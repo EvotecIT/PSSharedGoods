@@ -88,7 +88,7 @@ function New-SqlQuery {
 function New-SqlTableMapping {
     [CmdletBinding()]
     param(
-        [hashtable] $SqlTableMapping,
+        [Object] $SqlTableMapping,
         [Object] $Object
     )
     if ($SqlTableMapping) {
@@ -119,29 +119,30 @@ function New-SqlTableMapping {
 function New-SqlQueryCreateTable {
     [CmdletBinding()]
     param (
-        [hashtable ]$SqlSettings,
+        [Object]$SqlSettings,
         [Object] $Object,
         $TableMapping
     )
 
     $ArraySQLQueries = New-ArrayList
-    if ($Object) {
+   # if ($Object) {
 
-        foreach ($O in $Object) {
+       # foreach ($O in $Object) {
             #Get-ObjectType -Object $O -Verbose -VerboseOnly
             $ArrayMain = New-ArrayList
             $ArrayKeys = New-ArrayList
             $ArrayValues = New-ArrayList
 
-            foreach ($E in $O.PSObject.Properties) {
-                $FieldName = $E.Name
-                $FieldValue = $E.Value
+            #foreach ($E in $O.PSObject.Properties) {
+                #$FieldName = $E.Name
+               # $FieldValue = $E.Value
 
                 #Write-Verbose "Test1 - Value1: $FieldName Value2: $FieldValue"
+
+
                 foreach ($MapKey in $TableMapping.Keys) {
-                    if ($FieldName -eq $MapKey) {
+                    #if ($FieldName -eq $MapKey) {
                         $MapValue = $TableMapping.$MapKey
-                        #Write-Verbose "Test2 - Value1: $FieldName Value2: $FieldValue MapKey: $MapKey"
                         if ($FieldValue -is [DateTime]) {
                             Add-ToArray -List $ArrayKeys -Element "[$MapValue] [DateTime] NULL"
                         } elseif ($FieldValue -is [int] -or $FieldValue -is [Int64]) {
@@ -151,9 +152,9 @@ function New-SqlQueryCreateTable {
                         } else {
                             Add-ToArray -List $ArrayKeys -Element "[$MapValue] [nvarchar](max) NULL"
                         }
-                    }
+                    #}
                 }
-            }
+            #}
             if ($ArrayKeys) {
                 Add-ToArray -List $ArrayMain -Element "CREATE TABLE $($SqlSettings.SqlTable) ("
                 Add-ToArray -List $ArrayMain -Element "ID int IDENTITY(1,1) PRIMARY KEY,"
@@ -163,8 +164,8 @@ function New-SqlQueryCreateTable {
                 Add-ToArray -List $ArrayMain -Element ')'
                 Add-ToArray -List $ArraySQLQueries -Element ([string] ($ArrayMain) -replace "`n", "" -replace "`r", "")
             }
-            break
-        }
-    }
+            #break
+        #}
+   # }
     return $ArraySQLQueries
 }
