@@ -55,24 +55,6 @@ function Add-ToArrayAdvanced {
     #Write-Verbose "Add-ToArrayAdvanced - Adding ELEMENT: $Element"
     $List.Add($Element) > $null
 }
-
-function Show-Array {
-    [CmdletBinding()]
-    param(
-        [System.Collections.ArrayList] $List,
-        [switch] $WithType
-    )
-    foreach ($Element in $List) {
-        $Type = Get-ObjectType -Object $Element
-        if ($WithType) {
-            Write-Output "$Element (Type: $($Type.ObjectTypeName))"
-        } else {
-            Write-Output $Element
-        }
-    }
-}
-
-
 function Remove-FromArray {
     [CmdletBinding()]
     param(
@@ -86,4 +68,36 @@ function Remove-FromArray {
     } else {
         $List.Remove($Element) > $null
     }
+}
+function Split-Array {
+    [CmdletBinding()]
+    <#
+        .SYNOPSIS
+        Split an array
+        .NOTES
+        Version : July 2, 2017 - implemented suggestions from ShadowSHarmon for performance
+        .PARAMETER inArray
+        A one dimensional array you want to split
+        .EXAMPLE
+        Split-array -inArray @(1,2,3,4,5,6,7,8,9,10) -parts 3
+        .EXAMPLE
+        Split-array -inArray @(1,2,3,4,5,6,7,8,9,10) -size 3
+    #>
+
+    param($inArray, [int]$parts, [int]$size)
+    if ($parts) {
+        $PartSize = [Math]::Ceiling($inArray.count / $parts)
+    }
+    if ($size) {
+        $PartSize = $size
+        $parts = [Math]::Ceiling($inArray.count / $size)
+    }
+    $outArray = New-Object 'System.Collections.Generic.List[psobject]'
+    for ($i = 1; $i -le $parts; $i++) {
+        $start = (($i - 1) * $PartSize)
+        $end = (($i) * $PartSize) - 1
+        if ($end -ge $inArray.count) {$end = $inArray.count - 1}
+        $outArray.Add(@($inArray[$start..$end]))
+    }
+    return , $outArray
 }
