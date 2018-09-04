@@ -2,7 +2,7 @@ function Send-SqlInsert {
     [CmdletBinding()]
     param(
         [Object] $Object,
-        [hashtable] $SqlSettings
+        [Object] $SqlSettings
     )
     $Queries = New-ArrayList
     $ReturnData = @()
@@ -24,7 +24,6 @@ function Send-SqlInsert {
             }
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-            #Write-Color @script:WriteParameters -Text '[e] ', 'SQL Error: ', $ErrorMessage -Color White, White, Yellow
             $ReturnData += "Error occured: $ErrorMessage"
         }
     }
@@ -34,16 +33,15 @@ function Send-SqlInsert {
 function New-SqlQuery {
     [CmdletBinding()]
     param (
-        [hashtable ]$SqlSettings,
+        [Object] $SqlSettings,
         [Object] $Object,
-        $TableMapping
+        [Object] $TableMapping
     )
 
     $ArraySQLQueries = New-ArrayList
     if ($Object -ne $null) {
         ## Added fields to know when event was added to SQL and by WHO (in this case TaskS Scheduler User)
         ## Only adding when $Object exists
-
         foreach ($O in $Object) {
             $ArrayMain = New-ArrayList
             $ArrayKeys = New-ArrayList
@@ -92,7 +90,6 @@ function New-SqlTableMapping {
         [Object] $Object
     )
     if ($SqlTableMapping) {
-        #Write-Verbose "Test $($SqlTableMapping.'Record ID')"
         $TableMapping = $SqlTableMapping
     } else {
         $TableMapping = @{}
@@ -120,52 +117,32 @@ function New-SqlQueryCreateTable {
     [CmdletBinding()]
     param (
         [Object]$SqlSettings,
-        [Object] $Object,
-        $TableMapping
+        [Object]$TableMapping
     )
-
     $ArraySQLQueries = New-ArrayList
-   # if ($Object) {
+    $ArrayMain = New-ArrayList
+    $ArrayKeys = New-ArrayList
 
-       # foreach ($O in $Object) {
-            #Get-ObjectType -Object $O -Verbose -VerboseOnly
-            $ArrayMain = New-ArrayList
-            $ArrayKeys = New-ArrayList
-            $ArrayValues = New-ArrayList
+    foreach ($MapKey in $TableMapping.Keys) {
 
-            #foreach ($E in $O.PSObject.Properties) {
-                #$FieldName = $E.Name
-               # $FieldValue = $E.Value
+        $MapValue = $TableMapping.$MapKey
+        if ($FieldValue -is [DateTime]) {
+            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [DateTime] NULL"
+        } elseif ($FieldValue -is [int] -or $FieldValue -is [Int64]) {
+            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [int] NULL"
+        } elseif ($FieldValue -is [bool]) {
+            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [bit] NULL"
+        } else {
+            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [nvarchar](max) NULL"
+        }
+    }
 
-                #Write-Verbose "Test1 - Value1: $FieldName Value2: $FieldValue"
-
-
-                foreach ($MapKey in $TableMapping.Keys) {
-                    #if ($FieldName -eq $MapKey) {
-                        $MapValue = $TableMapping.$MapKey
-                        if ($FieldValue -is [DateTime]) {
-                            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [DateTime] NULL"
-                        } elseif ($FieldValue -is [int] -or $FieldValue -is [Int64]) {
-                            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [int] NULL"
-                        } elseif ($FieldValue -is [bool]) {
-                            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [bit] NULL"
-                        } else {
-                            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [nvarchar](max) NULL"
-                        }
-                    #}
-                }
-            #}
-            if ($ArrayKeys) {
-                Add-ToArray -List $ArrayMain -Element "CREATE TABLE $($SqlSettings.SqlTable) ("
-                Add-ToArray -List $ArrayMain -Element "ID int IDENTITY(1,1) PRIMARY KEY,"
-                Add-ToArray -List $ArrayMain -Element ($ArrayKeys -join ',')
-
-
-                Add-ToArray -List $ArrayMain -Element ')'
-                Add-ToArray -List $ArraySQLQueries -Element ([string] ($ArrayMain) -replace "`n", "" -replace "`r", "")
-            }
-            #break
-        #}
-   # }
+    if ($ArrayKeys) {
+        Add-ToArray -List $ArrayMain -Element "CREATE TABLE $($SqlSettings.SqlTable) ("
+        Add-ToArray -List $ArrayMain -Element "ID int IDENTITY(1,1) PRIMARY KEY,"
+        Add-ToArray -List $ArrayMain -Element ($ArrayKeys -join ',')
+        Add-ToArray -List $ArrayMain -Element ')'
+        Add-ToArray -List $ArraySQLQueries -Element ([string] ($ArrayMain) -replace "`n", "" -replace "`r", "")
+    }
     return $ArraySQLQueries
 }
