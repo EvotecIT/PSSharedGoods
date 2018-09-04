@@ -12,7 +12,7 @@ function Send-SqlInsert {
     $TableMapping = New-SqlTableMapping -SqlTableMapping $SqlSettings.SqlTableMapping -Object $Object
 
     if ($SqlSettings.SqlTableCreate) {
-        $CreateTableSQL = New-SqlQueryCreateTable -SqlSettings $SqlSettings -Object $Object -TableMapping $TableMapping
+        $CreateTableSQL = New-SqlQueryCreateTable -SqlSettings $SqlSettings -TableMapping $TableMapping
         Add-ToArray -List $Queries -Element $CreateTableSQL
     }
     $Queries += New-SqlQuery -Object $Object -SqlSettings $SqlSettings -TableMapping $TableMapping
@@ -60,10 +60,12 @@ function New-SqlQuery {
                 foreach ($MapKey in $TableMapping.Keys) {
                     if ($FieldName -eq $MapKey) {
                         $MapValue = $TableMapping.$MapKey
+                        $MapValueSplit = $MapValue -Split ','
+
                         if ($FieldValue -is [DateTime]) { $FieldValue = Get-Date $FieldValue -Format "yyyy-MM-dd HH:mm:ss" }
                         if ($FieldValue -like "*'*") { $FieldValue = $FieldValue -Replace "'", "''" }
                         #if ($FieldValue -eq '') { $FieldValue = 'NULL' }
-                        Add-ToArray -List $ArrayKeys -Element "[$MapValue]"
+                        Add-ToArray -List $ArrayKeys -Element "[$($MapValueSplit[0])]"
                         Add-ToArray -List $ArrayValues -Element "'$FieldValue'"
                     }
                 }
@@ -102,8 +104,21 @@ function New-SqlTableMapping {
             }
             foreach ($E in $O.PSObject.Properties) {
                 $FieldName = $E.Name
-                $FieldNameSQL = $($E.Name).Replace(' ', '')
-                $TableMapping.$FieldName = $FieldNameSQL
+                $FieldValue = $E.Value
+                $FieldNameSQL = $($E.Name).Replace(' ', '') #.Replace('-', '')
+                if ($FieldValue -is [DateTime]) {
+                    $TableMapping.$FieldName = "$FieldNameSQL,[datetime],null"
+                    #Add-ToArray -List $ArrayKeys -Element "[$MapValue] [DateTime] NULL"
+                } elseif ($FieldValue -is [int] -or $FieldValue -is [Int64]) {
+                    $TableMapping.$FieldName = "$FieldNameSQL,[bigint]"
+                    #Add-ToArray -List $ArrayKeys -Element "[$MapValue] [bigint] NULL"
+                } elseif ($FieldValue -is [bool]) {
+                    $TableMapping.$FieldName = "$FieldNameSQL,[bit]"
+                    #Add-ToArray -List $ArrayKeys -Element "[$MapValue] [bit] NULL"
+                } else {
+                    $TableMapping.$FieldName = "$FieldNameSQL"
+                    #Add-ToArray -List $ArrayKeys -Element "[$MapValue] [nvarchar](max) NULL"
+                }
             }
             break
         }
@@ -124,17 +139,29 @@ function New-SqlQueryCreateTable {
     $ArrayKeys = New-ArrayList
 
     foreach ($MapKey in $TableMapping.Keys) {
+        $MapValue = $TableMapping.$MapKey
 
+        $Field = $MapValue -Split ','
+        if ($Field.Count -eq 1) {
+            Add-ToArray -List $ArrayKeys -Element "[$($Field[0])] [nvarchar](max) NULL"
+        } elseif ($Field.Count -eq 2) {
+            Add-ToArray -List $ArrayKeys -Element "[$($Field[0])] $($Field[1]) NULL"
+        } elseif ($Field.Count -eq 3) {
+            Add-ToArray -List $ArrayKeys -Element "[$($Field[0])] $($Field[1]) $($Field[2])"
+        }
+
+        <#
         $MapValue = $TableMapping.$MapKey
         if ($FieldValue -is [DateTime]) {
             Add-ToArray -List $ArrayKeys -Element "[$MapValue] [DateTime] NULL"
         } elseif ($FieldValue -is [int] -or $FieldValue -is [Int64]) {
-            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [int] NULL"
+            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [bigint] NULL"
         } elseif ($FieldValue -is [bool]) {
             Add-ToArray -List $ArrayKeys -Element "[$MapValue] [bit] NULL"
         } else {
             Add-ToArray -List $ArrayKeys -Element "[$MapValue] [nvarchar](max) NULL"
         }
+        #>
     }
 
     if ($ArrayKeys) {
