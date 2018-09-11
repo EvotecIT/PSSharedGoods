@@ -3,40 +3,35 @@ function Test-Port {
     Param(
         [string] $Server,
         [int[]] $Ports = 135,
-        [int] $Timeout = 1000
+        [int] $TimeOut = 1000
     )
     foreach ($Port in $Ports) {
         #Write-Verbose "Test-Port - $Server`:$Port Start"
         $TcpClient = New-Object system.Net.Sockets.TcpClient
         $iar = $TcpClient.BeginConnect($server, $port, $null, $null)
-        # Set the wait time
-        $wait = $iar.AsyncWaitHandle.WaitOne($timeout, $false)
+        # Set the Wait time
+        $Wait = $iar.AsyncWaitHandle.WaitOne($TimeOut, $false)
         # Check to see if the connection is done
-        if (!$wait) {
-            # Close the connection and report timeout
+        if (!$Wait) {
+            # Close the connection and report TimeOut
             $TcpClient.Close()
-            Write-Verbose "Test-Port - $Server`:$Port Connection Timeout"
+            Write-Verbose "Test-Port - $Server`:$Port Connection TimeOut"
             return $false
         } else {
             # Close the connection and report the error if there is one
             $error.Clear()
             $TcpClient.EndConnect($iar) | Out-Null
             if (!$?) {
-                if ($verbose) {
-                    Write-Verbose "Test-Port - $Server`:$Port Error: $($error[0])"
-                }
-                $failed = $true
+                Write-Verbose "Test-Port - $Server`:$Port Error: $($error[0])"
+                $Failed = $true
             }
-
             $TcpClient.Close()
         }
-        if ($failed) { break }
+        if ($Failed) { break }
     }
-    #Write-Verbose "Test-Port - $Server`:$Port End"
-    # Return $true if connection Establish else $False
-    if ($failed) {
-        return $false
+    if ($Failed) {
+        return $false # Failed on all or just one of tested ports
     } else {
-        return $true
+        return $true # Established
     }
 }
