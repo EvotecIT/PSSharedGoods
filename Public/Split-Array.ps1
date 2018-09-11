@@ -17,6 +17,8 @@ function Split-Array {
 
 
         Split-array -inArray @(1,2,3,4,5,6,7,8,9,10) -size 3
+
+        # Link: https://gallery.technet.microsoft.com/scriptcenter/Split-an-array-into-parts-4357dcc1
     #>
     param(
         [Object] $inArray,
