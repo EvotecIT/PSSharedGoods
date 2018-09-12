@@ -2,7 +2,8 @@ function Get-ObjectPropertiesAdvanced {
     [CmdletBinding()]
     param (
         [object] $Object,
-        [string[]] $AddProperties # provides ability to add some custom properties
+        [string[]] $AddProperties, # provides ability to add some custom properties
+        [switch] $Sort
     )
     $Data = @{}
     $Properties = New-ArrayList
@@ -24,7 +25,7 @@ function Get-ObjectPropertiesAdvanced {
     foreach ($Property in $AddProperties) {
         Add-ToArrayAdvanced -List $Properties -Element $Property -SkipNull -RequireUnique
     }
-    $Data.Properties = $Properties | Sort-Object
+    $Data.Properties = if ($Sort) { $Properties | Sort-Object } else { $Properties }
     #Write-Verbose "Get-ObjectPropertiesAdvanced - HighestCount: $($Data.HighestCount)"
     #Write-Verbose "Get-ObjectPropertiesAdvanced - Properties: $($($Data.Properties) -join ',')"
 

@@ -4,7 +4,8 @@
 function Get-ObjectProperties {
     param (
         [object] $Object,
-        [string[]] $AddProperties # provides ability to add some custom properties
+        [string[]] $AddProperties, # provides ability to add some custom properties
+        [switch] $Sort
     )
     $Properties = New-ArrayList
     foreach ($O in $Object) {
@@ -16,5 +17,9 @@ function Get-ObjectProperties {
     foreach ($Property in $AddProperties) {
         Add-ToArrayAdvanced -List $Properties -Element $Property -SkipNull -RequireUnique
     }
-    return $Properties | Sort-Object
+    if ($Sort) {
+        return $Properties | Sort-Object
+    } else {
+        return $Properties
+    }
 }
