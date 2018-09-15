@@ -34,7 +34,12 @@ function New-SqlQuery {
                         if ($FieldValue -like "*'*") { $FieldValue = $FieldValue -Replace "'", "''" }
                         #if ($FieldValue -eq '') { $FieldValue = 'NULL' }
                         Add-ToArray -List $ArrayKeys -Element "[$($MapValueSplit[0])]"
-                        Add-ToArray -List $ArrayValues -Element "'$FieldValue'"
+                        if ([string]::IsNullOrWhiteSpace($FieldValue)) {
+                            #if ($FieldValue -eq '') {
+                            Add-ToArray -List $ArrayValues -Element "NULL"
+                        } else {
+                            Add-ToArray -List $ArrayValues -Element "'$FieldValue'"
+                        }
                     }
                 }
             }
