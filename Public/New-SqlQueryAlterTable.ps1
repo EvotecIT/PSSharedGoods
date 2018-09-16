@@ -10,11 +10,14 @@ function New-SqlQueryAlterTable {
     $ArrayKeys = New-ArrayList
 
     foreach ($MapKey in $TableMapping.Keys) {
-        if ($ExistingColumns -notcontains $MapKey) {
+        #Write-Verbose "New-SqlQueryAlterTable - MapKey: $MapKey"
+        $MapValue = $TableMapping.$MapKey
+        $Field = $MapValue -Split ','
 
-            $MapValue = $TableMapping.$MapKey
 
-            $Field = $MapValue -Split ','
+        if ($ExistingColumns -notcontains $MapKey -and $ExistingColumns -notcontains $Field[0]) {
+            #Write-Verbose "New-SqlQueryAlterTable - MapKey: $MapKey not found in $($ExistingColumns -join ',')"
+            #Write-Verbose "New-SqlQueryAlterTable - MapKey: $MapKey MapValue: $MapValue"
             if ($Field.Count -eq 1) {
                 Add-ToArray -List $ArrayKeys -Element "[$($Field[0])] [nvarchar](max) NULL"
             } elseif ($Field.Count -eq 2) {
@@ -22,19 +25,6 @@ function New-SqlQueryAlterTable {
             } elseif ($Field.Count -eq 3) {
                 Add-ToArray -List $ArrayKeys -Element "[$($Field[0])] $($Field[1]) $($Field[2])"
             }
-
-            <#
-        $MapValue = $TableMapping.$MapKey
-        if ($FieldValue -is [DateTime]) {
-            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [DateTime] NULL"
-        } elseif ($FieldValue -is [int] -or $FieldValue -is [Int64]) {
-            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [bigint] NULL"
-        } elseif ($FieldValue -is [bool]) {
-            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [bit] NULL"
-        } else {
-            Add-ToArray -List $ArrayKeys -Element "[$MapValue] [nvarchar](max) NULL"
-        }
-        #>
         }
     }
 
