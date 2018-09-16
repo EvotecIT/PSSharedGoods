@@ -12,7 +12,7 @@
     RootModule        = 'PSSharedGoods.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.0.7'
+    ModuleVersion     = '0.0.9'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
