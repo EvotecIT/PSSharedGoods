@@ -9,31 +9,31 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule        = 'PSSharedGoods.psm1'
+    RootModule           = 'PSSharedGoods.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.0.10'
+    ModuleVersion        = '0.0.11'
 
     # Supported PSEditions
-    # CompatiblePSEditions = @()
+    CompatiblePSEditions = @('Desktop', 'Core')
 
     # ID used to uniquely identify this module
-    GUID              = 'ee272aa8-baaa-4edf-9f45-b6d6f7d844fe'
+    GUID                 = 'ee272aa8-baaa-4edf-9f45-b6d6f7d844fe'
 
     # Author of this module
-    Author            = 'Przemyslaw Klys'
+    Author               = 'Przemyslaw Klys'
 
     # Company or vendor of this module
-    CompanyName       = 'Evotec'
+    CompanyName          = 'Evotec'
 
     # Copyright statement for this module
-    Copyright         = '(c) 2018 Przemyslaw Klys. All rights reserved.'
+    Copyright            = '(c) 2018 Przemyslaw Klys. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'Module covering functions that are shared within multiple projects'
+    Description          = 'Module covering functions that are shared within multiple projects'
 
     # Minimum version of the Windows PowerShell engine required by this module
-    # PowerShellVersion = ''
+    PowerShellVersion    = '5.1'
 
     # Name of the Windows PowerShell host required by this module
     # PowerShellHostName = ''
@@ -69,16 +69,16 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = '*'
+    FunctionsToExport    = '*'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport   = '*'
+    CmdletsToExport      = '*'
 
     # Variables to export from this module
-    VariablesToExport = '*'
+    VariablesToExport    = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = '*'
+    AliasesToExport      = '*'
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -90,7 +90,7 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData       = @{
+    PrivateData          = @{
 
         PSData = @{
 
