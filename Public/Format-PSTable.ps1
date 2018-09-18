@@ -6,7 +6,7 @@ function Format-PSTable {
         [string[]] $ExcludeProperty,
         [switch] $NoAliasOrScriptProperties,
         [switch] $DisplayPropertySet,
-        [bool] $OverwriteHeaders,
+        [Object] $OverwriteHeaders,
         [switch] $PreScanHeaders
     )
 

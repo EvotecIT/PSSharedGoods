@@ -6,7 +6,7 @@ function Format-PSTableConvertType1 {
         [string[]] $ExcludeProperty,
         [switch] $NoAliasOrScriptProperties,
         [switch] $DisplayPropertySet,
-        [bool] $OverwriteHeaders
+        [Object] $OverwriteHeaders # not used - requires fix
     )
     #Write-Verbose 'Format-PSTableConvertType1 - Option 1'
     $Array = New-ArrayList

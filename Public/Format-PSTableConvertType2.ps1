@@ -6,7 +6,7 @@ function Format-PSTableConvertType2 {
         [string[]] $ExcludeProperty,
         [switch] $NoAliasOrScriptProperties,
         [switch] $DisplayPropertySet,
-        [bool] $OverwriteHeaders,
+        [Object] $OverwriteHeaders,
         [switch] $PreScanHeaders
     )
     #[int] $Run = 0
