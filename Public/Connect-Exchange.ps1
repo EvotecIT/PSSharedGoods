@@ -15,9 +15,7 @@ function Connect-Exchange {
             $SecurePassword = $Password | ConvertTo-SecureString -asPlainText -Force
             $Credentials = New-Object System.Management.Automation.PSCredential($Username, $SecurePassword)
         }
-
     }
-
     $ExistingSession = Get-PSSession -Name $SessionName -ErrorAction SilentlyContinue
     if ($ExistingSession.Availability -eq 'Available') {
         Write-Verbose 'Connect-Exchange - reusing session'
@@ -25,11 +23,13 @@ function Connect-Exchange {
         #Import-PSSession -Session $ExistingSession -AllowClobber
     } else {
         Write-Verbose 'Connect-Exchange - creating new session'
-        $SessionOption = New-PSSessionOption -SkipRevocationCheck -SkipCACheck -SkipCNCheck
+        $SessionOption = New-PSSessionOption -SkipRevocationCheck -SkipCACheck -SkipCNCheck -Verbose:$false
         if ($Credentials) {
-            $Session = New-PSSession -Credential $Credentials -ConfigurationName Microsoft.Exchange -ConnectionUri $ConnectionURI -Authentication $Authentication -SessionOption $sessionOption -Name $SessionName -AllowRedirection
+            Write-Verbose 'Connect-Exchange - Creating new session using Credentials'
+            $Session = New-PSSession -Credential $Credentials -ConfigurationName Microsoft.Exchange -ConnectionUri $ConnectionURI -Authentication $Authentication -SessionOption $sessionOption -Name $SessionName -AllowRedirection -Verbose:$false
         } else {
-            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri $ConnectionURI -Authentication $Authentication -SessionOption $sessionOption -Name $SessionName -AllowRedirection
+            Write-Verbose 'Connect-Exchange - Creating new session without Credentials'
+            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri $ConnectionURI -Authentication $Authentication -SessionOption $sessionOption -Name $SessionName -AllowRedirection -Verbose:$false
         }
         return $Session
     }
