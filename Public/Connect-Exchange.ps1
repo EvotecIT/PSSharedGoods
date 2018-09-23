@@ -18,8 +18,12 @@ function Connect-Exchange {
     }
     $ExistingSession = Get-PSSession -Name $SessionName -ErrorAction SilentlyContinue
     if ($ExistingSession.Availability -eq 'Available') {
-        Write-Verbose 'Connect-Exchange - reusing session'
-        return $ExistingSession
+        foreach ($Session in $ExistingSession) {
+            if ($Session.Availability -eq 'Available') {
+                Write-Verbose 'Connect-Exchange - reusing session'
+                return $Session
+            }
+        }
         #Import-PSSession -Session $ExistingSession -AllowClobber
     } else {
         Write-Verbose 'Connect-Exchange - creating new session'
