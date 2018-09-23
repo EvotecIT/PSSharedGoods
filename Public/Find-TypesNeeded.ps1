@@ -11,9 +11,9 @@ function Find-TypesNeeded {
             $AllTypes += $False
         }
     }
-    if ($AllTypes -contains $False) {
-        return $False
+    if ($AllTypes -contains $True) {
+        return $True
     } else {
-        return $true
+        return $False
     }
 }
