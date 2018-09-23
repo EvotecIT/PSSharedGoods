@@ -1,4 +1,4 @@
-function Connect-Exchange {
+function Connect-WinExchange {
     [CmdletBinding()]
     param(
         [string] $SessionName = 'Evotec',

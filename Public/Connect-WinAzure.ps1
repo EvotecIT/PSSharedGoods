@@ -1,4 +1,4 @@
-function Connect-Azure {
+function Connect-WinAzure {
     [CmdletBinding()]
     param(
         [string] $SessionName = 'Evotec',
