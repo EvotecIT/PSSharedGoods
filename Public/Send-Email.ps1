@@ -1,5 +1,5 @@
 function Send-Email ([hashtable] $EmailParameters, [string] $Body = "", $Attachment = $null, [string] $Subject = "", $To = "") {
-    #     $SendMail = Send-Email -EmailParameters $EmailParameters -Body $EmailBody -Attachment $Reports -Subject $TemporarySubject
+    #  $SendMail = Send-Email -EmailParameters $EmailParameters -Body $EmailBody -Attachment $Reports -Subject $TemporarySubject
     #  Preparing the Email properties
     $SmtpClient = New-Object -TypeName system.net.mail.smtpClient
     $SmtpClient.host = $EmailParameters.EmailServer
@@ -59,15 +59,19 @@ function Send-Email ([hashtable] $EmailParameters, [string] $Body = "", $Attachm
         $SmtpClient.Send($MailMessage)
         #$att.Dispose();
         $MailMessage.Dispose();
+        $MailSentTo = "$($MailMessage.To) $($MailMessage.CC) $($MailMessage.BCC)"
         return @{
             Status = $True
             Error  = ""
+            SentTo = $MailSentTo
         }
     } catch {
         $MailMessage.Dispose();
         return @{
             Status = $False
             Error  = $($_.Exception.Message)
+            SentTo = ""
         }
     }
+
 }

@@ -1,4 +1,4 @@
-function Connect-WinAzure {
+function Connect-WinAzureAD {
     [CmdletBinding()]
     param(
         [string] $SessionName = 'Evotec',
@@ -35,11 +35,11 @@ function Connect-WinAzure {
         }
     }
     try {
-        $Data = Connect-MsolService -Credential $Credentials -ErrorAction Stop
+        $Data = Connect-AzureAD -Credential $Credentials -ErrorAction Stop
     } catch {
         $Data = $null
         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-        Write-Warning "Connect-WinAzure - Failed with error message: $ErrorMessage"
+        Write-Warning "Connect-WinAzureAD - Failed with error message: $ErrorMessage"
     }
     return $Data
 }

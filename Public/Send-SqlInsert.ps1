@@ -2,7 +2,8 @@ function Send-SqlInsert {
     [CmdletBinding()]
     param(
         [Object] $Object,
-        [Object] $SqlSettings
+        [Object] $SqlSettings,
+        [string] $CheckDuplicateColumn
     )
     $Queries = New-ArrayList
     $ReturnData = @()
