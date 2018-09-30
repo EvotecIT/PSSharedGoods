@@ -1,4 +1,12 @@
-function Send-Email ([hashtable] $EmailParameters, [string] $Body = "", $Attachment = $null, [string] $Subject = "", $To = "") {
+function Send-Email {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param (
+        [hashtable] $EmailParameters,
+        [string] $Body = "",
+        [string[]] $Attachment = $null,
+        [string] $Subject = "",
+        [string] $To = ""
+    )
     #  $SendMail = Send-Email -EmailParameters $EmailParameters -Body $EmailBody -Attachment $Reports -Subject $TemporarySubject
     #  Preparing the Email properties
     $SmtpClient = New-Object -TypeName system.net.mail.smtpClient
@@ -56,14 +64,18 @@ function Send-Email ([hashtable] $EmailParameters, [string] $Body = "", $Attachm
 
     #  Sending the Email
     try {
-        $SmtpClient.Send($MailMessage)
-        #$att.Dispose();
-        $MailMessage.Dispose();
-        $MailSentTo = "$($MailMessage.To) $($MailMessage.CC) $($MailMessage.BCC)"
-        return @{
-            Status = $True
-            Error  = ""
-            SentTo = $MailSentTo
+        $MailSentTo = "$($MailMessage.To) $($MailMessage.CC) $($MailMessage.BCC)".Trim()
+        if ($pscmdlet.ShouldProcess("$MailSentTo", "Send-Email")) {
+            $SmtpClient.Send($MailMessage)
+            #$att.Dispose();
+            $MailMessage.Dispose();
+
+
+            return @{
+                Status = $True
+                Error  = ""
+                SentTo = $MailSentTo
+            }
         }
     } catch {
         $MailMessage.Dispose();
@@ -73,5 +85,4 @@ function Send-Email ([hashtable] $EmailParameters, [string] $Body = "", $Attachm
             SentTo = ""
         }
     }
-
 }

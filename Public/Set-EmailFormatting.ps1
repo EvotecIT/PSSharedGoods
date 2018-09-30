@@ -1,12 +1,21 @@
-function Set-EmailFormatting ($Template, $FormattingParameters, $ConfigurationParameters) {
-    $WriteParameters = $ConfigurationParameters.DisplayConsole
-
+function Set-EmailFormatting {
+    param (
+        $Template,
+        $FormattingParameters,
+        $ConfigurationParameters
+    )
+    if ($ConfigurationParameters) {
+        $WriteParameters = $ConfigurationParameters.DisplayConsole
+    } else {
+        $WriteParameters = @{ ShowTime = $true; LogFile = ""; TimeFormat = "yyyy-MM-dd HH:mm:ss" }
+    }
     $Template = $Template.Split("`n") # https://blogs.msdn.microsoft.com/timid/2014/07/09/one-liner-fun-with-multi-line-blocktext-and-split-split/
 
     $Body = ""
+
     Write-Color @WriteParameters -Text "[i] Preparing template ", "adding", " HTML ", "<BR>", " tags..." -Color White, Yellow, White, Yellow -NoNewLine
     foreach ($t in $Template) {
-        $Body += "<br>$t"
+        $Body += "$t<br>"
     }
     Write-Color -Text "Done" -Color "Green"
     foreach ($style in $FormattingParameters.Styles.GetEnumerator()) {
@@ -41,7 +50,8 @@ function Set-EmailFormatting ($Template, $FormattingParameters, $ConfigurationPa
         }
 
     }
-
-    if ($ConfigurationParameters.DisplayTemplateHTML -eq $true) { Get-HTML($Body) }
+    if ($ConfigurationParameters) {
+        if ($ConfigurationParameters.DisplayTemplateHTML -eq $true) { Get-HTML($Body) }
+    }
     return $Body
 }
