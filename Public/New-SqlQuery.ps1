@@ -15,11 +15,7 @@ function New-SqlQuery {
         INSERT INTO  dbo.[EventsLogsClearedSecurity] ( [DomainController],[Action],[BackupPath],[LogType],[Who],[When],[EventID],[RecordID],[AddedWhen],[AddedWho] ) VALUES ( 'AD1.ad.evotec.xyz','Event log automatic backup','C:\Windows\System32\Winevt\Logs\Archive-Security-2018-09-25-14-12-52-658.evtx','Security','Automatic Backup','2018-09-25 16:12:53','1105','2434391','2018-09-25 20:49:02','przemyslaw.klys' )
     END
     #>
-    if ($SqlSettings.SqlCheckBeforeInsert) {
-        # This section allows to skip INSERT if value of DuplicateColumn already exists.
-        $DuplicateColumn = ($SqlSettings.SqlCheckBeforeInsert).Replace("[", '').Replace("]", '') # Remove [ ] for comparision
-        $DuplicateValue = ''
-    }
+
     $ArraySQLQueries = New-ArrayList
     if ($Object -ne $null) {
         ## Added fields to know when event was added to SQL and by WHO (in this case TaskS Scheduler User)
@@ -39,6 +35,11 @@ function New-SqlQuery {
                 $FieldName = $E.Name
                 $FieldValue = $E.Value
 
+                if (-not [string]::IsNullOrWhiteSpace($SqlSettings.SqlCheckBeforeInsert)) {
+                    # This section allows to skip INSERT if value of DuplicateColumn already exists.
+                    $DuplicateColumn = ($SqlSettings.SqlCheckBeforeInsert).Replace("[", '').Replace("]", '') # Remove [ ] for comparision
+                    $DuplicateValue = ''
+                }
                 foreach ($MapKey in $TableMapping.Keys) {
                     if ($FieldName -eq $MapKey) {
                         $MapValue = $TableMapping.$MapKey
@@ -66,11 +67,11 @@ function New-SqlQuery {
                 }
             }
             if ($ArrayKeys) {
-                if ($DuplicateColumn -ne '' -and $DuplicateValue -ne '') {
+                if (-not [string]::IsNullOrWhiteSpace($SqlSettings.SqlCheckBeforeInsert) -and $DuplicateColumn -ne '' -and $DuplicateValue -ne '') {
                     Add-ToArray -List $ArrayMain -Element "IF NOT EXISTS ("
                     Add-ToArray -List $ArrayMain -Element "SELECT 1 FROM "
                     Add-ToArray -List $ArrayMain -Element "$($SqlSettings.SqlTable) "
-                    Add-ToArray -List $ArrayMain -Element " WHERE $DuplicateColumn = $DuplicateValue"
+                    Add-ToArray -List $ArrayMain -Element "WHERE $DuplicateColumn = $DuplicateValue"
                     Add-ToArray -List $ArrayMain -Element ")"
                 }
                 Add-ToArray -List $ArrayMain -Element "BEGIN"
