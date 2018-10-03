@@ -31,7 +31,11 @@ function New-SqlQuery {
             if (-not $O.AddedWho) {
                 Add-Member -InputObject $O -MemberType NoteProperty -Name "AddedWho" -Value ($Env:USERNAME)
             }
-            if (-not [string]::IsNullOrWhiteSpace($SqlSettings.SqlCheckBeforeInsert)) {
+
+            if ([string]::IsNullOrWhiteSpace($SqlSettings.SqlCheckBeforeInsert)) {
+                $DuplicateColumn = ''
+                $DuplicateValue = ''
+            } else {
                 # This section allows to skip INSERT if value of DuplicateColumn already exists.
                 $DuplicateColumn = ($SqlSettings.SqlCheckBeforeInsert).Replace("[", '').Replace("]", '') # Remove [ ] for comparision
                 $DuplicateValue = ''
@@ -67,7 +71,7 @@ function New-SqlQuery {
                 }
             }
             if ($ArrayKeys) {
-                if ($DuplicateColumn -ne '' -and $DuplicateValue -ne '') {
+                if ($SqlSettings.SqlCheckBeforeInsert -ne $null -and $DuplicateColumn -ne '' -and $DuplicateValue -ne '') {
                     Add-ToArray -List $ArrayMain -Element "IF NOT EXISTS ("
                     Add-ToArray -List $ArrayMain -Element "SELECT 1 FROM "
                     Add-ToArray -List $ArrayMain -Element "$($SqlSettings.SqlTable) "

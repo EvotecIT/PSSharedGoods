@@ -12,7 +12,7 @@
     RootModule           = 'PSSharedGoods.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.21'
+    ModuleVersion        = '0.0.23'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop', 'Core')
@@ -51,7 +51,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    #RequiredModules   = @('dbatools')
+    RequiredModules      = @('PSWriteColor')
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
