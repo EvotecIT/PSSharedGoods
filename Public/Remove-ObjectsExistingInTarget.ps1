@@ -3,7 +3,8 @@ function Remove-ObjectsExistingInTarget {
         $ObjectSource,
         $ObjectTarget,
         [string] $ComparePropertySource,
-        [string] $ComparePropertyTarget
+        [string] $ComparePropertyTarget,
+        [switch] $Reverse # returns only existing objects
     )
     $ObjectsExistingInTarget = @()
     $ObjectsNotExistingInTarget = @()
@@ -14,5 +15,9 @@ function Remove-ObjectsExistingInTarget {
             $ObjectsNotExistingInTarget += $Object
         }
     }
-    return $ObjectsNotExistingInTarget
+    if ($Reverse) {
+        return $ObjectsExistingInTarget
+    } else {
+        return $ObjectsNotExistingInTarget
+    }
 }
