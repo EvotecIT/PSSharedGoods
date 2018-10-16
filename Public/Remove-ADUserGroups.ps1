@@ -15,10 +15,10 @@ function Remove-ADUserGroups {
             foreach ($Group in $ADgroups) {
                 try {
                     Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false
-                    $Object += @{ Status = $true; Output = $Group.Name }
+                    $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                 } catch {
                     $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-                    $Object += @{ Status = $false; Output = $Group.Name; Error = $ErrorMessage }
+                    $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
                 }
             }
         }
@@ -29,10 +29,10 @@ function Remove-ADUserGroups {
                 foreach ($Group in $ADGroupsByCategory) {
                     try {
                         Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false
-                        $Object += @{ Status = $true; Output = $Group.Name }
+                        $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {
                         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-                        $Object += @{ Status = $false; Output = $Group.Name; Error = $ErrorMessage }
+                        $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
                     }
                 }
             }
@@ -44,10 +44,10 @@ function Remove-ADUserGroups {
                 foreach ($Group in $ADGroupsByScope) {
                     try {
                         Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false
-                        $Object += @{ Status = $true; Output = $Group.Name }
+                        $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {
                         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-                        $Object += @{ Status = $false; Output = $Group.Name; Error = $ErrorMessage }
+                        $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
                     }
                 }
             }
@@ -59,13 +59,13 @@ function Remove-ADUserGroups {
                     #Write-Color @Script:WriteParameters -Text '[i]', ' Removing groups (by name) ', ($ADGroupsByName.Name -join ', '), ' from user ', $User.DisplayName -Color White, Yellow, Green, White, Yellow, White, Yellow
                     try {
                         Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $ADGroupsByName -Confirm:$false
-                        $Object += @{ Status = $true; Output = $Group.Name }
+                        $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {
                         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-                        $Object += @{ Status = $false; Output = $Group.Name; Error = $ErrorMessage }
+                        $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
                     }
                 } else {
-                    $Object += @{ Status = $false; Output = $Group.Name; Error = 'Not available on user.' }
+                    $Object += @{ Status = $false; Output = $Group.Name; Extended = 'Not available on user.' }
                 }
             }
         }

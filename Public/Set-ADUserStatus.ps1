@@ -5,22 +5,33 @@ function Set-ADUserStatus {
         [parameter(Mandatory = $true)][ValidateSet("Enable", "Disable")][String] $Option #,
         # $WriteParameters
     )
+    $Object = @()
     if ($Option -eq 'Enable' -and $User.Enabled -eq $false) {
         #if (-not $WriteParameters) {
         #    Write-Color @Script:WriteParameters -Text 'Enabling user ', $User.DisplayName, ' in Active Directory.' -Color Yellow, Green, White, Yellow
         #} else {
         #    Write-Color @WriteParameters
         #}
-        Set-ADUser -Identity $User -Enabled $true
-        return $true
+        try {
+            Set-ADUser -Identity $User -Enabled $true
+            $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = 'Enabled user.' }
+        } catch {
+            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+            $Object += @{ Status = $false; Output = $User.SamAccountName; Extended = $ErrorMessage }
+        }
     } elseif ($Option -eq 'Disable' -and $User.Enabled -eq $true) {
         #if (-not $WriteParameters) {
         #    Write-Color @Script:WriteParameters -Text 'Disabling user ', $User.DisplayName, 'in Active Directory.' -Color Yellow, Green, White, Yellow
         #} else {
         #    Write-Color @WriteParameters
         #}
-        Set-ADUser -Identity $User -Enabled $false
-        return $true
+        try {
+            Set-ADUser -Identity $User -Enabled $false
+            $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = 'Disabled user.' }
+        } catch {
+            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+            $Object += @{ Status = $false; Output = $User.SamAccountName; Extended = $ErrorMessage }
+        }
     }
-    return $false
+    return $Object
 }

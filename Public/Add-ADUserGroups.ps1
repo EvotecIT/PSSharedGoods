@@ -11,7 +11,7 @@ function Add-ADUserGroups {
             if ($ADgroups -notcontains $Group) {
                 try {
                     Add-ADGroupMember -Identity $Group -Members $User -ErrorAction Stop
-                    $Object += @{ Status = $true; Output = $Group }
+                    $Object += @{ Status = $true; Output = $Group; Extended = 'Added to group.' }
                 } catch {
                     $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
                     $Object += @{ Status = $false; Output = $Group; Error = $ErrorMessage }
