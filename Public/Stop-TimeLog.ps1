@@ -2,7 +2,8 @@ function Stop-TimeLog {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline = $true)][System.Diagnostics.Stopwatch] $Time,
-        [ValidateSet('OneLiner', 'Array')][string] $Option = 'OneLiner'
+        [ValidateSet('OneLiner', 'Array')][string] $Option = 'OneLiner',
+        [switch] $Continue
     )
     Begin {}
     Process {
@@ -13,7 +14,9 @@ function Stop-TimeLog {
         }
     }
     End {
-        $Time.Stop()
+        if (-not $Continue) {
+            $Time.Stop()
+        }
         return $TimeToExecute
     }
 }
