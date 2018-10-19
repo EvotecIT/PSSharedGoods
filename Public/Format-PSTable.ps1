@@ -34,7 +34,7 @@ function Format-PSTable {
     } elseif ($Type.ObjectTypeName -eq 'HashTable' -or $Type.ObjectTypeName -eq 'OrderedDictionary' ) {
         #Write-Verbose 'Level 0-1'
         return Format-PSTableConvertType3 -Object $Object -SkipTitle:$SkipTitle -ExcludeProperty $ExcludeProperty -NoAliasOrScriptProperties:$NoAliasOrScriptProperties -DisplayPropertySet:$DisplayPropertySet -OverwriteHeaders $OverwriteHeaders
-    } elseif ($Type.ObjectTypeName -match 'string|bool|byte|char|decimal|double|float|int|long|sbyte|short|uint|ulong|ushort') {
+    } elseif ($Type.ObjectTypeName -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
         return $Object
     } else {
         #Write-Verbose 'Level 0-2'
