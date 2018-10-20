@@ -1,4 +1,5 @@
 function Get-FileInformation {
+    [CmdletBinding()]
     param(
         [string] $File
     )

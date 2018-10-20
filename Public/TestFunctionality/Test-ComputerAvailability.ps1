@@ -7,7 +7,6 @@ function Test-ComputerAvailability {
         [int] $PortsTimeout = 100,
         [int] $PingCount = 1
     )
-    #$Verbose = $PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent
     $OutputList = @()
     foreach ($Server in $Servers) {
         $Output = [ordered] @{}

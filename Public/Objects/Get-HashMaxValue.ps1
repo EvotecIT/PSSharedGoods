@@ -1,4 +1,9 @@
-function Get-HashMaxValue($hashTable, [switch] $Lowest) {
+function Get-HashMaxValue {
+    [CmdletBinding()]
+    param (
+        [Object] $hashTable,
+        [switch] $Lowest
+    )
     if ($Lowest) {
         return ($hashTable.GetEnumerator() | Sort-Object value -Descending | Select-Object -Last 1).Value
     } else {

@@ -1,4 +1,7 @@
-Function Get-ModulesAvailability ([string]$Name) {
+Function Get-ModulesAvailability {
+    param(
+        [string]$Name
+    )
     if (-not(Get-Module -name $name)) {
         if (Get-Module -ListAvailable | Where-Object { $_.name -eq $name }) {
             try {

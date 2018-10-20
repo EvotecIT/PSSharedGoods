@@ -1,4 +1,5 @@
 function Find-TypesNeeded {
+    [CmdletBinding()]
     param (
         $TypesRequired,
         $TypesNeeded
