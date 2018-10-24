@@ -34,8 +34,6 @@ Function Set-ADUserSettingGAL {
                 }
             }
         }
-    } else {
-
     }
     return $Object
 }
