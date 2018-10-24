@@ -5,7 +5,8 @@ function Remove-ADUserGroups {
         [ValidateSet("Distribution", "Security")][String] $GroupCategory ,
         [ValidateSet("DomainLocal", "Global", "Universal")][String] $GroupScope,
         [string[]] $Groups,
-        [switch] $All
+        [switch] $All,
+        [switch] $WhatIf
     )
     $Object = @()
     try {
@@ -19,7 +20,9 @@ function Remove-ADUserGroups {
             #Write-Color @Script:WriteParameters -Text '[i]', ' Removing groups ', ($ADgroups.Name -join ', '), ' from user ', $User.DisplayName -Color White, Yellow, Green, White, Yellow
             foreach ($Group in $ADgroups) {
                 try {
+                    if (-not $WhatIf) {
                     Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false -ErrorAction Stop
+                    }
                     $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                 } catch {
                     $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
@@ -33,7 +36,9 @@ function Remove-ADUserGroups {
                 #Write-Color @Script:WriteParameters -Text '[i]', ' Removing groups (by category - ', $GroupCategory, ") ", ($ADGroupsByCategory.Name -join ', '), ' from user ', $User.DisplayName -Colo White, Yellow, Green, White, Yellow, White, Blue
                 foreach ($Group in $ADGroupsByCategory) {
                     try {
+                        if (-not $WhatIf) {
                         Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false -ErrorAction Stop
+                        }
                         $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {
                         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
@@ -48,7 +53,9 @@ function Remove-ADUserGroups {
                 #Write-Color @Script:WriteParameters -Text '[i]', ' Removing groups (by scope ', " - $GroupScope) ", ($ADGroupsByScope.Name -join ', '), ' from user ', $User.DisplayName -Color White, Yellow, Green, White, Yellow, White, Blue
                 foreach ($Group in $ADGroupsByScope) {
                     try {
+                        if (-not $WhatIf) {
                         Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false -ErrorAction Stop
+                        }
                         $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {
                         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
@@ -63,7 +70,9 @@ function Remove-ADUserGroups {
                 if ($ADGroupsByName) {
                     #Write-Color @Script:WriteParameters -Text '[i]', ' Removing groups (by name) ', ($ADGroupsByName.Name -join ', '), ' from user ', $User.DisplayName -Color White, Yellow, Green, White, Yellow, White, Yellow
                     try {
+                        if (-not $WhatIf) {
                         Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $ADGroupsByName -Confirm:$false -ErrorAction Stop
+                        }
                         $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {
                         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "

@@ -17,7 +17,8 @@ function Add-ADUserGroups {
     param(
         [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
         [string[]] $Groups,
-        [string] $FieldSearch = 'Name'
+        [string] $FieldSearch = 'Name',
+        [switch] $WhatIf
     )
     $Object = @()
     try {
@@ -30,8 +31,11 @@ function Add-ADUserGroups {
         foreach ($Group in $Groups) {
             if ($ADgroups.$FieldSearch -notcontains $Group) {
                 try {
-                    Add-ADGroupMember -Identity $Group -Members $User -ErrorAction Stop
+                    if (-not $WhatIf) {
+                        Add-ADGroupMember -Identity $Group -Members $User -ErrorAction Stop
+                    }
                     $Object += @{ Status = $true; Output = $Group; Extended = 'Added to group.' }
+
                 } catch {
                     $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
                     $Object += @{ Status = $false; Output = $Group; Extended = $ErrorMessage }

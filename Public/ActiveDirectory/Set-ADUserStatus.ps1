@@ -2,7 +2,8 @@ function Set-ADUserStatus {
     [CmdletBinding()]
     param (
         [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
-        [parameter(Mandatory = $true)][ValidateSet("Enable", "Disable")][String] $Option #,
+        [parameter(Mandatory = $true)][ValidateSet("Enable", "Disable")][String] $Option,
+        [switch] $WhatIf
         # $WriteParameters
     )
     $Object = @()
@@ -13,7 +14,9 @@ function Set-ADUserStatus {
         #    Write-Color @WriteParameters
         #}
         try {
-            Set-ADUser -Identity $User -Enabled $true
+            if (-not $WhatIf) {
+                Set-ADUser -Identity $User -Enabled $true
+            }
             $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = 'Enabled user.' }
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
@@ -26,8 +29,11 @@ function Set-ADUserStatus {
         #    Write-Color @WriteParameters
         #}
         try {
-            Set-ADUser -Identity $User -Enabled $false
+            if (-not $WhatIf) {
+                Set-ADUser -Identity $User -Enabled $false
+            }
             $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = 'Disabled user.' }
+
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
             $Object += @{ Status = $false; Output = $User.SamAccountName; Extended = $ErrorMessage }
