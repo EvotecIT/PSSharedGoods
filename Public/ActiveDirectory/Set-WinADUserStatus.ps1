@@ -1,5 +1,6 @@
-function Set-ADUserStatus {
+function Set-WinADUserStatus {
     [CmdletBinding()]
+    [alias("Set-ADUserStatus")]
     param (
         [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
         [parameter(Mandatory = $true)][ValidateSet("Enable", "Disable")][String] $Option,

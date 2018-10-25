@@ -3,10 +3,10 @@
 $Group1 = 'GDS-TestGroup1'
 $Group2 = 'GDS-TestGroup2'
 
-Set-WinGroupsSynchronize -GroupFrom $Group1 -GroupTo $Group2 -Type 'All' -Recursive None
+Set-WinADGroupSynchronization -GroupFrom $Group1 -GroupTo $Group2 -Type 'All' -Recursive None
 #>
 
-function Set-WinGroupsSynchronize {
+function Set-WinADGroupSynchronization {
     [CmdletBinding()]
     param(
         [parameter(Mandatory = $true)][string] $GroupFrom,

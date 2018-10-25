@@ -1,5 +1,6 @@
-Function Set-ADUserSettingGAL {
+Function Set-WinADUserSettingGAL {
     [CmdletBinding()]
+    [alias("Set-ADUserSettingGAL")]
     param (
         [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
         [parameter(Mandatory = $true)][ValidateSet("Hide", "Show")][String]$Option,

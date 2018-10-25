@@ -1,5 +1,6 @@
-function Remove-ADUserGroups {
+function Remove-WinADUserGroups {
     [CmdletBinding()]
+    [alias("Remove-ADUserGroups")]
     param(
         [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
         [ValidateSet("Distribution", "Security")][String] $GroupCategory ,

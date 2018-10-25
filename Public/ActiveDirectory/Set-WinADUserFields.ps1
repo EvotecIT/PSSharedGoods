@@ -1,5 +1,6 @@
-function Set-ADUserName {
+function Set-WinADUserFields {
     [CmdletBinding()]
+    [alias("Set-ADUserName")]
     param (
         [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
         [parameter(Mandatory = $false)][ValidateSet("Before", "After")][String] $Option,

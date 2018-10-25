@@ -1,5 +1,6 @@
-function Get-ADUserSnapshot {
+function Get-WinADUserSnapshot {
     [CmdletBinding()]
+    [alias("Get-ADUserSnapshot")]
     param (
         [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
         [string] $XmlPath,

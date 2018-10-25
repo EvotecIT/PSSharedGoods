@@ -12,8 +12,9 @@ SID               : S-1-5-21-853615985-2870445339-3163598659-1117
 
 #>
 
-function Add-ADUserGroups {
+function Add-WinADUserGroups {
     [CmdletBinding()]
+    [alias("Add-ADUserGroups")]
     param(
         [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
         [string[]] $Groups,
