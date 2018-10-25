@@ -1,46 +1,123 @@
-function Set-WinGroupsSynchronize($GroupFrom, $GroupTo, $LogFile = "") {
-    $g1 = Get-ADGroupMember -Identity $GroupFrom | Select-Object Name, ObjectClass, SamAccountName, UserPrincipalName | ToArray
-    $g2 = @(Get-ADGroupMember -Identity $GroupTo | Select-Object Name, ObjectClass, SamAccountName, UserPrincipalName)#  | ToArray
+<#
 
+$Group1 = 'GDS-TestGroup1'
+$Group2 = 'GDS-TestGroup2'
 
-    #$g1.Count
-    #$g2.Count
+Set-WinGroupsSynchronize -GroupFrom $Group1 -GroupTo $Group2 -Type 'All' -Recursive None
+#>
 
-    foreach ($u in $g1) {
-        #Write-Color "$($u.UserPrincipalName)" -Color White
-        if ($u.ObjectClass -eq "user") {
-
-            if (!($g2.count -lt 1)) {
-                if ($g2.SamAccountName -notcontains $u.SamAccountName) {
-                    Write-Color "Not a member ", $u.SamAccountName, " of $GroupTo", ". Adding!" -Color Red -LogFile $LogFile
-                    Add-ADGroupMember -Identity $GroupTo -Members $u.SamAccountName
-                } else {
-                    #Write-Color "Already a member ", $u.SamAccountName, " of $GroupTo", ". Skipping!" -Color Green
-                }
-            } else {
-                Write-Color "Not a member ", $u.SamAccountName, " of $GroupTo", ". Adding!" -Color Red -LogFile $LogFile
-                Add-ADGroupMember -Identity $GroupTo -Members $u.SamAccountName
-            }
-
+function Set-WinGroupsSynchronize {
+    [CmdletBinding()]
+    param(
+        [parameter(Mandatory = $true)][string] $GroupFrom,
+        [parameter(Mandatory = $true)][string] $GroupTo,
+        [parameter(Mandatory = $false)][ValidateSet("User", "Group", "All")][string] $Type = 'User',
+        [parameter(Mandatory = $false)][ValidateSet("None", "RecursiveFrom", "RecursiveBoth", "RecursiveTo")] $Recursive = 'None',
+        [switch] $WhatIf
+    )
+    Begin {
+        $Object = @()
+        if ($Recursive -eq 'None') {
+            $GroupFromRecursive = $false
+            $GroupToRecursive = $false
+        } elseif ($Recursive -eq 'RecursiveFrom') {
+            $GroupFromRecursive = $true
+            $GroupToRecursive = $false
+        } elseif ($Recursive -eq 'RecursiveBoth') {
+            $GroupFromRecursive = $true
+            $GroupToRecursive = $true
         } else {
-            Write-Color "Not a user ", $u.Name -Color White
+            $GroupFromRecursive = $false
+            $GroupToRecursive = $true
         }
     }
-    foreach ($u in $g2) {
-        if ($u.ObjectClass -eq "user") {
-            if (!($g1.count -lt 1)) {
-                if ($g1.SamAccountName -notcontains $u.SamAccountName) {
-                    Write-Color "Not a member of $GroupFrom - requires removal from $GroupTo ", $u.SamAccountName -Color Red -LogFile $LogFile
-                    Remove-ADGroupMember -Identity $GroupTo -Members $u.SamAccountName -Confirm:$false
-                } else {
-                    #Write-Color "Already a member of $GroupTo and $GroupFrom - skipping ", $u.SamAccountName -Color Green
+    Process {
+        try {
+
+            $GroupMembersFrom = Get-ADGroupMember -Identity $GroupFrom -Recursive:$GroupFromRecursive | Select-Object Name, ObjectClass, SamAccountName, UserPrincipalName
+        } catch {
+            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+            $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
+        }
+        try {
+            $GroupMembersTo = Get-ADGroupMember -Identity $GroupTo -Recursive:$GroupToRecursive | Select-Object Name, ObjectClass, SamAccountName, UserPrincipalName
+        } catch {
+            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+            $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
+        }
+        if ($Object.Count -gt 0) {
+            # Something went seriously wrong. Terminate ASAP
+            return $Object
+        }
+
+        foreach ($User in $GroupMembersFrom) {
+            if ($User.ObjectClass -eq "user") {
+                if ($Type -eq 'User' -or $Type -eq 'All') {
+                    if ($GroupMembersTo.SamAccountName -notcontains $User.SamAccountName) {
+                        #Write-Color "Not a member ", $User.SamAccountName, " of $GroupTo", ". Adding!" -Color Red -LogFile $LogFile
+                        try {
+                            if (-not $WhatIf) {
+                            Add-ADGroupMember -Identity $GroupTo -Members $User.SamAccountName
+                            }
+                            $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = "Added to group $GroupTo" }
+                        } catch {
+                            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+                            $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
+                        }
+                    }
                 }
             } else {
-                Remove-ADGroupMember -Identity $GroupTo -Members $u.SamAccountName -Confirm:$false
+                if ($Type -eq 'Group' -or $Type -eq 'All') {
+                    if ($GroupMembersTo.SamAccountName -notcontains $User.SamAccountName) {
+                        #Write-Color "Not a member ", $User.SamAccountName, " of $GroupTo", ". Adding!" -Color Red -LogFile $LogFile
+                        try {
+                            if (-not $WhatIf) {
+                            Add-ADGroupMember -Identity $GroupTo -Members $User.SamAccountName
+                            }
+                            $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = "Added to group $GroupTo" }
+                        } catch {
+                            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+                            $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
+                        }
+                    }
+                }
             }
-        } else {
-            Write-Color "Not a user ", $u.Name -Color White
+        }
+        foreach ($User in $GroupMembersTo) {
+            if ($User.ObjectClass -eq "user") {
+                if ($Type -eq 'User' -or $Type -eq 'All') {
+                    if ($GroupMembersFrom.SamAccountName -notcontains $User.SamAccountName) {
+                        Write-Color "Not a member of $GroupFrom - requires removal from $GroupTo ", $User.SamAccountName -Color Red -LogFile $LogFile
+                        try {
+                            if (-not $WhatIf) {
+                            Remove-ADGroupMember -Identity $GroupTo -Members $User.SamAccountName -Confirm:$false
+                            }
+                            $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = "Removed from group $GroupTo" }
+                        } catch {
+                            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+                            $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
+                        }
+                    }
+                }
+            } else {
+                if ($Type -eq 'Group' -or $Type -eq 'All') {
+                    if ($GroupMembersFrom.SamAccountName -notcontains $User.SamAccountName) {
+                        Write-Color "Not a member of $GroupFrom - requires removal from $GroupTo ", $User.SamAccountName -Color Red -LogFile $LogFile
+                        try {
+                            if (-not $WhatIf) {
+                            Remove-ADGroupMember -Identity $GroupTo -Members $User.SamAccountName -Confirm:$false
+                            }
+                            $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = "Removed from group $GroupTo" }
+                        } catch {
+                            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+                            $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
+                        }
+                    }
+                }
+            }
         }
     }
-
+    End {
+        return $object
+    }
 }
