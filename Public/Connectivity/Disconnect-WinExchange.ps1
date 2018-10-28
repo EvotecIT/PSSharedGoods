@@ -1,10 +1,33 @@
 function Disconnect-WinExchange {
     [CmdletBinding()]
     param(
-        $SessionName = "Evotec"
+        [string] $SessionName = "Exchange",
+        [switch] $Output
     )
+    $Object = @()
     $ExistingSession = Get-PSSession -Name $SessionName -ErrorAction SilentlyContinue
     if ($ExistingSession) {
-        Remove-PSSession -Name $SessionName
+        try {
+            Remove-PSSession -Name $SessionName -ErrorAction Stop
+        } catch {
+            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+            if ($Output) {
+                $Object += @{ Status = $false; Output = $SessionName; Extended = "Disconnection failed. Error: $ErrorMessage" }
+                return $Object
+            } else {
+                Write-Warning "Disconnect-WinExchange - Failed with error message: $ErrorMessage"
+                return
+            }
+        }
+        if ($Output) {
+            $Object += @{ Status = $true; Output = $SessionName; Extended = "Disconnection succeeded." }
+            return $Object
+        }
+    } else {
+        if ($Output) {
+            $Object += @{ Status = $false; Output = $SessionName; Extended = "Disconnection failed. No connection exists." }
+            return $Object
+        }
     }
+
 }
