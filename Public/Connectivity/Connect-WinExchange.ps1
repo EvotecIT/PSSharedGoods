@@ -107,8 +107,10 @@ function Connect-WinExchange {
     $CurrentVerbosePreference = $VerbosePreference; $VerbosePreference = 'SilentlyContinue' # weird but -Verbose:$false doesn't do anything
     $CurrentWarningPreference = $WarningPreference; $WarningPreference = 'SilentlyContinue' # weird but -Verbose:$false doesn't do anything
     if ($Prefix) {
-        Import-Module (Import-PSSession -Session $Session -AllowClobber -DisableNameChecking -Prefix $Prefix -Verbose:$false) -Global
+        #Write-Verbose "Prefix used $Prefix"
+        Import-Module (Import-PSSession -Session $Session -AllowClobber -DisableNameChecking -Prefix $Prefix -Verbose:$false) -Global -Prefix $Prefix
     } else {
+        #Write-Verbose "Prefix used - None"
         Import-Module (Import-PSSession -Session $Session -AllowClobber -DisableNameChecking -Verbose:$false) -Global
     }
     $VerbosePreference = $CurrentVerbosePreference
@@ -116,7 +118,7 @@ function Connect-WinExchange {
 
     ## Verify Connectivity
     #$CheckAvailabilityCommands = Test-AvailabilityCommands -Commands "Get-$($Service.Prefix)ExchangeServer", "Get-$($Service.Prefix)MailboxDatabase", "Get-$($Service.Prefix)PublicFolderDatabase"
-    $CheckAvailabilityCommands = Test-AvailabilityCommands -Commands "Get-$($Prefix)MailContact", "Get-$($Service.Prefix)Mailbox"
+    $CheckAvailabilityCommands = Test-AvailabilityCommands -Commands "Get-$($Prefix)MailContact", "Get-$($Prefix)Mailbox"
     if ($CheckAvailabilityCommands -contains $false) {
         if ($Output) {
             $Object += @{ Status = $false; Output = $SessionName; Extended = 'Commands unavailable.' }
@@ -127,7 +129,11 @@ function Connect-WinExchange {
     }
 
     if ($Output) {
-        $Object += @{ Status = $true; Output = $SessionName; Extended = "Connection established $($Session.ComputerName)" }
+        if ($Prefix) {
+            $Object += @{ Status = $true; Output = $SessionName; Extended = "Connection established $($Session.ComputerName) - prefix: $Prefix" }
+        } else {
+            $Object += @{ Status = $true; Output = $SessionName; Extended = "Connection established $($Session.ComputerName) - prefix: n/a" }
+        }
         return $Object
     }
 
