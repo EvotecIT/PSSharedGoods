@@ -10,38 +10,43 @@ function Connect-WinExchange {
         [switch] $FromFile
     )
 
-    if ($FromFile) {
-        if (Test-Path $Password) {
-            Write-Verbose "Connect-Exchange - Reading password from file $Password"
-            if ($AsSecure) {
-                $NewPassword = Get-Content $Password | ConvertTo-SecureString
-                #Write-Verbose "Connect-Exchange - Password to use: $Password"
+    if ($Authentication -ne 'Kerberos') {
+        if ($FromFile) {
+            if (($Password -ne '') -and (Test-Path $Password)) {
+                Write-Verbose "Connect-Exchange - Reading password from file $Password"
+                if ($AsSecure) {
+                    $NewPassword = Get-Content $Password | ConvertTo-SecureString
+                    #Write-Verbose "Connect-Exchange - Password to use: $Password"
+                } else {
+                    $NewPassword = Get-Content $Password
+                    #Write-Verbose "Connect-Exchange - Password to use: $Password"
+                }
             } else {
-                $NewPassword = Get-Content $Password
-                #Write-Verbose "Connect-Exchange - Password to use: $Password"
+                Write-Warning "Connect-Exchange - Secure password from file couldn't be read. File not readable. Terminating."
+                return
             }
         } else {
-            Write-Warning "Connect-Exchange - Secure password from file couldn't be read. File not readable. Terminating."
-            return
+            $NewPassword = $Password
+        }
+        if ($UserName -and $NewPassword) {
+            if ($AsSecure) {
+                $Credentials = New-Object System.Management.Automation.PSCredential($Username, $NewPassword)
+                #Write-Verbose "Connect-Exchange - Using AsSecure option with Username $Username and password: $NewPassword"
+            } else {
+                $SecurePassword = $Password | ConvertTo-SecureString -asPlainText -Force
+                $Credentials = New-Object System.Management.Automation.PSCredential($Username, $SecurePassword)
+                #Write-Verbose "Connect-Exchange - Using AsSecure option with Username $Username and password: $NewPassword converted to $SecurePassword"
+            }
         }
     } else {
-        $NewPassword = $Password
-    }
-    if ($UserName -and $NewPassword) {
-        if ($AsSecure) {
-            $Credentials = New-Object System.Management.Automation.PSCredential($Username, $NewPassword)
-            #Write-Verbose "Connect-Exchange - Using AsSecure option with Username $Username and password: $NewPassword"
-        } else {
-            $SecurePassword = $Password | ConvertTo-SecureString -asPlainText -Force
-            $Credentials = New-Object System.Management.Automation.PSCredential($Username, $SecurePassword)
-            #Write-Verbose "Connect-Exchange - Using AsSecure option with Username $Username and password: $NewPassword converted to $SecurePassword"
-        }
+        # Credentials should be null for Kerberos - Current user will run it
+        $Credentials = $null
     }
     $ExistingSession = Get-PSSession -Name $SessionName -ErrorAction SilentlyContinue
-    if ($ExistingSession.Availability -eq 'Available') {
+    if ($ExistingSession.Availability -contains 'Available') {
         foreach ($Session in $ExistingSession) {
             if ($Session.Availability -eq 'Available') {
-                Write-Verbose "Connect-Exchange - reusing session $($ExistingSession.ComputerName)"
+                Write-Verbose "Connect-Exchange - reusing session $($Session.ComputerName)"
                 return $Session
             }
         }
