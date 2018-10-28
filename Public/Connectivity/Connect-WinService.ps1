@@ -45,7 +45,7 @@ function Connect-WinService {
             }
             'Azure' {
                 # Check Credentials
-                $CheckCredentials = Test-ConfigurationCredentials -Configuration $Credentials -Output
+                $CheckCredentials = Test-ConfigurationCredentials -Configuration $Credentials
                 if ($CheckCredentials.Status -contains $false) {
                     if ($Output) {
                         $Object += @{ Status = $false; Output = "Azure"; Extended = 'Credentials configuration is incomplete.' }
@@ -59,7 +59,7 @@ function Connect-WinService {
                     -Username $Credentials.Username `
                     -Password $Credentials.Password `
                     -AsSecure:$Credentials.PasswordAsSecure `
-                    -FromFile:$Credentials.PasswordFromFile -Verbose
+                    -FromFile:$Credentials.PasswordFromFile
 
                 if (-not $Session) {
                     if ($Output) {
@@ -96,25 +96,6 @@ function Connect-WinService {
                     -AsSecure:$Credentials.PasswordAsSecure `
                     -FromFile:$Credentials.PasswordFromFile
 
-                # Failed connecting to session
-                if (-not $Session) {
-                    if ($Output) {
-                        $Object += @{ Status = $false; Output = 'Exchange'; Extended = 'Connection failed.' }
-                        return $Object
-                    } else {
-                        return
-                    }
-                }
-
-                $CurrentVerbosePreference = $VerbosePreference; $VerbosePreference = 'SilentlyContinue' # weird but -Verbose:$false doesn't do anything
-                $CurrentWarningPreference = $WarningPreference; $WarningPreference = 'SilentlyContinue' # weird but -Verbose:$false doesn't do anything
-                if ($Service.Prefix) {
-                    Import-Module (Import-PSSession -Session $Session -AllowClobber -DisableNameChecking -Prefix $Service.Prefix -Verbose:$false) -Global
-                } else {
-                    Import-Module (Import-PSSession -Session $Session -AllowClobber -DisableNameChecking -Verbose:$false) -Global
-                }
-                $VerbosePreference = $CurrentVerbosePreference
-                $WarningPreference = $CurrentWarningPreference
 
                 $CheckAvailabilityCommands = Test-AvailabilityCommands -Commands "Get-$($Service.Prefix)ExchangeServer", "Get-$($Service.Prefix)MailboxDatabase", "Get-$($Service.Prefix)PublicFolderDatabase"
                 if ($CheckAvailabilityCommands -contains $false) {
