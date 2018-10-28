@@ -18,5 +18,3 @@ function Disconnect-WinAzure {
         Exit
     }
 }
-
-Disconnect-WinAzure -Output
