@@ -3,14 +3,38 @@ function Send-Email {
     param (
         [hashtable] $EmailParameters,
         [string] $Body = "",
-        [string[]] $Attachment = $null,
+        [string[]] $Attachment,
+        [hashtable]$InlineAttachments,
         [string] $Subject = "",
         [string] $To = ""
     )
+    function Get-ContentType {
+        [CmdletBinding()]
+        param (
+            [Parameter(Mandatory = $true)]
+            [string]
+            $FileName
+        )
+
+        $MimeMappings = @{
+            '.jpeg' = 'image/jpeg'
+            '.jpg'  = 'image/jpeg'
+            '.png'  = 'image/png'
+        }
+
+        $Extension = [System.IO.Path]::GetExtension( $FileName )
+        $ContentType = $MimeMappings[ $Extension ]
+
+        if ([string]::IsNullOrEmpty($ContentType)) {
+            return New-Object System.Net.Mime.ContentType
+        } else {
+            return New-Object System.Net.Mime.ContentType($ContentType)
+        }
+    }
     #  $SendMail = Send-Email -EmailParameters $EmailParameters -Body $EmailBody -Attachment $Reports -Subject $TemporarySubject
     #  Preparing the Email properties
-    $SmtpClient = New-Object -TypeName system.net.mail.smtpClient
-    $SmtpClient.host = $EmailParameters.EmailServer
+    $SmtpClient = New-Object -TypeName System.Net.Mail.SmtpClient
+    $SmtpClient.Host = $EmailParameters.EmailServer
 
     # Adding parameters to login to server
     $SmtpClient.Port = $EmailParameters.EmailServerPort
@@ -45,18 +69,41 @@ function Send-Email {
     } else {
         $MailMessage.Subject = $Subject
     }
-    $MailMessage.Body = $Body
+    
+    $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString( $Body, 'text/html' )
+    $MailMessage.AlternateViews.Add( $BodyPart )
     $MailMessage.Priority = [System.Net.Mail.MailPriority]::$($EmailParameters.EmailPriority)
 
     #  Encoding
     $MailMessage.BodyEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
     $MailMessage.SubjectEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
 
+    # Inlining attachment (s)
+    if ($PSBoundParameters.ContainsKey('InlineAttachments')) {
+        foreach ( $Entry in $InlineAttachments.GetEnumerator() ) {
+            try {
+                $FilePath = $Entry.Value
+                if ($Entry.Value.StartsWith('http')) {
+                    $FileName = $Entry.Value.Substring($Entry.Value.LastIndexOf("/") + 1)
+                    $FilePath = Join-Path $env:temp $FileName
+                    Invoke-WebRequest -Uri $Entry.Value -OutFile $FilePath 
+                }
+                $ContentType = Get-ContentType -FileName $FilePath
+                $InAttachment = New-Object Net.Mail.LinkedResource($FilePath, $ContentType )
+                $InAttachment.ContentId = $Entry.Key
+                $BodyPart.LinkedResources.Add( $InAttachment )
+            } catch {
+                $MailMessage.Dispose()
+                throw
+            }
+        }
+    }
+
     #  Attaching file (s)
-    if ($Attachment -ne $null) {
+    if ($PSBoundParameters.ContainsKey('Attachments')) {
         foreach ($Attach in $Attachment) {
             if (Test-Path $Attach) {
-                $File = new-object Net.Mail.Attachment($Attach)
+                $File = New-Object Net.Mail.Attachment($Attach)
                 $MailMessage.Attachments.Add($File)
             }
         }
