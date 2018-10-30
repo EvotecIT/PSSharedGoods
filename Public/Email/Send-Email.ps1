@@ -4,7 +4,7 @@ function Send-Email {
         [hashtable] $EmailParameters,
         [string] $Body = "",
         [string[]] $Attachment,
-        [hashtable]$InlineAttachments,
+        [hashtable] $InlineAttachments,
         [string] $Subject = "",
         [string] $To = ""
     )
@@ -12,8 +12,7 @@ function Send-Email {
         [CmdletBinding()]
         param (
             [Parameter(Mandatory = $true)]
-            [string]
-            $FileName
+            [string] $FileName
         )
 
         $MimeMappings = @{
@@ -42,7 +41,7 @@ function Send-Email {
         $SmtpClient.Credentials = New-Object System.Net.NetworkCredential($EmailParameters.EmailServerLogin, $EmailParameters.EmailServerPassword)
     }
     $SmtpClient.EnableSsl = $EmailParameters.EmailServerEnableSSL
-    $MailMessage = New-Object -TypeName system.net.mail.mailmessage
+    $MailMessage = New-Object -TypeName System.Net.Mail.MailMessage
     $MailMessage.From = $EmailParameters.EmailFrom
     if ($To -ne "") {
         foreach ($T in $To) { $MailMessage.To.add($($T)) }
@@ -70,16 +69,16 @@ function Send-Email {
         $MailMessage.Subject = $Subject
     }
     
-    $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString( $Body, 'text/html' )
-    $MailMessage.AlternateViews.Add( $BodyPart )
     $MailMessage.Priority = [System.Net.Mail.MailPriority]::$($EmailParameters.EmailPriority)
-
+    
     #  Encoding
     $MailMessage.BodyEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
     $MailMessage.SubjectEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
-
+    
     # Inlining attachment (s)
     if ($PSBoundParameters.ContainsKey('InlineAttachments')) {
+        $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString( $Body, 'text/html' )
+        $MailMessage.AlternateViews.Add( $BodyPart )
         foreach ( $Entry in $InlineAttachments.GetEnumerator() ) {
             try {
                 $FilePath = $Entry.Value
@@ -97,6 +96,8 @@ function Send-Email {
                 throw
             }
         }
+    } else {
+        $MailMessage.Body = $Body
     }
 
     #  Attaching file (s)
