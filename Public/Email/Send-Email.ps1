@@ -8,28 +8,6 @@ function Send-Email {
         [string] $Subject = "",
         [string] $To = ""
     )
-    function Get-ContentType {
-        [CmdletBinding()]
-        param (
-            [Parameter(Mandatory = $true)]
-            [string] $FileName
-        )
-
-        $MimeMappings = @{
-            '.jpeg' = 'image/jpeg'
-            '.jpg'  = 'image/jpeg'
-            '.png'  = 'image/png'
-        }
-
-        $Extension = [System.IO.Path]::GetExtension( $FileName )
-        $ContentType = $MimeMappings[ $Extension ]
-
-        if ([string]::IsNullOrEmpty($ContentType)) {
-            return New-Object System.Net.Mime.ContentType
-        } else {
-            return New-Object System.Net.Mime.ContentType($ContentType)
-        }
-    }
     #  $SendMail = Send-Email -EmailParameters $EmailParameters -Body $EmailBody -Attachment $Reports -Subject $TemporarySubject
     #  Preparing the Email properties
     $SmtpClient = New-Object -TypeName System.Net.Mail.SmtpClient
@@ -87,7 +65,7 @@ function Send-Email {
                     $FilePath = Join-Path $env:temp $FileName
                     Invoke-WebRequest -Uri $Entry.Value -OutFile $FilePath 
                 }
-                $ContentType = Get-ContentType -FileName $FilePath
+                $ContentType = Get-MimeType -FileName $FilePath
                 $InAttachment = New-Object Net.Mail.LinkedResource($FilePath, $ContentType )
                 $InAttachment.ContentId = $Entry.Key
                 $BodyPart.LinkedResources.Add( $InAttachment )
