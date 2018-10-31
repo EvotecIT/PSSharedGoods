@@ -9,7 +9,7 @@ function Test-ComputerAvailability {
     )
     $OutputList = @()
     foreach ($Server in $Servers) {
-        $Output = [ordered] @{}
+        $Output = [PsCustomObject][ordered] @{}
         $Output.ServerName = $Server
         if ($Test -eq 'All' -or $Test -like 'Ping*') {
             $Output.Pingable = Test-Connection -ComputerName $Server -Quiet -Count $PingCount
@@ -22,5 +22,5 @@ function Test-ComputerAvailability {
         }
         $OutputList += $Output
     }
-    return Format-TransposeTable $OutputList
+    return $OutputList
 }
