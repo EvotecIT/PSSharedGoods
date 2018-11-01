@@ -6,15 +6,31 @@ function Send-Email {
         [string[]] $Attachment,
         [hashtable] $InlineAttachments,
         [string] $Subject = "",
-        [string] $To = ""
+        [string[]] $To
     )
     #  $SendMail = Send-Email -EmailParameters $EmailParameters -Body $EmailBody -Attachment $Reports -Subject $TemporarySubject
     #  Preparing the Email properties
     $SmtpClient = New-Object -TypeName System.Net.Mail.SmtpClient
-    $SmtpClient.Host = $EmailParameters.EmailServer
-
+    if ($EmailParameters.EmailServer) {
+        $SmtpClient.Host = $EmailParameters.EmailServer
+    } else {
+        return @{
+            Status = $False
+            Error  = "Email Server Host is not set."
+            SentTo = ""
+        }
+    }
     # Adding parameters to login to server
-    $SmtpClient.Port = $EmailParameters.EmailServerPort
+    if ($EmailParameters.EmailServerPort) {
+        $SmtpClient.Port = $EmailParameters.EmailServerPort
+    } else {
+        return @{
+            Status = $False
+            Error  = "Email Server Port is not set."
+            SentTo = ""
+        }
+    }
+
     if ($EmailParameters.EmailServerLogin -ne "") {
         #$Credentials = Request-Credentials -UserName $EmailParameters.EmailServerLogin `
         #    -Password $EmailParameters.EmailServerPassword `
@@ -25,10 +41,10 @@ function Send-Email {
     $SmtpClient.EnableSsl = $EmailParameters.EmailServerEnableSSL
     $MailMessage = New-Object -TypeName System.Net.Mail.MailMessage
     $MailMessage.From = $EmailParameters.EmailFrom
-    if ($To -ne "") {
+    if ($To) {
         foreach ($T in $To) { $MailMessage.To.add($($T)) }
     } else {
-        if ($EmailParameters.Emailto -ne "") {
+        if ($EmailParameters.Emailto) {
             foreach ($To in $EmailParameters.Emailto) { $MailMessage.To.add($($To)) }
         }
     }
