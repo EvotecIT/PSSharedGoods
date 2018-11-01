@@ -16,6 +16,10 @@ function Send-Email {
     # Adding parameters to login to server
     $SmtpClient.Port = $EmailParameters.EmailServerPort
     if ($EmailParameters.EmailServerLogin -ne "") {
+        #$Credentials = Request-Credentials -UserName $EmailParameters.EmailServerLogin `
+        #    -Password $EmailParameters.EmailServerPassword `
+        #    -NetworkCredentials
+        #$SmtpClient.Credentials = $Credentials
         $SmtpClient.Credentials = New-Object System.Net.NetworkCredential($EmailParameters.EmailServerLogin, $EmailParameters.EmailServerPassword)
     }
     $SmtpClient.EnableSsl = $EmailParameters.EmailServerEnableSSL
@@ -46,24 +50,26 @@ function Send-Email {
     } else {
         $MailMessage.Subject = $Subject
     }
-    
+
     $MailMessage.Priority = [System.Net.Mail.MailPriority]::$($EmailParameters.EmailPriority)
-    
+
     #  Encoding
     $MailMessage.BodyEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
     $MailMessage.SubjectEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
-    
+
     # Inlining attachment (s)
     if ($PSBoundParameters.ContainsKey('InlineAttachments')) {
         $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString( $Body, 'text/html' )
         $MailMessage.AlternateViews.Add( $BodyPart )
         foreach ( $Entry in $InlineAttachments.GetEnumerator() ) {
             try {
+
                 $FilePath = $Entry.Value
+                Write-Verbose $FilePath
                 if ($Entry.Value.StartsWith('http')) {
                     $FileName = $Entry.Value.Substring($Entry.Value.LastIndexOf("/") + 1)
                     $FilePath = Join-Path $env:temp $FileName
-                    Invoke-WebRequest -Uri $Entry.Value -OutFile $FilePath 
+                    Invoke-WebRequest -Uri $Entry.Value -OutFile $FilePath
                 }
                 $ContentType = Get-MimeType -FileName $FilePath
                 $InAttachment = New-Object Net.Mail.LinkedResource($FilePath, $ContentType )

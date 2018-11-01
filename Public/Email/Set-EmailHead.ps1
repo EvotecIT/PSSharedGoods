@@ -1,8 +1,8 @@
 function Set-EmailHead($FormattingOptions) {
-    if ($FormattingOptions.CompanyBrandingTemplate -eq '') { $FormattingOptions.CompanyBrandingTemplate = 'TemplateDefault' }
+    # if ($null -eq $FormattingOptions.CompanyBrandingTemplate -eq  '') { $FormattingOptions.CompanyBrandingTemplate = 'TemplateDefault' }
 
-    if ($FormattingOptions.CompanyBrandingTemplate -eq 'TemplateDefault') {
-        $head = @"
+    #if ($FormattingOptions.CompanyBrandingTemplate -eq 'TemplateDefault') {
+    $head = @"
         <style>
         BODY {
             background-color: white;
@@ -59,8 +59,8 @@ function Set-EmailHead($FormattingOptions) {
     </style>
 "@
 
-    } else {
-
-    }
+    # } else {
+    #
+    # }
     return $Head
 }
