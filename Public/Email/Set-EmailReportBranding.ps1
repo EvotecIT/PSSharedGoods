@@ -1,4 +1,4 @@
-function Set-EmailReportBrading {
+function Set-EmailReportBranding {
     param(
         [alias('FormattingOptions')] $FormattingParameters
     )
