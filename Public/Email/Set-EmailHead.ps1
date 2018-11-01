@@ -1,4 +1,7 @@
-function Set-EmailHead($FormattingOptions) {
+function Set-EmailHead {
+    param(
+        $FormattingOptions
+    )
     # if ($null -eq $FormattingOptions.CompanyBrandingTemplate -eq  '') { $FormattingOptions.CompanyBrandingTemplate = 'TemplateDefault' }
 
     #if ($FormattingOptions.CompanyBrandingTemplate -eq 'TemplateDefault') {
@@ -32,6 +35,16 @@ function Set-EmailHead($FormattingOptions) {
         TR {
             font-family: $($FormattingOptions.FontTableDataFamily);
             font-size: $($FormattingOptions.FontTableDataSize);
+        }
+
+        UL {
+            font-family: $($FormattingOptions.FontFamily);
+            font-size: $($FormattingOptions.FontSize);
+        }
+
+        LI {
+            font-family: $($FormattingOptions.FontFamily);
+            font-size: $($FormattingOptions.FontSize);
         }
 
         TD {
