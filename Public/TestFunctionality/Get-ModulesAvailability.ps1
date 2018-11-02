@@ -2,14 +2,19 @@ Function Get-ModulesAvailability {
     param(
         [string]$Name
     )
-    if (-not(Get-Module -name $name)) {
-        if (Get-Module -ListAvailable | Where-Object { $_.name -eq $name }) {
+    if (-not(Get-Module -Name $Name)) {
+        if (Get-Module -ListAvailable | Where-Object { $_.Name -eq $Name }) {
             try {
-                Import-Module -Name $name
+                Import-Module -Name $Name
                 return $true
             } catch {
                 return $false
             }
-        } else { return $false } #module not available
-    } else { return $true } #module already loaded
+        } else {
+            #module not available
+            return $false
+        }
+    } else {
+        return $true
+    } #module already loaded
 }
