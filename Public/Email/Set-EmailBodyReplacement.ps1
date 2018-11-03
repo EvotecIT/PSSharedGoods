@@ -1,7 +1,7 @@
 function Set-EmailBodyReplacement {
     [CmdletBinding()]
     param(
-        $Body,
+        [string] $Body,
         [hashtable] $ReplacementTable,
         [ValidateSet('Colors', 'Bold')][string] $Type
     )

@@ -12,7 +12,7 @@
     RootModule           = 'PSSharedGoods.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.33'
+    ModuleVersion        = '0.0.34'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop', 'Core')
@@ -55,17 +55,11 @@
             # Tags applied to this module. These help with module discovery in online galleries.
             Tags       = @('Shared', 'Useful', 'Goods')
 
-            # A URL to the license for this module.
-            # LicenseUri = ''
-
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/EvotecIT/PSSharedGoods'
 
             # A URL to an icon representing this module.
             IconUri    = 'https://evotec.xyz/wp-content/uploads/2018/10/PSSharedGoods-Alternative.png'
-
-            # ReleaseNotes of this module
-            # ReleaseNotes = ''
 
         } # End of PSData hashtable
 

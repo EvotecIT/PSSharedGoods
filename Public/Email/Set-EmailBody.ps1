@@ -1,10 +1,16 @@
-function Set-EmailBody($TableData, $TableWelcomeMessage) {
-    $body = "<p><i>$TableWelcomeMessage</i>"
+function Set-EmailBody {
+    [CmdletBinding()]
+    param(
+        [Object] $TableData,
+        [alias('TableWelcomeMessage')][string] $TableMessageWelcome,
+        [string] $TableMessageNoData = 'No changes happend during that period.'
+    )
+    $Body = "<p><i>$TableMessageWelcome</i>"
     if ($($TableData | Measure-Object).Count -gt 0) {
-        $body += $TableData | ConvertTo-Html -Fragment | Out-String
-        $body += "</p>"
+        $Body += $TableData | ConvertTo-Html -Fragment | Out-String
+        $Body += "</p>"
     } else {
-        $body += "<br><i>No changes happend during that period.</i></p>"
+        $Body += "<br><i>$TableMessageNoData</i></p>"
     }
     return $body
 }
