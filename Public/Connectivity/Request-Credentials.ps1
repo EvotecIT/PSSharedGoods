@@ -9,8 +9,6 @@ function Request-Credentials {
         [switch] $NetworkCredentials,
         [string] $Service
     )
-
-    [string] $NewPassword
     if ($FromFile) {
         if (($Password -ne '') -and (Test-Path $Password)) {
             Write-Verbose "Request-Credentials - Reading password from file $Password"
@@ -31,7 +29,8 @@ function Request-Credentials {
             }
         }
     } else {
-        $NewPassword = $Password
+        # Write-Verbose $Password
+        $NewPassword = $Password | ConvertTo-SecureString
     }
     if ($UserName -and $NewPassword) {
         if ($AsSecure) {
@@ -55,8 +54,6 @@ function Request-Credentials {
         $RewritePassword = $Credentials.GetNetworkCredential()
         #Get-ObjectType $RewritePassword -VerboseOnly -Verbose
         return $RewritePassword
-        #$Return = New-Object System.Net.NetworkCredential($RewritePassword.UserName, $RewritePassword.Password)
-        #return $Return
     } else {
         #Get-ObjectType $Credentials -VerboseOnly -Verbose
         return $Credentials
