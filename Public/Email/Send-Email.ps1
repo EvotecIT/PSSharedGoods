@@ -8,8 +8,6 @@ function Send-Email {
         [string] $Subject = "",
         [string[]] $To
     )
-    #  $SendMail = Send-Email -EmailParameters $EmailParameters -Body $EmailBody -Attachment $Reports -Subject $TemporarySubject
-    #  Preparing the Email properties
     $SmtpClient = New-Object -TypeName System.Net.Mail.SmtpClient
     if ($EmailParameters.EmailServer) {
         $SmtpClient.Host = $EmailParameters.EmailServer
@@ -32,10 +30,6 @@ function Send-Email {
     }
 
     if ($EmailParameters.EmailServerLogin -ne "") {
-        #$Credentials = Request-Credentials -UserName $EmailParameters.EmailServerLogin `
-        #    -Password $EmailParameters.EmailServerPassword `
-        #    -NetworkCredentials
-        #$SmtpClient.Credentials = $Credentials
         $SmtpClient.Credentials = New-Object System.Net.NetworkCredential($EmailParameters.EmailServerLogin, $EmailParameters.EmailServerPassword)
     }
     $SmtpClient.EnableSsl = $EmailParameters.EmailServerEnableSSL
