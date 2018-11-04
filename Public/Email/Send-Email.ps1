@@ -29,9 +29,16 @@ function Send-Email {
         }
     }
 
-    if ($EmailParameters.EmailServerLogin -ne "") {
-        $SmtpClient.Credentials = New-Object System.Net.NetworkCredential($EmailParameters.EmailServerLogin, $EmailParameters.EmailServerPassword)
+    if ($EmailParameters.EmailServerLogin -ne '') {
+
+        $Credentials = Request-Credentials -UserName $EmailParameters.EmailServerLogin `
+            -Password $EmailParameters.EmailServerPassword `
+            -AsSecure:$EmailParameters.EmailServerPasswordAsSecure `
+            -FromFile:$EmailParameters.EmailServerPasswordFromFile `
+            -NetworkCredentials -Verbose
+        $SmtpClient.Credentials = New-Object System.Net.NetworkCredential($Credentials.UserName, $Credentials.Password)
     }
+
     $SmtpClient.EnableSsl = $EmailParameters.EmailServerEnableSSL
     $MailMessage = New-Object -TypeName System.Net.Mail.MailMessage
     $MailMessage.From = $EmailParameters.EmailFrom
@@ -54,8 +61,8 @@ function Send-Email {
             $MailMessage.ReplyTo = $EmailParameters.EmailReplyTo
         }
     }
-    $MailMessage.IsBodyHtml = 1
-    if ($Subject -eq "") {
+    $MailMessage.IsBodyHtml = $true
+    if ($Subject -eq '') {
         $MailMessage.Subject = $EmailParameters.EmailSubject
     } else {
         $MailMessage.Subject = $Subject
