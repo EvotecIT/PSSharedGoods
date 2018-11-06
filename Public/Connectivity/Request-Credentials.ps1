@@ -29,7 +29,11 @@ function Request-Credentials {
             }
         }
     } else {
-        $NewPassword = $Password | ConvertTo-SecureString
+        if ($AsSecure) {
+            $NewPassword = $Password | ConvertTo-SecureString
+        } else {
+            $NewPassword = $Password
+        }
     }
     if ($UserName -and $NewPassword) {
         if ($AsSecure) {
