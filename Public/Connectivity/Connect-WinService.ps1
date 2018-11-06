@@ -126,6 +126,25 @@ function Connect-WinService {
                 return $OutputCommand
 
             }
+            'MicrosoftTeams' {
+                # Check Credentials
+                $CheckCredentials = Test-ConfigurationCredentials -Configuration $Credentials
+                if ($CheckCredentials.Status -contains $false) {
+                    if ($Output) {
+                        $Object += @{ Status = $false; Output = $Service.SessionName; Extended = 'Credentials configuration is wrong.' }
+                        return $Object
+                    } else {
+                        return
+                    }
+                }
+                $OutputCommand = Connect-WinTeams -SessionName $Service.SessionName `
+                    -Username $Credentials.Username `
+                    -Password $Credentials.Password `
+                    -AsSecure:$Credentials.PasswordAsSecure `
+                    -FromFile:$Credentials.PasswordFromFile `
+                    -Output
+                return $OutputCommand
+            }
         }
 
     }
