@@ -35,8 +35,8 @@ function Send-Email {
             -Password $EmailParameters.EmailServerPassword `
             -AsSecure:$EmailParameters.EmailServerPasswordAsSecure `
             -FromFile:$EmailParameters.EmailServerPasswordFromFile `
-            -NetworkCredentials -Verbose
-        $SmtpClient.Credentials = New-Object System.Net.NetworkCredential($Credentials.UserName, $Credentials.Password)
+            -NetworkCredentials #-Verbose
+        $SmtpClient.Credentials = $Credentials
     }
 
     $SmtpClient.EnableSsl = $EmailParameters.EmailServerEnableSSL
