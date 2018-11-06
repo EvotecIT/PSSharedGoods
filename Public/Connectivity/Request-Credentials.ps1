@@ -29,7 +29,6 @@ function Request-Credentials {
             }
         }
     } else {
-        # Write-Verbose $Password
         $NewPassword = $Password | ConvertTo-SecureString
     }
     if ($UserName -and $NewPassword) {
