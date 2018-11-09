@@ -1,17 +1,17 @@
 function Convert-ToTimeSpan {
     [CmdletBinding()]
     param (
-        $StartTime,
-        $EndTime
+        [DateTime] $StartTime = (Get-Date),
+        [DateTime] $EndTime
     )
     if ($StartTime -and $EndTime) {
         try {
-            $TimeSpan = (NEW-TIMESPAN -Start (GET-DATE) -End ($EndTime))
+            $TimeSpan = (NEW-TIMESPAN -Start $StartTime -End $EndTime)
         } catch {
             $TimeSpan = $null
         }
     }
-    if ($TimeSpan -ne $null) {
+    if ($null -ne $TimeSpan) {
         return $TimeSpan
     } else {
         return $null

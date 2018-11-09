@@ -1,4 +1,8 @@
-Function Convert-UAC ([int]$UAC) {
+Function Convert-UAC  {
+    [CmdletBinding()]
+    param(
+        [int]$UAC
+    )
     $PropertyFlags = @(s
         "SCRIPT",
         "ACCOUNTDISABLE",
