@@ -12,374 +12,374 @@ Locale: en-US
 
 ## PSSharedGoods Cmdlets
 ### [Add-PropertyToList](Add-PropertyToList.md)
-{{Manually Enter Add-PropertyToList Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Add-ToArray](Add-ToArray.md)
-{{Manually Enter Add-ToArray Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Add-ToArrayAdvanced](Add-ToArrayAdvanced.md)
-{{Manually Enter Add-ToArrayAdvanced Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Add-ToHashTable](Add-ToHashTable.md)
-{{Manually Enter Add-ToHashTable Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Add-WinADUserGroups](Add-WinADUserGroups.md)
-{{Manually Enter Add-WinADUserGroups Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Connect-WinAzure](Connect-WinAzure.md)
-{{Manually Enter Connect-WinAzure Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Connect-WinAzureAD](Connect-WinAzureAD.md)
-{{Manually Enter Connect-WinAzureAD Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Connect-WinExchange](Connect-WinExchange.md)
-{{Manually Enter Connect-WinExchange Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Connect-WinService](Connect-WinService.md)
-{{Manually Enter Connect-WinService Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Connect-WinTeams](Connect-WinTeams.md)
-{{Manually Enter Connect-WinTeams Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-ExchangeEmail](Convert-ExchangeEmail.md)
-{{Manually Enter Convert-ExchangeEmail Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-ExchangeItems](Convert-ExchangeItems.md)
-{{Manually Enter Convert-ExchangeItems Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-ExchangeSize](Convert-ExchangeSize.md)
-{{Manually Enter Convert-ExchangeSize Description Here}}
-
-### [ConvertFrom-SID](ConvertFrom-SID.md)
-{{Manually Enter ConvertFrom-SID Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-KeyToKeyValue](Convert-KeyToKeyValue.md)
-{{Manually Enter Convert-KeyToKeyValue Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-Size](Convert-Size.md)
-{{Manually Enter Convert-Size Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-TimeToDays](Convert-TimeToDays.md)
-{{Manually Enter Convert-TimeToDays Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-ToDateTime](Convert-ToDateTime.md)
-{{Manually Enter Convert-ToDateTime Description Here}}
-
-### [ConvertTo-ImmutableID](ConvertTo-ImmutableID.md)
-{{Manually Enter ConvertTo-ImmutableID Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-ToTimeSpan](Convert-ToTimeSpan.md)
-{{Manually Enter Convert-ToTimeSpan Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-TwoArraysIntoOne](Convert-TwoArraysIntoOne.md)
-{{Manually Enter Convert-TwoArraysIntoOne Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Convert-UAC](Convert-UAC.md)
-{{Manually Enter Convert-UAC Description Here}}
+{{Fill in the Synopsis}}
+
+### [ConvertFrom-SID](ConvertFrom-SID.md)
+{{Fill in the Synopsis}}
+
+### [ConvertTo-ImmutableID](ConvertTo-ImmutableID.md)
+{{Fill in the Synopsis}}
 
 ### [Disconnect-WinAzure](Disconnect-WinAzure.md)
-{{Manually Enter Disconnect-WinAzure Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Disconnect-WinAzureAD](Disconnect-WinAzureAD.md)
-{{Manually Enter Disconnect-WinAzureAD Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Disconnect-WinExchange](Disconnect-WinExchange.md)
-{{Manually Enter Disconnect-WinExchange Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Disconnect-WinTeams](Disconnect-WinTeams.md)
-{{Manually Enter Disconnect-WinTeams Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesCurrentDayMinusDayX](Find-DatesCurrentDayMinusDayX.md)
-{{Manually Enter Find-DatesCurrentDayMinusDayX Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesCurrentDayMinuxDaysX](Find-DatesCurrentDayMinuxDaysX.md)
-{{Manually Enter Find-DatesCurrentDayMinuxDaysX Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesCurrentHour](Find-DatesCurrentHour.md)
-{{Manually Enter Find-DatesCurrentHour Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesDayPrevious](Find-DatesDayPrevious.md)
-{{Manually Enter Find-DatesDayPrevious Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesDayToday](Find-DatesDayToday.md)
-{{Manually Enter Find-DatesDayToday Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesMonthCurrent](Find-DatesMonthCurrent.md)
-{{Manually Enter Find-DatesMonthCurrent Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesMonthPast](Find-DatesMonthPast.md)
-{{Manually Enter Find-DatesMonthPast Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesPastHour](Find-DatesPastHour.md)
-{{Manually Enter Find-DatesPastHour Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesPastWeek](Find-DatesPastWeek.md)
-{{Manually Enter Find-DatesPastWeek Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesQuarterCurrent](Find-DatesQuarterCurrent.md)
-{{Manually Enter Find-DatesQuarterCurrent Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-DatesQuarterLast](Find-DatesQuarterLast.md)
-{{Manually Enter Find-DatesQuarterLast Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-MyProgramData](Find-MyProgramData.md)
-{{Manually Enter Find-MyProgramData Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Find-TypesNeeded](Find-TypesNeeded.md)
-{{Manually Enter Find-TypesNeeded Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Format-PSTable](Format-PSTable.md)
-{{Manually Enter Format-PSTable Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Format-PSTableConvertType1](Format-PSTableConvertType1.md)
-{{Manually Enter Format-PSTableConvertType1 Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Format-PSTableConvertType2](Format-PSTableConvertType2.md)
-{{Manually Enter Format-PSTableConvertType2 Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Format-PSTableConvertType3](Format-PSTableConvertType3.md)
-{{Manually Enter Format-PSTableConvertType3 Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Format-TableVerbose](Format-TableVerbose.md)
-{{Manually Enter Format-TableVerbose Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Format-TransposeTable](Format-TransposeTable.md)
-{{Manually Enter Format-TransposeTable Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-CommandInfo](Get-CommandInfo.md)
-{{Manually Enter Get-CommandInfo Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-FileInformation](Get-FileInformation.md)
-{{Manually Enter Get-FileInformation Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-FilesInFolder](Get-FilesInFolder.md)
-{{Manually Enter Get-FilesInFolder Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-FileSize](Get-FileSize.md)
-{{Manually Enter Get-FileSize Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-HashMaxValue](Get-HashMaxValue.md)
-{{Manually Enter Get-HashMaxValue Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-HTML](Get-HTML.md)
-{{Manually Enter Get-HTML Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-MimeType](Get-MimeType.md)
-{{Manually Enter Get-MimeType Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-ModulesAvailability](Get-ModulesAvailability.md)
-{{Manually Enter Get-ModulesAvailability Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-MyIP](Get-MyIP.md)
-{{Manually Enter Get-MyIP Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-ObjectCount](Get-ObjectCount.md)
-{{Manually Enter Get-ObjectCount Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-ObjectData](Get-ObjectData.md)
-{{Manually Enter Get-ObjectData Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-ObjectKeys](Get-ObjectKeys.md)
-{{Manually Enter Get-ObjectKeys Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-ObjectProperties](Get-ObjectProperties.md)
-{{Manually Enter Get-ObjectProperties Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-ObjectPropertiesAdvanced](Get-ObjectPropertiesAdvanced.md)
-{{Manually Enter Get-ObjectPropertiesAdvanced Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-ObjectTitles](Get-ObjectTitles.md)
-{{Manually Enter Get-ObjectTitles Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-ObjectType](Get-ObjectType.md)
-{{Manually Enter Get-ObjectType Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-PathSeparator](Get-PathSeparator.md)
-{{Manually Enter Get-PathSeparator Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-PathTemporary](Get-PathTemporary.md)
-{{Manually Enter Get-PathTemporary Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-RandomCharacters](Get-RandomCharacters.md)
-{{Manually Enter Get-RandomCharacters Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-RandomPassword](Get-RandomPassword.md)
-{{Manually Enter Get-RandomPassword Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-RandomStringName](Get-RandomStringName.md)
-{{Manually Enter Get-RandomStringName Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-SqlQueryColumnInformation](Get-SqlQueryColumnInformation.md)
-{{Manually Enter Get-SqlQueryColumnInformation Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-TimeZoneAdvanced](Get-TimeZoneAdvanced.md)
-{{Manually Enter Get-TimeZoneAdvanced Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-TimeZoneLegacy](Get-TimeZoneLegacy.md)
-{{Manually Enter Get-TimeZoneLegacy Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-Types](Get-Types.md)
-{{Manually Enter Get-Types Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Get-WinADUserSnapshot](Get-WinADUserSnapshot.md)
-{{Manually Enter Get-WinADUserSnapshot Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Merge-Objects](Merge-Objects.md)
-{{Manually Enter Merge-Objects Description Here}}
+{{Fill in the Synopsis}}
 
 ### [New-ArrayList](New-ArrayList.md)
-{{Manually Enter New-ArrayList Description Here}}
+{{Fill in the Synopsis}}
 
 ### [New-Runspace](New-Runspace.md)
-{{Manually Enter New-Runspace Description Here}}
+{{Fill in the Synopsis}}
 
 ### [New-SqlQuery](New-SqlQuery.md)
-{{Manually Enter New-SqlQuery Description Here}}
+{{Fill in the Synopsis}}
 
 ### [New-SqlQueryAlterTable](New-SqlQueryAlterTable.md)
-{{Manually Enter New-SqlQueryAlterTable Description Here}}
+{{Fill in the Synopsis}}
 
 ### [New-SqlQueryCreateTable](New-SqlQueryCreateTable.md)
-{{Manually Enter New-SqlQueryCreateTable Description Here}}
+{{Fill in the Synopsis}}
 
 ### [New-SqlTableMapping](New-SqlTableMapping.md)
-{{Manually Enter New-SqlTableMapping Description Here}}
+{{Fill in the Synopsis}}
 
 ### [New-UserAdd](New-UserAdd.md)
-{{Manually Enter New-UserAdd Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Remove-DuplicateObjects](Remove-DuplicateObjects.md)
-{{Manually Enter Remove-DuplicateObjects Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Remove-FromArray](Remove-FromArray.md)
-{{Manually Enter Remove-FromArray Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Remove-ObjectsExistingInTarget](Remove-ObjectsExistingInTarget.md)
-{{Manually Enter Remove-ObjectsExistingInTarget Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Remove-WinADUserGroups](Remove-WinADUserGroups.md)
-{{Manually Enter Remove-WinADUserGroups Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Rename-UserValuesFromHash](Rename-UserValuesFromHash.md)
-{{Manually Enter Rename-UserValuesFromHash Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Request-Credentials](Request-Credentials.md)
-{{Manually Enter Request-Credentials Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Save-XML](Save-XML.md)
-{{Manually Enter Save-XML Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Search-Command](Search-Command.md)
-{{Manually Enter Search-Command Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Send-Email](Send-Email.md)
-{{Manually Enter Send-Email Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Send-SqlInsert](Send-SqlInsert.md)
-{{Manually Enter Send-SqlInsert Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-DnsServerIpAddress](Set-DnsServerIpAddress.md)
-{{Manually Enter Set-DnsServerIpAddress Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailBody](Set-EmailBody.md)
-{{Manually Enter Set-EmailBody Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailBodyPreparedTable](Set-EmailBodyPreparedTable.md)
-{{Manually Enter Set-EmailBodyPreparedTable Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailBodyReplacement](Set-EmailBodyReplacement.md)
-{{Manually Enter Set-EmailBodyReplacement Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailBodyReplacementTable](Set-EmailBodyReplacementTable.md)
-{{Manually Enter Set-EmailBodyReplacementTable Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailFormatting](Set-EmailFormatting.md)
-{{Manually Enter Set-EmailFormatting Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailHead](Set-EmailHead.md)
-{{Manually Enter Set-EmailHead Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailReportBranding](Set-EmailReportBranding.md)
-{{Manually Enter Set-EmailReportBranding Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailWordReplacements](Set-EmailWordReplacements.md)
-{{Manually Enter Set-EmailWordReplacements Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-EmailWordReplacementsHash](Set-EmailWordReplacementsHash.md)
-{{Manually Enter Set-EmailWordReplacementsHash Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-SpecUser](Set-SpecUser.md)
-{{Manually Enter Set-SpecUser Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-WinADGroupSynchronization](Set-WinADGroupSynchronization.md)
-{{Manually Enter Set-WinADGroupSynchronization Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-WinADUserFields](Set-WinADUserFields.md)
-{{Manually Enter Set-WinADUserFields Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-WinADUserSettingGAL](Set-WinADUserSettingGAL.md)
-{{Manually Enter Set-WinADUserSettingGAL Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-WinADUserStatus](Set-WinADUserStatus.md)
-{{Manually Enter Set-WinADUserStatus Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-WinAzureADUserLicense](Set-WinAzureADUserLicense.md)
-{{Manually Enter Set-WinAzureADUserLicense Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-WinAzureADUserStatus](Set-WinAzureADUserStatus.md)
-{{Manually Enter Set-WinAzureADUserStatus Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Set-XML](Set-XML.md)
-{{Manually Enter Set-XML Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Show-Array](Show-Array.md)
-{{Manually Enter Show-Array Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Show-DataInVerbose](Show-DataInVerbose.md)
-{{Manually Enter Show-DataInVerbose Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Show-TableVisualization](Show-TableVisualization.md)
-{{Manually Enter Show-TableVisualization Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Split-Array](Split-Array.md)
-{{Manually Enter Split-Array Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Start-MyProgram](Start-MyProgram.md)
-{{Manually Enter Start-MyProgram Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Start-Runspace](Start-Runspace.md)
-{{Manually Enter Start-Runspace Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Start-TimeLog](Start-TimeLog.md)
-{{Manually Enter Start-TimeLog Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Stop-Runspace](Stop-Runspace.md)
-{{Manually Enter Stop-Runspace Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Stop-TimeLog](Stop-TimeLog.md)
-{{Manually Enter Stop-TimeLog Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Test-AvailabilityCommands](Test-AvailabilityCommands.md)
-{{Manually Enter Test-AvailabilityCommands Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Test-ComputerAvailability](Test-ComputerAvailability.md)
-{{Manually Enter Test-ComputerAvailability Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Test-ConfigurationCredentials](Test-ConfigurationCredentials.md)
-{{Manually Enter Test-ConfigurationCredentials Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Test-ForestConnectivity](Test-ForestConnectivity.md)
-{{Manually Enter Test-ForestConnectivity Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Test-Key](Test-Key.md)
-{{Manually Enter Test-Key Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Test-ModuleAvailability](Test-ModuleAvailability.md)
-{{Manually Enter Test-ModuleAvailability Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Test-Port](Test-Port.md)
-{{Manually Enter Test-Port Description Here}}
+{{Fill in the Synopsis}}
 
 ### [Test-WinRM](Test-WinRM.md)
-{{Manually Enter Test-WinRM Description Here}}
+{{Fill in the Synopsis}}
 
