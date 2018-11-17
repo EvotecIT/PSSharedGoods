@@ -1,6 +1,12 @@
 
 # This function goes thru an object such as Get-Aduser and scans every object returned getting all properties
 # This basically makes sure that all properties are known at run time of Export to SQL, Excel or Word
+
+<#
+$Test = Get-Process
+
+Get-ObjectProperties -Object $Test
+#>
 function Get-ObjectProperties {
     param (
         [object] $Object,

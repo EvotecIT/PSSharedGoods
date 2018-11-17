@@ -1,8 +1,9 @@
 function Format-PSTableConvertType1 {
     [CmdletBinding()]
     param (
-        $Object,
+        [Object] $Object,
         [switch] $SkipTitles,
+        [string[]] $Property,
         [string[]] $ExcludeProperty,
         [switch] $NoAliasOrScriptProperties,
         [switch] $DisplayPropertySet,
@@ -22,12 +23,19 @@ function Format-PSTableConvertType1 {
         Write-Verbose "$Name"
         Write-Verbose "$Object.$Name"
         $ArrayValues = New-ArrayList
-        if (-not $ExcludeProperty -notcontains $Name) {
-            Add-ToArray -List $ArrayValues -Element $Name
-            Add-ToArray -List $ArrayValues -Element $Object.$Name
-            Add-ToArray -List $Array -Element $ArrayValues
+        if ($Property) {
+            if ($Property -contains $Name) {
+                Add-ToArray -List $ArrayValues -Element $Name
+                Add-ToArray -List $ArrayValues -Element $Object.$Name
+                Add-ToArray -List $Array -Element $ArrayValues
+            }
+        } else {
+            if (-not $ExcludeProperty -notcontains $Name) {
+                Add-ToArray -List $ArrayValues -Element $Name
+                Add-ToArray -List $ArrayValues -Element $Object.$Name
+                Add-ToArray -List $Array -Element $ArrayValues
+            }
         }
     }
-
     return , $Array
 }

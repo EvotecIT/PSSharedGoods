@@ -3,13 +3,17 @@ function Format-PSTableConvertType2 {
     param(
         [Object] $Object,
         [switch] $SkipTitles,
+        [string[]] $Property,
         [string[]] $ExcludeProperty,
         [switch] $NoAliasOrScriptProperties,
         [switch] $DisplayPropertySet,
         [Object] $OverwriteHeaders,
         [switch] $PreScanHeaders
     )
-    #[int] $Run = 0
+    if ($Property) {
+        $Object = $Object | Select-Object $Property
+    }
+
     $Array = New-ArrayList
     $Titles = New-ArrayList
     if ($NoAliasOrScriptProperties) {$PropertyType = 'AliasProperty', 'ScriptProperty'  } else {$PropertyType = ''}
