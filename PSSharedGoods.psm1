@@ -66,7 +66,7 @@ $FunctionsToExport = 'Send-EmailNew', 'Connect-Tenant1', 'Add-WinADUserGroups',
 'Test-Key', 'Test-ModuleAvailability', 'Test-Port', 'Test-WinRM',
 'Get-TimeZoneAdvanced', 'Get-TimeZoneLegacy', 'Start-TimeLog',
 'Stop-TimeLog', 'Show-Array', 'Show-DataInVerbose',
-'Show-TableVisualization', 'Save-XML', 'Set-XML'
+'Show-TableVisualization', 'Save-XML', 'Set-XML', 'Format-TableVerbose','Format-ToTitleCase'
 
 Export-ModuleMember -Function $FunctionsToExport
 
