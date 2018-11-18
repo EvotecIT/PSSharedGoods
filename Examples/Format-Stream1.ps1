@@ -26,4 +26,4 @@ $InvoiceData1 += $InvoiceEntry4
 $InvoiceData1 += $InvoiceEntry5
 
 
-$InvoiceData1 | Format-TableVerbose
+$InvoiceData1 | Format-TableVerbose -Transpose -TransposeSort ASC -List

@@ -2,49 +2,38 @@ function Format-Stream {
     [alias('FTV', 'Format-TableVerbose', 'Format-TableDebug', 'Format-TableInformation', 'Format-TableWarning')]
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param(
-        [Parameter(Mandatory = $false,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true,
-            Position = 1)]
+        [Parameter(Mandatory = $false,ValueFromPipeline = $true,ValueFromPipelineByPropertyName = $true,Position = 1)]
         [object] $InputObject,
 
-        [Parameter(Mandatory = $false,
-            ValueFromPipeline = $false,
-            Position = 0,
-            ParameterSetName = 'Property')]
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 0,ParameterSetName = 'Property')]
         [Object[]] $Property,
 
-        [Parameter(Mandatory = $false,
-            ValueFromPipeline = $false,
-            Position = 2,
-            ParameterSetName = 'ExcludeProperty')]
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 2,ParameterSetName = 'ExcludeProperty')]
         [Object[]] $ExcludeProperty,
 
-        [Parameter(Mandatory = $false,
-            ValueFromPipeline = $false,
-            Position = 3)]
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 3)]
         [switch] $HideTableHeaders,
 
-        [Parameter(Mandatory = $false,
-            ValueFromPipeline = $false,
-            Position = 4)]
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 4)]
         [int] $ColumnHeaderSize,
 
-        [Parameter(Mandatory = $false,
-            ValueFromPipeline = $false,
-            Position = 5)]
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 5)]
         [switch] $AlignRight,
 
-        [Parameter(Mandatory = $false,
-            ValueFromPipeline = $false,
-            Position = 6)]
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 6)]
         [validateset('Output', 'Host', 'Warning', 'Verbose', 'Debug', 'Information')]
         [string] $Stream = 'Verbose',
 
-        [Parameter(Mandatory = $false,
-            ValueFromPipeline = $false,
-            Position = 7)]
-        [alias('AsList')][switch] $List
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 7)]
+        [alias('AsList')][switch] $List,
+
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 8)]
+        [alias('Rotate', 'RotateData', 'TransposeColumnsRows', 'TransposeData')]
+        [switch] $Transpose,
+
+        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 9)]
+        [ValidateSet("ASC", "DESC", "NONE")]
+        [string] $TransposeSort = 'NONE'
     )
     Begin {
         $IsVerbosePresent = $PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent
@@ -77,6 +66,7 @@ function Format-Stream {
         if ((Get-ObjectCount -Object $InputObject) -eq 0) { break }
         if ($FirstRun) {
             $FirstRun = $false
+            if ($Transpose) { $InputObject = Format-TransposeTable -Object $InputObject -Sort $TransposeSort }
             $Data = Format-PSTable -Object $InputObject -Property $Property -ExcludeProperty $ExcludeProperty -NoAliasOrScriptProperties:$NoAliasOrScriptProperties -DisplayPropertySet:$DisplayPropertySet -PreScanHeaders:$PreScanHeaders
             $Headers = $Data[0]
             if ($HideTableHeaders) {
@@ -84,6 +74,7 @@ function Format-Stream {
             }
             $ArrayList += $Data
         } else {
+            if ($Transpose) { $InputObject = Format-TransposeTable -Object $InputObject -Sort $TransposeSort }
             $Data = Format-PSTable -Object $InputObject -Property $Property -ExcludeProperty $ExcludeProperty -NoAliasOrScriptProperties:$NoAliasOrScriptProperties -DisplayPropertySet:$DisplayPropertySet -PreScanHeaders:$PreScanHeaders -OverwriteHeaders $Headers -SkipTitle
             $ArrayList += $Data
         }
