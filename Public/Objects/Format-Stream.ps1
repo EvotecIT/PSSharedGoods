@@ -1,5 +1,6 @@
 function Format-Stream {
-    [alias('FTV', 'Format-TableVerbose', 'Format-TableDebug', 'Format-TableInformation', 'Format-TableWarning')]
+    [alias('fs','Format-TableStream','Format-ListStream')]
+    ##[alias('ftv','ftd','fto','fth','fti','flv','fld','flo','flh','fli','Format-TableVerbose', 'Format-TableDebug', 'Format-TableInformation', 'Format-TableWarning')]
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param(
         [Parameter(Mandatory = $false,ValueFromPipeline = $true,ValueFromPipelineByPropertyName = $true,Position = 1)]
@@ -33,7 +34,13 @@ function Format-Stream {
 
         [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 9)]
         [ValidateSet("ASC", "DESC", "NONE")]
-        [string] $TransposeSort = 'NONE'
+        [string] $TransposeSort = 'NONE',
+
+        [alias('Color')]
+        [System.ConsoleColor[]] $ForegroundColor,
+
+        [alias('ColorRow')]
+        [int[]] $ForegroundColorRow
     )
     Begin {
         $IsVerbosePresent = $PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent
@@ -179,6 +186,7 @@ function Format-Stream {
             }
         } else {
             # Process Data
+            [int] $RowCountColors = 1
             foreach ($Row in $ArrayList ) {
                 [string] $Output = ''
                 [int] $ColumnNumber = 0
@@ -224,7 +232,12 @@ function Format-Stream {
                 if ($Stream -eq 'Output') {
                     Write-Output -InputObject $Output
                 } elseif ($Stream -eq 'Host') {
-                    Write-Host -Object $Output
+                    if ($ForegroundColorRow -contains $RowCountColors) {
+                        [int] $Index = $ForegroundColorRow.IndexOf($RowCountColors)
+                        Write-Host -Object $Output -ForegroundColor $ForegroundColor[$Index]
+                    } else {
+                        Write-Host -Object $Output
+                    }
                 } elseif ($Stream -eq 'Warning') {
                     Write-Warning -Message $Output
                 } elseif ($Stream -eq 'Verbose') {
@@ -244,7 +257,12 @@ function Format-Stream {
                         if ($Stream -eq 'Output') {
                             Write-Output -InputObject $HeaderUnderline
                         } elseif ($Stream -eq 'Host') {
-                            Write-Host -Object $HeaderUnderline
+                            if ($ForegroundColorRow -contains $RowCountColors) {
+                                [int] $Index = $ForegroundColorRow.IndexOf($RowCountColors)
+                                Write-Host -Object $HeaderUnderline -ForegroundColor $ForegroundColor[$Index]
+                            } else {
+                                Write-Host -Object $HeaderUnderline
+                            }
                         } elseif ($Stream -eq 'Warning') {
                             Write-Warning -Message $HeaderUnderline
                         } elseif ($Stream -eq 'Verbose') {
@@ -258,6 +276,7 @@ function Format-Stream {
                 }
 
                 $FirstLoop = $false
+                $RowCountColors++
             }
         }
 

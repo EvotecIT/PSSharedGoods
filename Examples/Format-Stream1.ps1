@@ -26,4 +26,4 @@ $InvoiceData1 += $InvoiceEntry4
 $InvoiceData1 += $InvoiceEntry5
 
 
-$InvoiceData1 | Format-TableVerbose -Transpose -TransposeSort ASC -List
+$InvoiceData1 | Format-Stream -Transpose -TransposeSort ASC -Stream Host -Color Green,Red -ColorRow 2,4
