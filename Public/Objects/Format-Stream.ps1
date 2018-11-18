@@ -1,22 +1,31 @@
 function Format-Stream {
-    [alias('FTV','Format-TableVerbose','Format-TableDebug','Format-TableInformation','Format-TableWarning')]
+    [alias('FTV', 'Format-TableVerbose', 'Format-TableDebug', 'Format-TableInformation', 'Format-TableWarning')]
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true, Position = 1)][object] $InputObject,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true, Position = 1)]
+        [object] $InputObject,
 
-        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 0)][Object[]] $Property,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 0, ParameterSetName = 'Property')]
+        [Object[]] $Property,
 
-        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 2)][Object[]] $ExcludeProperty,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 2, ParameterSetName = 'ExcludeProperty')]
+        [Object[]] $ExcludeProperty,
 
-        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 3)][switch] $HideTableHeaders,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 3)]
+        [switch] $HideTableHeaders,
 
-        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 4)][int] $ColumnHeaderSize,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 4)]
+        [int] $ColumnHeaderSize,
 
-        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 5)][switch] $AlignRight,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 5)]
+        [switch] $AlignRight,
 
         [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 6)]
-        [validateset('Output','Host','Warning','Verbose','Debug','Information')]
-        [string] $Stream = 'Verbose'
+        [validateset('Output', 'Host', 'Warning', 'Verbose', 'Debug', 'Information')]
+        [string] $Stream = 'Verbose',
+
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 7)]
+        [switch] $List
     )
     Begin {
         $IsVerbosePresent = $PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent
@@ -101,7 +110,7 @@ function Format-Stream {
 
                 # Set Column Header Size to static value or based on string length
                 if ($ColumnHeaderSize) {
-                    $PadLength = $ColumnHeaderSize + 1 # Add +1 to make sure there's space between columns
+                    $PadLength = $ColumnHeaderSize # Add +1 to make sure there's space between columns
                 } else {
                     $PadLength = $ColumnLength[$ColumnNumber] + 1 # Add +1 to make sure there's space between columns
                 }
@@ -113,7 +122,12 @@ function Format-Stream {
                 }
 
                 # Prepare Data
-                $ColumnValue = ("$ColumnValue".ToCharArray() | Select-Object -First ($PadLength)) -join ""
+                if ($ColumnHeaderSize) {
+                    # if ColumnHeaderSize is defined we need to trim text and make sure there is space between for the ones being trimmed
+                    $ColumnValue = ("$ColumnValue".ToCharArray() | Select-Object -First ($PadLength - 1)) -join ""
+                } else {
+                    $ColumnValue = ("$ColumnValue".ToCharArray() | Select-Object -First ($PadLength)) -join ""
+                }
                 if ($Output -eq '') {
                     if ($AlignRight) {
                         $Output = "$ColumnValue".PadLeft($PadLength)
