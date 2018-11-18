@@ -1,6 +1,8 @@
 function Set-SpecUser {
+    [CmdletBinding()]
     param(
-        $User, $UsersAzure
+        $User,
+        $UsersAzure
     )
     $UserAzure = $UsersAzure | where { $_.UserPrincipalName -eq $User.UserPrincipalName }
     if ($UserAzure) {

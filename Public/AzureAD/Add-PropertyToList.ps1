@@ -1,4 +1,5 @@
 function Add-PropertyToList {
+    [CmdletBinding()]
     param(
         $List,
         [ValidateSet("Password", "MailNickName")][string] $PropertyName

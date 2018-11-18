@@ -6,6 +6,7 @@ Set-DnsServerIpAddress -ComputerName $ServerName -NicName "Service*" -IpAddresse
 #>
 
 function Set-DnsServerIpAddress {
+    [CmdletBinding()]
     param(
         [string] $ComputerName,
         [string] $NicName,
