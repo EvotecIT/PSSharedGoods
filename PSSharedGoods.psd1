@@ -116,7 +116,7 @@
     'Test-Key', 'Test-ModuleAvailability', 'Test-Port', 'Test-WinRM',
     'Get-TimeZoneAdvanced', 'Get-TimeZoneLegacy', 'Start-TimeLog',
     'Stop-TimeLog', 'Show-Array', 'Show-DataInVerbose',
-    'Show-TableVisualization', 'Save-XML', 'Set-XML', 'Format-TableVerbose','Format-ToTitleCase'
+    'Show-TableVisualization', 'Save-XML', 'Set-XML', 'Format-Stream','Format-ToTitleCase'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @()
@@ -125,7 +125,7 @@
     VariablesToExport    = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport      = @('ftv')
+    AliasesToExport      = @('FTV','Format-TableVerbose','Format-TableDebug','Format-TableInformation','Format-TableWarning')
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()

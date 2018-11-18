@@ -66,9 +66,9 @@ $FunctionsToExport = 'Send-EmailNew', 'Connect-Tenant1', 'Add-WinADUserGroups',
 'Test-Key', 'Test-ModuleAvailability', 'Test-Port', 'Test-WinRM',
 'Get-TimeZoneAdvanced', 'Get-TimeZoneLegacy', 'Start-TimeLog',
 'Stop-TimeLog', 'Show-Array', 'Show-DataInVerbose',
-'Show-TableVisualization', 'Save-XML', 'Set-XML', 'Format-TableVerbose','Format-ToTitleCase'
+'Show-TableVisualization', 'Save-XML', 'Set-XML', 'Format-Stream','Format-ToTitleCase'
 
-Export-ModuleMember -Function $FunctionsToExport
+Export-ModuleMember -Function $FunctionsToExport -Alias 'FTV','Format-TableVerbose','Format-TableDebug','Format-TableInformation','Format-TableWarning'
 
 [string] $ManifestFile = '{0}.psd1' -f (Get-Item $PSCommandPath).BaseName;
 $ManifestPathAndFile = Join-Path -Path $PSScriptRoot -ChildPath $ManifestFile;
