@@ -16,14 +16,14 @@ function Add-WinADUserGroups {
     [CmdletBinding()]
     [alias("Add-ADUserGroups")]
     param(
-        [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
+        [parameter(Mandatory = $true)][Object] $User,
         [string[]] $Groups,
         [string] $FieldSearch = 'Name',
         [switch] $WhatIf
     )
     $Object = @()
     try {
-        $ADgroups = Get-ADPrincipalGroupMembership -Identity $User | Where-Object {$_.Name -ne "Domain Users" }
+        $ADgroups = Get-ADPrincipalGroupMembership -Identity $User.DistinguishedName | Where-Object {$_.Name -ne "Domain Users" }
     } catch {
         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
         $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
@@ -33,7 +33,7 @@ function Add-WinADUserGroups {
             if ($ADgroups.$FieldSearch -notcontains $Group) {
                 try {
                     if (-not $WhatIf) {
-                        Add-ADGroupMember -Identity $Group -Members $User -ErrorAction Stop
+                        Add-ADGroupMember -Identity $Group -Members $User.DistinguishedName -ErrorAction Stop
                     }
                     $Object += @{ Status = $true; Output = $Group; Extended = 'Added to group.' }
 

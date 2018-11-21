@@ -1,7 +1,7 @@
 function Set-WinAzureADUserStatus {
     [CmdletBinding()]
     param (
-        [parameter(Mandatory = $true)][Microsoft.Online.Administration.User] $User,
+        [parameter(Mandatory = $true)][Object] $User,
         [parameter(Mandatory = $true)][ValidateSet("Enable", "Disable")][String] $Option,
         [switch] $WhatIf
     )

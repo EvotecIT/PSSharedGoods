@@ -2,13 +2,13 @@ function Get-WinADUserSnapshot {
     [CmdletBinding()]
     [alias("Get-ADUserSnapshot")]
     param (
-        [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
+        [parameter(Mandatory = $true)][Object] $User,
         [string] $XmlPath,
         [switch] $WhatIf
     )
     $Object = @()
     try {
-        $FullData = Get-ADUser -Identity $User -Properties *
+        $FullData = Get-ADUser -Identity $User.DistinguishedName -Properties *
         if (($XmlPath) -and (Test-Path $XmlPath)) {
             $FullPath = [IO.Path]::Combine($XmlPath, "$($User.SamAccountName).xml") #
             if (-not $WhatIf) {

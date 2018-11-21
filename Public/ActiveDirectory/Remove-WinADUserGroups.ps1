@@ -2,7 +2,7 @@ function Remove-WinADUserGroups {
     [CmdletBinding()]
     [alias("Remove-ADUserGroups")]
     param(
-        [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
+        [parameter(Mandatory = $true)][Object] $User,
         [ValidateSet("Distribution", "Security")][String] $GroupCategory ,
         [ValidateSet("DomainLocal", "Global", "Universal")][String] $GroupScope,
         [string[]] $Groups,
@@ -11,7 +11,7 @@ function Remove-WinADUserGroups {
     )
     $Object = @()
     try {
-        $ADgroups = Get-ADPrincipalGroupMembership -Identity $User -ErrorAction Stop | Where-Object { $_.Name -ne "Domain Users" }
+        $ADgroups = Get-ADPrincipalGroupMembership -Identity $User.DistinguishedName -ErrorAction Stop | Where-Object { $_.Name -ne "Domain Users" }
     } catch {
         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
         $Object += @{ Status = $false; Output = $Group.Name; Extended = $ErrorMessage }
@@ -22,7 +22,7 @@ function Remove-WinADUserGroups {
             foreach ($Group in $ADgroups) {
                 try {
                     if (-not $WhatIf) {
-                        Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false -ErrorAction Stop
+                        Remove-ADPrincipalGroupMembership -Identity $User.DistinguishedName -MemberOf $Group -Confirm:$false -ErrorAction Stop
                     }
                     $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                 } catch {
@@ -38,7 +38,7 @@ function Remove-WinADUserGroups {
                 foreach ($Group in $ADGroupsByCategory) {
                     try {
                         if (-not $WhatIf) {
-                            Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false -ErrorAction Stop
+                            Remove-ADPrincipalGroupMembership -Identity $User.DistinguishedName -MemberOf $Group -Confirm:$false -ErrorAction Stop
                         }
                         $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {
@@ -55,7 +55,7 @@ function Remove-WinADUserGroups {
                 foreach ($Group in $ADGroupsByScope) {
                     try {
                         if (-not $WhatIf) {
-                            Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $Group -Confirm:$false -ErrorAction Stop
+                            Remove-ADPrincipalGroupMembership -Identity $User.DistinguishedName -MemberOf $Group -Confirm:$false -ErrorAction Stop
                         }
                         $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {
@@ -72,7 +72,7 @@ function Remove-WinADUserGroups {
                     #Write-Color @Script:WriteParameters -Text '[i]', ' Removing groups (by name) ', ($ADGroupsByName.Name -join ', '), ' from user ', $User.DisplayName -Color White, Yellow, Green, White, Yellow, White, Yellow
                     try {
                         if (-not $WhatIf) {
-                            Remove-ADPrincipalGroupMembership -Identity $User -MemberOf $ADGroupsByName -Confirm:$false -ErrorAction Stop
+                            Remove-ADPrincipalGroupMembership -Identity $User.DistinguishedName -MemberOf $ADGroupsByName -Confirm:$false -ErrorAction Stop
                         }
                         $Object += @{ Status = $true; Output = $Group.Name; Extended = 'Removed from group.' }
                     } catch {

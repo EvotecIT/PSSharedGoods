@@ -2,7 +2,7 @@ function Set-WinADUserFields {
     [CmdletBinding()]
     [alias("Set-ADUserName")]
     param (
-        [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
+        [parameter(Mandatory = $true)][Object] $User,
         [parameter(Mandatory = $false)][ValidateSet("Before", "After")][String] $Option,
         [string] $TextToAdd,
         [string] $TextToRemove,
@@ -23,7 +23,7 @@ function Set-WinADUserFields {
                     if ($Field -eq 'Name') {
                         try {
                             if (-not $WhatIf) {
-                                Rename-ADObject -Identity $User -NewName $NewName #-WhatIf
+                                Rename-ADObject -Identity $User.DistinguishedName -NewName $NewName #-WhatIf
                             }
                             $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = "Renamed account '$Field' to '$NewName'" }
 
@@ -33,7 +33,7 @@ function Set-WinADUserFields {
                         }
                     } else {
                         $Splat = @{
-                            Identity = $User
+                            Identity = $User.DistinguishedName
                             "$Field" = $NewName
                         }
                         try {
@@ -61,7 +61,7 @@ function Set-WinADUserFields {
                 if ($Field -eq 'Name') {
                     try {
                         if (-not $WhatIf) {
-                            Rename-ADObject -Identity $User -NewName $NewName #-WhatIf
+                            Rename-ADObject -Identity $User.DistinguishedName -NewName $NewName #-WhatIf
                         }
                         $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = "Renamed account '$Field' to '$NewName'" }
 
@@ -71,7 +71,7 @@ function Set-WinADUserFields {
                     }
                 } else {
                     $Splat = @{
-                        Identity = $User
+                        Identity = $User.DistinguishedName
                         "$Field" = $NewName
                     }
                     try {

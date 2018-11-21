@@ -2,7 +2,7 @@ function Set-WinADUserStatus {
     [CmdletBinding()]
     [alias("Set-ADUserStatus")]
     param (
-        [parameter(Mandatory = $true)][Microsoft.ActiveDirectory.Management.ADAccount] $User,
+        [parameter(Mandatory = $true)][Object] $User,
         [parameter(Mandatory = $true)][ValidateSet("Enable", "Disable")][String] $Option,
         [switch] $WhatIf
         # $WriteParameters
@@ -16,7 +16,7 @@ function Set-WinADUserStatus {
         #}
         try {
             if (-not $WhatIf) {
-                Set-ADUser -Identity $User -Enabled $true
+                Set-ADUser -Identity $User.DistinguishedName -Enabled $true
             }
             $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = 'Enabled user.' }
         } catch {
@@ -31,7 +31,7 @@ function Set-WinADUserStatus {
         #}
         try {
             if (-not $WhatIf) {
-                Set-ADUser -Identity $User -Enabled $false
+                Set-ADUser -Identity $User.DistinguishedName -Enabled $false
             }
             $Object += @{ Status = $true; Output = $User.SamAccountName; Extended = 'Disabled user.' }
 
