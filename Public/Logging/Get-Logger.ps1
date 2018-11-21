@@ -1,3 +1,4 @@
+#requires -Module PSWriteColor
 <#
     .SYNOPSIS
     Returns an instance of the logger object.
@@ -44,7 +45,15 @@ function Get-Logger {
         )
         Write-Color -Text "[Info] ", $String -Color Yellow, White -LogFile:$this.LogPath -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
     }
-    
+
+    Add-Member -InputObject $Logger -MemberType ScriptMethod AddWarningRecord -Value {
+        param(
+            [Parameter(Mandatory = $true)]
+            [string]$String
+        )
+        Write-Color -Text "[Warning] ", $String -Color Magenta, White -LogFile:$this.LogPath -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
+    }
+
     Add-Member -InputObject $Logger -MemberType ScriptMethod AddRecord -Value {
         param(
             [Parameter(Mandatory = $true)]
