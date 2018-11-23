@@ -14,7 +14,19 @@ function Set-EmailFormatting {
     $Body = ""
 
     Write-Color @WriteParameters -Text "[i] Preparing template ", "adding", " HTML ", "<BR>", " tags..." -Color White, Yellow, White, Yellow -NoNewLine
+    $StyleFlag = $false
     foreach ($t in $Template) {
+        if ($t -match 'style>') {
+            $StyleFlag = -not $StyleFlag
+        }
+        if ($StyleFlag) {
+            $Body += $t
+            continue
+        }
+        if ($t -match '[\<|\</][\w+|\d+]') { 
+            $Body += $t
+            continue
+        }
         $Body += "$t<br>"
     }
     Write-Color -Text "Done" -Color "Green"
