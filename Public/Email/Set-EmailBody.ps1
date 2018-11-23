@@ -3,7 +3,7 @@ function Set-EmailBody {
     param(
         [Object] $TableData,
         [alias('TableWelcomeMessage')][string] $TableMessageWelcome,
-        [string] $TableMessageNoData = 'No changes happend during that period.'
+        [string] $TableMessageNoData = 'No changes happened during that period.'
     )
     $Body = "<p><i>$TableMessageWelcome</i>"
     if ($($TableData | Measure-Object).Count -gt 0) {
