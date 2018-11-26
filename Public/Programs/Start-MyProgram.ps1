@@ -2,7 +2,7 @@ function Start-MyProgram {
     [CmdletBinding()]
     param (
         [string] $Program,
-        [string[]]$cmdArgList
+        [string[]] $CmdArgList
     )
-    return & $Program $cmdArgList
+    return & $Program $CmdArgList
 }
