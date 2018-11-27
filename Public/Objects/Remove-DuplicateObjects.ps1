@@ -4,6 +4,10 @@ function Remove-DuplicateObjects {
         $Object,
         $Property
     )
-    $MyObjects = $Object | Sort-Object -Property $Property -Unique
-    return $MyObjects
+    $Count = Get-ObjectCount -Object $Object
+    if ($Count -eq 0) {
+        return $Object
+    } else {
+        return $Object | Sort-Object -Property $Property -Unique
+    }
 }
