@@ -5,7 +5,8 @@ function Add-ToArrayAdvanced {
         [Object] $Element,
         [switch] $SkipNull,
         [switch] $RequireUnique,
-        [switch] $FullComparison
+        [switch] $FullComparison,
+        [switch] $Merge
     )
     if ($SkipNull -and $Element -eq $null) {
         #Write-Verbose "Add-ToArrayAdvanced - SkipNull used"
@@ -31,5 +32,9 @@ function Add-ToArrayAdvanced {
         }
     }
     #Write-Verbose "Add-ToArrayAdvanced - Adding ELEMENT: $Element"
-    $List.Add($Element) > $null
+    if ($Merge) {
+        [void] $List.AddRange($Element) # > $null
+    } else {
+        [void] $List.Add($Element) # > $null
+    }
 }
