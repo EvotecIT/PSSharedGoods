@@ -61,7 +61,7 @@ function Get-Logger {
             [string]$String
         )
         if ([string]::IsNullOrWhiteSpace($this.LogPath)) {
-            Write-Color -Text "[Warning] ", $String -Color Yellow, White -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
+            Write-Color -Text "[Warning] ", $String -Color Magenta, White -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
         } else {
             Write-Color -Text "[Warning] ", $String -Color Magenta, White -LogFile:$this.LogPath -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
         }
@@ -73,9 +73,9 @@ function Get-Logger {
             [string]$String
         )
         if ([string]::IsNullOrWhiteSpace($this.LogPath)) {
-            Write-Color -Text $String -Color Yellow, White -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
+            Write-Color -Text " $String" -Color White -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
         } else {
-            Write-Color -Text $String -Color White -LogFile:$this.LogPath -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
+            Write-Color -Text " $String" -Color White -LogFile:$this.LogPath -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
         }
     }
     Add-Member -InputObject $Logger -MemberType ScriptMethod AddSuccessRecord -Value {
@@ -84,7 +84,7 @@ function Get-Logger {
             [string]$String
         )
         if ([string]::IsNullOrWhiteSpace($this.LogPath)) {
-            Write-Color -Text "[Success] ", $String -Color Yellow, White -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
+            Write-Color -Text "[Success] ", $String -Color Green, White -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
         } else {
             Write-Color -Text "[Success] ", $String -Color Green, White -LogFile:$this.LogPath -ShowTime:$this.ShowTime -TimeFormat $this:TimeFormat
         }
