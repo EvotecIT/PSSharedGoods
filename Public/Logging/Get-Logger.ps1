@@ -38,7 +38,8 @@ function Get-Logger {
 
     if ($PSCmdlet.ParameterSetName -eq 'Complexpath') {
         if (-not $Filename) {
-            $Filename = "$([datetime]::Now.ToString($TimeFormat) -replace('[^.\-\w]', '_'))_ADReporting.log"
+            $CallerName = [System.IO.Path]::GetFileNameWithoutExtension((Split-Path $MyInvocation.PSCommandPath -Leaf))
+            $Filename = "$([DateTime]::Now.ToString($TimeFormat) -replace('[^.\-\w]', '_'))_$CallerName.log"
         }
         $LogPath = Join-Path $LogsDir $Filename
     }
