@@ -1,4 +1,4 @@
-function Format-ToTitleCaseSentence {
+function Format-AddSpaceToSentence {
     <#
     .SYNOPSIS
     Short description
@@ -11,6 +11,7 @@ function Format-ToTitleCaseSentence {
 
     .EXAMPLE
 
+
     $test = @(
         'OnceUponATime',
         'OnceUponATime1',
@@ -20,8 +21,9 @@ function Format-ToTitleCaseSentence {
         'OnceUponATime_123'
     )
 
-    Format-ToTitleCaseSentence -Text $Test
-    $Test | Format-ToTitleCaseSentence
+    Format-AddSpaceToSentence -Text $Test
+
+    $Test | Format-AddSpaceToSentence -ToLowerCase
 
     .NOTES
     General notes
@@ -29,12 +31,18 @@ function Format-ToTitleCaseSentence {
 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)][string[]] $Text
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)][string[]] $Text,
+        [switch] $ToLowerCase
     )
     Begin {}
     Process {
-        foreach ($T in $Text) {
+        $Value = foreach ($T in $Text) {
             ($T -creplace '([A-Z\W_]|\d+)(?<![a-z])', ' $&').trim()
+        }
+        if ($ToLowerCase) {
+            $Value.ToLower()
+        } else {
+            $Value
         }
     }
     End {
