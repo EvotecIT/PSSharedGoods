@@ -5,5 +5,5 @@ function Add-ToArray {
         [Object] $Element
     )
     #Write-Verbose "Add-ToArray - Element: $Element"
-    $List.Add($Element) > $null
+    [void] $List.Add($Element) #> $null
 }
