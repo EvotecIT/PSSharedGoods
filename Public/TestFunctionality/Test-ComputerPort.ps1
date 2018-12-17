@@ -1,4 +1,4 @@
-function Test-Port {
+function Test-ComputerPort {
     [CmdletBinding()]
     Param(
         [string] $Server,

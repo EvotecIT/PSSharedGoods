@@ -18,7 +18,7 @@ function Test-ComputerAvailability {
             $Output.WinRM = Test-WinRM -ComputerName $Server
         }
         if ($Test -eq 'All' -or '*PortOpen*') {
-            $Output.PortOpen = Test-Port -Server $Server -Ports $Ports -Timeout $PortsTimeout
+            $Output.PortOpen = Test-ComputerPort -Server $Server -Ports $Ports -Timeout $PortsTimeout
         }
         $OutputList += $Output
     }
