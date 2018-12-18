@@ -1,6 +1,12 @@
 function Get-RandomStringName {
+    [cmdletbinding()]
     param(
-        $Size = 10
+        [int] $Size = 31,
+        [switch] $ToLower
     )
-    return -join ((48..57) + (97..122) | Get-Random -Count 31 | % {[char]$_})
+    if ($ToLower) {
+        return (-join ((48..57) + (97..122) | Get-Random -Count $Size | ForEach-Object {[char]$_})).ToLower()
+    } else {
+        return -join ((48..57) + (97..122) | Get-Random -Count $Size | ForEach-Object {[char]$_})
+    }
 }
