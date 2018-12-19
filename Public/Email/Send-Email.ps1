@@ -102,10 +102,11 @@ function Send-Email {
     }
 
     #  Attaching file (s)
-    if ($PSBoundParameters.ContainsKey('Attachments')) {
+    if ($PSBoundParameters.ContainsKey('Attachment')) {
         foreach ($Attach in $Attachment) {
             if (Test-Path $Attach) {
                 $File = New-Object Net.Mail.Attachment($Attach)
+                Write-Verbose "Send-Email - Attaching file $Attach"
                 $MailMessage.Attachments.Add($File)
             }
         }
