@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Set-WinAzureADUserStatus
+# Get-WinADUsersByDN
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Set-WinAzureADUserStatus [-User] <Object> [-Option] <String> [-WhatIf] [<CommonParameters>]
+Get-WinADUsersByDN [[-DistinguishedName] <String[]>] [[-Field] <String>] [-All] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,40 +30,8 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Option
-{{Fill Option Description}}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-Accepted values: Enable, Disable
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -User
-{{Fill User Description}}
-
-```yaml
-Type: Object
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
+### -All
+{{Fill All Description}}
 
 ```yaml
 Type: SwitchParameter
@@ -72,6 +40,36 @@ Aliases:
 
 Required: False
 Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DistinguishedName
+{{Fill DistinguishedName Description}}
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases: DN
+
+Required: False
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Field
+{{Fill Field Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

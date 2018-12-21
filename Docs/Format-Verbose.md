@@ -5,17 +5,29 @@ online version:
 schema: 2.0.0
 ---
 
-# Format-PSTable
+# Format-Verbose
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
 
 ## SYNTAX
 
+### All (Default)
 ```
-Format-PSTable [[-Object] <Object>] [-SkipTitle] [[-Property] <String[]>] [[-ExcludeProperty] <String[]>]
- [-NoAliasOrScriptProperties] [-DisplayPropertySet] [[-OverwriteHeaders] <Object>] [-PreScanHeaders]
- [[-StringLenghts] <PSReference>] [<CommonParameters>]
+Format-Verbose [[-InputObject] <Object>] [-HideTableHeaders] [[-Stream] <String>] [-List] [-Transpose]
+ [[-TransposeSort] <String>] [<CommonParameters>]
+```
+
+### Property
+```
+Format-Verbose [[-InputObject] <Object>] [[-Property] <Object[]>] [-HideTableHeaders] [[-Stream] <String>]
+ [-List] [-Transpose] [[-TransposeSort] <String>] [<CommonParameters>]
+```
+
+### ExcludeProperty
+```
+Format-Verbose [[-InputObject] <Object>] [[-ExcludeProperty] <Object[]>] [-HideTableHeaders]
+ [[-Stream] <String>] [-List] [-Transpose] [[-TransposeSort] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,27 +44,12 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -DisplayPropertySet
-{{Fill DisplayPropertySet Description}}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -ExcludeProperty
 {{Fill ExcludeProperty Description}}
 
 ```yaml
-Type: String[]
-Parameter Sets: (All)
+Type: Object[]
+Parameter Sets: ExcludeProperty
 Aliases:
 
 Required: False
@@ -62,41 +59,11 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -NoAliasOrScriptProperties
-{{Fill NoAliasOrScriptProperties Description}}
+### -HideTableHeaders
+{{Fill HideTableHeaders Description}}
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Object
-{{Fill Object Description}}
-
-```yaml
-Type: Object
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 0
-Default value: None
-Accept pipeline input: True (ByPropertyName, ByValue)
-Accept wildcard characters: False
-```
-
-### -OverwriteHeaders
-{{Fill OverwriteHeaders Description}}
-
-```yaml
-Type: Object
 Parameter Sets: (All)
 Aliases:
 
@@ -107,16 +74,31 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -PreScanHeaders
-{{Fill PreScanHeaders Description}}
+### -InputObject
+{{Fill InputObject Description}}
 
 ```yaml
-Type: SwitchParameter
+Type: Object
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 1
+Default value: None
+Accept pipeline input: True (ByPropertyName, ByValue)
+Accept wildcard characters: False
+```
+
+### -List
+{{Fill List Description}}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: AsList
+
+Required: False
+Position: 7
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -126,42 +108,59 @@ Accept wildcard characters: False
 {{Fill Property Description}}
 
 ```yaml
-Type: String[]
-Parameter Sets: (All)
+Type: Object[]
+Parameter Sets: Property
 Aliases:
 
 Required: False
-Position: 1
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SkipTitle
-{{Fill SkipTitle Description}}
+### -Stream
+{{Fill Stream Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+Accepted values: Output, Host, Warning, Verbose, Debug, Information
+
+Required: False
+Position: 6
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Transpose
+{{Fill Transpose Description}}
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: Rotate, RotateData, TransposeColumnsRows, TransposeData
 
 Required: False
-Position: Named
+Position: 8
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -StringLenghts
-{{Fill StringLenghts Description}}
+### -TransposeSort
+{{Fill TransposeSort Description}}
 
 ```yaml
-Type: PSReference
+Type: String
 Parameter Sets: (All)
 Aliases:
+Accepted values: ASC, DESC, NONE
 
 Required: False
-Position: 4
+Position: 9
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

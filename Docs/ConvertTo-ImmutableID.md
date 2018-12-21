@@ -5,21 +5,15 @@ online version:
 schema: 2.0.0
 ---
 
-# ConvertTo-ImmutableID
+# ConvertFrom-SID
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
 
 ## SYNTAX
 
-### User
 ```
-ConvertTo-ImmutableID [-User <ADAccount>] [<CommonParameters>]
-```
-
-### Guid
-```
-ConvertTo-ImmutableID [-ObjectGUID <String>] [<CommonParameters>]
+ConvertFrom-SID [[-Sid] <Object>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,31 +30,16 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -ObjectGUID
-{{Fill ObjectGUID Description}}
+### -Sid
+{{Fill Sid Description}}
 
 ```yaml
-Type: String
-Parameter Sets: Guid
-Aliases: GUID
+Type: Object
+Parameter Sets: (All)
+Aliases:
 
 Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -User
-{{Fill User Description}}
-
-```yaml
-Type: ADAccount
-Parameter Sets: User
-Aliases: ADuser
-
-Required: False
-Position: Named
+Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

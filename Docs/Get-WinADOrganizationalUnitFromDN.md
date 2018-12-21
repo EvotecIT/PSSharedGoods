@@ -5,56 +5,41 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-RandomStringName
+# Get-WinADOrganizationalUnitFromDN
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
 
 ## SYNTAX
 
 ```
-Get-RandomStringName [[-Size] <Int32>] [-ToLower] [<CommonParameters>]
+Get-WinADOrganizationalUnitFromDN [[-DistinguishedName] <Object>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Long description
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
+```
+An example
 ```
 
-{{ Add example description here }}
+$DistinguishedName = 'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
+Get-WinADOrganizationalUnitFromDN -DistinguishedName $DistinguishedName
 
 ## PARAMETERS
 
-### -Size
-{{Fill Size Description}}
+### -DistinguishedName
+Parameter description
 
 ```yaml
-Type: Int32
+Type: Object
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ToLower
-{{Fill ToLower Description}}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -65,11 +50,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
+General notes
 
 ## RELATED LINKS

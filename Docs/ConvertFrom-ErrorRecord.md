@@ -5,15 +5,21 @@ online version:
 schema: 2.0.0
 ---
 
-# Set-WinAzureADUserStatus
+# ConvertFrom-ErrorRecord
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
 
 ## SYNTAX
 
+### ErrorRecord
 ```
-Set-WinAzureADUserStatus [-User] <Object> [-Option] <String> [-WhatIf] [<CommonParameters>]
+ConvertFrom-ErrorRecord -ErrorRecord <ErrorRecord[]> [<CommonParameters>]
+```
+
+### StopException
+```
+ConvertFrom-ErrorRecord -Exception <ActionPreferenceStopException[]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,50 +36,33 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Option
-{{Fill Option Description}}
+### -ErrorRecord
+{{Fill ErrorRecord Description}}
 
 ```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-Accepted values: Enable, Disable
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -User
-{{Fill User Description}}
-
-```yaml
-Type: Object
-Parameter Sets: (All)
+Type: ErrorRecord[]
+Parameter Sets: ErrorRecord
 Aliases:
 
 Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -Exception
+{{Fill Exception Description}}
+
+```yaml
+Type: ActionPreferenceStopException[]
+Parameter Sets: StopException
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -82,7 +71,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+### System.Management.Automation.ErrorRecord[]
+
+### System.Management.Automation.ActionPreferenceStopException[]
 
 ## OUTPUTS
 

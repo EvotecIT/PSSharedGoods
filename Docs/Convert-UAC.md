@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Convert-UAC [[-UAC] <Int32>] [<CommonParameters>]
+Convert-UAC [[-UAC] <String[]>] [[-Separator] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,12 +34,27 @@ PS C:\> {{ Add example code here }}
 {{Fill UAC Description}}
 
 ```yaml
-Type: Int32
+Type: String[]
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 0
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Separator
+{{Fill Separator Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -13,7 +13,8 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Set-WinAzureADUserLicense [-User] <User> [-Option] <String> [-License] <String> [-WhatIf] [<CommonParameters>]
+Set-WinAzureADUserLicense [-User] <Object> [-Option] <String> [[-License] <String>]
+ [[-LicenseToReplace] <String>] [-WhatIf] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,8 +39,23 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LicenseToReplace
+{{Fill LicenseToReplace Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -52,7 +68,7 @@ Accept wildcard characters: False
 Type: String
 Parameter Sets: (All)
 Aliases:
-Accepted values: Add, Remove
+Accepted values: Add, Remove, RemoveAll, Replace
 
 Required: True
 Position: 1
@@ -65,7 +81,7 @@ Accept wildcard characters: False
 {{Fill User Description}}
 
 ```yaml
-Type: User
+Type: Object
 Parameter Sets: (All)
 Aliases:
 

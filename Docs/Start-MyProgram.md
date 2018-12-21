@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Start-MyProgram [[-Program] <String>] [[-cmdArgList] <String[]>] [<CommonParameters>]
+Start-MyProgram [[-Program] <String>] [[-CmdArgList] <String[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,21 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
+### -CmdArgList
+{{Fill cmdArgList Description}}
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Program
 {{Fill Program Description}}
 
@@ -40,21 +55,6 @@ Aliases:
 
 Required: False
 Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -cmdArgList
-{{Fill cmdArgList Description}}
-
-```yaml
-Type: String[]
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

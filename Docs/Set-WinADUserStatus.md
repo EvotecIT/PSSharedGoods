@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Set-WinADUserStatus [-User] <ADAccount> [-Option] <String> [-WhatIf] [<CommonParameters>]
+Set-WinADUserStatus [-User] <Object> [-Option] <String> [-WhatIf] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,7 +50,7 @@ Accept wildcard characters: False
 {{Fill User Description}}
 
 ```yaml
-Type: ADAccount
+Type: Object
 Parameter Sets: (All)
 Aliases:
 

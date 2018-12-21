@@ -14,7 +14,7 @@ schema: 2.0.0
 
 ```
 Add-ToArrayAdvanced [[-List] <ArrayList>] [[-Element] <Object>] [-SkipNull] [-RequireUnique] [-FullComparison]
- [<CommonParameters>]
+ [-Merge] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -71,6 +71,21 @@ Aliases:
 
 Required: False
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Merge
+{{Fill Merge Description}}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

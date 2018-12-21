@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Set-WinAzureADUserStatus
+# Test-ComputerPort
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Set-WinAzureADUserStatus [-User] <Object> [-Option] <String> [-WhatIf] [<CommonParameters>]
+Test-ComputerPort [[-Server] <String>] [[-Ports] <Int32[]>] [[-TimeOut] <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,48 +30,46 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Option
-{{Fill Option Description}}
+### -Ports
+{{Fill Ports Description}}
 
 ```yaml
-Type: String
+Type: Int32[]
 Parameter Sets: (All)
 Aliases:
-Accepted values: Enable, Disable
 
-Required: True
+Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -User
-{{Fill User Description}}
+### -Server
+{{Fill Server Description}}
 
 ```yaml
-Type: Object
+Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
+### -TimeOut
+{{Fill TimeOut Description}}
 
 ```yaml
-Type: SwitchParameter
+Type: Int32
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

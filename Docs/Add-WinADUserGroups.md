@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Add-WinADUserGroups [-User] <ADAccount> [[-Groups] <String[]>] [[-FieldSearch] <String>] [-WhatIf]
+Add-WinADUserGroups [-User] <Object> [[-Groups] <String[]>] [[-FieldSearch] <String>] [-WhatIf]
  [<CommonParameters>]
 ```
 
@@ -65,7 +65,7 @@ Accept wildcard characters: False
 {{Fill User Description}}
 
 ```yaml
-Type: ADAccount
+Type: Object
 Parameter Sets: (All)
 Aliases:
 

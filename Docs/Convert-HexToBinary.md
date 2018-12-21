@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Set-WinAzureADUserStatus
+# Convert-HexToBinary
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Set-WinAzureADUserStatus [-User] <Object> [-Option] <String> [-WhatIf] [<CommonParameters>]
+Convert-HexToBinary [-Hex] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,50 +30,18 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Option
-{{Fill Option Description}}
+### -Hex
+{{Fill Hex Description}}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
-Accepted values: Enable, Disable
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -User
-{{Fill User Description}}
-
-```yaml
-Type: Object
 Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -82,7 +50,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+### System.String
 
 ## OUTPUTS
 

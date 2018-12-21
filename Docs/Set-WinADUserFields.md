@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Set-WinADUserFields [-User] <ADAccount> [[-Option] <String>] [[-TextToAdd] <String>] [[-TextToRemove] <String>]
+Set-WinADUserFields [-User] <Object> [[-Option] <String>] [[-TextToAdd] <String>] [[-TextToRemove] <String>]
  [[-Fields] <String[]>] [-WhatIf] [<CommonParameters>]
 ```
 
@@ -96,7 +96,7 @@ Accept wildcard characters: False
 {{Fill User Description}}
 
 ```yaml
-Type: ADAccount
+Type: Object
 Parameter Sets: (All)
 Aliases:
 

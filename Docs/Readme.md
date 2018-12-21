@@ -41,6 +41,12 @@ Locale: en-US
 ### [Connect-WinTeams](Connect-WinTeams.md)
 {{Fill in the Synopsis}}
 
+### [Convert-BinaryToHex](Convert-BinaryToHex.md)
+{{Fill in the Synopsis}}
+
+### [Convert-BinaryToString](Convert-BinaryToString.md)
+{{Fill in the Synopsis}}
+
 ### [Convert-ExchangeEmail](Convert-ExchangeEmail.md)
 {{Fill in the Synopsis}}
 
@@ -48,6 +54,9 @@ Locale: en-US
 {{Fill in the Synopsis}}
 
 ### [Convert-ExchangeSize](Convert-ExchangeSize.md)
+{{Fill in the Synopsis}}
+
+### [Convert-HexToBinary](Convert-HexToBinary.md)
 {{Fill in the Synopsis}}
 
 ### [Convert-KeyToKeyValue](Convert-KeyToKeyValue.md)
@@ -71,10 +80,16 @@ Locale: en-US
 ### [Convert-UAC](Convert-UAC.md)
 {{Fill in the Synopsis}}
 
+### [ConvertFrom-ErrorRecord](ConvertFrom-ErrorRecord.md)
+{{Fill in the Synopsis}}
+
+### [ConvertFrom-OperationType](ConvertFrom-OperationType.md)
+{{Fill in the Synopsis}}
+
 ### [ConvertFrom-SID](ConvertFrom-SID.md)
 {{Fill in the Synopsis}}
 
-### [ConvertTo-ImmutableID](ConvertTo-ImmutableID.md)
+### [ConvertFrom-SID](ConvertFrom-SID.md)
 {{Fill in the Synopsis}}
 
 ### [Disconnect-WinAzure](Disconnect-WinAzure.md)
@@ -128,22 +143,25 @@ Locale: en-US
 ### [Find-TypesNeeded](Find-TypesNeeded.md)
 {{Fill in the Synopsis}}
 
+### [Format-AddSpaceToSentence](Format-AddSpaceToSentence.md)
+Short description
+
+### [Format-FirstXChars](Format-FirstXChars.md)
+Short description
+
 ### [Format-PSTable](Format-PSTable.md)
 {{Fill in the Synopsis}}
 
-### [Format-PSTableConvertType1](Format-PSTableConvertType1.md)
+### [Format-Stream](Format-Stream.md)
 {{Fill in the Synopsis}}
 
-### [Format-PSTableConvertType2](Format-PSTableConvertType2.md)
-{{Fill in the Synopsis}}
-
-### [Format-PSTableConvertType3](Format-PSTableConvertType3.md)
-{{Fill in the Synopsis}}
-
-### [Format-TableVerbose](Format-TableVerbose.md)
+### [Format-ToTitleCase](Format-ToTitleCase.md)
 {{Fill in the Synopsis}}
 
 ### [Format-TransposeTable](Format-TransposeTable.md)
+{{Fill in the Synopsis}}
+
+### [Format-Verbose](Format-Verbose.md)
 {{Fill in the Synopsis}}
 
 ### [Get-CommandInfo](Get-CommandInfo.md)
@@ -151,6 +169,9 @@ Locale: en-US
 
 ### [Get-FileInformation](Get-FileInformation.md)
 {{Fill in the Synopsis}}
+
+### [Get-FileName](Get-FileName.md)
+Short description
 
 ### [Get-FilesInFolder](Get-FilesInFolder.md)
 {{Fill in the Synopsis}}
@@ -162,6 +183,9 @@ Locale: en-US
 {{Fill in the Synopsis}}
 
 ### [Get-HTML](Get-HTML.md)
+{{Fill in the Synopsis}}
+
+### [Get-Logger](Get-Logger.md)
 {{Fill in the Synopsis}}
 
 ### [Get-MimeType](Get-MimeType.md)
@@ -221,6 +245,18 @@ Locale: en-US
 ### [Get-Types](Get-Types.md)
 {{Fill in the Synopsis}}
 
+### [Get-WinADOrganizationalUnitData](Get-WinADOrganizationalUnitData.md)
+Short description
+
+### [Get-WinADOrganizationalUnitFromDN](Get-WinADOrganizationalUnitFromDN.md)
+
+
+### [Get-WinADUsersByDN](Get-WinADUsersByDN.md)
+{{Fill in the Synopsis}}
+
+### [Get-WinADUsersByOU](Get-WinADUsersByOU.md)
+{{Fill in the Synopsis}}
+
 ### [Get-WinADUserSnapshot](Get-WinADUserSnapshot.md)
 {{Fill in the Synopsis}}
 
@@ -228,6 +264,9 @@ Locale: en-US
 {{Fill in the Synopsis}}
 
 ### [New-ArrayList](New-ArrayList.md)
+{{Fill in the Synopsis}}
+
+### [New-GenericList](New-GenericList.md)
 {{Fill in the Synopsis}}
 
 ### [New-Runspace](New-Runspace.md)
@@ -255,6 +294,9 @@ Locale: en-US
 {{Fill in the Synopsis}}
 
 ### [Remove-ObjectsExistingInTarget](Remove-ObjectsExistingInTarget.md)
+{{Fill in the Synopsis}}
+
+### [Remove-WhiteSpace](Remove-WhiteSpace.md)
 {{Fill in the Synopsis}}
 
 ### [Remove-WinADUserGroups](Remove-WinADUserGroups.md)
@@ -323,6 +365,9 @@ Locale: en-US
 ### [Set-WinADUserStatus](Set-WinADUserStatus.md)
 {{Fill in the Synopsis}}
 
+### [Set-WinAzureADUserField](Set-WinAzureADUserField.md)
+{{Fill in the Synopsis}}
+
 ### [Set-WinAzureADUserLicense](Set-WinAzureADUserLicense.md)
 {{Fill in the Synopsis}}
 
@@ -365,6 +410,9 @@ Locale: en-US
 ### [Test-ComputerAvailability](Test-ComputerAvailability.md)
 {{Fill in the Synopsis}}
 
+### [Test-ComputerPort](Test-ComputerPort.md)
+{{Fill in the Synopsis}}
+
 ### [Test-ConfigurationCredentials](Test-ConfigurationCredentials.md)
 {{Fill in the Synopsis}}
 
@@ -375,9 +423,6 @@ Locale: en-US
 {{Fill in the Synopsis}}
 
 ### [Test-ModuleAvailability](Test-ModuleAvailability.md)
-{{Fill in the Synopsis}}
-
-### [Test-Port](Test-Port.md)
 {{Fill in the Synopsis}}
 
 ### [Test-WinRM](Test-WinRM.md)

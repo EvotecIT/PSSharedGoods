@@ -5,15 +5,26 @@ online version:
 schema: 2.0.0
 ---
 
-# Set-WinAzureADUserStatus
+# Get-Logger
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
 
 ## SYNTAX
 
+### All (Default)
 ```
-Set-WinAzureADUserStatus [-User] <Object> [-Option] <String> [-WhatIf] [<CommonParameters>]
+Get-Logger [-ShowTime] [-TimeFormat <String>] [<CommonParameters>]
+```
+
+### Logpath
+```
+Get-Logger [-LogPath <String>] [-ShowTime] [-TimeFormat <String>] [<CommonParameters>]
+```
+
+### Complexpath
+```
+Get-Logger [-LogsDir <String>] [-Filename <String>] [-ShowTime] [-TimeFormat <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,43 +41,71 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Option
-{{Fill Option Description}}
+### -Filename
+{{Fill Filename Description}}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Complexpath
 Aliases:
-Accepted values: Enable, Disable
 
-Required: True
-Position: 1
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -User
-{{Fill User Description}}
+### -LogPath
+{{Fill LogPath Description}}
 
 ```yaml
-Type: Object
-Parameter Sets: (All)
+Type: String
+Parameter Sets: Logpath
 Aliases:
 
-Required: True
-Position: 0
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
+### -LogsDir
+{{Fill LogsDir Description}}
+
+```yaml
+Type: String
+Parameter Sets: Complexpath
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ShowTime
+{{Fill ShowTime Description}}
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TimeFormat
+{{Fill TimeFormat Description}}
+
+```yaml
+Type: String
 Parameter Sets: (All)
 Aliases:
 

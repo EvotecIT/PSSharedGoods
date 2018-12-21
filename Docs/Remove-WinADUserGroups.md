@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Remove-WinADUserGroups [-User] <ADAccount> [[-GroupCategory] <String>] [[-GroupScope] <String>]
+Remove-WinADUserGroups [-User] <Object> [[-GroupCategory] <String>] [[-GroupScope] <String>]
  [[-Groups] <String[]>] [-All] [-WhatIf] [<CommonParameters>]
 ```
 
@@ -97,7 +97,7 @@ Accept wildcard characters: False
 {{Fill User Description}}
 
 ```yaml
-Type: ADAccount
+Type: Object
 Parameter Sets: (All)
 Aliases:
 

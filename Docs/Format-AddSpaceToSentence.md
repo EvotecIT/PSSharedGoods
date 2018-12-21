@@ -5,65 +5,58 @@ online version:
 schema: 2.0.0
 ---
 
-# Set-WinAzureADUserStatus
+# Format-AddSpaceToSentence
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Short description
 
 ## SYNTAX
 
 ```
-Set-WinAzureADUserStatus [-User] <Object> [-Option] <String> [-WhatIf] [<CommonParameters>]
+Format-AddSpaceToSentence [-Text] <String[]> [-ToLowerCase] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Long description
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
+```
+$test = @(
 ```
 
-{{ Add example description here }}
+'OnceUponATime',
+    'OnceUponATime1',
+    'Money@Risk',
+    'OnceUponATime123',
+    'AHappyMan2014'
+    'OnceUponATime_123'
+)
+
+Format-AddSpaceToSentence -Text $Test
+
+$Test | Format-AddSpaceToSentence -ToLowerCase
 
 ## PARAMETERS
 
-### -Option
-{{Fill Option Description}}
+### -Text
+Parameter description
 
 ```yaml
-Type: String
+Type: String[]
 Parameter Sets: (All)
 Aliases:
-Accepted values: Enable, Disable
 
 Required: True
 Position: 1
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -User
-{{Fill User Description}}
-
-```yaml
-Type: Object
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
+### -ToLowerCase
+{{Fill ToLowerCase Description}}
 
 ```yaml
 Type: SwitchParameter
@@ -72,7 +65,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -82,11 +75,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
+General notes
 
 ## RELATED LINKS

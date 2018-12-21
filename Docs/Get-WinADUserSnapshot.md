@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Get-WinADUserSnapshot [-User] <ADAccount> [[-XmlPath] <String>] [-WhatIf] [<CommonParameters>]
+Get-WinADUserSnapshot [-User] <Object> [[-XmlPath] <String>] [-WhatIf] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,7 +34,7 @@ PS C:\> {{ Add example code here }}
 {{Fill User Description}}
 
 ```yaml
-Type: ADAccount
+Type: Object
 Parameter Sets: (All)
 Aliases:
 
