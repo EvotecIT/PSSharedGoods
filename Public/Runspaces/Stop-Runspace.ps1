@@ -7,30 +7,22 @@ function Stop-Runspace {
     )
     $List = @()
     while ($Runspaces.Status -ne $null) {
-        #foreach ($v in $($runspaces.Pipe.Streams.Verbose)) {
-        #    Write-Verbose "$FunctionName - 1Verbose from runspace: $v"
-        #}
-        $completed = $runspaces | Where-Object { $_.Status.IsCompleted -eq $true }
-
-        foreach ($runspace in $completed) {
-            #write-verbose 'Stop-runspace - Hello 2'
-            foreach ($e in $($runspace.Pipe.Streams.Error)) {
-                Write-Verbose "$FunctionName - Error from runspace: $e"
+        $Completed = $Runspaces | Where-Object { $_.Status.IsCompleted -eq $true }
+        foreach ($Runspace in $Completed) {
+            foreach ($e in $($Runspace.Pipe.Streams.Error)) {
+                Write-Error "$FunctionName - Error from Runspace: $e"
             }
-            foreach ($v in $($runspace.Pipe.Streams.Verbose)) {
-                Write-Verbose "$FunctionName - Verbose from runspace: $v"
+            foreach ($w in $($Runspace.Pipe.Streams.Warning)) {
+                Write-Warning "$FunctionName - Warning from Runspace: $w"
             }
-            #write-verbose 'Stop-runspace - Hello 3'
-            $List += $runspace.Pipe.EndInvoke($runspace.Status)
-            #write-verbose 'Stop-runspace - Hello 4'
-            $runspace.Status = $null
-            #write-verbose 'Stop-runspace - Hello 5'
+            foreach ($v in $($Runspace.Pipe.Streams.Verbose)) {
+                Write-Verbose "$FunctionName - Verbose from Runspace: $v"
+            }
+            $List += $Runspace.Pipe.EndInvoke($Runspace.Status)
+            $Runspace.Status = $null
         }
     }
-    #write-verbose 'Stop-runspace - Hello 6'
     $RunspacePool.Close()
-    #write-verbose 'Stop-runspace - Hello 7'
     $RunspacePool.Dispose()
-    #write-verbose 'Stop-runspace - Hello 8'
     return $List
 }
