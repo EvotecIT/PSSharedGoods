@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Start-Runspace [[-ScriptBlock] <Object>] [[-Parameters] <Hashtable>] [[-RunspacePool] <RunspacePool>]
+Start-Runspace [[-ScriptBlock] <String>] [[-Parameters] <Hashtable>] [[-RunspacePool] <RunspacePool>]
  [<CommonParameters>]
 ```
 
@@ -65,7 +65,7 @@ Accept wildcard characters: False
 {{Fill ScriptBlock Description}}
 
 ```yaml
-Type: Object
+Type: String
 Parameter Sets: (All)
 Aliases:
 
