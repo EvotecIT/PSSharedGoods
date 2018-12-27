@@ -1,7 +1,7 @@
 function Start-Runspace {
     [cmdletbinding()]
     param (
-        $ScriptBlock,
+        [string] $ScriptBlock,
         [hashtable] $Parameters,
         [System.Management.Automation.Runspaces.RunspacePool] $RunspacePool
     )
@@ -11,7 +11,10 @@ function Start-Runspace {
     $null = $runspace.AddParameters($Parameters)
     $runspace.RunspacePool = $RunspacePool
     #Write-Verbose "Start-Runspace - Ending soon"
-    $Data = [PSCustomObject]@{ Pipe = $runspace; Status = $runspace.BeginInvoke() }
+    $Data = [PSCustomObject]@{
+        Pipe   = $runspace;
+        Status = $runspace.BeginInvoke()
+    }
     #Write-Verbose "Start-Runspace - Ending done"
     return $Data
 }
