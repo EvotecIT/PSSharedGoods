@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Test-Port
+# Split-ArrayEvery
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Test-Port [[-Server] <String>] [[-Ports] <Int32[]>] [[-TimeOut] <Int32>] [<CommonParameters>]
+Split-ArrayEvery [[-list] <Object>] [[-count] <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,11 +30,11 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Ports
-{{Fill Ports Description}}
+### -count
+{{Fill count Description}}
 
 ```yaml
-Type: Int32[]
+Type: Int32
 Parameter Sets: (All)
 Aliases:
 
@@ -45,31 +45,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Server
-{{Fill Server Description}}
+### -list
+{{Fill list Description}}
 
 ```yaml
-Type: String
+Type: Object
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TimeOut
-{{Fill TimeOut Description}}
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

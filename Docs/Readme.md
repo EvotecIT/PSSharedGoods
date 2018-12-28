@@ -389,6 +389,9 @@ Short description
 ### [Split-Array](Split-Array.md)
 {{Fill in the Synopsis}}
 
+### [Split-ArrayEvery](Split-ArrayEvery.md)
+{{Fill in the Synopsis}}
+
 ### [Start-MyProgram](Start-MyProgram.md)
 {{Fill in the Synopsis}}
 
