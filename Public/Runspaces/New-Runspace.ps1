@@ -5,7 +5,8 @@ function New-Runspace {
         [int] $maxRunspaces = [int]$env:NUMBER_OF_PROCESSORS + 1
     )
     $RunspacePool = [RunspaceFactory]::CreateRunspacePool($minRunspaces, $maxRunspaces)
-    $RunspacePool.ApartmentState = "MTA"
+    #ApartmentState is not available in PowerShell 6+
+    #$RunspacePool.ApartmentState = "MTA"
     $RunspacePool.Open()
     return $RunspacePool
 }

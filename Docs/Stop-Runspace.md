@@ -14,7 +14,7 @@ schema: 2.0.0
 
 ```
 Stop-Runspace [[-Runspaces] <Object[]>] [[-FunctionName] <String>] [[-RunspacePool] <RunspacePool>]
- [<CommonParameters>]
+ [-ExtendedOutput] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,21 @@ PS C:\> {{ Add example code here }}
 {{ Add example description here }}
 
 ## PARAMETERS
+
+### -ExtendedOutput
+{{Fill ExtendedOutput Description}}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -FunctionName
 {{Fill FunctionName Description}}
