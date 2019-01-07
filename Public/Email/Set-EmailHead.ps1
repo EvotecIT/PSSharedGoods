@@ -2,9 +2,6 @@ function Set-EmailHead {
     param(
         $FormattingOptions
     )
-    # if ($null -eq $FormattingOptions.CompanyBrandingTemplate -eq  '') { $FormattingOptions.CompanyBrandingTemplate = 'TemplateDefault' }
-
-    #if ($FormattingOptions.CompanyBrandingTemplate -eq 'TemplateDefault') {
     $head = @"
         <style>
         BODY {
@@ -71,9 +68,5 @@ function Set-EmailHead {
         }
     </style>
 "@
-
-    # } else {
-    #
-    # }
     return $Head
 }

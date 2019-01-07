@@ -12,15 +12,18 @@ function Set-EmailFormatting {
     }
     $Template = $Template.Split("`n") # https://blogs.msdn.microsoft.com/timid/2014/07/09/one-liner-fun-with-multi-line-blocktext-and-split-split/
 
-    $Body = ""
+    $Body = "<body>"
 
     if ($Logger) {
         $Logger.AddInfoRecord("Preparing template - adding HTML <BR> tags...")
     } else {
-        Write-Color @WriteParameters -Text "[i] Preparing template ", "adding", " HTML ", "<BR>", " tags." -Color White, Yellow, White, Yellow -NoNewLine
+        Write-Color @WriteParameters -Text "[i] Preparing template ", "adding", " HTML ", "<BR>", " tags." -Color White, Yellow, White, Yellow
     }
+
     $StyleFlag = $false
     foreach ($t in $Template) {
+        ## needs investigation
+        <#
         if ($t -match 'style>') {
             $StyleFlag = -not $StyleFlag
         }
@@ -32,8 +35,9 @@ function Set-EmailFormatting {
             $Body += $t
             continue
         }
+        #>
         $Body += "$t<br>"
-    }
+    }#>
     foreach ($style in $FormattingParameters.Styles.GetEnumerator()) {
         foreach ($value in $style.Value) {
             if ($value -eq "") { continue }
@@ -82,5 +86,6 @@ function Set-EmailFormatting {
     if ($ConfigurationParameters) {
         if ($ConfigurationParameters.DisplayTemplateHTML -eq $true) { Get-HTML($Body) }
     }
+    $Body += '</body>'
     return $Body
 }

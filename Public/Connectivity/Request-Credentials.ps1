@@ -11,15 +11,11 @@ function Request-Credentials {
     )
     if ($FromFile) {
         if (($Password -ne '') -and (Test-Path $Password)) {
+            # File is there and we are reading it into Password
             Write-Verbose "Request-Credentials - Reading password from file $Password"
-            if ($AsSecure) {
-                $NewPassword = Get-Content $Password | ConvertTo-SecureString
-                #Write-Verbose "Request-Credentials - Password to use: $Password"
-            } else {
-                $NewPassword = Get-Content $Password
-                #Write-Verbose "Request-Credentials - Password to use: $Password"
-            }
+            $Password = Get-Content -Path $Password
         } else {
+            # File is not there or couldn't be read
             if ($Output) {
                 $Object = @{ Status = $false; Output = $Service; Extended = 'File with password unreadable.' }
                 return $Object
@@ -28,13 +24,35 @@ function Request-Credentials {
                 return
             }
         }
-    } else {
-        if ($AsSecure) {
-            $NewPassword = $Password | ConvertTo-SecureString
-        } else {
-            $NewPassword = $Password
-        }
     }
+    if ($AsSecure) {
+        try {
+            $NewPassword = $Password | ConvertTo-SecureString
+        } catch {
+            $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+            if ($ErrorMessage -like '*Key not valid for use in specified state*') {
+                if ($Output) {
+                    $Object = @{ Status = $false; Output = $Service; Extended = "Couldn't use credentials provided. Most likely using credentials from other user/session/computer." }
+                    return $Object
+                } else {
+                    Write-Warning -Message "Request-Credentials - Couldn't use credentials provided. Most likely using credentials from other user/session/computer."
+                    return
+                }
+            } else {
+                if ($Output) {
+                    $Object = @{ Status = $false; Output = $Service; Extended = $ErrorMessage }
+                    return $Object
+                } else {
+                    Write-Warning -Message "Request-Credentials - $ErrorMessage"
+                    return
+                }
+            }
+        }
+
+    } else {
+        $NewPassword = $Password
+    }
+
     if ($UserName -and $NewPassword) {
         if ($AsSecure) {
             $Credentials = New-Object System.Management.Automation.PSCredential($Username, $NewPassword)
@@ -49,7 +67,7 @@ function Request-Credentials {
             $Object = @{ Status = $false; Output = $Service; Extended = 'Username or/and Password is empty' }
             return $Object
         } else {
-            #Write-Warning 'Request-Credentials - UserName or Password are empty.'
+            Write-Warning -Message 'Request-Credentials - UserName or Password are empty.'
             return
         }
     }
