@@ -16,7 +16,7 @@ schema: 2.0.0
 Compare-ObjectsAdvanced [[-Object1] <Object>] [[-Object2] <Object>] [[-CommonProperty] <String>]
  [[-AddObjectArrayName] <String[]>] [[-AddObjectArray] <Object[]>] [[-Object1Property] <String>]
  [[-Object2Property] <String>] [[-ObjectPropertySubstitute] <String>] [-RemoveSideIndicator]
- [-KeepTemporaryProperty] [[-Side] <String>]
+ [-KeepTemporaryProperty] [[-Side] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -198,6 +198,9 @@ Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

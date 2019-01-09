@@ -26,6 +26,12 @@ Locale: en-US
 ### [Add-WinADUserGroups](Add-WinADUserGroups.md)
 {{Fill in the Synopsis}}
 
+### [Compare-ObjectProperties](Compare-ObjectProperties.md)
+{{Fill in the Synopsis}}
+
+### [Compare-ObjectsAdvanced](Compare-ObjectsAdvanced.md)
+{{Fill in the Synopsis}}
+
 ### [Connect-WinAzure](Connect-WinAzure.md)
 {{Fill in the Synopsis}}
 
@@ -236,6 +242,9 @@ Short description
 ### [Get-SqlQueryColumnInformation](Get-SqlQueryColumnInformation.md)
 {{Fill in the Synopsis}}
 
+### [Get-TimeSynchronization](Get-TimeSynchronization.md)
+{{Fill in the Synopsis}}
+
 ### [Get-TimeZoneAdvanced](Get-TimeZoneAdvanced.md)
 {{Fill in the Synopsis}}
 
@@ -243,6 +252,9 @@ Short description
 {{Fill in the Synopsis}}
 
 ### [Get-Types](Get-Types.md)
+{{Fill in the Synopsis}}
+
+### [Get-WinADForestControllers](Get-WinADForestControllers.md)
 {{Fill in the Synopsis}}
 
 ### [Get-WinADOrganizationalUnitData](Get-WinADOrganizationalUnitData.md)
@@ -351,6 +363,9 @@ Short description
 {{Fill in the Synopsis}}
 
 ### [Set-SpecUser](Set-SpecUser.md)
+{{Fill in the Synopsis}}
+
+### [Set-TimeSynchronization](Set-TimeSynchronization.md)
 {{Fill in the Synopsis}}
 
 ### [Set-WinADGroupSynchronization](Set-WinADGroupSynchronization.md)
