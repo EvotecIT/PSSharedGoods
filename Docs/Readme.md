@@ -53,6 +53,9 @@ Locale: en-US
 ### [Convert-BinaryToString](Convert-BinaryToString.md)
 {{Fill in the Synopsis}}
 
+### [Convert-Color](Convert-Color.md)
+This color converter gives you the hexadecimal values of your RGB colors and vice versa (RGB to HEX)
+
 ### [Convert-ExchangeEmail](Convert-ExchangeEmail.md)
 {{Fill in the Synopsis}}
 
@@ -84,6 +87,9 @@ Locale: en-US
 {{Fill in the Synopsis}}
 
 ### [Convert-UAC](Convert-UAC.md)
+{{Fill in the Synopsis}}
+
+### [ConvertFrom-Color](ConvertFrom-Color.md)
 {{Fill in the Synopsis}}
 
 ### [ConvertFrom-ErrorRecord](ConvertFrom-ErrorRecord.md)
@@ -256,6 +262,9 @@ Short description
 
 ### [Get-WinADForestControllers](Get-WinADForestControllers.md)
 {{Fill in the Synopsis}}
+
+### [Get-WinADForestOptions](Get-WinADForestOptions.md)
+This Cmdlet gets Active Directory Site Options.
 
 ### [Get-WinADOrganizationalUnitData](Get-WinADOrganizationalUnitData.md)
 Short description
