@@ -1,4 +1,4 @@
-Function Replace-LatinCharacters {
+Function Rename-LatinCharacters {
     [alias('Remove-StringLatinCharacters')]
     param (
         [string]$String
