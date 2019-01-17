@@ -155,6 +155,9 @@ This color converter gives you the hexadecimal values of your RGB colors and vic
 ### [Find-TypesNeeded](Find-TypesNeeded.md)
 {{Fill in the Synopsis}}
 
+### [Find-UsersProxyAddressesStatus](Find-UsersProxyAddressesStatus.md)
+{{Fill in the Synopsis}}
+
 ### [Format-AddSpaceToSentence](Format-AddSpaceToSentence.md)
 Short description
 
@@ -321,6 +324,9 @@ Short description
 {{Fill in the Synopsis}}
 
 ### [Remove-WinADUserGroups](Remove-WinADUserGroups.md)
+{{Fill in the Synopsis}}
+
+### [Rename-LatinCharacters](Rename-LatinCharacters.md)
 {{Fill in the Synopsis}}
 
 ### [Rename-UserValuesFromHash](Rename-UserValuesFromHash.md)

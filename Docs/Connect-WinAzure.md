@@ -14,7 +14,7 @@ schema: 2.0.0
 
 ```
 Connect-WinAzure [[-SessionName] <String>] [[-Username] <String>] [[-Password] <String>] [-AsSecure]
- [-FromFile] [-Output] [<CommonParameters>]
+ [-FromFile] [-MultiFactorAuthentication] [-Output] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,7 +37,7 @@ PS C:\> {{ Add example code here }}
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: PasswordAsSecure
 
 Required: False
 Position: Named
@@ -52,7 +52,22 @@ Accept wildcard characters: False
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: PasswordFromFile
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MultiFactorAuthentication
+{{Fill MultiFactorAuthentication Description}}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: mfa
 
 Required: False
 Position: Named
