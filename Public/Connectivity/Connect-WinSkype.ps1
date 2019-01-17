@@ -41,7 +41,11 @@ function Connect-WinSkype {
         }
     } else {
         try {
-            $Session = New-CsOnlineSession -Credential $Credentials -ErrorAction Stop
+            if ($MultiFactorAuthentication) {
+                $Session = New-CsOnlineSession -UserName $Username -ErrorAction Stop
+            } else {
+                $Session = New-CsOnlineSession -Credential $Credentials -ErrorAction Stop
+            }
             $Session.Name = $SessionName
         } catch {
             $Session = $null

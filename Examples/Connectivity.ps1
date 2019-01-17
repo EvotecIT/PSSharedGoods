@@ -6,34 +6,38 @@ $Configuration = @{
         LogsPath = 'C:\Support\Logs\Automated.log'
     }
     Office365  = [ordered] @{
-        Credentials    = [ordered] @{
+        Credentials      = [ordered] @{
             Username                  = 'przemyslaw.klys@evotec.pl'
             Password                  = 'C:\Support\Important\Password-O365-Evotec.txt'
             PasswordAsSecure          = $true
             PasswordFromFile          = $true
             MultiFactorAuthentication = $false
         }
-        Azure          = [ordered] @{
+        Azure            = [ordered] @{
             Use         = $false
             SessionName = 'O365 Azure MSOL' # MSOL
         }
-        AzureAD        = [ordered] @{
+        AzureAD          = [ordered] @{
             Use         = $false
             SessionName = 'O365 Azure AD' # Azure
             Prefix      = ''
         }
-        ExchangeOnline = [ordered] @{
+        ExchangeOnline   = [ordered] @{
             Use            = $false
             Authentication = 'Basic'
             ConnectionURI  = 'https://outlook.office365.com/powershell-liveid/'
             Prefix         = 'O365'
             SessionName    = 'O365 Exchange'
         }
-        SkypeOnline    = [ordered] @{
+        SharePointOnline = [ordered] @{
             Use           = $true
+            ConnectionURI = 'https://evotecpoland-admin.sharepoint.com'
+        }
+        SkypeOnline      = [ordered] @{
+            Use         = $false
             SessionName = 'O365 Skype'
         }
-        Teams          = [ordered] @{
+        Teams            = [ordered] @{
             Use         = $false
             Prefix      = ''
             SessionName = 'O365 Teams'
@@ -72,6 +76,9 @@ if ($Configuration.Office365.ExchangeOnline.Use) {
 }
 if ($Configuration.Office365.SkypeOnline.Use) {
     $Connected += Connect-WinSkype @BundleCredentials -Output -SessionName $Configuration.Office365.SkypeOnline.SessionName -Verbose
+}
+if ($Configuration.Office365.SharePointOnline.Use) {
+    $Connected += Connect-WinSharePoint @BundleCredentials -Output -SessionName $Configuration.Office365.SharePointOnline.SessionName -ConnectionURI $Configuration.Office365.SharePointOnline.ConnectionURI -Verbose
 }
 if ($Configuration.Office365.MicrosoftTeams.Use) {
     $Connected += Connect-WinTeams @BundleCredentials -Output -SessionName $Configuration.Office365.Teams.SessionName -Verbose
