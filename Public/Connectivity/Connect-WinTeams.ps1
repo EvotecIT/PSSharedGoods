@@ -4,26 +4,29 @@ function Connect-WinTeams {
         [string] $SessionName = 'Microsoft Teams',
         [string] $Username,
         [string] $Password,
-        [switch] $AsSecure,
-        [switch] $FromFile,
+        [alias('PasswordAsSecure')][switch] $AsSecure,
+        [alias('PasswordFromFile')][switch] $FromFile,
+        [alias('mfa')][switch] $MultiFactorAuthentication,
         [switch] $Output
     )
+    if (-not $MultiFactorAuthentication) {
+        $Credentials = Request-Credentials -UserName $Username `
+            -Password $Password `
+            -AsSecure:$AsSecure `
+            -FromFile:$FromFile `
+            -Service $SessionName `
+            -Output
 
-    $Credentials = Request-Credentials -UserName $Username `
-        -Password $Password `
-        -AsSecure:$AsSecure `
-        -FromFile:$FromFile `
-        -Service $SessionName `
-        -Output
-
-    if ($Credentials -isnot [PSCredential]) {
-        if ($Output) {
-            return $Credentials
-        } else {
-            return
+        if ($Credentials -isnot [PSCredential]) {
+            if ($Output) {
+                return $Credentials
+            } else {
+                return
+            }
         }
     }
     try {
+        # If it's mfa $Credentials will be $null so it will ask with a prompt
         $Session = Connect-MicrosoftTeams -Credential $Credentials -ErrorAction Stop
     } catch {
         $Session = $null

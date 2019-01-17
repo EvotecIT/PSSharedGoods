@@ -4,25 +4,30 @@ function Connect-WinAzure {
         [string] $SessionName = 'Azure MSOL',
         [string] $Username,
         [string] $Password,
-        [switch] $AsSecure,
-        [switch] $FromFile,
-        [switch] $Output
+        [alias('PasswordAsSecure')][switch] $AsSecure,
+        [alias('PasswordFromFile')][switch] $FromFile,
+        [alias('mfa')][switch] $MultiFactorAuthentication,
+        [switch] $Output #, [System.Collections.IDictionary] $Credentials
     )
-    $Credentials = Request-Credentials -UserName $Username `
-        -Password $Password `
-        -AsSecure:$AsSecure `
-        -FromFile:$FromFile `
-        -Service $SessionName `
-        -Output
+    if (-not $MultiFactorAuthentication) {
+        Write-Verbose "Connect-WinAzure - Running connectivity without MFA"
+        $Credentials = Request-Credentials -UserName $Username `
+            -Password $Password `
+            -AsSecure:$AsSecure `
+            -FromFile:$FromFile `
+            -Service $SessionName `
+            -Output
 
-    if ($Credentials -isnot [PSCredential]) {
-        if ($Output) {
-            return $Credentials
-        } else {
-            return
+        if ($Credentials -isnot [PSCredential]) {
+            if ($Output) {
+                return $Credentials
+            } else {
+                return
+            }
         }
     }
     try {
+        # If it's mfa $Credentials will be $null so it will ask with a prompt
         Connect-MsolService -Credential $Credentials -ErrorAction Stop
         $Connected = $true
     } catch {

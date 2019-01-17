@@ -60,6 +60,7 @@ function Connect-WinService {
                     -Password $Credentials.Password `
                     -AsSecure:$Credentials.PasswordAsSecure `
                     -FromFile:$Credentials.PasswordFromFile `
+                    -MultiFactorAuthentication:$Credentials.MultiFactorAuthentication `
                     -Output
                 return $OutputCommand
             }
@@ -79,6 +80,7 @@ function Connect-WinService {
                     -Password $Credentials.Password `
                     -AsSecure:$Credentials.PasswordAsSecure `
                     -FromFile:$Credentials.PasswordFromFile `
+                    -MultiFactorAuthentication:$Credentials.MultiFactorAuthentication `
                     -Output
                 return $OutputCommand
             }
@@ -99,6 +101,7 @@ function Connect-WinService {
                     -Password $Credentials.Password `
                     -AsSecure:$Credentials.PasswordAsSecure `
                     -FromFile:$Credentials.PasswordFromFile `
+                    -MultiFactorAuthentication:$Credentials.MultiFactorAuthentication `
                     -Prefix $Service.Prefix `
                     -Output
                 return $OutputCommand
@@ -121,6 +124,7 @@ function Connect-WinService {
                     -Password $Credentials.Password `
                     -AsSecure:$Credentials.PasswordAsSecure `
                     -FromFile:$Credentials.PasswordFromFile `
+                    -MultiFactorAuthentication:$Credentials.MultiFactorAuthentication `
                     -Prefix $Service.Prefix `
                     -Output
                 return $OutputCommand
@@ -142,6 +146,7 @@ function Connect-WinService {
                     -Password $Credentials.Password `
                     -AsSecure:$Credentials.PasswordAsSecure `
                     -FromFile:$Credentials.PasswordFromFile `
+                    -MultiFactorAuthentication:$Credentials.MultiFactorAuthentication `
                     -Output
                 return $OutputCommand
             }
