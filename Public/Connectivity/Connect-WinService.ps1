@@ -130,6 +130,76 @@ function Connect-WinService {
                 return $OutputCommand
 
             }
+            'SecurityCompliance' {
+                $CheckCredentials = Test-ConfigurationCredentials -Configuration $Credentials
+                if ($CheckCredentials.Status -contains $false) {
+                    if ($Output) {
+                        $Object += @{ Status = $false; Output = $Service.SessionName; Extended = 'Credentials configuration is wrong.' }
+                        return $Object
+                    } else {
+                        return
+                    }
+                }
+                # Build Session
+                $OutputCommand = Connect-WinSecurityCompliance -SessionName $Service.SessionName `
+                    -ConnectionURI $Service.ConnectionURI `
+                    -Authentication $Service.Authentication `
+                    -Username $Credentials.Username `
+                    -Password $Credentials.Password `
+                    -AsSecure:$Credentials.PasswordAsSecure `
+                    -FromFile:$Credentials.PasswordFromFile `
+                    -MultiFactorAuthentication:$Credentials.MultiFactorAuthentication `
+                    -Prefix $Service.Prefix `
+                    -Output
+                return $OutputCommand
+
+            }
+            'SharePointOnline' {
+                $CheckCredentials = Test-ConfigurationCredentials -Configuration $Credentials
+                if ($CheckCredentials.Status -contains $false) {
+                    if ($Output) {
+                        $Object += @{ Status = $false; Output = $Service.SessionName; Extended = 'Credentials configuration is wrong.' }
+                        return $Object
+                    } else {
+                        return
+                    }
+                }
+                # Build Session
+                $OutputCommand = Connect-WinSharePoint -SessionName $Service.SessionName `
+                    -ConnectionURI $Service.ConnectionURI `
+                    -Authentication $Service.Authentication `
+                    -Username $Credentials.Username `
+                    -Password $Credentials.Password `
+                    -AsSecure:$Credentials.PasswordAsSecure `
+                    -FromFile:$Credentials.PasswordFromFile `
+                    -MultiFactorAuthentication:$Credentials.MultiFactorAuthentication `
+                    -Prefix $Service.Prefix `
+                    -Output
+                return $OutputCommand
+
+            }
+            'SkypeOnline' {
+                $CheckCredentials = Test-ConfigurationCredentials -Configuration $Credentials
+                if ($CheckCredentials.Status -contains $false) {
+                    if ($Output) {
+                        $Object += @{ Status = $false; Output = $Service.SessionName; Extended = 'Credentials configuration is wrong.' }
+                        return $Object
+                    } else {
+                        return
+                    }
+                }
+                # Build Session
+                $OutputCommand = Connect-WinSkype -SessionName $Service.SessionName `
+                    -Username $Credentials.Username `
+                    -Password $Credentials.Password `
+                    -AsSecure:$Credentials.PasswordAsSecure `
+                    -FromFile:$Credentials.PasswordFromFile `
+                    -MultiFactorAuthentication:$Credentials.MultiFactorAuthentication `
+                    -Prefix $Service.Prefix `
+                    -Output
+                return $OutputCommand
+
+            }
             'MicrosoftTeams' {
                 # Check Credentials
                 $CheckCredentials = Test-ConfigurationCredentials -Configuration $Credentials

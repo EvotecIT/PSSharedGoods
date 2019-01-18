@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Connect-WinSkype
+# Connect-WinSharePoint
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,8 +13,8 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Connect-WinSkype [[-SessionName] <String>] [[-Username] <String>] [[-Password] <String>] [-AsSecure]
- [-FromFile] [-MultiFactorAuthentication] [-Output] [<CommonParameters>]
+Connect-WinSharePoint [[-SessionName] <String>] [[-Username] <String>] [[-Password] <String>] [-AsSecure]
+ [-FromFile] [-MultiFactorAuthentication] [[-ConnectionURI] <Uri>] [-Output] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,6 +41,21 @@ Aliases: PasswordAsSecure
 
 Required: False
 Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConnectionURI
+{{Fill ConnectionURI Description}}
+
+```yaml
+Type: Uri
+Parameter Sets: (All)
+Aliases: uri, url, ConnectionUrl
+
+Required: False
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

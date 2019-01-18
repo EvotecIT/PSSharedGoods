@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Connect-WinSkype
+# Connect-WinSecurityCompliance
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,8 +13,9 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Connect-WinSkype [[-SessionName] <String>] [[-Username] <String>] [[-Password] <String>] [-AsSecure]
- [-FromFile] [-MultiFactorAuthentication] [-Output] [<CommonParameters>]
+Connect-WinSecurityCompliance [[-SessionName] <String>] [[-ConnectionURI] <String>]
+ [[-Authentication] <String>] [[-Username] <String>] [[-Password] <String>] [-AsSecure] [-FromFile]
+ [-MultiFactorAuthentication] [[-Prefix] <String>] [-Output] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -41,6 +42,37 @@ Aliases: PasswordAsSecure
 
 Required: False
 Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Authentication
+{{Fill Authentication Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+Accepted values: Basic, Kerberos
+
+Required: False
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConnectionURI
+{{Fill ConnectionURI Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -100,7 +132,22 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Prefix
+{{Fill Prefix Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -127,10 +174,10 @@ Accept wildcard characters: False
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases:
+Aliases: UserPrincipalName
 
 Required: False
-Position: 1
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

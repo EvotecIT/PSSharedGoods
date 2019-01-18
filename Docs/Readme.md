@@ -41,7 +41,16 @@ Locale: en-US
 ### [Connect-WinExchange](Connect-WinExchange.md)
 {{Fill in the Synopsis}}
 
+### [Connect-WinSecurityCompliance](Connect-WinSecurityCompliance.md)
+{{Fill in the Synopsis}}
+
 ### [Connect-WinService](Connect-WinService.md)
+{{Fill in the Synopsis}}
+
+### [Connect-WinSharePoint](Connect-WinSharePoint.md)
+{{Fill in the Synopsis}}
+
+### [Connect-WinSkype](Connect-WinSkype.md)
 {{Fill in the Synopsis}}
 
 ### [Connect-WinTeams](Connect-WinTeams.md)
@@ -111,6 +120,15 @@ This color converter gives you the hexadecimal values of your RGB colors and vic
 {{Fill in the Synopsis}}
 
 ### [Disconnect-WinExchange](Disconnect-WinExchange.md)
+{{Fill in the Synopsis}}
+
+### [Disconnect-WinSecurityCompliance](Disconnect-WinSecurityCompliance.md)
+{{Fill in the Synopsis}}
+
+### [Disconnect-WinService](Disconnect-WinService.md)
+{{Fill in the Synopsis}}
+
+### [Disconnect-WinSkype](Disconnect-WinSkype.md)
 {{Fill in the Synopsis}}
 
 ### [Disconnect-WinTeams](Disconnect-WinTeams.md)
@@ -199,6 +217,9 @@ Short description
 
 ### [Get-HTML](Get-HTML.md)
 {{Fill in the Synopsis}}
+
+### [Get-InstalledApplication](Get-InstalledApplication.md)
+
 
 ### [Get-Logger](Get-Logger.md)
 {{Fill in the Synopsis}}

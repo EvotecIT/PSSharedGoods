@@ -29,8 +29,15 @@ $Configuration = @{
             Prefix         = 'O365'
             SessionName    = 'O365 Exchange'
         }
+        SecurityCompliance = [ordered] @{
+            Use            = $true
+            Authentication = 'Basic'
+            ConnectionURI  = 'https://ps.compliance.protection.outlook.com/PowerShell-LiveId'
+            Prefix         = 'O365'
+            SessionName    = 'O365 Security And Compliance'
+        }
         SharePointOnline = [ordered] @{
-            Use           = $true
+            Use           = $false
             ConnectionURI = 'https://evotecpoland-admin.sharepoint.com'
         }
         SkypeOnline      = [ordered] @{
@@ -73,6 +80,9 @@ if ($Configuration.Office365.AzureAD.Use) {
 }
 if ($Configuration.Office365.ExchangeOnline.Use) {
     $Connected += Connect-WinExchange @BundleCredentials -Output -SessionName $Configuration.Office365.ExchangeOnline.SessionName -ConnectionURI $Configuration.Office365.ExchangeOnline.ConnectionURI -Authentication $Configuration.Office365.ExchangeOnline.Authentication -Verbose
+}
+if ($Configuration.Office365.SecurityCompliance.Use) {
+    $Connected += Connect-WinSecurityCompliance @BundleCredentials -Output -SessionName $Configuration.Office365.SecurityCompliance.SessionName -ConnectionURI $Configuration.Office365.SecurityCompliance.ConnectionURI -Authentication $Configuration.Office365.SecurityCompliance.Authentication -Verbose
 }
 if ($Configuration.Office365.SkypeOnline.Use) {
     $Connected += Connect-WinSkype @BundleCredentials -Output -SessionName $Configuration.Office365.SkypeOnline.SessionName -Verbose
