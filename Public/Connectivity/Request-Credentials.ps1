@@ -27,7 +27,7 @@ function Request-Credentials {
     }
     if ($AsSecure) {
         try {
-            $NewPassword = $Password | ConvertTo-SecureString
+            $NewPassword = $Password | ConvertTo-SecureString -ErrorAction Stop
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
             if ($ErrorMessage -like '*Key not valid for use in specified state*') {
@@ -58,7 +58,28 @@ function Request-Credentials {
             $Credentials = New-Object System.Management.Automation.PSCredential($Username, $NewPassword)
             #Write-Verbose "Request-Credentials - Using AsSecure option with Username $Username and password: $NewPassword"
         } else {
-            $SecurePassword = $Password | ConvertTo-SecureString -asPlainText -Force
+            Try {
+                $SecurePassword = $Password | ConvertTo-SecureString -asPlainText -Force -ErrorAction Stop
+            } catch {
+                $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+                if ($ErrorMessage -like '*Key not valid for use in specified state*') {
+                    if ($Output) {
+                        $Object = @{ Status = $false; Output = $Service; Extended = "Couldn't use credentials provided. Most likely using credentials from other user/session/computer." }
+                        return $Object
+                    } else {
+                        Write-Warning -Message "Request-Credentials - Couldn't use credentials provided. Most likely using credentials from other user/session/computer."
+                        return
+                    }
+                } else {
+                    if ($Output) {
+                        $Object = @{ Status = $false; Output = $Service; Extended = $ErrorMessage }
+                        return $Object
+                    } else {
+                        Write-Warning -Message "Request-Credentials - $ErrorMessage"
+                        return
+                    }
+                }
+            }
             $Credentials = New-Object System.Management.Automation.PSCredential($Username, $SecurePassword)
             #Write-Verbose "Request-Credentials - Using AsSecure option with Username $Username and password: $NewPassword converted to $SecurePassword"
         }
