@@ -12,7 +12,7 @@
 RootModule = 'PSSharedGoods.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.53'
+ModuleVersion = '0.0.54'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop', 'Core'
@@ -85,7 +85,7 @@ FunctionsToExport = 'Add-WinADUserGroups', 'Find-UsersProxyAddressesStatus',
                'Disconnect-WinSkype', 'Disconnect-WinAzure', 'Disconnect-WinAzureAD', 
                'Disconnect-WinExchange', 'Disconnect-WinSecurityCompliance', 
                'Disconnect-WinService', 'Disconnect-WinTeams', 'Get-MyIP', 
-               'Request-Credentials', 'Set-PasswordRemotly', 'Convert-BinaryToHex', 
+               'Request-Credentials', 'Set-PasswordRemotely', 'Convert-BinaryToHex', 
                'Convert-BinaryToString', 'Convert-Color', 'Convert-ExchangeEmail', 
                'Convert-ExchangeItems', 'Convert-ExchangeSize', 'ConvertFrom-Color', 
                'Convert-HexToBinary', 'Convert-KeyToKeyValue', 'Convert-Size', 

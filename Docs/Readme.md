@@ -110,6 +110,9 @@ This color converter gives you the hexadecimal values of your RGB colors and vic
 ### [ConvertFrom-SID](ConvertFrom-SID.md)
 {{Fill in the Synopsis}}
 
+### [ConvertFrom-X500Address](ConvertFrom-X500Address.md)
+
+
 ### [ConvertFrom-SID](ConvertFrom-SID.md)
 {{Fill in the Synopsis}}
 
@@ -239,6 +242,9 @@ Short description
 ### [Get-ObjectData](Get-ObjectData.md)
 {{Fill in the Synopsis}}
 
+### [Get-ObjectEnumValues](Get-ObjectEnumValues.md)
+{{Fill in the Synopsis}}
+
 ### [Get-ObjectKeys](Get-ObjectKeys.md)
 {{Fill in the Synopsis}}
 
@@ -335,6 +341,9 @@ Short description
 ### [Remove-DuplicateObjects](Remove-DuplicateObjects.md)
 {{Fill in the Synopsis}}
 
+### [Remove-FilePermission](Remove-FilePermission.md)
+{{Fill in the Synopsis}}
+
 ### [Remove-FromArray](Remove-FromArray.md)
 {{Fill in the Synopsis}}
 
@@ -396,6 +405,12 @@ Short description
 {{Fill in the Synopsis}}
 
 ### [Set-EmailWordReplacementsHash](Set-EmailWordReplacementsHash.md)
+{{Fill in the Synopsis}}
+
+### [Set-FileInheritance](Set-FileInheritance.md)
+{{Fill in the Synopsis}}
+
+### [Set-FilePermission](Set-FilePermission.md)
 {{Fill in the Synopsis}}
 
 ### [Set-SpecUser](Set-SpecUser.md)

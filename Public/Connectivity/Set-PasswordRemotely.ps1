@@ -1,4 +1,4 @@
-function Set-PasswordRemotly {
+function Set-PasswordRemotely {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)][string] $UserName,
