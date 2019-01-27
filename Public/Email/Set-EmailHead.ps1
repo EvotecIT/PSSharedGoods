@@ -3,6 +3,7 @@ function Set-EmailHead {
         $FormattingOptions
     )
     $head = @"
+    <head>
         <style>
         BODY {
             background-color: white;
@@ -67,6 +68,7 @@ function Set-EmailHead {
             font-size: $($FormattingOptions.FontSize);
         }
     </style>
+    </head>
 "@
     return $Head
 }

@@ -3,27 +3,31 @@ function Set-EmailFormatting {
         $Template,
         $FormattingParameters,
         $ConfigurationParameters,
-        $Logger
+        $Logger,
+        [switch] $SkipNewLines
     )
     if ($ConfigurationParameters) {
         $WriteParameters = $ConfigurationParameters.DisplayConsole
     } else {
         $WriteParameters = @{ ShowTime = $true; LogFile = ""; TimeFormat = "yyyy-MM-dd HH:mm:ss" }
     }
-    $Template = $Template.Split("`n") # https://blogs.msdn.microsoft.com/timid/2014/07/09/one-liner-fun-with-multi-line-blocktext-and-split-split/
+   
 
     $Body = "<body>"
 
-    if ($Logger) {
-        $Logger.AddInfoRecord("Preparing template - adding HTML <BR> tags...")
-    } else {
-        Write-Color @WriteParameters -Text "[i] Preparing template ", "adding", " HTML ", "<BR>", " tags." -Color White, Yellow, White, Yellow
-    }
+    if (-not $SkipNewLines) { 
+        $Template = $Template.Split("`n") # https://blogs.msdn.microsoft.com/timid/2014/07/09/one-liner-fun-with-multi-line-blocktext-and-split-split/
+        if ($Logger) {
+            $Logger.AddInfoRecord("Preparing template - adding HTML <BR> tags...")
+        } else {
+            Write-Color @WriteParameters -Text "[i] Preparing template ", "adding", " HTML ", "<BR>", " tags." -Color White, Yellow, White, Yellow
+        }
 
-    $StyleFlag = $false
-    foreach ($t in $Template) {
-        ## needs investigation
-        <#
+        $StyleFlag = $false
+   
+        foreach ($t in $Template) {
+            ## needs investigation
+            <#
         if ($t -match 'style>') {
             $StyleFlag = -not $StyleFlag
         }
@@ -35,9 +39,13 @@ function Set-EmailFormatting {
             $Body += $t
             continue
         }
-        #>
-        $Body += "$t<br>"
-    }#>
+        #>       
+            $Body += "$t<br>" 
+        
+        }
+    } else {
+        $Body += $Template
+    }
     foreach ($style in $FormattingParameters.Styles.GetEnumerator()) {
         foreach ($value in $style.Value) {
             if ($value -eq "") { continue }
