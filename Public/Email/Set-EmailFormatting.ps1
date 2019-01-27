@@ -1,10 +1,12 @@
 function Set-EmailFormatting {
     param (
         $Template,
-        $FormattingParameters,
-        $ConfigurationParameters,
+        [System.Collections.IDictionary] $FormattingParameters,
+        [System.Collections.IDictionary] $ConfigurationParameters,
         $Logger,
-        [switch] $SkipNewLines
+        [switch] $SkipNewLines,
+        [string[]] $AddAfterOpening,
+        [string[]] $AddBeforeClosing
     )
     if ($ConfigurationParameters) {
         $WriteParameters = $ConfigurationParameters.DisplayConsole
@@ -14,6 +16,9 @@ function Set-EmailFormatting {
    
 
     $Body = "<body>"
+    if ($AddAfterOpening) {
+        $Body += $AddAfterOpening
+    }
 
     if (-not $SkipNewLines) { 
         $Template = $Template.Split("`n") # https://blogs.msdn.microsoft.com/timid/2014/07/09/one-liner-fun-with-multi-line-blocktext-and-split-split/
@@ -91,9 +96,12 @@ function Set-EmailFormatting {
         }
 
     }
+    if ($AddAfterOpening) {
+        $Body += $AddBeforeClosing
+    }
+    $Body += '</body>'
     if ($ConfigurationParameters) {
         if ($ConfigurationParameters.DisplayTemplateHTML -eq $true) { Get-HTML($Body) }
     }
-    $Body += '</body>'
     return $Body
 }

@@ -1,10 +1,10 @@
 function Send-Email {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
-        [hashtable] $EmailParameters,
+        [System.Collections.IDictionary] $EmailParameters,
         [string] $Body = "",
         [string[]] $Attachment,
-        [hashtable] $InlineAttachments,
+        [System.Collections.IDictionary] $InlineAttachments,
         [string] $Subject = "",
         [string[]] $To
     )

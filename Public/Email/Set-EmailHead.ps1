@@ -1,6 +1,6 @@
 function Set-EmailHead {
     param(
-        $FormattingOptions
+        [System.Collections.IDictionary] $FormattingOptions
     )
     $head = @"
     <head>
