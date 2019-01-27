@@ -6,7 +6,7 @@ function Stop-Runspace {
         [System.Management.Automation.Runspaces.RunspacePool] $RunspacePool,
         [switch] $ExtendedOutput
     )
-    $List = while ($Runspaces.Status -ne $null) {
+    [Array] $List = while ($Runspaces.Status -ne $null) {
         foreach ($Runspace in $Runspaces | Where-Object { $_.Status.IsCompleted -eq $true }) {
             $Errors = foreach ($e in $($Runspace.Pipe.Streams.Error)) {
                 Write-Error -ErrorRecord $e
@@ -31,5 +31,5 @@ function Stop-Runspace {
     }
     $RunspacePool.Close()
     $RunspacePool.Dispose()
-    return $List
+    return , $List
 }
