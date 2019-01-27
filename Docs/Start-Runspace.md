@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Start-Runspace [[-ScriptBlock] <String>] [[-Parameters] <Hashtable>] [[-RunspacePool] <RunspacePool>]
+Start-Runspace [[-ScriptBlock] <String>] [[-Parameters] <IDictionary>] [[-RunspacePool] <RunspacePool>]
  [<CommonParameters>]
 ```
 
@@ -35,7 +35,7 @@ PS C:\> {{ Add example code here }}
 {{Fill Parameters Description}}
 
 ```yaml
-Type: Hashtable
+Type: IDictionary
 Parameter Sets: (All)
 Aliases:
 

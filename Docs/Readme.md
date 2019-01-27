@@ -239,9 +239,6 @@ Short description
 ### [Get-ModulesAvailability](Get-ModulesAvailability.md)
 {{Fill in the Synopsis}}
 
-### [Get-MyIP](Get-MyIP.md)
-{{Fill in the Synopsis}}
-
 ### [Get-MyIpAddress](Get-MyIpAddress.md)
 {{Fill in the Synopsis}}
 

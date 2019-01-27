@@ -14,7 +14,7 @@ schema: 2.0.0
 
 ```
 Set-EmailFormatting [[-Template] <Object>] [[-FormattingParameters] <Object>]
- [[-ConfigurationParameters] <Object>] [[-Logger] <Object>] [<CommonParameters>]
+ [[-ConfigurationParameters] <Object>] [[-Logger] <Object>] [-SkipNewLines] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -71,6 +71,21 @@ Aliases:
 
 Required: False
 Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SkipNewLines
+{{Fill SkipNewLines Description}}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
