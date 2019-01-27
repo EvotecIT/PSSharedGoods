@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Search-Command
+# Install-ApplicationClickOnce
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Search-Command [[-CommandName] <String>] [<CommonParameters>]
+Install-ApplicationClickOnce [[-Manifest] <String>] [-ElevatePermissions] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,8 +30,23 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -CommandName
-{{Fill CommandName Description}}
+### -ElevatePermissions
+{{Fill ElevatePermissions Description}}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Manifest
+{{Fill Manifest Description}}
 
 ```yaml
 Type: String

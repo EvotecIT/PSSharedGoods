@@ -80,6 +80,9 @@ This color converter gives you the hexadecimal values of your RGB colors and vic
 ### [Convert-KeyToKeyValue](Convert-KeyToKeyValue.md)
 {{Fill in the Synopsis}}
 
+### [Convert-Office365License](Convert-Office365License.md)
+{{Fill in the Synopsis}}
+
 ### [Convert-Size](Convert-Size.md)
 {{Fill in the Synopsis}}
 
@@ -224,6 +227,9 @@ Short description
 ### [Get-InstalledApplication](Get-InstalledApplication.md)
 
 
+### [Get-IPAddressInformation](Get-IPAddressInformation.md)
+{{Fill in the Synopsis}}
+
 ### [Get-Logger](Get-Logger.md)
 {{Fill in the Synopsis}}
 
@@ -234,6 +240,9 @@ Short description
 {{Fill in the Synopsis}}
 
 ### [Get-MyIP](Get-MyIP.md)
+{{Fill in the Synopsis}}
+
+### [Get-MyIpAddress](Get-MyIpAddress.md)
 {{Fill in the Synopsis}}
 
 ### [Get-ObjectCount](Get-ObjectCount.md)
@@ -309,6 +318,12 @@ Short description
 {{Fill in the Synopsis}}
 
 ### [Get-WinADUserSnapshot](Get-WinADUserSnapshot.md)
+{{Fill in the Synopsis}}
+
+### [Install-ApplicationClickOnce](Install-ApplicationClickOnce.md)
+{{Fill in the Synopsis}}
+
+### [Install-WinConnectity](Install-WinConnectity.md)
 {{Fill in the Synopsis}}
 
 ### [Merge-Objects](Merge-Objects.md)
@@ -413,6 +428,9 @@ Short description
 ### [Set-FilePermission](Set-FilePermission.md)
 {{Fill in the Synopsis}}
 
+### [Set-PasswordRemotely](Set-PasswordRemotely.md)
+{{Fill in the Synopsis}}
+
 ### [Set-SpecUser](Set-SpecUser.md)
 {{Fill in the Synopsis}}
 
@@ -488,6 +506,9 @@ Short description
 ### [Test-ForestConnectivity](Test-ForestConnectivity.md)
 {{Fill in the Synopsis}}
 
+### [Test-InstalledApplication](Test-InstalledApplication.md)
+{{Fill in the Synopsis}}
+
 ### [Test-Key](Test-Key.md)
 {{Fill in the Synopsis}}
 
@@ -495,5 +516,8 @@ Short description
 {{Fill in the Synopsis}}
 
 ### [Test-WinRM](Test-WinRM.md)
+{{Fill in the Synopsis}}
+
+### [Uninstall-ApplicationClickOnce](Uninstall-ApplicationClickOnce.md)
 {{Fill in the Synopsis}}
 

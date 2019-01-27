@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Search-Command
+# Get-IPAddressInformation
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Search-Command [[-CommandName] <String>] [<CommonParameters>]
+Get-IPAddressInformation [[-IP] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,8 +30,8 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -CommandName
-{{Fill CommandName Description}}
+### -IP
+{{Fill IP Description}}
 
 ```yaml
 Type: String

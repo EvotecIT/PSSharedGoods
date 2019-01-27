@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Test-AvailabilityCommands [[-Commands] <Object>] [<CommonParameters>]
+Test-AvailabilityCommands [[-Commands] <String[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,7 +34,7 @@ PS C:\> {{ Add example code here }}
 {{Fill Commands Description}}
 
 ```yaml
-Type: Object
+Type: String[]
 Parameter Sets: (All)
 Aliases:
 

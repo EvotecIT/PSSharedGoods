@@ -1,4 +1,5 @@
-function Get-MyIP {
+function Get-MyIpAddress {
+    [alias('Get-MyIP')]
     [CmdletBinding()]
     param()
     $DNSParam = @{

@@ -31,21 +31,6 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -AddSeparator
-{{Fill AddSeparator Description}}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Emails
 {{Fill Emails Description}}
 
@@ -55,7 +40,22 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 0
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Separator
+{{Fill Separator Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -91,16 +91,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Separator
-{{Fill Separator Description}}
+### -AddSeparator
+{{Fill AddSeparator Description}}
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 1
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

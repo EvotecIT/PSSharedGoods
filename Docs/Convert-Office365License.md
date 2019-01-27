@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Search-Command
+# Convert-Office365License
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,8 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Search-Command [[-CommandName] <String>] [<CommonParameters>]
+Convert-Office365License [[-License] <String[]>] [-ToSku] [[-Separator] <String>] [-ReturnArray]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,8 +31,38 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -CommandName
-{{Fill CommandName Description}}
+### -License
+{{Fill License Description}}
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ToSku
+Converts license name to SKU
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: SKU
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Separator
+{{Fill Separator Description}}
 
 ```yaml
 Type: String
@@ -39,8 +70,23 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 0
-Default value: None
+Position: 2
+Default value: ,
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ReturnArray
+{{Fill ReturnArray Description}}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

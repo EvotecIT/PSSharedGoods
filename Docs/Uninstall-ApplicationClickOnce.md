@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Search-Command
+# Uninstall-ApplicationClickOnce
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Search-Command [[-CommandName] <String>] [<CommonParameters>]
+Uninstall-ApplicationClickOnce [[-DisplayName] <Object>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,13 +30,13 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -CommandName
-{{Fill CommandName Description}}
+### -DisplayName
+{{Fill DisplayName Description}}
 
 ```yaml
-Type: String
+Type: Object
 Parameter Sets: (All)
-Aliases:
+Aliases: ApplicationName
 
 Required: False
 Position: 0
