@@ -1,4 +1,5 @@
 function Convert-HexToBinary {
+	[CmdletBinding()]
 	param(
         [Parameter(Position=0, Mandatory=$true, ValueFromPipeline=$true)] [string] $Hex
     )

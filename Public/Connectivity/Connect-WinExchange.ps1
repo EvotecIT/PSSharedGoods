@@ -16,7 +16,7 @@ function Connect-WinExchange {
     if ($MultiFactorAuthentication) {
         Write-Verbose 'Connect-WinExchange - Using MFA option'
         try {
-            Import-Module $((Get-ChildItem -Path $($env:LOCALAPPDATA + "\Apps\2.0\") -Filter Microsoft.Exchange.Management.ExoPowershellModule.dll -Recurse).FullName | ? { $_ -notmatch "_none_" } | select -First 1)
+            Import-Module -ErrorAction Stop $((Get-ChildItem -Path $($env:LOCALAPPDATA + "\Apps\2.0\") -Filter Microsoft.Exchange.Management.ExoPowershellModule.dll -Recurse).FullName | Where-Object { $_ -notmatch "_none_" } | select -First 1)
         } catch {
             if ($Output) {
                 $Object += @{ Status = $false; Output = $SessionName; Extended = "Connection failed. Couldn't find Exchange Online module to load." }

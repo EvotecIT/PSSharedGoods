@@ -1,7 +1,7 @@
 function Search-Command {
     [cmdletbinding()]
     param (
-        $CommandName
+        [string] $CommandName
     )
     return [bool](Get-Command -Name $CommandName -ErrorAction SilentlyContinue)
 }
