@@ -13,8 +13,9 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Set-EmailFormatting [[-Template] <Object>] [[-FormattingParameters] <Object>]
- [[-ConfigurationParameters] <Object>] [[-Logger] <Object>] [-SkipNewLines] [<CommonParameters>]
+Set-EmailFormatting [[-Template] <Object>] [[-FormattingParameters] <IDictionary>]
+ [[-ConfigurationParameters] <IDictionary>] [[-Logger] <Object>] [-SkipNewLines]
+ [[-AddAfterOpening] <String[]>] [[-AddBeforeClosing] <String[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,11 +32,41 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
+### -AddAfterOpening
+{{Fill AddAfterOpening Description}}
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AddBeforeClosing
+{{Fill AddBeforeClosing Description}}
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 5
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ConfigurationParameters
 {{Fill ConfigurationParameters Description}}
 
 ```yaml
-Type: Object
+Type: IDictionary
 Parameter Sets: (All)
 Aliases:
 
@@ -50,7 +81,7 @@ Accept wildcard characters: False
 {{Fill FormattingParameters Description}}
 
 ```yaml
-Type: Object
+Type: IDictionary
 Parameter Sets: (All)
 Aliases:
 

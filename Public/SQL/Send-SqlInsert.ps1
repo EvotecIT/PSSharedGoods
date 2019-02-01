@@ -1,9 +1,8 @@
 function Send-SqlInsert {
     [CmdletBinding()]
     param(
-        [Object] $Object,
-        [Object] $SqlSettings,
-        [string] $CheckDuplicateColumn
+        [Array] $Object,
+        [System.Collections.IDictionary] $SqlSettings
     )
     $Queries = New-ArrayList
     $ReturnData = @()
@@ -64,6 +63,7 @@ function Send-SqlInsert {
 
     $Queries += New-SqlQuery -Object $Object -SqlSettings $SqlSettings -TableMapping $TableMapping
     foreach ($Query in $Queries) {
+        #Write-Verbose "Send-SqlInsert - query: $Query"
         $ReturnData += $Query
         try {
             if ($Query) {
@@ -71,7 +71,7 @@ function Send-SqlInsert {
             }
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-            $ReturnData += "Error occured: $ErrorMessage"
+            $ReturnData += "Error occured (Send-SqlInsert): $ErrorMessage"
         }
     }
     return $ReturnData

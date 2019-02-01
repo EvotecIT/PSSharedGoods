@@ -16,8 +16,13 @@ function New-SqlQuery {
     END
     #>
 
+
+
     $ArraySQLQueries = New-ArrayList
     if ($Object -ne $null) {
+
+      
+
         ## Added fields to know when event was added to SQL and by WHO (in this case TaskS Scheduler User)
         ## Only adding when $Object exists
         foreach ($O in $Object) {
@@ -31,7 +36,7 @@ function New-SqlQuery {
             if (-not $O.AddedWho) {
                 Add-Member -InputObject $O -MemberType NoteProperty -Name "AddedWho" -Value ($Env:USERNAME)
             }
-
+            <#
             if ([string]::IsNullOrWhiteSpace($SqlSettings.SqlCheckBeforeInsert)) {
                 $DuplicateColumn = ''
                 $DuplicateValue = ''
@@ -40,6 +45,9 @@ function New-SqlQuery {
                 $DuplicateColumn = ($SqlSettings.SqlCheckBeforeInsert).Replace("[", '').Replace("]", '') # Remove [ ] for comparision
                 $DuplicateValue = ''
             }
+#>
+
+            $DuplicateString = [System.Text.StringBuilder]::new()
             foreach ($E in $O.PSObject.Properties) {
                 $FieldName = $E.Name
                 $FieldValue = $E.Value
@@ -61,21 +69,35 @@ function New-SqlQuery {
                             #if ($DuplicateColumn -eq $FieldName) {
                             #    $DuplicateValue = "'$FieldValue'"
                             #}
-                            if ($MapValueSplit[0] -eq $DuplicateColumn) {
-                                $DuplicateColumn = "[$DuplicateColumn]" # add [] to make sure spaces are supported
-                                $DuplicateValue = "'$FieldValue'"
+                            # if (-not [string]::IsNullOrWhiteSpace($SqlSettings.SqlCheckBeforeInsert)) {
+                            foreach ($ColumnName in $SqlSettings.SqlCheckBeforeInsert) {
+                                $DuplicateColumn = $ColumnName.Replace("[", '').Replace("]", '') # Remove [ ] for comparision
+
+                                if ($MapValueSplit[0] -eq $DuplicateColumn) {
+                                    #$DuplicateColumn = "[$DuplicateColumn]" # add [] to make sure spaces are supported
+                                    #$DuplicateValue = "'$FieldValue'"
+                                    if ($DuplicateString.Length -ne 0) {
+                                        # Means something is already in string so most likely 2nd run
+                                        $null = $DuplicateString.Append(" AND ")
+                                    }
+                                    $null = $DuplicateString.Append("[$DuplicateColumn] = '$FieldValue'")
+                                    
+                                }
                             }
+                            #   }
                             Add-ToArray -List $ArrayValues -Element "'$FieldValue'"
                         }
                     }
                 }
             }
+
+
             if ($ArrayKeys) {
-                if ($SqlSettings.SqlCheckBeforeInsert -ne $null -and $DuplicateColumn -ne '' -and $DuplicateValue -ne '') {
+                if ($SqlSettings.SqlCheckBeforeInsert -ne $null -and $DuplicateString.Length -gt 0) {
                     Add-ToArray -List $ArrayMain -Element "IF NOT EXISTS ("
                     Add-ToArray -List $ArrayMain -Element "SELECT 1 FROM "
                     Add-ToArray -List $ArrayMain -Element "$($SqlSettings.SqlTable) "
-                    Add-ToArray -List $ArrayMain -Element "WHERE $DuplicateColumn = $DuplicateValue"
+                    Add-ToArray -List $ArrayMain -Element "WHERE $($DuplicateString.ToString())"
                     Add-ToArray -List $ArrayMain -Element ")"
                 }
                 Add-ToArray -List $ArrayMain -Element "BEGIN"

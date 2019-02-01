@@ -13,9 +13,9 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Send-Email [[-EmailParameters] <Hashtable>] [[-Body] <String>] [[-Attachment] <String[]>]
- [[-InlineAttachments] <Hashtable>] [[-Subject] <String>] [[-To] <String[]>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Send-Email [[-Email] <IDictionary>] [[-Body] <String>] [[-Attachment] <String[]>]
+ [[-InlineAttachments] <IDictionary>] [[-Subject] <String>] [[-To] <String[]>] [[-Logger] <PSObject>] [-WhatIf]
+ [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -77,13 +77,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -EmailParameters
-{{Fill EmailParameters Description}}
+### -Email
+{{Fill Email Description}}
 
 ```yaml
-Type: Hashtable
+Type: IDictionary
 Parameter Sets: (All)
-Aliases:
+Aliases: EmailParameters
 
 Required: False
 Position: 0
@@ -96,12 +96,27 @@ Accept wildcard characters: False
 {{Fill InlineAttachments Description}}
 
 ```yaml
-Type: Hashtable
+Type: IDictionary
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Logger
+{{Fill Logger Description}}
+
+```yaml
+Type: PSObject
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 6
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

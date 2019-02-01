@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Set-EmailHead [[-FormattingOptions] <Object>] [<CommonParameters>]
+Set-EmailHead [[-FormattingOptions] <IDictionary>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -34,7 +34,7 @@ PS C:\> {{ Add example code here }}
 {{Fill FormattingOptions Description}}
 
 ```yaml
-Type: Object
+Type: IDictionary
 Parameter Sets: (All)
 Aliases:
 

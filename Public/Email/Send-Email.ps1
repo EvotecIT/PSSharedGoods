@@ -1,13 +1,44 @@
 function Send-Email {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
-        [System.Collections.IDictionary] $EmailParameters,
+        [alias('EmailParameters')][System.Collections.IDictionary] $Email,
         [string] $Body = "",
         [string[]] $Attachment,
         [System.Collections.IDictionary] $InlineAttachments,
         [string] $Subject = "",
-        [string[]] $To
+        [string[]] $To,
+        [PSCustomObject] $Logger
     )
+    try {
+        # Following code makes sure both formats are accepted.
+        if ($Email.EmailTo) {
+            $EmailParameters = $Email.Clone()
+        } else {
+            $EmailParameters = @{
+                EmailFrom                   = $Email.From
+                EmailTo                     = $Email.To
+                EmailCC                     = $Email.CC
+                EmailBCC                    = $Email.BCC
+                EmailReplyTo                = $Email.ReplyTo
+                EmailServer                 = $Email.Server
+                EmailServerPassword         = $Email.Password
+                EmailServerPasswordAsSecure = $Email.PasswordAsSecure
+                EmailServerPasswordFromFile = $Email.PasswordFromFile
+                EmailServerPort             = $Email.Port
+                EmailServerLogin            = $Email.Login
+                EmailServerEnableSSL        = $Email.EnableSsl
+                EmailEncoding               = $Email.Encoding
+                EmailSubject                = $Email.Subject
+                EmailPriority               = $Email.Priority
+            }
+        }
+    } catch {    
+        return @{
+            Status = $False
+            Error  = $($_.Exception.Message)
+            SentTo = ""
+        }
+    }  
     $SmtpClient = New-Object -TypeName System.Net.Mail.SmtpClient
     if ($EmailParameters.EmailServer) {
         $SmtpClient.Host = $EmailParameters.EmailServer
@@ -105,9 +136,19 @@ function Send-Email {
     if ($PSBoundParameters.ContainsKey('Attachment')) {
         foreach ($Attach in $Attachment) {
             if (Test-Path $Attach) {
-                $File = New-Object Net.Mail.Attachment($Attach)
-                Write-Verbose "Send-Email - Attaching file $Attach"
-                $MailMessage.Attachments.Add($File)
+                try {
+                    $File = New-Object Net.Mail.Attachment($Attach)
+                    Write-Verbose "Send-Email - Attaching file $Attach"
+                    $MailMessage.Attachments.Add($File)
+                } catch {
+                    # non critical error
+                    $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+                    if ($Logger) {
+                    $Logger.AddErrorRecord("Error attaching file $Attach`: $ErrorMessage")
+                    } else {
+                        Write-Error "Error attaching file $Attach`: $ErrorMessage"
+                    }
+                }
             }
         }
     }

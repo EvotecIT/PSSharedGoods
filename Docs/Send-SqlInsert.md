@@ -13,8 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Send-SqlInsert [[-Object] <Object>] [[-SqlSettings] <Object>] [[-CheckDuplicateColumn] <String>]
- [<CommonParameters>]
+Send-SqlInsert [[-Object] <Array>] [[-SqlSettings] <IDictionary>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -31,26 +30,11 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -CheckDuplicateColumn
-{{Fill CheckDuplicateColumn Description}}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Object
 {{Fill Object Description}}
 
 ```yaml
-Type: Object
+Type: Array
 Parameter Sets: (All)
 Aliases:
 
@@ -65,7 +49,7 @@ Accept wildcard characters: False
 {{Fill SqlSettings Description}}
 
 ```yaml
-Type: Object
+Type: IDictionary
 Parameter Sets: (All)
 Aliases:
 
