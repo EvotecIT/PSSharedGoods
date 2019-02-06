@@ -83,5 +83,3 @@ function Find-ServerTypes {
         }
     }
 }
-
-Find-ServerTypes -Type ADConnect, Exchange, SQL | Format-Table *

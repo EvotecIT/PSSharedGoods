@@ -28,5 +28,3 @@ function Find-ExchangeServer {
         }
     }
 }
-
-Find-ExchangeServer | Format-Table -Autosize *
