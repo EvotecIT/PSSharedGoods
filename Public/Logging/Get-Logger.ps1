@@ -26,12 +26,9 @@
 function Get-Logger {
     [CmdletBinding(DefaultParameterSetName="All")]
     param (
-        [Parameter(Mandatory = $false, ParameterSetName = 'Logpath')]
-        [string] $LogPath,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Complexpath')]
-        [string] $LogsDir,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Complexpath')]
-        [string] $Filename,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Logpath')][string] $LogPath,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Complexpath')][string] $LogsDir,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Complexpath')][string] $Filename,
         [switch] $ShowTime,
         [string] $TimeFormat = 'yyyy-MM-dd HH:mm:ss'
     )
