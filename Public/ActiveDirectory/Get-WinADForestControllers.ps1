@@ -35,7 +35,13 @@ function Get-WinADForestControllers {
         [switch] $TestAvailability,
         [switch] $SkipEmpty
     )
-    $Forest = Get-AdForest
+    try {
+        $Forest = Get-ADForest
+    } catch {
+        $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+        Write-Warning "Get-WinADForestControllers - Couldn't use Get-ADForest feature. Error: $ErrorMessage"
+        return
+    }
     $Servers = foreach ($D in $Forest.Domains) {
         try {
             $DC = Get-ADDomainController -Server $D -Filter *
@@ -45,13 +51,17 @@ function Get-WinADForestControllers {
                     HostName                 = $S.HostName
                     Forest                   = $Forest.RootDomain
                     IPV4Address              = $S.IPV4Address
+                    IPV6Address              = $S.IPV6Address
                     IsGlobalCatalog          = $S.IsGlobalCatalog
                     IsReadOnly               = $S.IsReadOnly
+                    Site                     = $S.Site
                     SchemaMaster             = ($S.OperationMasterRoles -contains 'SchemaMaster')
                     DomainNamingMasterMaster = ($S.OperationMasterRoles -contains 'DomainNamingMaster')
                     PDCEmulator              = ($S.OperationMasterRoles -contains 'PDCEmulator')
                     RIDMaster                = ($S.OperationMasterRoles -contains 'RIDMaster')
                     InfrastructureMaster     = ($S.OperationMasterRoles -contains 'InfrastructureMaster')
+                    LdapPort                 = $S.LdapPort
+                    SslPort                  = $S.SslPort
                     Comment                  = ''
                 }
             }
@@ -61,14 +71,18 @@ function Get-WinADForestControllers {
                 HostName                 = ''
                 Forest                   = $Forest.RootDomain
                 IPV4Address              = ''
+                IPV6Address              = ''
                 IsGlobalCatalog          = ''
                 IsReadOnly               = ''
+                Site                     = ''
                 SchemaMaster             = $false
                 DomainNamingMasterMaster = $false
                 PDCEmulator              = $false
                 RIDMaster                = $false
                 InfrastructureMaster     = $false
-                Comment                  = $_.Exception.Message
+                LdapPort                 = ''
+                SslPort                  = ''
+                Comment                  = $_.Exception.Message -replace "`n", " " -replace "`r", " "
             }
         }
     }
