@@ -71,6 +71,9 @@ This color converter gives you the hexadecimal values of your RGB colors and vic
 ### [Convert-ExchangeItems](Convert-ExchangeItems.md)
 {{Fill in the Synopsis}}
 
+### [Convert-ExchangeRecipientDetails](Convert-ExchangeRecipientDetails.md)
+{{Fill in the Synopsis}}
+
 ### [Convert-ExchangeSize](Convert-ExchangeSize.md)
 {{Fill in the Synopsis}}
 
@@ -140,6 +143,9 @@ This color converter gives you the hexadecimal values of your RGB colors and vic
 ### [Disconnect-WinTeams](Disconnect-WinTeams.md)
 {{Fill in the Synopsis}}
 
+### [Find-ADConnectServer](Find-ADConnectServer.md)
+{{Fill in the Synopsis}}
+
 ### [Find-DatesCurrentDayMinusDayX](Find-DatesCurrentDayMinusDayX.md)
 {{Fill in the Synopsis}}
 
@@ -173,7 +179,16 @@ This color converter gives you the hexadecimal values of your RGB colors and vic
 ### [Find-DatesQuarterLast](Find-DatesQuarterLast.md)
 {{Fill in the Synopsis}}
 
+### [Find-ExchangeServer](Find-ExchangeServer.md)
+Find Exchange Servers in Active Directory
+
+### [Find-HyperVServer](Find-HyperVServer.md)
+{{Fill in the Synopsis}}
+
 ### [Find-MyProgramData](Find-MyProgramData.md)
+{{Fill in the Synopsis}}
+
+### [Find-ServerTypes](Find-ServerTypes.md)
 {{Fill in the Synopsis}}
 
 ### [Find-TypesNeeded](Find-TypesNeeded.md)
@@ -200,7 +215,7 @@ Short description
 ### [Format-TransposeTable](Format-TransposeTable.md)
 {{Fill in the Synopsis}}
 
-### [Format-Verbose](Format-Verbose.md)
+### [Format-TransposeTable](Format-TransposeTable.md)
 {{Fill in the Synopsis}}
 
 ### [Get-CommandInfo](Get-CommandInfo.md)

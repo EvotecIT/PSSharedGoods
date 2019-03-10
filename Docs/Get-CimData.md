@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-RandomStringName
+# Get-CimData
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,8 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Get-RandomStringName [[-Size] <Int32>] [-ToLower] [-ToUpper] [-LettersOnly] [<CommonParameters>]
+Get-CimData [[-ComputerName] <String[]>] [[-Protocol] <String>] [[-Class] <String>] [[-Properties] <String[]>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,26 +31,26 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -LettersOnly
-{{Fill LettersOnly Description}}
+### -Class
+{{Fill Class Description}}
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Size
-{{Fill Size Description}}
+### -ComputerName
+{{Fill ComputerName Description}}
 
 ```yaml
-Type: Int32
+Type: String[]
 Parameter Sets: (All)
 Aliases:
 
@@ -60,38 +61,40 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ToLower
-{{Fill ToLower Description}}
+### -Properties
+{{Fill Properties Description}}
 
 ```yaml
-Type: SwitchParameter
+Type: String[]
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ToUpper
-{{Fill ToUpper Description}}
+### -Protocol
+{{Fill Protocol Description}}
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
 Aliases:
+Accepted values: Default, Dcom, Wsman
 
 Required: False
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Find-ServerTypes
+# Get-ComputerBios
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Find-ServerTypes [[-Type] <String[]>] [<CommonParameters>]
+Get-ComputerBios [[-ComputerName] <Object>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,14 +30,13 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Type
-{{Fill Type Description}}
+### -ComputerName
+{{Fill ComputerName Description}}
 
 ```yaml
-Type: String[]
+Type: Object
 Parameter Sets: (All)
 Aliases:
-Accepted values: All, ADConnect, DomainController, Exchange, Hyper-V, RDSLicense, SQL, VirtualMachine
 
 Required: False
 Position: 0
@@ -47,7 +46,8 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

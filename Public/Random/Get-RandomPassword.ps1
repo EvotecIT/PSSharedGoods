@@ -1,4 +1,5 @@
 function Get-RandomPassword {
+    [cmdletbinding()]
     param(
         [int] $LettersLowerCase = 4,
         [int] $LettersHigherCase = 2,

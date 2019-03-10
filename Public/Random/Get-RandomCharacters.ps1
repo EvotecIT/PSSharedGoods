@@ -1,4 +1,5 @@
 function Get-RandomCharacters {
+    [cmdletbinding()]
     param(
         [int] $length,
         [string] $characters

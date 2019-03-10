@@ -19,11 +19,11 @@ function Merge-Objects {
     )
     $Object = [ordered] @{}
     foreach ($Property in $Object1.PSObject.Properties) {
-        $Object += @{$Property.Name = $Property.Value}
+        $Object.($Property.Name) = $Property.Value
 
     }
     foreach ($Property in $Object2.PSObject.Properties) {
-        $Object += @{$Property.Name = $Property.Value}
+        $Object.($Property.Name) = $Property.Value
     }
     return [pscustomobject] $Object
 }

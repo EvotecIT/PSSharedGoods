@@ -1,8 +1,13 @@
 function Install-WinConnectity {
     param(
         [ValidateSet('MSOnline', 'AzureAD', 'SharePoint', 'ExchangeOnline' )][string[]] $Module,
-        [switch] $All
+        [switch] $All,
+        [switch] $Force
     )
+
+    $Splat = @{
+        Force = $Force
+    }
 
     if ($Module -eq 'MSOnline' -or $All) {
         Install-Module -Name MSOnline

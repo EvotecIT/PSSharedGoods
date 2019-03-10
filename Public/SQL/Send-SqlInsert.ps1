@@ -67,7 +67,7 @@ function Send-SqlInsert {
         $ReturnData += $Query
         try {
             if ($Query) {
-                $ReturnData += Invoke-Sqlcmd2 -SqlInstance $SqlSettings.SqlServer -Database $SqlSettings.SqlDatabase -Query $Query -ErrorAction Stop
+                $ReturnData += Invoke-DbaQuery -SqlInstance $SqlSettings.SqlServer -Database $SqlSettings.SqlDatabase -Query $Query -ErrorAction Stop
             }
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "

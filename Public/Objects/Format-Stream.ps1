@@ -1,5 +1,5 @@
 function Format-Stream {
-    [alias('fs','Format-TableStream','Format-ListStream')]
+    [alias('FS','Format-TableStream','Format-ListStream')]
     ##[alias('ftv','ftd','fto','fth','fti','flv','fld','flo','flh','fli','Format-TableVerbose', 'Format-TableDebug', 'Format-TableInformation', 'Format-TableWarning')]
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param(

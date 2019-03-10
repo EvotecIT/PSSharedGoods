@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Convert-ExchangeRecipientDetails
+# Get-ComputerCPU
 
 ## SYNOPSIS
 {{Fill in the Synopsis}}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Convert-ExchangeRecipientDetails [[-RecipientType] <String>] [-FromKey] [<CommonParameters>]
+Get-ComputerCPU [[-ComputerName] <String[]>] [[-Protocol] <String>] [-All] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,8 +30,8 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -FromKey
-{{Fill FromKey Description}}
+### -All
+{{Fill All Description}}
 
 ```yaml
 Type: SwitchParameter
@@ -45,11 +45,11 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -RecipientType
-{{Fill RecipientType Description}}
+### -ComputerName
+{{Fill ComputerName Description}}
 
 ```yaml
-Type: String
+Type: String[]
 Parameter Sets: (All)
 Aliases:
 
@@ -60,8 +60,25 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Protocol
+{{Fill Protocol Description}}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+Accepted values: Default, Dcom, Wsman
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
