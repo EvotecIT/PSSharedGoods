@@ -31,5 +31,9 @@ function Stop-Runspace {
     }
     $RunspacePool.Close()
     $RunspacePool.Dispose()
-    return , $List
+    if ($List.Count -eq 1) {
+        return , $List
+    } else {
+        return $List
+    }
 }
