@@ -1,4 +1,4 @@
-function Format-PSTableConvertType2 {
+function Format-PSTableConvertCO {
     [CmdletBinding()]
     param(
         [Object] $Object,
@@ -11,19 +11,18 @@ function Format-PSTableConvertType2 {
         [switch] $PreScanHeaders
     )
     if ($Property) {
-        $Object = $Object | Select-Object $Property
+        $Object = $Object | Select-Object -Property $Property
     }
+    $Array = [System.Collections.ArrayList]::new()
+    $Titles = [System.Collections.ArrayList]::new()
 
-    $Array = New-ArrayList
-    $Titles = New-ArrayList
     if ($NoAliasOrScriptProperties) {$PropertyType = 'AliasProperty', 'ScriptProperty'  } else {$PropertyType = ''}
-    #Write-Verbose "Format-PSTableConvertType2 - Option 2 - NoAliasOrScriptProperties: $NoAliasOrScriptProperties"
 
     # Get Titles first (to make sure order is correct for all rows)
     if ($PreScanHeaders) {
         $ObjectProperties = Get-ObjectProperties -Object $Object
         foreach ($Name in $ObjectProperties) {
-            Add-ToArray -List $Titles -Element $Name
+            $null = $Titles.Add($Name)
         }
     } else {
         if ($OverwriteHeaders) {
@@ -36,24 +35,23 @@ function Format-PSTableConvertType2 {
                     $ObjectProperties = $O.PSObject.Properties.Where( { $PropertyType -notcontains $_.MemberType -and $ExcludeProperty -notcontains $_.Name  } ).Name
                 }
                 foreach ($Name in $ObjectProperties) {
-                    Add-ToArray -List $Titles -Element $Name
+                    $null = $Titles.Add($Name)
                 }
                 break
             }
             # Add Titles to Array (if not -SkipTitles)
-
         }
     }
     if (-not $SkipTitle) {
-        Add-ToArray -List $Array -Element $Titles
+        $null = $Array.Add($Titles)
     }
     # Extract data (based on Title)
     foreach ($O in $Object) {
-        $ArrayValues = New-ArrayList
+        $ArrayValues = [System.Collections.ArrayList]::new()
         foreach ($Name in $Titles) {
-            Add-ToArray -List $ArrayValues -Element $O.$Name
+            $null = $ArrayValues.Add($O.$Name)
         }
-        Add-ToArray -List $Array -Element $ArrayValues
+        $null = $Array.Add($ArrayValues)
     }
-    return , $Array
+    if ($Array.Count -eq 1) { , $Array } else { $Array }
 }

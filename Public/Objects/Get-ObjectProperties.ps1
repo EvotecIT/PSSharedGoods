@@ -13,7 +13,7 @@ function Get-ObjectProperties {
         [string[]] $AddProperties, # provides ability to add some custom properties
         [switch] $Sort
     )
-    $Properties = New-ArrayList
+    $Properties = [System.Collections.ArrayList]::new()
     foreach ($O in $Object) {
         $ObjectProperties = $O.PSObject.Properties.Name
         foreach ($Property in $ObjectProperties) {
