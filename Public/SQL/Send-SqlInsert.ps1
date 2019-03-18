@@ -4,8 +4,6 @@ function Send-SqlInsert {
         [Array] $Object,
         [System.Collections.IDictionary] $SqlSettings
     )
-    $Queries = New-ArrayList
-    $ReturnData = @()
     if ($SqlSettings.SqlTableTranspose) {
         $Object = Format-TransposeTable -Object $Object
     }
@@ -20,8 +18,7 @@ function Send-SqlInsert {
             $CreateTableSQL = New-SqlQueryCreateTable -SqlSettings $SqlSettings -TableMapping $TableMapping
         } else {
             Write-Verbose "Send-SqlInsert - SqlTable doesn't exists, no table creation is allowed. Terminating"
-            $ReturnData += "Error occured: SQL Table doesn't exists. SqlTableCreate option is disabled"
-            return $ReturnData
+            return "Error occured: SQL Table doesn't exists. SqlTableCreate option is disabled"
         }
     } else {
         if ($SqlSettings.SqlTableAlterIfNeeded) {
@@ -43,36 +40,33 @@ function Send-SqlInsert {
             }
         }
     }
-    ### Rest of code is based on TableMapping
-    <#
-    if ($SqlSettings.SqlTableCreate) {
-        if ($SqlTable -eq $null) {
-            # Table doesn't exists
-            $CreateTableSQL = New-SqlQueryCreateTable -SqlSettings $SqlSettings -TableMapping $TableMapping
-
-        } else {
-            # Table exists... altering Table to add missing columns
-            $AlterTableSQL = New-SqlQueryAlterTable -SqlSettings $SqlSettings -TableMapping $TableMapping -ExistingColumns $SqlTable.Column_name
-
+    $Queries = @(
+        if ($CreateTableSQL) { 
+            foreach ($Sql in $CreateTableSQL) {
+                $Sql 
+            }
         }
+        if ($AlterTableSQL) {
+            foreach ($Sql in $AlterTableSQL) {
+                $Sql 
+            }
+        }
+        $SqlQueries = New-SqlQuery -Object $Object -SqlSettings $SqlSettings -TableMapping $TableMapping
+        foreach ($Sql in $SqlQueries) {
+            $Sql
+        }
+    )
 
-    }
-  #>
-    Add-ToArrayAdvanced -List $Queries -Element $CreateTableSQL -SkipNull
-    Add-ToArrayAdvanced -List $Queries -Element $AlterTableSQL -SkipNull
-
-    $Queries += New-SqlQuery -Object $Object -SqlSettings $SqlSettings -TableMapping $TableMapping
-    foreach ($Query in $Queries) {
-        #Write-Verbose "Send-SqlInsert - query: $Query"
-        $ReturnData += $Query
+    $ReturnData = foreach ($Query in $Queries) {
         try {
             if ($Query) {
-                $ReturnData += Invoke-DbaQuery -SqlInstance $SqlSettings.SqlServer -Database $SqlSettings.SqlDatabase -Query $Query -ErrorAction Stop
+                $Query # return query to log
+                Invoke-DbaQuery -SqlInstance "$($SqlSettings.SqlServer)" -Database "$($SqlSettings.SqlDatabase)" -Query $Query -ErrorAction Stop # return output      
             }
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-            $ReturnData += "Error occured (Send-SqlInsert): $ErrorMessage"
+            "Error occured (Send-SqlInsert): $ErrorMessage" # return data
         }
-    }
+    }    
     return $ReturnData
 }
