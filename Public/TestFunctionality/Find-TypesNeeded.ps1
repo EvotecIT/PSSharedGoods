@@ -4,17 +4,12 @@ function Find-TypesNeeded {
         $TypesRequired,
         $TypesNeeded
     )
-    $AllTypes = @()
+    [bool] $Found = $False
     foreach ($Type in $TypesNeeded) {
         if ($TypesRequired -contains $Type) {
-            $AllTypes += $True
-        } else {
-            $AllTypes += $False
+            $Found = $true
+            break
         }
     }
-    if ($AllTypes -contains $True) {
-        return $True
-    } else {
-        return $False
-    }
+    return $Found
 }

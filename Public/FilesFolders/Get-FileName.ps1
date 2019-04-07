@@ -42,7 +42,7 @@ function Get-FileName {
     )
 
     if ($Temporary) {
-        return "$($([System.IO.Path]::GetTempFileName()).Split('.')[0]).$Extension"
+        return "$($([System.IO.Path]::GetTempFileName()).Replace('.tmp','')).$Extension"
     }
     if ($TemporaryFileOnly) {
         # Generates 3ymsxvav.tmp

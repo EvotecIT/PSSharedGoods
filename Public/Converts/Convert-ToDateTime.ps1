@@ -9,7 +9,6 @@ function Convert-ToDateTime {
     } catch {
         $DateTime = $null
     }
-    #Write-Verbose "Convert-ToDateTime: $DateTime"
     if ($null -eq $DateTime -or $DateTime -like $Ignore) {
         return $null
     } else {

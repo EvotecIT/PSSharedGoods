@@ -3,10 +3,8 @@ Function Get-Types {
     param (
         [Object] $Types
     )
-    $TypesRequired = @()
-    foreach ($Type in $Types) {
-        #Write-Verbose "Type: $Type"
-        $TypesRequired += $Type.GetEnumValues()
+    $TypesRequired = foreach ($Type in $Types) {
+        $Type.GetEnumValues()
     }
     return $TypesRequired
 }

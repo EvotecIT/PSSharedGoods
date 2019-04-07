@@ -43,4 +43,4 @@ function Get-ComputerCPU {
 }
 
 
-get-counter -Counter '\Processor(*)\% Processor Time' -SampleInterval 1 -MaxSamples 3 | select -ExpandProperty countersamples | select -ExpandProperty cookedvalue | Measure-Object -Average | select -ExpandProperty Average
+#get-counter -Counter '\Processor(*)\% Processor Time' -SampleInterval 1 -MaxSamples 3 | select -ExpandProperty countersamples | select -ExpandProperty cookedvalue | Measure-Object -Average | select -ExpandProperty Average
