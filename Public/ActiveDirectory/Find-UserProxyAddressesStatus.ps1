@@ -4,7 +4,7 @@ function Find-UsersProxyAddressesStatus {
         $User
     )
     $status = 'No proxy'
-    if ($user.proxyAddresses -ne $null) {
+    if ($null -ne $user.proxyAddresses) {
         $count = 0
         foreach ($proxy in $($user.ProxyAddresses)) {
             if ($proxy.SubString(0, 4) -ceq 'SMTP') { $count++ }
