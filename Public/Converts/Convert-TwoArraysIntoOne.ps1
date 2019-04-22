@@ -7,9 +7,8 @@ function Convert-TwoArraysIntoOne {
         $ObjectToAdd
     )
 
-    $Value = @()
-    for ($i = 0; $i -lt $Object.Count; $i++) {
-        $Value += "$($Object[$i]) ($($ObjectToAdd[$i]))"
+    $Value = for ($i = 0; $i -lt $Object.Count; $i++) {
+        "$($Object[$i]) ($($ObjectToAdd[$i]))"
     }
     return $Value
 }

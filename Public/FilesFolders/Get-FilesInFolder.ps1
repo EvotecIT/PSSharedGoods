@@ -4,10 +4,10 @@ function Get-FilesInFolder {
         [string] $Folder,
         [string] $Extension = '*.evtx'
     )
-    $ReturnFiles = @()
+
     $Files = Get-ChildItem -Path $Folder -Filter $Extension -Recurse
-    foreach ($File in $Files) {
-        $ReturnFiles += $File.FullName
+    $ReturnFiles = foreach ($File in $Files) {
+        $File.FullName
     }
     return $ReturnFiles
 }

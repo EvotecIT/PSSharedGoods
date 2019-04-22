@@ -3,19 +3,19 @@ Function Compare-ObjectProperties {
         [PSObject]$ReferenceObject,
         [PSObject]$DifferenceObject
     )
-    $objprops = $ReferenceObject | Get-Member -MemberType Property, NoteProperty | % Name
-    $objprops += $DifferenceObject | Get-Member -MemberType Property, NoteProperty | % Name
+    $objprops = $ReferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name
+    $objprops += $DifferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name
     $objprops = $objprops | Sort | Select -Unique
-    $diffs = @()
-    foreach ($objprop in $objprops) {
+    $diffs = foreach ($objprop in $objprops) {
         $diff = Compare-Object $ReferenceObject $DifferenceObject -Property $objprop
         if ($diff) {
-            $diffprops = @{
+            $diffprops = [PsCustomObject] @{
                 PropertyName = $objprop
-                RefValue     = ($diff | ? {$_.SideIndicator -eq '<='} | % $($objprop))
-                DiffValue    = ($diff | ? {$_.SideIndicator -eq '=>'} | % $($objprop))
+                RefValue     = ($diff | Where-Object {$_.SideIndicator -eq '<='} | % $($objprop))
+                DiffValue    = ($diff | Where-Object {$_.SideIndicator -eq '=>'} | % $($objprop))
             }
-            $diffs += New-Object PSObject -Property $diffprops
+            $diffprops
+            #New-Object PSObject -Property $diffprops
         }
     }
     if ($diffs) {return ($diffs | Select PropertyName, RefValue, DiffValue)}

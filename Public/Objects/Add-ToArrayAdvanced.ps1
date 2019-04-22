@@ -8,7 +8,7 @@ function Add-ToArrayAdvanced {
         [switch] $FullComparison,
         [switch] $Merge
     )
-    if ($SkipNull -and $Element -eq $null) {
+    if ($SkipNull -and $null -eq $Element) {
         #Write-Verbose "Add-ToArrayAdvanced - SkipNull used"
         return
     }
