@@ -4,23 +4,17 @@ function Format-View {
     param(
         [Parameter(Mandatory = $false, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         [object] $InputObject,
-
         [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 1, ParameterSetName = 'Property')]
         [Object[]] $Property,
-
         [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 2, ParameterSetName = 'ExcludeProperty')]
         [Object[]] $ExcludeProperty,
-
         [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 3)]
         [switch] $HideTableHeaders,
-
         [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 6)]
         [validateset('Output', 'Host', 'Warning', 'Verbose', 'Debug', 'Information')]
         [string] $Stream = 'Verbose',
-
         [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 7)]
         [alias('AsList')][switch] $List,
-
         [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 8)]
         [switch] $Autosize
     )

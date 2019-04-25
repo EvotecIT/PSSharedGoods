@@ -15,11 +15,11 @@ function Convert-TimeToDays {
         } catch {}
     } elseif ($null -ne $EndTime) {
         if ($StartTime -notlike $Ignore -and $EndTime -notlike $Ignore) {
-            $Days = (NEW-TIMESPAN -Start (GET-DATE) -End ($EndTime)).Days
+            $Days = (NEW-TIMESPAN -Start (Get-Date) -End ($EndTime)).Days
         }
     } elseif ($null -ne $StartTime) {
         if ($StartTime -notlike $Ignore -and $EndTime -notlike $Ignore) {
-            $Days = (NEW-TIMESPAN -Start $StartTime -End (GET-DATE)).Days
+            $Days = (NEW-TIMESPAN -Start $StartTime -End (Get-Date)).Days
         }
     }
     return $Days

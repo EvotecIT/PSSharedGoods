@@ -1,12 +1,12 @@
 function Stop-Runspace {
     [cmdletbinding()]
     param(
-        [System.Object[]]$Runspaces,
+        [Array] $Runspaces,
         [string] $FunctionName,
         [System.Management.Automation.Runspaces.RunspacePool] $RunspacePool,
         [switch] $ExtendedOutput
     )
-    [Array] $List = while ($null -ne $Runspaces.Status) {
+    [Array] $List = while ($Runspaces.Status -ne $null) {
         foreach ($Runspace in $Runspaces | Where-Object { $_.Status.IsCompleted -eq $true }) {
             $Errors = foreach ($e in $($Runspace.Pipe.Streams.Error)) {
                 Write-Error -ErrorRecord $e
