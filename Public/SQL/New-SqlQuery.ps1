@@ -25,10 +25,10 @@ function New-SqlQuery {
             $ArrayValues = New-ArrayList
 
             if (-not $O.AddedWhen) {
-                Add-Member -InputObject $O -MemberType NoteProperty -Name "AddedWhen" -Value (Get-Date)
+                Add-Member -InputObject $O -MemberType NoteProperty -Name "AddedWhen" -Value (Get-Date) -Force
             }
             if (-not $O.AddedWho) {
-                Add-Member -InputObject $O -MemberType NoteProperty -Name "AddedWho" -Value ($Env:USERNAME)
+                Add-Member -InputObject $O -MemberType NoteProperty -Name "AddedWho" -Value ($Env:USERNAME) -Force
             }
             $DuplicateString = [System.Text.StringBuilder]::new()
             foreach ($E in $O.PSObject.Properties) {
@@ -58,7 +58,7 @@ function New-SqlQuery {
                                         $null = $DuplicateString.Append(" AND ")
                                     }
                                     $null = $DuplicateString.Append("[$DuplicateColumn] = '$FieldValue'")
-                                    
+
                                 }
                             }
                             Add-ToArray -List $ArrayValues -Element "'$FieldValue'"
