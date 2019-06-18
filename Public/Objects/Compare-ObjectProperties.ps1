@@ -4,16 +4,18 @@ Function Compare-ObjectProperties {
         [PSObject]$DifferenceObject,
         [switch]$CaseSensitive = $false
     )
-    $objprops = $ReferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name
-    $objprops += $DifferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name
-    $objprops = $objprops | Sort-Object | Select-Object -Unique
+    $objprops = @(
+                  $($ReferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name),
+                  $($DifferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name)
+                  )
+    $objprops = $objprops | Sort-Object -Unique
     $diffs = foreach ($objprop in $objprops) {
-        $diff = Compare-Object $ReferenceObject $DifferenceObject -Property $objprop -CaseSensitive $CaseSensitive
+        $diff = Compare-Object $ReferenceObject $DifferenceObject -Property $objprop -CaseSensitive:$CaseSensitive
         if ($diff) {
             $diffprops = [PsCustomObject] @{
                 PropertyName = $objprop
-                RefValue     = ($diff | Where-Object {$_.SideIndicator -eq '<='} | Foreach-Obect $($objprop))
-                DiffValue    = ($diff | Where-Object {$_.SideIndicator -eq '=>'} | Foreach-Obect $($objprop))
+                RefValue     = ($diff | Where-Object {$_.SideIndicator -eq '<='} | ForEach-Object $($objprop))
+                DiffValue    = ($diff | Where-Object {$_.SideIndicator -eq '=>'} | ForEach-Object $($objprop))
             }
             $diffprops
             #New-Object PSObject -Property $diffprops
