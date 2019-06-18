@@ -8,7 +8,7 @@ Function Compare-ObjectProperties {
                   $($ReferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name),
                   $($DifferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name)
                   )
-    $objprops = $objprops | Sort-Object | Select-Object -Unique
+    $objprops = $objprops | Sort-Object -Unique
     $diffs = foreach ($objprop in $objprops) {
         $diff = Compare-Object $ReferenceObject $DifferenceObject -Property $objprop -CaseSensitive:$CaseSensitive
         if ($diff) {
