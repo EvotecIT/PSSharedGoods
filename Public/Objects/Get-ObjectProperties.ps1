@@ -7,25 +7,29 @@ $Test = Get-Process
 
 Get-ObjectProperties -Object $Test
 #>
-function Get-ObjectProperties {
+function Get-ObjectProperties1 {
     param (
         [object] $Object,
         [string[]] $AddProperties, # provides ability to add some custom properties
-        [switch] $Sort
+        [switch] $Sort,
+        [bool] $RequireUnique = $true
     )
-    $Properties = [System.Collections.ArrayList]::new()
-    foreach ($O in $Object) {
-        $ObjectProperties = $O.PSObject.Properties.Name
-        foreach ($Property in $ObjectProperties) {
-            Add-ToArrayAdvanced -List $Properties -Element $Property -SkipNull -RequireUnique
+    $Properties = @(
+        foreach ($O in $Object) {
+            $ObjectProperties = $O.PSObject.Properties.Name
+            $ObjectProperties
+            # foreach ($Property in $ObjectProperties) {
+            #     $Property
+            # }
         }
-    }
-    foreach ($Property in $AddProperties) {
-        Add-ToArrayAdvanced -List $Properties -Element $Property -SkipNull -RequireUnique
-    }
+        foreach ($Property in $AddProperties) {
+            #Add-ToArrayAdvanced -List $Properties -Element $Property -SkipNull -RequireUnique
+            $Property
+        }
+    )
     if ($Sort) {
-        return $Properties | Sort-Object
+        return $Properties | Sort-Object -Unique:$RequireUnique
     } else {
-        return $Properties
+        return $Properties | Select-Object -Unique:$RequireUnique
     }
 }
