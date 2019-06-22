@@ -1,7 +1,7 @@
 ﻿function Format-PSTable {
     [CmdletBinding()]
     param (
-        [parameter(ValueFromPipelineByPropertyName, ValueFromPipeline)][Array] $Object,
+        [parameter(ValueFromPipelineByPropertyName, ValueFromPipeline)][System.Collections.ICollection] $Object,
         [switch] $SkipTitle,
         [string[]] $Property,
         [string[]] $ExcludeProperty,
