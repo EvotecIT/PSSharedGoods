@@ -7,7 +7,7 @@ $Test = Get-Process
 
 Get-ObjectProperties -Object $Test
 #>
-function Get-ObjectProperties1 {
+function Get-ObjectProperties {
     param (
         [object] $Object,
         [string[]] $AddProperties, # provides ability to add some custom properties
