@@ -12,7 +12,7 @@
     if ($Object[0] -is [System.Collections.IDictionary]) {
         $Array = @(
             ### Add Titles
-            if (-not $SkipTitles) {
+            if (-not $SkipTitle) {
                 , @('Name', 'Value')
             }
             ### Add Data

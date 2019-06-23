@@ -1,10 +1,11 @@
 ﻿function Copy-OrderedHashtable {
+    [CmdletBinding()]
     param(
-        $OrderedHashtableSource,
-        $OrderedHashtableTarget
+        [System.Collections.IDictionary] $OrderedHashtableSource,
+        [System.Collections.IDictionary] $OrderedHashtableTarget
     )
     if ($null -eq $OrderedHashtableTarget) {
-        $OrderedHashtableTarget = [ordered] @{}
+        $OrderedHashtableTarget = [ordered] @{ }
     }
     foreach ($pair in $OrderedHashtableSource.GetEnumerator()) {
         $OrderedHashtableTarget[$pair.Key] = $pair.Value
