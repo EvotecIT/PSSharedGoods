@@ -1,24 +1,27 @@
 Function Compare-ObjectProperties {
     Param(
         [PSObject]$ReferenceObject,
-        [PSObject]$DifferenceObject
+        [PSObject]$DifferenceObject,
+        [switch]$CaseSensitive = $false
     )
-    $objprops = $ReferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name
-    $objprops += $DifferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name
-    $objprops = $objprops | Sort | Select -Unique
+    $objprops = @(
+                  $($ReferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name),
+                  $($DifferenceObject | Get-Member -MemberType Property, NoteProperty | ForEach-Object Name)
+                  )
+    $objprops = $objprops | Sort-Object -Unique
     $diffs = foreach ($objprop in $objprops) {
-        $diff = Compare-Object $ReferenceObject $DifferenceObject -Property $objprop
+        $diff = Compare-Object $ReferenceObject $DifferenceObject -Property $objprop -CaseSensitive:$CaseSensitive
         if ($diff) {
             $diffprops = [PsCustomObject] @{
                 PropertyName = $objprop
-                RefValue     = ($diff | Where-Object {$_.SideIndicator -eq '<='} | % $($objprop))
-                DiffValue    = ($diff | Where-Object {$_.SideIndicator -eq '=>'} | % $($objprop))
+                RefValue     = ($diff | Where-Object {$_.SideIndicator -eq '<='} | ForEach-Object $($objprop))
+                DiffValue    = ($diff | Where-Object {$_.SideIndicator -eq '=>'} | ForEach-Object $($objprop))
             }
             $diffprops
             #New-Object PSObject -Property $diffprops
         }
     }
-    if ($diffs) {return ($diffs | Select PropertyName, RefValue, DiffValue)}
+    if ($diffs) {return ($diffs | Select-Object PropertyName, RefValue, DiffValue)}
 }
 <#
 https://blogs.technet.microsoft.com/janesays/2017/04/25/compare-all-properties-of-two-objects-in-windows-powershell/
