@@ -57,8 +57,15 @@
                     # If array contains another array as one of the values we need to do something with it
                     if ($Value.Count -gt 1) {
                         $Value -join $Splitter
+                    } elseif ($Value.Count -eq 1) {
+                        if ($Value.Value) {
+                           $Value.Value
+                           #$Value
+                        } else {
+                            $Value
+                        }
                     } else {
-                        $Value
+                        ''
                     }
                 }
                 , $ArrayValues
