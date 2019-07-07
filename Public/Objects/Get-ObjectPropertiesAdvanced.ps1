@@ -5,13 +5,13 @@ function Get-ObjectPropertiesAdvanced {
         [string[]] $AddProperties, # provides ability to add some custom properties
         [switch] $Sort
     )
-    $Data = @{}
+    $Data = @{ }
     $Properties = New-ArrayList
     $HighestCount = 0
 
     foreach ($O in $Object) {
         $ObjectProperties = $O.PSObject.Properties.Name
-        $Test = $ObjectProperties -join ','
+        # $Test = $ObjectProperties -join ','
         $Count = $ObjectProperties.Count
         if ($Count -gt $HighestCount) {
             $Data.HighestCount = $Count

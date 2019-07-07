@@ -34,7 +34,7 @@ function Format-AddSpaceToSentence {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)][string[]] $Text,
         [switch] $ToLowerCase
     )
-    Begin {}
+    Begin { }
     Process {
         $Value = foreach ($T in $Text) {
             ($T -creplace '([A-Z\W_]|\d+)(?<![a-z])', ' $&').trim()

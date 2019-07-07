@@ -17,7 +17,7 @@ function Convert-ExchangeSize {
     }
     $Pattern = [Regex]::new('(?<=\()([0-9]*[,.].*[0-9])')  # (?<=\()([0-9]*.*[0-9]) works too
     $Value = ($Size | Select-String $Pattern -AllMatches).Matches.Value
-    Write-Verbose "Convert-ExchangeSize - Value Before: $Value"
+    #Write-Verbose "Convert-ExchangeSize - Value Before: $Value"
 
     if ($null -ne $Value) {
         $Value = $Value.Replace(',', '').Replace('.', '')
@@ -31,11 +31,10 @@ function Convert-ExchangeSize {
         "TB" {$Value = $Value / 1TB}
 
     }
-    Write-Verbose "Convert-ExchangeSize - Value After: $Value"
+    #Write-Verbose "Convert-ExchangeSize - Value After: $Value"
     if ($Display) {
         return "$([Math]::Round($value,$Precision,[MidPointRounding]::AwayFromZero)) $To"
     } else {
         return [Math]::Round($value, $Precision, [MidPointRounding]::AwayFromZero)
     }
-
 }
