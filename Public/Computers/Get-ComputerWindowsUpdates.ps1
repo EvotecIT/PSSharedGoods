@@ -3,6 +3,6 @@ function Get-ComputerWindowsUpdates {
         $ComputerName = $Env:COMPUTERNAME
     )
 
-    $Data = Get-hotfix -ComputerName $vComputerName | select Description , HotFixId , InstalledBy, InstalledOn, Caption
+    $Data = Get-hotfix -ComputerName $vComputerName | Select-Object Description , HotFixId , InstalledBy, InstalledOn, Caption
     return $Data
 }
