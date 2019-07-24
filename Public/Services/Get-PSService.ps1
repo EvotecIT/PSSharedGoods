@@ -85,16 +85,16 @@ function Get-PSService {
 
     [cmdletbinding()]
     param (
-        [string[]] $Computers = $Env:COMPUTERNAME,
-        [string[]] $Services,
+        [alias('Computer', 'Computers')][string[]] $ComputerName = $Env:COMPUTERNAME,
+        [alias('Service')][string[]] $Services,
         [int] $MaxRunspaces = [int]$env:NUMBER_OF_PROCESSORS + 1
     )
     if ($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent) { $Verbose = $true } else { $Verbose = $false }
     Write-Verbose 'Get-Service - Starting parallel processing....'
-    $ComputersToProcess = ($Computers | Measure-Object).Count
+    $ComputersToProcess = ($ComputerName | Measure-Object).Count
     $ServicesToProcess = ($Services | Measure-Object).Count
     Write-Verbose -Message "Get-Service - Computers to process: $ComputersToProcess"
-    Write-Verbose -Message "Get-Service - Computers List: $Computers"
+    Write-Verbose -Message "Get-Service - Computers List: $($ComputerName -join ', ')"
     Write-Verbose -Message "Get-Service - Services to process: $ServicesToProcess"
     $MeasureTotal = [System.Diagnostics.Stopwatch]::StartNew() # Timer Start
 
@@ -102,7 +102,7 @@ function Get-PSService {
     $Pool = New-Runspace -MaxRunspaces $maxRunspaces
     ### Define Runspace END
     $runspaces = @(
-        foreach ($Computer in $Computers) {
+        foreach ($Computer in $ComputerName) {
             if ($null -ne $Services) {
                 foreach ($ServiceName in $Services) {
                     Write-Verbose "Get-Service - Getting service $ServiceName on $Computer"
