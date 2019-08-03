@@ -1,7 +1,8 @@
 function Get-ComputerServices {
+    [CmdletBinding()]
     param(
-        $ComputerName = $Env:COMPUTERNAME
+        [stirng] $ComputerName = $Env:COMPUTERNAME
     )
-    $Services = Get-Service -ComputerName $ComputerName | Select-Object Name, Displayname, Status
+    $Services = Get-PSService -ComputerName $ComputerName | Select-Object Name, Displayname, Status
     return $Services
 }

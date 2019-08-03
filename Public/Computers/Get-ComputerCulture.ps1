@@ -1,9 +1,10 @@
 function Get-ComputerCulture {
+    [CmdletBinding()]
     param(
-        $ComputerName = $Env:COMPUTERNAME
+        [string] $ComputerName = $Env:COMPUTERNAME
     )
     $ScriptBlock = {
-        get-culture | select KeyboardLayoutId, DisplayName, @{Expression = {$_.ThreeLetterWindowsLanguageName}; Label = "Windows Language"}
+        Get-Culture | Select-Object KeyboardLayoutId, DisplayName, @{Expression = { $_.ThreeLetterWindowsLanguageName }; Label = "Windows Language" }
     }
     if ($ComputerName -eq $Env:COMPUTERNAME) {
         $Data8 = Invoke-Command -ScriptBlock $ScriptBlock

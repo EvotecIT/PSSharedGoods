@@ -1,6 +1,7 @@
 function Get-ComputerOemInformation {
+    [CmdletBinding()]
     param(
-        $ComputerName = $Env:COMPUTERNAME
+        [string] $ComputerName = $Env:COMPUTERNAME
     )
     $ScriptBlock = { Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation | Select-Object Model, Manufacturer, Logo, SupportPhone, SupportURL, SupportHours }
     if ($ComputerName -eq $Env:COMPUTERNAME) {

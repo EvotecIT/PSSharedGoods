@@ -32,13 +32,13 @@ function Send-Email {
                 EmailPriority               = $Email.Priority
             }
         }
-    } catch {    
+    } catch {
         return @{
             Status = $False
             Error  = $($_.Exception.Message)
             SentTo = ""
         }
-    }  
+    }
     $SmtpClient = New-Object -TypeName System.Net.Mail.SmtpClient
     if ($EmailParameters.EmailServer) {
         $SmtpClient.Host = $EmailParameters.EmailServer
@@ -135,7 +135,7 @@ function Send-Email {
     #  Attaching file (s)
     if ($PSBoundParameters.ContainsKey('Attachment')) {
         foreach ($Attach in $Attachment) {
-            if (Test-Path $Attach) {
+            if (Test-Path -LiteralPath $Attach) {
                 try {
                     $File = New-Object Net.Mail.Attachment($Attach)
                     Write-Verbose "Send-Email - Attaching file $Attach"
@@ -144,7 +144,7 @@ function Send-Email {
                     # non critical error
                     $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
                     if ($Logger) {
-                    $Logger.AddErrorRecord("Error attaching file $Attach`: $ErrorMessage")
+                        $Logger.AddErrorRecord("Error attaching file $Attach`: $ErrorMessage")
                     } else {
                         Write-Error "Error attaching file $Attach`: $ErrorMessage"
                     }

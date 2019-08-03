@@ -1,6 +1,7 @@
 function Get-ComputerApplications {
+    [CmdletBinding()]
     param(
-        $ComputerName = $Env:COMPUTERNAME
+        [string] $ComputerName = $Env:COMPUTERNAME
     )
     $ScriptBlock = {
         $objapp1 = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*

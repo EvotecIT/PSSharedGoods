@@ -1,8 +1,9 @@
 function Get-ComputerWindowsUpdates {
+    [CmdletBinding()]
     param(
-        $ComputerName = $Env:COMPUTERNAME
+        [string] $ComputerName = $Env:COMPUTERNAME
     )
 
-    $Data = Get-hotfix -ComputerName $vComputerName | Select-Object Description , HotFixId , InstalledBy, InstalledOn, Caption
+    $Data = Get-HotFix -ComputerName $vComputerName | Select-Object Description , HotFixId , InstalledBy, InstalledOn, Caption
     return $Data
 }
