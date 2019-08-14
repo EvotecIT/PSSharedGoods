@@ -1,9 +1,37 @@
 function Get-CimData {
+    <#
+    .SYNOPSIS
+    Short description
+
+    .DESCRIPTION
+    Long description
+
+    .PARAMETER ComputerName
+    Parameter description
+
+    .PARAMETER Protocol
+    Parameter description
+
+    .PARAMETER Class
+    Parameter description
+
+    .PARAMETER Properties
+    Parameter description
+
+    .EXAMPLE
+    Get-CimData -Class 'win32_bios' -ComputerName AD1,EVOWIN
+
+    Get-CimData -Class 'win32_bios'
+
+    .NOTES
+    General notes
+    #>
+
     [CmdletBinding()]
     param(
+        [string] $Class,
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
-        [string] $Class,
         [string[]] $Properties = '*'
     )
     $CimObject = @(
@@ -37,5 +65,6 @@ function Get-CimData {
             Write-Warning "Get-ComputerSystem - No data for computer $Computer. Most likely an error on receiving side."
         }
     }
-    return $CimObject
+    # removes unneeded properties
+    return $CimObject | Select-Object -Property * -ExcludeProperty 'CimClass', 'CimInstanceProperties', 'CimSystemProperties'
 }
