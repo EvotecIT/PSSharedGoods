@@ -3,7 +3,8 @@ function Get-ComputerNetwork {
     param(
         [string] $ComputerName = $Env:COMPUTERNAME
     )
-    $Data3 = get-WmiObject win32_networkadapter -ComputerName $ComputerName | Select-Object Name, Manufacturer, Description , AdapterType, Speed, MACAddress, NetConnectionID, PNPDeviceID
-    $Data3 = $Data3 | Select-Object Name, Manufacturer, Speed, AdapterType, MACAddress
-    return $Data3
+    $Data3 = Get-CimData -Class win32_networkadapter -ComputerName $ComputerName -Properties 'DeviceID','Name', 'PNPDeviceID','Speed','NetworkAddresses','PermanentAddress','AdapterType','MACAddress','Manufacturer','NetConnectionID','ProductName','TimeOfLastReset'
+    return $Data3 #| Select-Object 'DeviceID','Name', 'PNPDeviceID','Speed','NetworkAddresses','PermanentAddress','AdapterType','MACAddress','Manufacturer','NetConnectionID','ProductName','TimeOfLastReset'
+
+    # (Get-CimData Win32_NetworkAdapterConfiguration )[4]
 }

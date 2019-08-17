@@ -23,6 +23,8 @@ function Get-CimData {
 
     Get-CimData -Class 'win32_bios'
 
+    # Get-CimClass to get all classes
+
     .NOTES
     General notes
     #>
@@ -34,6 +36,8 @@ function Get-CimData {
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
         [string[]] $Properties = '*'
     )
+    $ExcludeProperties = 'CimClass', 'CimInstanceProperties', 'CimSystemProperties', 'SystemCreationClassName', 'CreationClassName'
+
     $CimObject = @(
         # requires removal of this property for query
         [string[]] $PropertiesOnly = $Properties | Where-Object { $_ -ne 'PSComputerName' }
@@ -41,11 +45,11 @@ function Get-CimData {
         $Computers = $ComputerName | Where-Object { $_ -ne $Env:COMPUTERNAME }
         if ($Computers.Count -gt 0) {
             if ($Protocol = 'Default') {
-                Get-CimInstance -ClassName $Class -ComputerName $Computers -ErrorAction SilentlyContinue -Property $PropertiesOnly | Select-Object $Properties
+                Get-CimInstance -ClassName $Class -ComputerName $Computers -ErrorAction SilentlyContinue -Property $PropertiesOnly | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
             } else {
                 $Option = New-CimSessionOption -Protocol
                 $Session = New-CimSession -ComputerName $Computers -SessionOption $Option -ErrorAction SilentlyContinue
-                $Info = Get-CimInstance -ClassName $Class -CimSession $Session -ErrorAction SilentlyContinue -Property $PropertiesOnly | Select-Object $Properties
+                $Info = Get-CimInstance -ClassName $Class -CimSession $Session -ErrorAction SilentlyContinue -Property $PropertiesOnly | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
                 $null = Remove-CimSession -CimSession $Session -ErrorAction SilentlyContinue
                 $Info
             }
@@ -53,7 +57,7 @@ function Get-CimData {
         # Process local computer
         $Computers = $ComputerName | Where-Object { $_ -eq $Env:COMPUTERNAME }
         if ($Computers.Count -gt 0) {
-            $Info = Get-CimInstance -ClassName $Class -ErrorAction SilentlyContinue -Property $PropertiesOnly | Select-Object $Properties
+            $Info = Get-CimInstance -ClassName $Class -ErrorAction SilentlyContinue -Property $PropertiesOnly | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
             $Info | Add-Member -Name 'PSComputerName' -Value $Env:COMPUTERNAME -MemberType NoteProperty -Force
             $Info
         }
@@ -66,5 +70,5 @@ function Get-CimData {
         }
     }
     # removes unneeded properties
-    return $CimObject | Select-Object -Property * -ExcludeProperty 'CimClass', 'CimInstanceProperties', 'CimSystemProperties'
+    return $CimObject
 }

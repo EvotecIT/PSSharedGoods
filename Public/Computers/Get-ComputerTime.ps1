@@ -15,9 +15,15 @@
     .PARAMETER TimeTarget
     Parameter description
 
+    .PARAMETER ForceCIM
+
+    .PARAMETER ToLocal
+
     .EXAMPLE
 
-    Get-ComputerTime -TimeTarget AD2, AD3, EVOWin | Format-Table
+    Get-ComputerTime -TimeTarget AD2, AD3, EVOWin | Format-Table -AutoSize
+    Get-ComputerTime -TimeSource AD1 -TimeTarget AD2, AD3, EVOWin | Format-Table -AutoSize
+    Get-ComputerTime -TimeSource 'pool.ntp.org' -TimeTarget AD2, AD3, EVOWin | Format-Table -AutoSize
 
     Output
 
@@ -35,13 +41,23 @@
     param(
         [string] $TimeSource,
         [string] $Domain = $Env:USERDNSDOMAIN,
-        [alias('ComputerName')][string[]] $TimeTarget = $ENV:COMPUTERNAME
+        [alias('ComputerName')][string[]] $TimeTarget = $ENV:COMPUTERNAME,
+        [switch] $ForceCIM
     )
     if (-not $TimeSource) {
         $TimeSource = (Get-ADDomainController -Discover -Service PrimaryDC -DomainName $Domain).HostName
     }
 
-    $TimeSourceInformation = Get-CimData -ComputerName $TimeSource -Class 'win32_operatingsystem'
+    if ($ForceCIM) {
+        $TimeSourceInformation = Get-CimData -ComputerName $TimeSource -Class 'win32_operatingsystem'
+        if ($TimeSourceInformation.LocalDateTime) {
+            $TimeSourceInformation = $TimeSourceInformation.LocalDateTime
+        } else {
+            $TimeSourceInformation = $null
+        }
+    } else {
+        $TimeSourceInformation = Get-ComputerTimeNtp -Server $TimeSource -ToLocal
+    }
 
     $TimeTargetInformationCache = @{ }
     $TimeTargetInformation = Get-CimData -ComputerName $TimeTarget -Class 'win32_operatingsystem'
@@ -53,20 +69,23 @@
     foreach ($_ in $TimeLocal) {
         $TimeLocalCache[$_.PSComputerName] = $_
     }
-    #$Information | ft PSComputerName, Name, LocalDateTime, LastBootUpTime
-    #$InformationPDC | ft PSComputerName, Name, LocalDateTime, LastBootUpTime
-
 
     $AllResults = foreach ($Computer in $TimeTarget) {
         $WMIComputerTime = $TimeLocalCache[$Computer]
         $WMIComputerTarget = $TimeTargetInformationCache[$Computer]
 
-        if ($WMIComputerTarget.LocalDateTime -and $TimeSourceInformation.LocalDateTime) {
-            $Result = New-TimeSpan -Start $TimeSourceInformation.LocalDateTime -End $WMIComputerTarget.LocalDateTime
+        if ($WMIComputerTime -and $WMIComputerTime.Year -and $WMIComputerTime.Month) {
+            $RemoteDateTime = Get-Date -Year $WMIComputerTime.Year -Month $WMIComputerTime.Month -Day $WMIComputerTime.Day -Hour $WMIComputerTime.Hour -Minute $WMIComputerTime.Minute -Second $WMIComputerTime.Second
+        } else {
+            $RemoteDateTIme = ''
+        }
+
+        if ($WMIComputerTarget.LocalDateTime -and $TimeSourceInformation) {
+            $Result = New-TimeSpan -Start $TimeSourceInformation -End $WMIComputerTarget.LocalDateTime
             [PSCustomObject] @{
                 Name                       = $Computer
                 LocalDateTime              = $WMIComputerTarget.LocalDateTime
-                RemoteDateTime             = Get-WMILocalDateTime -WMILocalTime $WMIComputerTime
+                RemoteDateTime             = $RemoteDateTime
                 InstallTime                = $WMIComputerTarget.InstallDate
                 LastBootUpTime             = $WMIComputerTarget.LastBootUpTime
                 TimeDifferenceMinutes      = if ($Result.TotalMinutes -lt 0) { ($Result.TotalMinutes * -1) } else { $Result.TotalMinutes }
@@ -79,7 +98,7 @@
             [PSCustomObject] @{
                 Name                       = $Computer
                 LocalDateTime              = $WMIComputerTarget.LocalDateTime
-                RemoteDateTime             = Get-WMILocalDateTime -WMILocalTime $WMIComputerTime
+                RemoteDateTime             = $RemoteDateTime
                 InstallTime                = $WMIComputerTarget.InstallDate
                 LastBootUpTime             = $WMIComputerTarget.LastBootUpTime
                 TimeDifferenceMinutes      = $null
@@ -89,7 +108,6 @@
                 Status                     = 'Unable to get time difference.'
             }
         }
-
     }
     $AllResults
 }
