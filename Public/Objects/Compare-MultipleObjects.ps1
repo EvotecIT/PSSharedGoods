@@ -15,7 +15,23 @@
     if ($null -eq $Objects) {
         return
     }
-
+    # Default Select-Object -Unique is case sensitive, Sort-Object -Unique isn't but it sorts object.
+    # Below is function that solves this, ugly but it works
+    function Select-ObjectSort {
+        [CmdLetBinding()]
+        param(
+            [System.Collections.IList] $Object
+        )
+        #$Test = 'one', 'Two', 'One', 'Three'
+        $New = $Object.ToLower() | Select-Object -Unique
+        $Selected = foreach ($_ in $New) {
+            $Index = $Object.ToLower().IndexOf($_)
+            if ($Index -ne -1) {
+                $Object[$Index]
+            }
+        }
+        $Selected
+    }
     function Compare-TwoArrays {
         [CmdLetBinding()]
         param(
@@ -36,10 +52,8 @@
                 $Result['MissingRight'] = $Collection[1].InputObject
             }
         }
-
         $Result
     }
-
     $FirstElement = [ordered] @{ }
     $FirstElement['Name'] = 'Properties'
     if ($Summary) {
@@ -54,7 +68,8 @@
             [Array] $All = foreach ($_ in $Objects) {
                 $_.Keys
             }
-            $FirstObjectProperties = $All | Select-Object -Unique
+            #  $FirstObjectProperties = $All | Select-Object -Unique
+            $FirstObjectProperties = Select-ObjectSort -Object $All
         } else {
             $FirstObjectProperties = $Objects[0].Keys
         }
@@ -78,7 +93,8 @@
             [Array] $All = foreach ($_ in $Objects) {
                 $_.PSObject.Properties.Name
             }
-            $FirstObjectProperties = $All | Select-Object -Unique
+            #$FirstObjectProperties = $All | Select-Object -Unique
+            $FirstObjectProperties = Select-ObjectSort -Object $All
         } else {
             $FirstObjectProperties = $Objects[0].PSObject.Properties.Name
         }
