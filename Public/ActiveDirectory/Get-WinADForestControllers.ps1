@@ -32,38 +32,49 @@ function Get-WinADForestControllers {
     #>
     [CmdletBinding()]
     param(
+        [string[]] $Domain,
         [switch] $TestAvailability,
         [switch] $SkipEmpty
     )
     try {
         $Forest = Get-ADForest
+        if (-not $Domain) {
+            $Domain = $Forest.Domains
+        }
     } catch {
         $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
         Write-Warning "Get-WinADForestControllers - Couldn't use Get-ADForest feature. Error: $ErrorMessage"
         return
     }
-    $Servers = foreach ($D in $Forest.Domains) {
+    $Servers = foreach ($D in $Domain) {
         try {
             $DC = Get-ADDomainController -Server $D -Filter *
             foreach ($S in $DC) {
-                [PSCustomObject]@{
-                    Domain                   = $D
-                    HostName                 = $S.HostName
-                    Forest                   = $Forest.RootDomain
-                    IPV4Address              = $S.IPV4Address
-                    IPV6Address              = $S.IPV6Address
-                    IsGlobalCatalog          = $S.IsGlobalCatalog
-                    IsReadOnly               = $S.IsReadOnly
-                    Site                     = $S.Site
-                    SchemaMaster             = ($S.OperationMasterRoles -contains 'SchemaMaster')
-                    DomainNamingMasterMaster = ($S.OperationMasterRoles -contains 'DomainNamingMaster')
-                    PDCEmulator              = ($S.OperationMasterRoles -contains 'PDCEmulator')
-                    RIDMaster                = ($S.OperationMasterRoles -contains 'RIDMaster')
-                    InfrastructureMaster     = ($S.OperationMasterRoles -contains 'InfrastructureMaster')
-                    LdapPort                 = $S.LdapPort
-                    SslPort                  = $S.SslPort
-                    Comment                  = ''
+                $Server = [ordered] @{
+                    Domain               = $D
+                    HostName             = $S.HostName
+                    Forest               = $Forest.RootDomain
+                    IPV4Address          = $S.IPV4Address
+                    IPV6Address          = $S.IPV6Address
+                    IsGlobalCatalog      = $S.IsGlobalCatalog
+                    IsReadOnly           = $S.IsReadOnly
+                    Site                 = $S.Site
+                    SchemaMaster         = ($S.OperationMasterRoles -contains 'SchemaMaster')
+                    DomainNamingMaster   = ($S.OperationMasterRoles -contains 'DomainNamingMaster')
+                    PDCEmulator          = ($S.OperationMasterRoles -contains 'PDCEmulator')
+                    RIDMaster            = ($S.OperationMasterRoles -contains 'RIDMaster')
+                    InfrastructureMaster = ($S.OperationMasterRoles -contains 'InfrastructureMaster')
+                    LdapPort             = $S.LdapPort
+                    SslPort              = $S.SslPort
+                    Pingable             = $null
+                    Comment              = ''
                 }
+                if ($TestAvailability) {
+                    $Server['Pingable'] = foreach ($_ in $Server.IPV4Address) {
+                        Test-Connection -Count 1 -Server $_ -Quiet -ErrorAction SilentlyContinue
+                    }
+                }
+                [PSCustomObject] $Server
             }
         } catch {
             [PSCustomObject]@{
@@ -82,10 +93,12 @@ function Get-WinADForestControllers {
                 InfrastructureMaster     = $false
                 LdapPort                 = ''
                 SslPort                  = ''
+                Pingable                 = $null
                 Comment                  = $_.Exception.Message -replace "`n", " " -replace "`r", " "
             }
         }
     }
+    <#
     if ($TestAvailability) {
         foreach ($Server in $Servers) {
             if ($Server.IPV4Address -ne '') {
@@ -96,6 +109,7 @@ function Get-WinADForestControllers {
             }
         }
     }
+    #>
     if ($SkipEmpty) {
         return $Servers | Where-Object { $_.HostName -ne '' }
     }
