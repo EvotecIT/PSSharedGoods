@@ -12,7 +12,7 @@
     RootModule = 'PSSharedGoods.psm1'
 
     # Version number of this module.
-    ModuleVersion = '0.0.87'
+    ModuleVersion = '0.0.88'
 
     # Supported PSEditions
     CompatiblePSEditions = 'Desktop', 'Core'
@@ -51,8 +51,8 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules = @(@{ModuleName = 'PSWriteColor'; GUID = '0b0ba5c5-ec85-4c2b-a718-874e55a8bc3f'; RequiredVersion = '0.86'; }, 
-        @{ModuleName = 'Connectimo'; GUID = 'e4f4f8a6-473e-4ba5-8166-480658c11421'; RequiredVersion = '0.0.2'; })
+    RequiredModules = @(@{ModuleName = 'PSWriteColor'; GUID = '0b0ba5c5-ec85-4c2b-a718-874e55a8bc3f'; ModuleVersion = '0.86'; }, 
+        @{ModuleName = 'Connectimo'; GUID = 'e4f4f8a6-473e-4ba5-8166-480658c11421'; ModuleVersion = '0.0.2'; })
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
