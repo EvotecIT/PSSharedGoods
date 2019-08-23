@@ -9,19 +9,21 @@ function Test-ComputerAvailability {
     )
     $OutputList = @(
         foreach ($Server in $Servers) {
-            $Output = [ordered] @{}
+            $Output = [ordered] @{ }
             $Output.ServerName = $Server
             if ($Test -eq 'All' -or $Test -like 'Ping*') {
                 $Output.Pingable = Test-Connection -ComputerName $Server -Quiet -Count $PingCount
             }
             if ($Test -eq 'All' -or $Test -like '*WinRM*') {
-                $Output.WinRM = Test-WinRM -ComputerName $Server
+                $Output.WinRM = (Test-WinRM -ComputerName $Server).Status
             }
             if ($Test -eq 'All' -or '*PortOpen*') {
-                $Output.PortOpen = Test-ComputerPort -Server $Server -Ports $Ports -Timeout $PortsTimeout
+                $Output.PortOpen = (Test-ComputerPort -Server $Server -PortTCP $Ports -Timeout $PortsTimeout).Status
             }
             [PSCustomObject] $Output
         }
     )
     return $OutputList
 }
+
+#Test-ComputerAvailability -Servers AD1,AD2

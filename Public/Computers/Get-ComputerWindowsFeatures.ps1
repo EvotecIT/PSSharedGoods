@@ -4,6 +4,6 @@ function Get-ComputerWindowsFeatures {
         [string] $ComputerName = $Env:COMPUTERNAME
     )
 
-    $Data = Get-WmiObject Win32_OptionalFeature -ComputerName $vComputerName | Select-Object Caption , Installstate
+    $Data = Get-WmiObject Win32_OptionalFeature -ComputerName $ComputerName | Select-Object Caption , Installstate
     return $Data
 }

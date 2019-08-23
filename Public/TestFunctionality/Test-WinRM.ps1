@@ -1,13 +1,23 @@
 function Test-WinRM {
     [CmdletBinding()]
     param (
-        $ComputerName
+        [alias('Server')][string[]] $ComputerName
     )
-    try {
-        $WinRM = Test-WSMan -ComputerName $Server -ErrorAction Stop
-        $Value = $true
-    } catch {
-        $Value = $false
+    $Output = foreach ($Computer in $ComputerName) {
+        $Test = [PSCustomObject] @{
+            Output       = $null
+            Status       = $null
+            ComputerName = $Computer
+        }
+        try {
+            $Test.Output = Test-WSMan -ComputerName $Computer -ErrorAction Stop
+            $Test.Status = $true
+        } catch {
+            $Test.Status = $false
+        }
+        $Test
     }
-    return $Value
+    $Output
 }
+
+#Test-WinRM -ComputerName AD1, AD2

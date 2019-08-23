@@ -53,6 +53,7 @@ function Get-WinADForestControllers {
                 $Server = [ordered] @{
                     Domain               = $D
                     HostName             = $S.HostName
+                    Name                 = $S.Name
                     Forest               = $Forest.RootDomain
                     IPV4Address          = $S.IPV4Address
                     IPV6Address          = $S.IPV6Address
@@ -80,6 +81,7 @@ function Get-WinADForestControllers {
             [PSCustomObject]@{
                 Domain                   = $D
                 HostName                 = ''
+                Name                     = ''
                 Forest                   = $Forest.RootDomain
                 IPV4Address              = ''
                 IPV6Address              = ''
