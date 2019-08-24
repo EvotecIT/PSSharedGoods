@@ -1,7 +1,7 @@
 ﻿function Select-Properties {
     [CmdLetBinding()]
     param(
-        [System.Collections.IList] $Objects,
+        [Array] $Objects,
         [string[]] $Property,
         [string[]] $ExcludeProperty,
         [switch] $AllProperties
@@ -20,6 +20,10 @@
             }
         }
         $Selected
+    }
+    if ($Objects.Count -eq 0) {
+        Write-Warning 'Select-Properties - Unable to process. Objects count equals 0.'
+        return
     }
     if ($Objects[0] -is [System.Collections.IDictionary]) {
         if ($AllProperties) {
