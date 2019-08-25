@@ -12,7 +12,8 @@
         [switch] $AllProperties,
         [switch] $SkipProperties,
         [int] $First,
-        [int] $Last
+        [int] $Last,
+        [Array] $Replace
     )
     if ($null -eq $Objects -or $Objects.Count -eq 1) {
         Write-Warning "Compare-MultipleObjects - Unable to compare objects. Not enough objects to compare ($($Objects.Count))."
@@ -23,14 +24,33 @@
     function Compare-TwoArrays {
         [CmdLetBinding()]
         param(
+            [string] $FieldName,
             [Array] $Object1,
-            [Array] $Object2
+            [Array] $Object2,
+            [Array] $Replace
         )
         $Result = [ordered] @{
             Status = $false
             Same   = [System.Collections.Generic.List[string]]::new()
             Add    = [System.Collections.Generic.List[string]]::new()
             Remove = [System.Collections.Generic.List[string]]::new()
+        }
+
+        if ($Replace) {
+            foreach ($R in $Replace) {
+                # if no keys are given replace is for all objects ''
+                # if keys are given replace is only done for a given FieldName
+                if (($($R.Keys[0]) -eq '') -or ($($R.Keys[0]) -eq $FieldName)) {
+                    if ($null -ne $Object1) {
+                        $Object1 = $Object1 -replace $($R.Values)[0], $($R.Values)[1]
+                        #$Object1 = $Object1 -replace $R[0], $R[1]
+                    }
+                    if ($null -ne $Object2) {
+                        $Object2 = $Object2 -replace $($R.Values)[0], $($R.Values)[1]
+                        #$Object2 = $Object2 -replace $R[0], $R[1]
+                    }
+                }
+            }
         }
 
         if ($null -eq $Object1 -and $null -eq $Object2) {
@@ -110,7 +130,7 @@
                     $Value2 = $CompareObjectProperties
                 }
 
-                $Status = Compare-TwoArrays -Object1 $Value1 -Object2 $Value2
+                $Status = Compare-TwoArrays -FieldName 'Properties' -Object1 $Value1 -Object2 $Value2 -Replace $Replace
                 if ($FormatDifferences) {
                     $FirstElement["$i-Add"] = $Status['Add'] -join $Splitter
                     $FirstElement["$i-Remove"] = $Status['Remove'] -join $Splitter
@@ -172,7 +192,7 @@
                     $Value2 = $Objects[$i].$_
                 }
 
-                $Status = Compare-TwoArrays -Object1 $Value1 -Object2 $Value2
+                $Status = Compare-TwoArrays -FieldName $_ -Object1 $Value1 -Object2 $Value2 -Replace $Replace
                 if ($FormatDifferences) {
                     $EveryOtherElement["$i-Add"] = $Status['Add'] -join $Splitter
                     $EveryOtherElement["$i-Remove"] = $Status['Remove'] -join $Splitter
