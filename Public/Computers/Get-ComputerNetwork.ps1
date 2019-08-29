@@ -47,7 +47,8 @@
     param(
         [string[]] $ComputerName,
         [switch] $NetworkFirewallOnly,
-        [switch] $NetworkFirewallSummaryOnly
+        [switch] $NetworkFirewallSummaryOnly,
+        [alias('Joiner')][string] $Splitter
     )
     [Array] $CollectionComputers = $ComputerName.Where( { $_ -eq $Env:COMPUTERNAME }, 'Split')
 
@@ -135,6 +136,16 @@
         }
     )
     foreach ($_ in $NetworkCards) {
+
+        $NetworkCardsConfiguration = Get-CimData -ComputerName $ComputerName -Class 'Win32_NetworkAdapterConfiguration'
+        $CurrentCard = foreach ($Configuration in $NetworkCardsConfiguration) {
+            if ($_.PSComputerName -eq $Configuration.PSComputerName) {
+                if ($Configuration.InterfaceIndex -eq $_.InterfaceIndex) {
+                    $Configuration
+                }
+            }
+        }
+
         [PSCustomObject] @{
             Name                            = $_.Name
             NetworkCardName                 = $_.InterfaceAlias
@@ -142,10 +153,23 @@
             FirewallProfile                 = $_.NetworkCategory
             FirewallStatus                  = $Firewall[$_.PSComputerName]["$($_.NetworkCategory)"].'Enabled'
             IPv4Connectivity                = $_.IPv4Connectivity
-            IPv6Connectivity                = $_.IPv6Connectivity
+            IPv4Address                     = $CurrentCard.IPAddress
+            IPV4Gateway                     = $CurrentCard.DefaultIPGateway
+            IPv4Subnet                      = $CurrentCard.IPSubnet
+            DNSServerSearchOrder            = $CurrentCard.DNSServerSearchOrder
+            DNSDomainSuffixSearchOrder      = $CurrentCard.DNSDomainSuffixSearchOrder
+            FullDNSRegistrationEnabled      = $CurrentCard.FullDNSRegistrationEnabled
+            DHCPEnabled                     = $CurrentCard.DHCPEnabled
+            DHCPServer                      = $CurrentCard.DHCPServer
+            DHCPLeaseObtained               = $CurrentCard.DHCPLeaseObtained
+
             Caption                         = $_.Caption
             Description                     = $_.Description
             ElementName                     = $_.ElementName
+
+            IPv6Connectivity                = $_.IPv6Connectivity
+
+            # Firewall based fields
             DefaultInboundAction            = $Firewall[$_.PSComputerName]["$($_.NetworkCategory)"].DefaultInboundAction
             DefaultOutboundAction           = $Firewall[$_.PSComputerName]["$($_.NetworkCategory)"].DefaultOutboundAction
             AllowInboundRules               = $Firewall[$_.PSComputerName]["$($_.NetworkCategory)"].AllowInboundRules
@@ -165,3 +189,6 @@
         }
     }
 }
+
+#Get-ComputerNetwork -ComputerName AD1 | ft -a *
+#Get-CimData -ComputerName AD1 -Class 'Win32_NetworkAdapterConfiguration'
