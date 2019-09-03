@@ -1,4 +1,5 @@
 ﻿function Get-PSRegistry {
+    [cmdletbinding()]
     param(
         [string[]] $ComputerName,
         [string[]] $RegistryPath,
@@ -95,6 +96,8 @@
         }
     }
 }
+
+#Get-PSRegistry -RegistryPath 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters' -ComputerName AD2
 
 #Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName GetSTRINGvalue -Arguments @{hDefKey = $hklm; sSubKeyName = $newkey; sValueName = $newname } -ComputerName 'AD1','AD2','AD3'
 #$T = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments @{hDefKey = $hklm; sSubKeyName = $newkey; } -ComputerName 'AD1' #,'AD2','AD3'
