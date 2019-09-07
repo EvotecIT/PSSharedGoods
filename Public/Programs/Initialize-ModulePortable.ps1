@@ -23,8 +23,12 @@
         }
     }
 
-    $ListModules = Get-ChildItem -LiteralPath $Path -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue
-    foreach ($Module in $ListModules.FullName) {
-        Import-Module -Name $Module -Force -ErrorAction SilentlyContinue
+    $PrimaryModule = Get-ChildItem -LiteralPath "$Path\$Name" -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
+    $PrimaryModuleInformation = Get-Module -ListAvailable $PrimaryModule.FullName
+    [Array] $RequiredModules = $PrimaryModuleInformation.RequiredModules.Name
+    foreach ($_ in $RequiredModules) {
+        $ListModules = Get-ChildItem -LiteralPath "$Path\$_" -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
+        Import-Module -Name $ListModules.FullName -Force -ErrorAction SilentlyContinue -Verbose
     }
+    Import-Module -Name $PrimaryModule.FullName-Force -ErrorAction SilentlyContinue -Verbose
 }
