@@ -146,6 +146,12 @@
             }
         }
 
+        $NetbiosTCPIP = @{
+            '0' = 'Default'
+            '1' = 'Enabled'
+            '2' = 'Disabled'
+        }
+
         [PSCustomObject] @{
             Name                            = $_.Name
             NetworkCardName                 = $_.InterfaceAlias
@@ -162,6 +168,7 @@
             DHCPEnabled                     = $CurrentCard.DHCPEnabled
             DHCPServer                      = $CurrentCard.DHCPServer
             DHCPLeaseObtained               = $CurrentCard.DHCPLeaseObtained
+            NetBIOSOverTCPIP                = $NetBiosTCPIP["$($CurrentCard.TcpipNetbiosOptions)"]
 
             Caption                         = $_.Caption
             Description                     = $_.Description
@@ -190,5 +197,5 @@
     }
 }
 
-#Get-ComputerNetwork -ComputerName AD1 | ft -a *
+#Get-ComputerNetwork -ComputerName AD1 #| ft -a *
 #Get-CimData -ComputerName AD1 -Class 'Win32_NetworkAdapterConfiguration'
