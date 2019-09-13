@@ -138,9 +138,19 @@ function Get-TimeSetttings {
         $NtpServers = $TimeParameters.NtpServer -split ' '
         $Ntp = foreach ($NtpServer in $NtpServers) {
             $SplitNTP = $NtpServer -split ','
+
+            if ($SplitNTP.Count -eq 2) {
+                $Intervals = $NtpServerIntervals[$SplitNTP[1]]
+                if ($null -eq $Intervals) {
+                    $Intervals = 'Incorrect'
+                }
+            } else {
+                $Intervals = 'Missing'
+            }
+
             [PSCustomObject] @{
                 NtpServer = $SplitNTP[0]
-                Intervals = if ($SplitNTP.Count -eq 2) { $NtpServerIntervals[$SplitNTP[1]] } else { 'Incorrect/Missing' }
+                Intervals = $Intervals
             }
         }
 
