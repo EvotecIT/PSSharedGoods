@@ -67,7 +67,7 @@ function Get-TimeSetttings {
     [alias('Get-TimeSynchronization')]
     param(
         [string[]] $ComputerName,
-       # [string] $Domain,
+        # [string] $Domain,
         [switch] $Formatted,
         [string] $Splitter
     )
@@ -111,16 +111,25 @@ function Get-TimeSetttings {
         '10' = 'The default value for domain members is 10. The default value for stand-alone clients and servers is 10.'
     }
 
-   # if ($Domain) {
+    # if ($Domain) {
     #    $DomainInformation = Get-ADDomain -Server $Domain
     #    $PDCName = $DomainInformation.PDCEmulator
-  #  }
+    #  }
 
     foreach ($_ in $ComputerName) {
-        $TimeParameters = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Parameters"
+        [bool] $AppliedGPO = $false
+        $TimeParameters = Get-PSRegistry -ComputerName $_ -RegistryPath "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32time\Parameters"
+        if ($null -eq $TimeParameters.NtpServer) {
+            $TimeParameters = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Parameters"
+            $AppliedGPO = $true
+        }
+
         $TimeConfig = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Config"
         #Get-PSRegistry -ComputerName $ComputerName -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Security"
-        $TimeNTPClient = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NTPClient"
+        $TimeNTPClient = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SOFTWARE\Policies\Microsoft\W32time\TimeProviders\NtpClient"
+        if ($null -eq $TimeNTPClient.CrossSiteSyncFlags) {
+            $TimeNTPClient = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NTPClient"
+        }
         $TimeNTPServer = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NTPServer"
         #$TimeSecureLimits = Get-PSRegistry -ComputerName $_ -RegistryPath "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\SecureTimeLimits"
         $TimeVMProvider = Get-PSRegistry -ComputerName $ComputerName -RegistryPath "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\VMICTimeProvider"
@@ -144,6 +153,7 @@ function Get-TimeSetttings {
             NtpServerIntervals          = if ($Splitter) { $Ntp.Intervals -join $Splitter } else { $Ntp.Intervals }
             NtpType                     = $TimeParameters.Type
             NtpTypeComment              = $Types["$($TimeParameters.Type)"]
+            AppliedGPO                    = $AppliedGPO
             VMTimeProvider              = [bool] $TimeVMProvider.Enabled
             AnnounceFlags               = $TimeConfig.AnnounceFlags
             AnnounceFlagsComment        = $AnnounceFlags["$($TimeConfig.AnnounceFlags)"]
@@ -166,6 +176,16 @@ function Get-TimeSetttings {
         }
     }
 }
+
+#Get-TimeSetttings -ComputerName DC1 | ft -AutoSize *
+#Get-TimeSetttings -ComputerName AD1 | ft -AutoSize *
+
+#Get-PSRegistry -ComputerName AD1 -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Parameters"
+#Get-PSRegistry -ComputerName AD1 -RegistryPath "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32time\Parameters"
+
+#Get-PSRegistry -ComputerName DC1 -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Parameters"
+#Get-PSRegistry -ComputerName DC1 -RegistryPath "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32time\Parameters"
+
 
 #$ComputersDC = @( 'AD1', 'AD2', 'AD3', 'DC1', 'EVOWIN', 'ADPreview2019')
 
