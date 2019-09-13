@@ -140,7 +140,7 @@ function Get-TimeSetttings {
             $SplitNTP = $NtpServer -split ','
             [PSCustomObject] @{
                 NtpServer = $SplitNTP[0]
-                Intervals = $NtpServerIntervals[$SplitNTP[1]]
+                Intervals = if ($SplitNTP.Count -eq 2) { $NtpServerIntervals[$SplitNTP[1]] } else { 'Incorrect/Missing' }
             }
         }
 
@@ -153,7 +153,7 @@ function Get-TimeSetttings {
             NtpServerIntervals          = if ($Splitter) { $Ntp.Intervals -join $Splitter } else { $Ntp.Intervals }
             NtpType                     = $TimeParameters.Type
             NtpTypeComment              = $Types["$($TimeParameters.Type)"]
-            AppliedGPO                    = $AppliedGPO
+            AppliedGPO                  = $AppliedGPO
             VMTimeProvider              = [bool] $TimeVMProvider.Enabled
             AnnounceFlags               = $TimeConfig.AnnounceFlags
             AnnounceFlagsComment        = $AnnounceFlags["$($TimeConfig.AnnounceFlags)"]
@@ -178,7 +178,7 @@ function Get-TimeSetttings {
 }
 
 #Get-TimeSetttings -ComputerName DC1 | ft -AutoSize *
-#Get-TimeSetttings -ComputerName AD1 | ft -AutoSize *
+#Get-TimeSetttings -ComputerName AD1.ad.evotec.xyz | ft -AutoSize *
 
 #Get-PSRegistry -ComputerName AD1 -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Parameters"
 #Get-PSRegistry -ComputerName AD1 -RegistryPath "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32time\Parameters"
