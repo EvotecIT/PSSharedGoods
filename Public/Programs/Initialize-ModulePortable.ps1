@@ -16,6 +16,9 @@
             $Module = Get-Module -ListAvailable $PrimaryModule.FullName -ErrorAction SilentlyContinue -Verbose:$false
             if ($Module) {
                 [Array] $RequiredModules = $Module.RequiredModules.Name
+                if ($null -ne $RequiredModules) {
+                    $null
+                }
                 $RequiredModules
                 foreach ($_ in $RequiredModules) {
                     Get-RequiredModule -Path $Path -Name $_
@@ -54,8 +57,9 @@
 
     if ($Download -or $Import) {
         [Array] $Modules = Get-RequiredModule -Path $Path -Name $Name | Where-Object { $null -ne $_ }
-        [array]::Reverse($Modules)
-
+        if ($null -ne $Modules) {
+            [array]::Reverse($Modules)
+        }
         $CleanedModules = [System.Collections.Generic.List[string]]::new()
 
         foreach ($_ in $Modules) {
@@ -98,3 +102,5 @@
 }
 
 #Initialize-ModulePortable -Name 'Testimo' -Path $Env:USERPROFILE\Desktop\TestimoPortable -Verbose -Download -Import
+
+#Initialize-ModulePortable -Name 'SqlServer' -Path $Env:USERPROFILE\Desktop\SqlServer -Verbose -Download #-Import

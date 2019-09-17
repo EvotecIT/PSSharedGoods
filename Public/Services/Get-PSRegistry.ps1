@@ -1,7 +1,7 @@
 ﻿function Get-PSRegistry {
     [cmdletbinding()]
     param(
-        [string[]] $ComputerName,
+        [string[]] $ComputerName = $Env:COMPUTERNAME,
         [string[]] $RegistryPath,
         [string] $Value #,
         #[switch] $CustomObject
