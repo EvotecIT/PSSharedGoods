@@ -14,5 +14,7 @@ function Get-RandomPassword {
         Get-RandomCharacters -length $SpecialChars -characters '!$%()=?{@#'
         Get-RandomCharacters -length $SpecialCharsLimited -characters '!$#'
     )
-    return $Password -join ''
+    $StringPassword = $Password -join ''
+    $StringPassword = ($StringPassword.ToCharArray() | Get-Random -Count $StringPassword.Length) -join ''
+    return $StringPassword
 }
