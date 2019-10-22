@@ -10,9 +10,12 @@
             $Output = Get-SmbServerConfiguration #| Select-Object EnableSMB2Protocol, EnableSMB1Protocol
             foreach ($_ in $Output) {
                 [PSCustomObject] @{
-                    ComputerName       = $Env:COMPUTERNAME
-                    EnableSMB1Protocol = $_.EnableSMB1Protocol
-                    EnableSMB2Protocol = $_.EnableSMB2Protocol
+                    ComputerName             = $Env:COMPUTERNAME
+                    EnableSMB1Protocol       = $_.EnableSMB1Protocol
+                    EnableSMB2Protocol       = $_.EnableSMB2Protocol
+                    Smb2CreditsMin           = $_.Smb2CreditsMin
+                    Smb2CreditsMax           = $_.Smb2CreditsMax
+                    RequireSecuritySignature = $_.RequireSecuritySignature
                 }
             }
         }
@@ -20,9 +23,12 @@
             $Output = Get-SmbServerConfiguration -CimSession $CollectionComputers[1] #| Select-Object EnableSMB2Protocol, EnableSMB1Protocol #
             foreach ($_ in $Output) {
                 [PSCustomObject] @{
-                    ComputerName       = $_.PSComputerName
-                    EnableSMB1Protocol = $_.EnableSMB1Protocol
-                    EnableSMB2Protocol = $_.EnableSMB2Protocol
+                    ComputerName             = $_.PSComputerName
+                    EnableSMB1Protocol       = $_.EnableSMB1Protocol
+                    EnableSMB2Protocol       = $_.EnableSMB2Protocol
+                    Smb2CreditsMin           = $_.Smb2CreditsMin
+                    Smb2CreditsMax           = $_.Smb2CreditsMax
+                    RequireSecuritySignature = $_.RequireSecuritySignature
                 }
             }
         }
