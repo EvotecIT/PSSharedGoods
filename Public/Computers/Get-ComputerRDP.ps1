@@ -78,6 +78,7 @@
             ConnectivitySummary                    = $Connectivity.Summary
             SecurityLayer                          = $SecurityLayers["$($_.SecurityLayer)"]
             MinimalEncryptionLevel                 = $EncryptionLevels["$($_.MinEncryptionLevel)"]
+            MinimalEncryptionLevelValue            = $_.MinEncryptionLevel
             PolicySourceUserAuthenticationRequired = $PolicyConfiguredBy["$($_.PolicySourceUserAuthenticationRequired)"]
             PolicySourceMinimalEncryptionLevel     = $PolicyConfiguredBy["$($_.PolicySourceMinEncryptionLevel)"]
             PolicySourceSecurityLayer              = $PolicyConfiguredBy["$($_.PolicySourceSecurityLayer)"]
