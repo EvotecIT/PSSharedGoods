@@ -1,26 +1,32 @@
-function Set-EmailFormatting {
+﻿function Set-EmailFormatting {
+    [CmdletBinding()]
     param (
         $Template,
         [System.Collections.IDictionary] $FormattingParameters,
         [System.Collections.IDictionary] $ConfigurationParameters,
-        $Logger,
+        [PSCustomObject] $Logger,
         [switch] $SkipNewLines,
         [string[]] $AddAfterOpening,
-        [string[]] $AddBeforeClosing
+        [string[]] $AddBeforeClosing,
+        [string] $Image
     )
     if ($ConfigurationParameters) {
         $WriteParameters = $ConfigurationParameters.DisplayConsole
     } else {
         $WriteParameters = @{ ShowTime = $true; LogFile = ""; TimeFormat = "yyyy-MM-dd HH:mm:ss" }
     }
-   
+
+    if ($Image) {
+        $Template = $Template -replace '<<Image>>', $Image
+    }
+
 
     $Body = "<body>"
     if ($AddAfterOpening) {
         $Body += $AddAfterOpening
     }
 
-    if (-not $SkipNewLines) { 
+    if (-not $SkipNewLines) {
         $Template = $Template.Split("`n") # https://blogs.msdn.microsoft.com/timid/2014/07/09/one-liner-fun-with-multi-line-blocktext-and-split-split/
         if ($Logger) {
             $Logger.AddInfoRecord("Preparing template - adding HTML <BR> tags...")
@@ -29,7 +35,7 @@ function Set-EmailFormatting {
         }
 
         $StyleFlag = $false
-   
+
         foreach ($t in $Template) {
             ## needs investigation
             <#
@@ -44,9 +50,9 @@ function Set-EmailFormatting {
             $Body += $t
             continue
         }
-        #>       
-            $Body += "$t<br>" 
-        
+        #>
+            $Body += "$t<br>"
+
         }
     } else {
         $Body += $Template
