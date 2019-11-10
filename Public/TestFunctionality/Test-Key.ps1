@@ -1,5 +1,12 @@
-function Test-Key ($ConfigurationTable, $ConfigurationSection = "", $ConfigurationKey, $DisplayProgress = $false) {
-    if ($ConfigurationTable -eq $null) { return $false }
+function Test-Key {
+    [CmdletBinding()]
+    param(
+        $ConfigurationTable,
+        $ConfigurationSection = "",
+        $ConfigurationKey,
+        $DisplayProgress = $false
+    )
+    if ($null -eq $ConfigurationTable) { return $false }
     try {
         $value = $ConfigurationTable.ContainsKey($ConfigurationKey)
     } catch {

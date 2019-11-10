@@ -5,17 +5,18 @@ function Get-ObjectData {
         $Title,
         [switch] $DoNotAddTitles
     )
-    $ArrayList = New-Object System.Collections.ArrayList
-    $Values = $Object.$Title
-    Write-Verbose "Get-ObjectData1: Title $Title Values: $Values"
-    if ((Get-ObjectCount $values) -eq 1 -and $DoNotAddTitles -eq $false) {
-        $ArrayList.Add("$Title - $Values") | Out-Null
-    } else {
-        if ($DoNotAddTitles -eq $false) { $ArrayList.Add($Title) | Out-Null }
-        foreach ($Value in $Values) {
-            $ArrayList.Add("$Value") | Out-Null
+    [Array] $Values = $Object.$Title
+    [Array] $ArrayList = @(
+        if ($Values.Count -eq 1 -and $DoNotAddTitles -eq $false) {
+            "$Title - $($Values[0])"
+        } else {
+            if ($DoNotAddTitles -eq $false) {
+                $Title
+            }
+            foreach ($Value in $Values) {
+                "$Value"
+            }
         }
-    }
-    Write-Verbose "Get-ObjectData2: Title $Title Values: $(Get-ObjectCount $ArrayList)"
+    )
     return $ArrayList
 }

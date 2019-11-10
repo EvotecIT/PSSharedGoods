@@ -1,64 +1,3 @@
-$sbGetService = {
-    Param (
-        [string]$Computer,
-        [string]$ServiceName,
-        [bool] $Verbose
-    )
-    $Measure = [System.Diagnostics.Stopwatch]::StartNew() # Timer Start
-    $ServiceList = @(
-        if ($Verbose) { $verbosepreference = 'continue' }
-        try {
-            if ($ServiceName -eq '') {
-                Write-Verbose "Get-Service - [i] Processing $Computer for all services"
-                $GetServices = Get-Service -ComputerName $Computer -ErrorAction Stop
-
-            } else {
-                Write-Verbose "Get-Service - [i] Processing $Computer with $ServiceName"
-                $GetServices = Get-Service -ComputerName $Computer -ServiceName $ServiceName -ErrorAction Stop
-            }
-        } catch {
-            [PsCustomObject][ordered] @{
-                Computer       = $Computer
-                Status         = 'N/A'
-                Name           = $ServiceName
-                ServiceType    = 'N/A'
-                StartType      = 'N/A'
-                DisplayName    = 'N/A'
-                TimeProcessing = $Measure.Elapsed
-                Comment        = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-            }
-        }
-        foreach ($GetService in $GetServices) {
-            if ($GetService) {
-                [PsCustomObject][ordered] @{
-                    Computer       = $Computer
-                    Status         = $GetService.Status
-                    Name           = $GetService.Name
-                    ServiceType    = $GetService.ServiceType
-                    StartType      = $GetService.StartType
-                    DisplayName    = $GetService.DisplayName
-                    TimeProcessing = $Measure.Elapsed
-                    Comment        = ''
-                }
-            } else {
-                [PsCustomObject][ordered] @{
-                    Computer       = $Computer
-                    Status         = 'N/A'
-                    Name           = $ServiceName
-                    ServiceType    = 'N/A'
-                    StartType      = 'N/A'
-                    DisplayName    = 'N/A'
-                    TimeProcessing = $Measure.Elapsed
-                    Comment        = ''
-                }
-            }
-        }
-    )
-    Write-Verbose "Get-Service - [i] Processed $Computer with $ServiceName - Time elapsed: $($Measure.Elapsed)"
-    $Measure.Stop()
-    return $ServiceList
-}
-
 function Get-PSService {
     <#
     .SYNOPSIS
@@ -89,6 +28,68 @@ function Get-PSService {
         [alias('Service')][string[]] $Services,
         [int] $MaxRunspaces = [int]$env:NUMBER_OF_PROCESSORS + 1
     )
+
+    $sbGetService = {
+        Param (
+            [string]$Computer,
+            [string]$ServiceName,
+            [bool] $Verbose
+        )
+        $Measure = [System.Diagnostics.Stopwatch]::StartNew() # Timer Start
+        $ServiceList = @(
+            if ($Verbose) { $verbosepreference = 'continue' }
+            try {
+                if ($ServiceName -eq '') {
+                    Write-Verbose "Get-Service - [i] Processing $Computer for all services"
+                    $GetServices = Get-Service -ComputerName $Computer -ErrorAction Stop
+
+                } else {
+                    Write-Verbose "Get-Service - [i] Processing $Computer with $ServiceName"
+                    $GetServices = Get-Service -ComputerName $Computer -ServiceName $ServiceName -ErrorAction Stop
+                }
+            } catch {
+                [PsCustomObject][ordered] @{
+                    Computer       = $Computer
+                    Status         = 'N/A'
+                    Name           = $ServiceName
+                    ServiceType    = 'N/A'
+                    StartType      = 'N/A'
+                    DisplayName    = 'N/A'
+                    TimeProcessing = $Measure.Elapsed
+                    Comment        = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+                }
+            }
+            foreach ($GetService in $GetServices) {
+                if ($GetService) {
+                    [PsCustomObject][ordered] @{
+                        Computer       = $Computer
+                        Status         = $GetService.Status
+                        Name           = $GetService.Name
+                        ServiceType    = $GetService.ServiceType
+                        StartType      = $GetService.StartType
+                        DisplayName    = $GetService.DisplayName
+                        TimeProcessing = $Measure.Elapsed
+                        Comment        = ''
+                    }
+                } else {
+                    [PsCustomObject][ordered] @{
+                        Computer       = $Computer
+                        Status         = 'N/A'
+                        Name           = $ServiceName
+                        ServiceType    = 'N/A'
+                        StartType      = 'N/A'
+                        DisplayName    = 'N/A'
+                        TimeProcessing = $Measure.Elapsed
+                        Comment        = ''
+                    }
+                }
+            }
+        )
+        Write-Verbose "Get-Service - [i] Processed $Computer with $ServiceName - Time elapsed: $($Measure.Elapsed)"
+        $Measure.Stop()
+        return $ServiceList
+    }
+
     if ($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent) { $Verbose = $true } else { $Verbose = $false }
     Write-Verbose 'Get-Service - Starting parallel processing....'
     $ComputersToProcess = ($ComputerName | Measure-Object).Count

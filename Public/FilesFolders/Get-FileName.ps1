@@ -1,4 +1,3 @@
-# https://docs.microsoft.com/en-us/dotnet/api/system.io.path.getfilenamewithoutextension?view=netframework-4.7.2
 function Get-FileName {
     <#
     .SYNOPSIS

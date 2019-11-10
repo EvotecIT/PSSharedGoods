@@ -1,6 +1,10 @@
 function Test-ForestConnectivity {
+    [CmdletBinding()]
+    param(
+
+    )
     Try {
-        $Test = Get-ADForest
+        $null = Get-ADForest
         return $true
     } catch {
         #Write-Warning 'No connectivity to forest/domain.'

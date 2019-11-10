@@ -1,38 +1,38 @@
 function Format-Stream {
-    [alias('FS','Format-TableStream','Format-ListStream')]
+    [alias('FS', 'Format-TableStream', 'Format-ListStream')]
     ##[alias('ftv','ftd','fto','fth','fti','flv','fld','flo','flh','fli','Format-TableVerbose', 'Format-TableDebug', 'Format-TableInformation', 'Format-TableWarning')]
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param(
-        [Parameter(Mandatory = $false,ValueFromPipeline = $true,ValueFromPipelineByPropertyName = $true,Position = 1)]
-        [object] $InputObject,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 1)]
+        [Array] $InputObject,
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 0,ParameterSetName = 'Property')]
-        [Object[]] $Property,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 0, ParameterSetName = 'Property')]
+        [string[]] $Property,
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 2,ParameterSetName = 'ExcludeProperty')]
-        [Object[]] $ExcludeProperty,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 2, ParameterSetName = 'ExcludeProperty')]
+        [string[]] $ExcludeProperty,
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 3)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 3)]
         [switch] $HideTableHeaders,
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 4)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 4)]
         [int] $ColumnHeaderSize,
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 5)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 5)]
         [switch] $AlignRight,
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 6)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 6)]
         [validateset('Output', 'Host', 'Warning', 'Verbose', 'Debug', 'Information')]
         [string] $Stream = 'Verbose',
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 7)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 7)]
         [alias('AsList')][switch] $List,
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 8)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 8)]
         [alias('Rotate', 'RotateData', 'TransposeColumnsRows', 'TransposeData')]
         [switch] $Transpose,
 
-        [Parameter(Mandatory = $false,ValueFromPipeline = $false,Position = 9)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 9)]
         [ValidateSet("ASC", "DESC", "NONE")]
         [string] $TransposeSort = 'NONE',
 
@@ -70,7 +70,7 @@ function Format-Stream {
         $ArrayList = @()
     }
     Process {
-        if ((Get-ObjectCount -Object $InputObject) -eq 0) { break }
+        if ($InputObject.Count -eq 0) { break }
         if ($FirstRun) {
             $FirstRun = $false
             if ($Transpose) { $InputObject = Format-TransposeTable -Object $InputObject -Sort $TransposeSort }

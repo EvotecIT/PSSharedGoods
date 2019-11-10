@@ -1,4 +1,8 @@
 function Test-ModuleAvailability {
+    [CmdletBinding()]
+    param(
+
+    )
     if (Search-Command -CommandName 'Get-AdForest') {
         # future use
     } else {
