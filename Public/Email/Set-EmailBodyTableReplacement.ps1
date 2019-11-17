@@ -1,9 +1,10 @@
 function Set-EmailBodyReplacementTable {
+    [CmdletBinding()]
     [alias('Set-EmailBodyTableReplacement')]
     param (
-        $Body,
-        $TableName,
-        $TableData
+        [string] $Body,
+        [string] $TableName,
+        [Array] $TableData
     )
     $TableData = $TableData | ConvertTo-Html -Fragment | Out-String
     $Body = $Body -replace "<<$TableName>>", $TableData

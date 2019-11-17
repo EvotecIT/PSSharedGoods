@@ -8,8 +8,9 @@ $Test = Get-Process
 Get-ObjectProperties -Object $Test
 #>
 function Get-ObjectProperties {
+    [CmdletBinding()]
     param (
-        [object] $Object,
+        [System.Collections.ICollection] $Object,
         [string[]] $AddProperties, # provides ability to add some custom properties
         [switch] $Sort,
         [bool] $RequireUnique = $true

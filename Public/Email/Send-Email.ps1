@@ -2,10 +2,10 @@ function Send-Email {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [alias('EmailParameters')][System.Collections.IDictionary] $Email,
-        [string] $Body = "",
+        [string] $Body,
         [string[]] $Attachment,
         [System.Collections.IDictionary] $InlineAttachments,
-        [string] $Subject = "",
+        [string] $Subject,
         [string[]] $To,
         [PSCustomObject] $Logger
     )
@@ -28,25 +28,30 @@ function Send-Email {
                 EmailServerLogin            = $Email.Login
                 EmailServerEnableSSL        = $Email.EnableSsl
                 EmailEncoding               = $Email.Encoding
+                EmailEncodingSubject        = $Email.EncodingSubject
+                EmailEncodingBody           = $Email.EncodingBody
                 EmailSubject                = $Email.Subject
                 EmailPriority               = $Email.Priority
+                EmailDeliveryNotifications  = $Email.DeliveryNotifications
+                EmailUseDefaultCredentials  = $Email.UseDefaultCredentials
+                # EmailAlternativeClient      = $Email.AlternativeClient
             }
         }
     } catch {
         return @{
             Status = $False
             Error  = $($_.Exception.Message)
-            SentTo = ""
+            SentTo = ''
         }
     }
-    $SmtpClient = New-Object -TypeName System.Net.Mail.SmtpClient
+    $SmtpClient = [System.Net.Mail.SmtpClient]::new()
     if ($EmailParameters.EmailServer) {
         $SmtpClient.Host = $EmailParameters.EmailServer
     } else {
         return @{
             Status = $False
             Error  = "Email Server Host is not set."
-            SentTo = ""
+            SentTo = ''
         }
     }
     # Adding parameters to login to server
@@ -56,11 +61,11 @@ function Send-Email {
         return @{
             Status = $False
             Error  = "Email Server Port is not set."
-            SentTo = ""
+            SentTo = ''
         }
     }
 
-    if ($EmailParameters.EmailServerLogin -ne '') {
+    if ($EmailParameters.EmailServerLogin) {
 
         $Credentials = Request-Credentials -UserName $EmailParameters.EmailServerLogin `
             -Password $EmailParameters.EmailServerPassword `
@@ -69,9 +74,10 @@ function Send-Email {
             -NetworkCredentials #-Verbose
         $SmtpClient.Credentials = $Credentials
     }
-
-    $SmtpClient.EnableSsl = $EmailParameters.EmailServerEnableSSL
-    $MailMessage = New-Object -TypeName System.Net.Mail.MailMessage
+    if ($EmailParameters.EmailServerEnableSSL) {
+        $SmtpClient.EnableSsl = $EmailParameters.EmailServerEnableSSL
+    }
+    $MailMessage = [System.Net.Mail.MailMessage]::new()
     $MailMessage.From = $EmailParameters.EmailFrom
     if ($To) {
         foreach ($T in $To) { $MailMessage.To.add($($T)) }
@@ -80,17 +86,14 @@ function Send-Email {
             foreach ($To in $EmailParameters.Emailto) { $MailMessage.To.add($($To)) }
         }
     }
-    if ($EmailParameters.EmailCC -ne "") {
+    if ($EmailParameters.EmailCC) {
         foreach ($CC in $EmailParameters.EmailCC) { $MailMessage.CC.add($($CC)) }
     }
-    if ($EmailParameters.EmailBCC -ne "") {
+    if ($EmailParameters.EmailBCC) {
         foreach ($BCC in $EmailParameters.EmailBCC) { $MailMessage.BCC.add($($BCC)) }
     }
-    $Exists = Test-Key $EmailParameters "EmailParameters" "EmailReplyTo" -DisplayProgress $false
-    if ($Exists -eq $true) {
-        if ($EmailParameters.EmailReplyTo -ne "") {
-            $MailMessage.ReplyTo = $EmailParameters.EmailReplyTo
-        }
+    if ($EmailParameters.EmailReplyTo) {
+        $MailMessage.ReplyTo = $EmailParameters.EmailReplyTo
     }
     $MailMessage.IsBodyHtml = $true
     if ($Subject -eq '') {
@@ -102,8 +105,22 @@ function Send-Email {
     $MailMessage.Priority = [System.Net.Mail.MailPriority]::$($EmailParameters.EmailPriority)
 
     #  Encoding
-    $MailMessage.BodyEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
-    $MailMessage.SubjectEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
+    if ($EmailParameters.EmailEncodingSubject) {
+        $MailMessage.SubjectEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncodingSubject)
+    } else {
+        $MailMessage.SubjectEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
+    }
+    if ($EmailParameters.EmailEncodingBody) {
+        $MailMessage.BodyEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncodingBody)
+    } else {
+        $MailMessage.BodyEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
+    }
+    if ($EmailParameters.EmailUseDefaultCredentials) {
+        $SmtpClient.UseDefaultCredentials = $EmailParameters.EmailUseDefaultCredentials
+    }
+    if ($EmailParameters.EmailDeliveryNotifications) {
+        $MailMessage.DeliveryNotificationOptions = $EmailParameters.EmailDeliveryNotifications
+    }
 
     # Inlining attachment (s)
     if ($PSBoundParameters.ContainsKey('InlineAttachments')) {
@@ -120,12 +137,14 @@ function Send-Email {
                     Invoke-WebRequest -Uri $Entry.Value -OutFile $FilePath
                 }
                 $ContentType = Get-MimeType -FileName $FilePath
-                $InAttachment = New-Object Net.Mail.LinkedResource($FilePath, $ContentType )
+                $InAttachment = [Net.Mail.LinkedResource]::new($FilePath, $ContentType )
                 $InAttachment.ContentId = $Entry.Key
                 $BodyPart.LinkedResources.Add( $InAttachment )
             } catch {
-                $MailMessage.Dispose()
-                throw
+                #$MailMessage.Dispose()
+                #throw
+                $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
+                Write-Error "Error inlining attachments: $ErrorMessage"
             }
         }
     } else {
@@ -137,8 +156,8 @@ function Send-Email {
         foreach ($Attach in $Attachment) {
             if (Test-Path -LiteralPath $Attach) {
                 try {
-                    $File = New-Object Net.Mail.Attachment($Attach)
-                    Write-Verbose "Send-Email - Attaching file $Attach"
+                    $File = [Net.Mail.Attachment]::new($Attach)
+                    #Write-Verbose "Send-Email - Attaching file $Attach"
                     $MailMessage.Attachments.Add($File)
                 } catch {
                     # non critical error
