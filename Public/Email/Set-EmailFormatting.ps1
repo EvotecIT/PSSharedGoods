@@ -33,26 +33,8 @@
         } else {
             Write-Color @WriteParameters -Text "[i] Preparing template ", "adding", " HTML ", "<BR>", " tags." -Color White, Yellow, White, Yellow
         }
-
-        $StyleFlag = $false
-
         foreach ($t in $Template) {
-            ## needs investigation
-            <#
-        if ($t -match 'style>') {
-            $StyleFlag = -not $StyleFlag
-        }
-        if ($StyleFlag) {
-            $Body += $t
-            continue
-        }
-        if ($t -match '[\<|\</][\w+|\d+]') {
-            $Body += $t
-            continue
-        }
-        #>
             $Body += "$t<br>"
-
         }
     } else {
         $Body += $Template
@@ -82,8 +64,6 @@
     }
     foreach ($links in $FormattingParameters.Links.GetEnumerator()) {
         foreach ($link in $links.Value) {
-            #write-host $link.Text
-            #write-host $link.Link
             if ($link.Link -like "*@*") {
                 if ($Logger) {
                     $Logger.AddInfoRecord("Preparing template - adding EMAIL Links for $($links.Key).")
@@ -100,7 +80,6 @@
                 $Body = $Body -replace "<<$($links.Key)>>", "<span style=color:$($link.Color)><a href='$($link.Link)'>$($Link.Text)</a></span>"
             }
         }
-
     }
     if ($AddAfterOpening) {
         $Body += $AddBeforeClosing

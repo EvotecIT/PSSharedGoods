@@ -48,7 +48,8 @@ function Get-WinADForestControllers {
     }
     $Servers = foreach ($D in $Domain) {
         try {
-            $DC = Get-ADDomainController -Server $D -Filter *
+            $LocalServer = Get-ADDomainController -Discover -DomainName $D -ErrorAction Stop
+            $DC = Get-ADDomainController -Server $LocalServer -Filter * -ErrorAction Stop
             foreach ($S in $DC) {
                 $Server = [ordered] @{
                     Domain               = $D
@@ -100,20 +101,10 @@ function Get-WinADForestControllers {
             }
         }
     }
-    <#
-    if ($TestAvailability) {
-        foreach ($Server in $Servers) {
-            if ($Server.IPV4Address -ne '') {
-                $Output = Test-Connection -Count 1 -Server $Server.IPV4Address -Quiet -ErrorAction SilentlyContinue
-                Add-Member -InputObject $Server -MemberType NoteProperty -Name 'Pingable' -Value $Output
-            } else {
-                Add-Member -InputObject $Server -MemberType NoteProperty -Name 'Pingable' -Value $false
-            }
-        }
-    }
-    #>
     if ($SkipEmpty) {
         return $Servers | Where-Object { $_.HostName -ne '' }
     }
     return $Servers
 }
+
+Get-WinADForestControllers | Format-Table -AutoSize

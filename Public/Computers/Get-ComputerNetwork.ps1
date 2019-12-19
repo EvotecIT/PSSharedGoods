@@ -158,10 +158,12 @@
             NetworkCardIndex                = $_.InterfaceIndex
             FirewallProfile                 = $_.NetworkCategory
             FirewallStatus                  = $Firewall[$_.PSComputerName]["$($_.NetworkCategory)"].'Enabled'
+
+            IPAddress                       = $CurrentCard.IPAddress
+            IPGateway                       = $CurrentCard.DefaultIPGateway
+            IPSubnet                        = $CurrentCard.IPSubnet
             IPv4Connectivity                = $_.IPv4Connectivity
-            IPv4Address                     = $CurrentCard.IPAddress
-            IPV4Gateway                     = $CurrentCard.DefaultIPGateway
-            IPv4Subnet                      = $CurrentCard.IPSubnet
+            IPv6Connectivity                = $_.IPv6Connectivity
             DNSServerSearchOrder            = $CurrentCard.DNSServerSearchOrder
             DNSDomainSuffixSearchOrder      = $CurrentCard.DNSDomainSuffixSearchOrder
             FullDNSRegistrationEnabled      = $CurrentCard.FullDNSRegistrationEnabled
@@ -169,13 +171,9 @@
             DHCPServer                      = $CurrentCard.DHCPServer
             DHCPLeaseObtained               = $CurrentCard.DHCPLeaseObtained
             NetBIOSOverTCPIP                = $NetBiosTCPIP["$($CurrentCard.TcpipNetbiosOptions)"]
-
             Caption                         = $_.Caption
             Description                     = $_.Description
             ElementName                     = $_.ElementName
-
-            IPv6Connectivity                = $_.IPv6Connectivity
-
             # Firewall based fields
             DefaultInboundAction            = $Firewall[$_.PSComputerName]["$($_.NetworkCategory)"].DefaultInboundAction
             DefaultOutboundAction           = $Firewall[$_.PSComputerName]["$($_.NetworkCategory)"].DefaultOutboundAction
@@ -197,5 +195,5 @@
     }
 }
 
-#Get-ComputerNetwork -ComputerName AD1 #| ft -a *
+Get-ComputerNetwork -ComputerName AD1, AD2 | Format-Table -a *
 #Get-CimData -ComputerName AD1 -Class 'Win32_NetworkAdapterConfiguration'
