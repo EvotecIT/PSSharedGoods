@@ -107,4 +107,4 @@ function Get-WinADForestControllers {
     return $Servers
 }
 
-Get-WinADForestControllers | Format-Table -AutoSize
+#Get-WinADForestControllers | Format-Table -AutoSize

@@ -195,5 +195,5 @@
     }
 }
 
-Get-ComputerNetwork -ComputerName AD1, AD2 | Format-Table -a *
+#Get-ComputerNetwork -ComputerName AD1, AD2 | Format-Table -a *
 #Get-CimData -ComputerName AD1 -Class 'Win32_NetworkAdapterConfiguration'
