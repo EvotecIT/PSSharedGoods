@@ -7,7 +7,7 @@ function Stop-Runspace {
         [switch] $ExtendedOutput
     )
     #[Array] $List = while ($Runspaces.Status -ne $null) {
-    [Array] $List = While (@($Runspaces | Where-Object -FilterScript {$null -ne $_.Status}).count -gt 0) {
+    [Array] $List = While (@($Runspaces | Where-Object -FilterScript { $null -ne $_.Status }).count -gt 0) {
         foreach ($Runspace in $Runspaces | Where-Object { $_.Status.IsCompleted -eq $true }) {
             $Errors = foreach ($e in $($Runspace.Pipe.Streams.Error)) {
                 Write-Error -ErrorRecord $e

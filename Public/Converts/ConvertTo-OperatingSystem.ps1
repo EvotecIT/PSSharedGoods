@@ -8,6 +8,7 @@
     if ($OperatingSystem -like '*Windows 10*') {
         $Systems = @{
             # This is how it's written in AD
+            '10.0 (18363)' = "Windows 10 1909"
             '10.0 (18362)' = "Windows 10 1903"
             '10.0 (17763)' = "Windows 10 1809"
             '10.0 (17134)' = "Windows 10 1803"
@@ -19,6 +20,7 @@
             '10.0 (18898)' = 'Windows 10 Insider Preview'
 
             # This is how WMI/CIM stores it
+            '10.0.18363'   = "Windows 10 1909"
             '10.0.18362'   = "Windows 10 1903"
             '10.0.17763'   = "Windows 10 1809"
             '10.0.17134'   = "Windows 10 1803"
