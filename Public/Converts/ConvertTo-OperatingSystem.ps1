@@ -38,6 +38,8 @@
         # to detect Core
 
         $Systems = @{
+            '5.2 (3790)'   = 'Windows Server 2003'
+            '6.1 (7601)'   = 'Windows Server 2008 R2'
             # This is how it's written in AD
             '10.0 (18362)' = "Windows Server, version 1903 (Semi-Annual Channel) 1903" # (Datacenter Core, Standard Core)
             '10.0 (17763)' = "Windows Server 2019 (Long-Term Servicing Channel) 1809" # (Datacenter, Essentials, Standard)
@@ -51,8 +53,7 @@
             '10.0.14393'   = "Windows Server 2016 (Long-Term Servicing Channel) 1607"
         }
         $System = $Systems[$OperatingSystemVersion]
-
-    } elseif ($OperatingSystem -notlike 'Windows 10*') {
+    } else {
         $System = $OperatingSystem
     }
     if ($System) {
