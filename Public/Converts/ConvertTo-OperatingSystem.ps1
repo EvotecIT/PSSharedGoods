@@ -32,7 +32,9 @@
             '10.0.18898'   = 'Windows 10 Insider Preview'
         }
         $System = $Systems[$OperatingSystemVersion]
-
+        if (-not $System) {
+            $System = $OperatingSystem
+        }
     } elseif ($OperatingSystem -like '*Windows Server*') {
         # May need updates https://docs.microsoft.com/en-us/windows-server/get-started/windows-server-release-info
         # to detect Core
@@ -53,6 +55,9 @@
             '10.0.14393'   = "Windows Server 2016 (Long-Term Servicing Channel) 1607"
         }
         $System = $Systems[$OperatingSystemVersion]
+        if (-not $System) {
+            $System = $OperatingSystem
+        }
     } else {
         $System = $OperatingSystem
     }

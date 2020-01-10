@@ -6,6 +6,12 @@ function Test-ComputerPort {
         [int[]] $PortUDP,
         [int]$Timeout = 5000
     )
+    begin {
+        if ($Global:ProgressPreference -ne 'SilentlyContinue') {
+            $TemporaryProgress = $Global:ProgressPreference
+            $Global:ProgressPreference = 'SilentlyContinue'
+        }
+    }
     process {
         foreach ($Computer in $ComputerName) {
             foreach ($P in $PortTCP) {
@@ -83,10 +89,16 @@ function Test-ComputerPort {
 
         }
     }
+    end {
+        # Bring back setting as per default
+        if ($TemporaryProgress) {
+            $Global:ProgressPreference = $TemporaryProgress
+        }
+    }
 }
 
 
-#Test-ComputerPort -ComputerName 'AD1', 'AD2', 'DC123' -PortTCP  25, 88, 389, 464, 636, 5722, 9389 | ft -AutoSize
+#Test-ComputerPort -ComputerName 'AD1', 'AD2' -PortTCP  25, 88, 389, 464, 636, 5722, 9389 | Format-Table -AutoSize
 #Test-ComputerPort -ComputerName 'AD1' -PortTCP 25, 88, 389, 464, 636, 5722, 9389 -PortUDP 88, 123, 389, 464 | ft -AutoSize
 #Test-ComputerPort -ComputerName 'AD2' -PortTCP 53 -PortUDP 53 | ft -AutoSize
 #Test-ComputerPort -PortUDP 53 -ComputerName AD1,AD2 | ft -AutoSize
