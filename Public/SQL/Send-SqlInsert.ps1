@@ -11,7 +11,7 @@ function Send-SqlInsert {
     $PropertiesFromAllObject = Get-ObjectPropertiesAdvanced -Object $Object -AddProperties 'AddedWhen', 'AddedWho'
     $PropertiesFromTable = $SqlTable.Column_name
 
-    if ($SqlTable -eq $null) {
+    if ($null -eq $SqlTable) {
         if ($SqlSettings.SqlTableCreate) {
             Write-Verbose "Send-SqlInsert - SqlTable doesn't exists, table creation is allowed, mapping will be done either on properties from object or from TableMapping defined in config"
             $TableMapping = New-SqlTableMapping -SqlTableMapping $SqlSettings.SqlTableMapping -Object $Object -Properties $PropertiesFromAllObject
@@ -41,14 +41,14 @@ function Send-SqlInsert {
         }
     }
     $Queries = @(
-        if ($CreateTableSQL) { 
+        if ($CreateTableSQL) {
             foreach ($Sql in $CreateTableSQL) {
-                $Sql 
+                $Sql
             }
         }
         if ($AlterTableSQL) {
             foreach ($Sql in $AlterTableSQL) {
-                $Sql 
+                $Sql
             }
         }
         $SqlQueries = New-SqlQuery -Object $Object -SqlSettings $SqlSettings -TableMapping $TableMapping
@@ -61,12 +61,12 @@ function Send-SqlInsert {
         try {
             if ($Query) {
                 $Query # return query to log
-                Invoke-DbaQuery -SqlInstance "$($SqlSettings.SqlServer)" -Database "$($SqlSettings.SqlDatabase)" -Query $Query -ErrorAction Stop # return output      
+                Invoke-DbaQuery -SqlInstance "$($SqlSettings.SqlServer)" -Database "$($SqlSettings.SqlDatabase)" -Query $Query -ErrorAction Stop # return output
             }
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
             "Error occured (Send-SqlInsert): $ErrorMessage" # return data
         }
-    }    
+    }
     return $ReturnData
 }
