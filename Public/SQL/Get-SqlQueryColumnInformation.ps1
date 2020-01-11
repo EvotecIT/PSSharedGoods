@@ -11,7 +11,7 @@ function Get-SqlQueryColumnInformation {
     $Query = "SELECT * FROM $SqlDatabase.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '$Table'"
     $SqlReturn = @(
         try {
-            Invoke-DbaQuery -ErrorAction Stop -ServerInstance $SqlServer -Query $Query #-Verbose
+            Invoke-DbaQuery -ErrorAction Stop -SqlInstance $SqlServer -Query $Query #-Verbose
         } catch {
             $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
             "Error occured (Get-SqlQueryColumnInformation): $ErrorMessage" # return of error
