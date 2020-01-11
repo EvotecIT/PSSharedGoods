@@ -1,11 +1,11 @@
 ﻿function Get-WinADForestDetails {
     [CmdletBinding()]
     param(
-        [string] $Forest,
+        [alias('ForestName')][string] $Forest,
         [string[]] $ExcludeDomains,
         [string[]] $ExcludeDomainControllers,
-        [alias('Domain')][string[]] $IncludeDomains,
-        [alias('DomainControllers')][string[]] $IncludeDomainControllers,
+        [alias('Domain', 'Domains')][string[]] $IncludeDomains,
+        [alias('DomainControllers', 'ComputerName')][string[]] $IncludeDomainControllers,
         [switch] $SkipRODC,
         [string] $Filter = '*',
         [switch] $TestAvailability,
@@ -29,6 +29,9 @@
         $ForestInformation = Get-ADForest -ErrorAction Stop -Server $DC.HostName[0]
     }
     $Findings['Forest'] = $ForestInformation
+    $Findings['ForestDomainControllers'] = @()
+    $Findings['QueryServers'] = @{ }
+    $Findings['QueryServers']['Forest'] = $DC
     $Findings.Domains = foreach ($_ in $ForestInformation.Domains) {
         if ($IncludeDomains) {
             if ($_ -in $IncludeDomains) {
@@ -41,18 +44,33 @@
             $_.ToLower()
         }
     }
-    foreach ($Domain in $Findings.Domains) {
+    $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
         $DC = Get-ADDomainController -DomainName $Domain -Discover
+        $Findings['QueryServers']["$Domain"] = $DC
         [Array] $AllDC = try {
-            $DomainControllers = Get-ADDomainController -Filter $Filter -Server $DC.HostName[0]
+            $DomainControllers = Get-ADDomainController -Filter $Filter -Server $DC.HostName[0] -ErrorAction Stop
             foreach ($S in $DomainControllers) {
                 if ($IncludeDomainControllers.Count -gt 0) {
-                    if ($S.HostName -notin $IncludeDomainControllers) {
-                        continue
+                    If (-not $IncludeDomainControllers[0].Contains('.')) {
+                        if ($S.Name -notin $IncludeDomainControllers) {
+                            continue
+                        }
+                    } else {
+                        if ($S.HostName -notin $IncludeDomainControllers) {
+                            continue
+                        }
                     }
                 }
-                if ($S.HostName -in $ExcludeDomainControllers) {
-                    continue
+                if ($ExcludeDomainControllers.Count -gt 0) {
+                    If (-not $ExcludeDomainControllers[0].Contains('.')) {
+                        if ($S.Name -notin $ExcludeDomainControllers) {
+                            continue
+                        }
+                    } else {
+                        if ($S.HostName -in $ExcludeDomainControllers) {
+                            continue
+                        }
+                    }
                 }
                 $Server = [ordered] @{
                     Domain                 = $Domain
@@ -69,8 +87,12 @@
                     IsPDC                  = ($S.OperationMasterRoles -contains 'PDCEmulator')
                     IsRIDMaster            = ($S.OperationMasterRoles -contains 'RIDMaster')
                     IsInfrastructureMaster = ($S.OperationMasterRoles -contains 'InfrastructureMaster')
+                    OperatingSystem        = $S.OperatingSystem
+                    OperatingSystemVersion = $S.OperatingSystemVersion
+                    OperatingSystemLong    = ConvertTo-OperatingSystem -OperatingSystem $S.OperatingSystem -OperatingSystemVersion $S.OperatingSystemVersion
                     LdapPort               = $S.LdapPort
                     SslPort                = $S.SslPort
+                    DistinguishedName      = $S.ComputerObjectDN
                     Pingable               = $null
                     WinRM                  = $null
                     PortOpen               = $null
@@ -107,6 +129,7 @@
                 InfrastructureMaster     = $false
                 LdapPort                 = ''
                 SslPort                  = ''
+                DistinguishedName        = ''
                 Pingable                 = $null
                 WinRM                    = $null
                 PortOpen                 = $null
@@ -118,6 +141,8 @@
         } else {
             $Findings[$Domain] = $AllDC
         }
+        # Building all DCs for whole Forest
+        $Findings[$Domain]
     }
     # Bring back setting as per default
     if ($TemporaryProgress) {
@@ -126,10 +151,12 @@
 
     $Findings
 }
+
 <#
-$F = Get-WinADForest -SkipRODC -ExcludeDomainControllers 'AD1.ad.evotec.xyz' #-TestAvailability #-IncludeDomains 'ad.evotec.xyz'
+$F = Get-WinADForestDetails -SkipRODC -ExcludeDomainControllers 'AD1.ad.evotec.xyz' #-TestAvailability #-IncludeDomains 'ad.evotec.xyz'
 $F | Format-Table -AutoSize
 
 $F.'ad.evotec.xyz' | Format-Table -AutoSize *
 $F.'ad.evotec.pl' | Format-Table -AutoSize *
+
 #>

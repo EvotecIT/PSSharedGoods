@@ -1,5 +1,3 @@
-#Require -Version 3
-#Require -Module ActiveDirectory
 Function Get-WinADForestOptions {
     <#
     .SYNOPSIS
