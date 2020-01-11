@@ -9,9 +9,15 @@ function Start-MyProgram {
    # $Output = & $Program $CmdArgList 2>&1
     $Output = (cmd /c $Program $CmdArgList '2>&1')
     if (-not $LoggerParameters) {
-        return $Output
+        if ($Output) {
+            return $Output
+        }
     } else {
         $Logger = Get-Logger @LoggerParameters
-        $Logger.AddInfoRecord("Running program $Program - $Output")
+        if ($null -ne $Output) {
+            $Logger.AddInfoRecord("Running program $Program with output: $Output")
+        } else {
+            $Logger.AddInfoRecord("Running program $Program $CmdArgList")
+        }
     }
 }
