@@ -21,12 +21,24 @@
 
     $Findings = [ordered] @{ }
 
-    if ($Forest) {
-        $DC = Get-ADDomainController -Discover -DomainName $Forest
-        $ForestInformation = Get-ADForest -ErrorAction Stop -Server $DC.HostName[0] -Identity $Forest
-    } else {
-        $DC = Get-ADDomainController -Discover
-        $ForestInformation = Get-ADForest -ErrorAction Stop -Server $DC.HostName[0]
+    try {
+        if ($Forest) {
+            #$DC = Get-ADDomainController -Discover -DomainName $Forest -ErrorAction Stop
+            #if ($DC) {
+            $ForestInformation = Get-ADForest -ErrorAction Stop -Identity $Forest #-Server $DC.HostName[0]
+            #}
+        } else {
+            #$DC = Get-ADDomainController -Discover -ErrorAction Stop
+            #if ($DC) {
+            $ForestInformation = Get-ADForest -ErrorAction Stop #-Server $DC.HostName[0]
+            #}
+        }
+    } catch {
+        Write-Warning "Get-WinADForestDetails - Error discovering DC for Forest - $($_.Exception.Message)"
+        return
+    }
+    if (-not $ForestInformation) {
+        return
     }
     $Findings['Forest'] = $ForestInformation
     $Findings['ForestDomainControllers'] = @()
@@ -45,10 +57,20 @@
         }
     }
     $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
-        $DC = Get-ADDomainController -DomainName $Domain -Discover
+        try {
+            $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
+        } catch {
+            Write-Warning "Get-WinADForestDetails - Error discovering DC for domain $Domain - $($_.Exception.Message)"
+            continue
+        }
         $Findings['QueryServers']["$Domain"] = $DC
         [Array] $AllDC = try {
-            $DomainControllers = Get-ADDomainController -Filter $Filter -Server $DC.HostName[0] -ErrorAction Stop
+            try {
+                $DomainControllers = Get-ADDomainController -Filter $Filter -Server $DC.HostName[0] -ErrorAction Stop
+            } catch {
+                Write-Warning "Get-WinADForestDetails - Error listing DCs for domain $Domain - $($_.Exception.Message)"
+                continue
+            }
             foreach ($S in $DomainControllers) {
                 if ($IncludeDomainControllers.Count -gt 0) {
                     If (-not $IncludeDomainControllers[0].Contains('.')) {
@@ -151,6 +173,8 @@
 
     $Findings
 }
+
+#Get-WinADForestDetails -Forest 'test.evotec.pl'
 
 <#
 $F = Get-WinADForestDetails -SkipRODC -ExcludeDomainControllers 'AD1.ad.evotec.xyz' #-TestAvailability #-IncludeDomains 'ad.evotec.xyz'

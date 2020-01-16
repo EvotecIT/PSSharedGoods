@@ -32,10 +32,13 @@
     [CmdletBinding()]
     param(
         [string[]] $DistinguishedName,
-        [switch] $ToOrganizationalUnit
+        [switch] $ToOrganizationalUnit,
+        [switch] $ToDC
     )
     if ($ToOrganizationalUnit) {
         return [Regex]::Match($DistinguishedName, '(?=OU)(.*\n?)(?<=.)').Value
+    } elseif ($ToDC) {
+        return [Regex]::Match($DistinguishedName, '(?=DC)(.*\n?)(?<=.)').Value
     } else {
         $Regex = '^CN=(?<cn>.+?)(?<!\\),(?<ou>(?:(?:OU|CN).+?(?<!\\),)+(?<dc>DC.+?))$'
         $Output = foreach ($_ in $DistinguishedName) {
