@@ -54,10 +54,13 @@
             break
         }
     }
-
-    $ReturnValues = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $ComputerName
-    if ($ReturnValues.ReturnValue -ne 0) {
-        Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $ComputerName may have failed. Please verify."
+    try {
+        $ReturnValues = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $ComputerName -ErrorAction Stop
+        if ($ReturnValues.ReturnValue -ne 0) {
+            Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $ComputerName may have failed. Please verify."
+        }
+    } catch {
+        Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $ComputerName have failed. Error: $($_.Exception.Message)"
     }
 }
 
