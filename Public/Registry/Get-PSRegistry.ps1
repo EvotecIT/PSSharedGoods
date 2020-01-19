@@ -55,9 +55,9 @@
                     }
                 }
                 if ($ComputerSplit -eq 0) {
-                    $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments
+                    $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
                 } else {
-                    $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments $Arguments
+                    $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments $Arguments -Verbose:$false
                 }
                 #$Output2 = Get-RegistryData -ComputerName $Computers[0] -MethodName EnumValues -Arguments $Arguments
                 foreach ($Entry in $Output2) {
@@ -69,9 +69,9 @@
                         $MethodName = $TypesDictionary["$($Types[$i])"]
 
                         if ($ComputerSplit -eq 0) {
-                            $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $Entry.PSComputerName
+                            $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $Entry.PSComputerName -Verbose:$false
                         } else {
-                            $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments #-ComputerName $Entry.PSComputerName
+                            $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -Verbose:$false #-ComputerName $Entry.PSComputerName
                         }
                         #$Output2 = Get-RegistryData -ComputerName $Entry.PSComputerName -MethodName $MethodName -Arguments $Arguments
                         if ($null -ne $Values.sValue) {
