@@ -2,40 +2,40 @@ function Set-ServiceRecovery {
     <#
     .SYNOPSIS
     #
-    
+
     .DESCRIPTION
     Long description
-    
+
     .PARAMETER ServiceDisplayName
     Parameter description
-    
+
     .PARAMETER Server
     Parameter description
-    
+
     .PARAMETER action1
     Parameter description
-    
+
     .PARAMETER time1
     Parameter description
-    
+
     .PARAMETER action2
     Parameter description
-    
+
     .PARAMETER time2
     Parameter description
-    
+
     .PARAMETER actionLast
     Parameter description
-    
+
     .PARAMETER timeLast
     Parameter description
-    
+
     .PARAMETER resetCounter
     Parameter description
-    
+
     .EXAMPLE
     Set-ServiceRecovery -ServiceDisplayName "Pulseway" -Server "MAIL1"
-    
+
     .NOTES
     General notes
     #>
@@ -53,7 +53,7 @@ function Set-ServiceRecovery {
         [int] $resetCounter = 4000 # in seconds
     )
     $serverPath = "\\" + $server
-    $services = Get-CimInstance -ClassName 'Win32_Service' -ComputerName $Server| Where-Object {$_.DisplayName -imatch $ServiceDisplayName}
+    $services = Get-CimInstance -ClassName 'Win32_Service' -ComputerName $Server | Where-Object { $_.DisplayName -imatch $ServiceDisplayName }
     $action = $action1 + "/" + $time1 + "/" + $action2 + "/" + $time2 + "/" + $actionLast + "/" + $timeLast
     foreach ($service in $services) {
         # https://technet.microsoft.com/en-us/library/cc742019.aspx
