@@ -4,15 +4,17 @@
         [alias('ReleasesUrl')][uri] $Url
     )
     Try {
-        $JsonContent = (Invoke-WebRequest -Uri $Url -ErrorAction Stop | ConvertFrom-Json)
-        [PSCustomObject] @{
-            PublishDate = [DateTime]  $JsonContent.published_at
-            CreatedDate = [DateTime] $JsonContent.created_at
-            PreRelease  = [bool] $JsonContent.prerelease
-            Version     = [version] ($JsonContent.name -replace 'v', '')
-            Tag         = $JsonContent.tag_name
-            Branch      = $JsonContent.target_commitish
-            Errors      = ''
+        [Array] $JsonOutput = (Invoke-WebRequest -Uri $Url -ErrorAction Stop | ConvertFrom-Json)
+        foreach ($JsonContent in $JsonOutput) {
+            [PSCustomObject] @{
+                PublishDate = [DateTime]  $JsonContent.published_at
+                CreatedDate = [DateTime] $JsonContent.created_at
+                PreRelease  = [bool] $JsonContent.prerelease
+                Version     = [version] ($JsonContent.name -replace 'v', '')
+                Tag         = $JsonContent.tag_name
+                Branch      = $JsonContent.target_commitish
+                Errors      = ''
+            }
         }
     } catch {
         [PSCustomObject] @{
