@@ -49,7 +49,7 @@ function Get-WinADForestControllers {
     $Servers = foreach ($D in $Domain) {
         try {
             $LocalServer = Get-ADDomainController -Discover -DomainName $D -ErrorAction Stop
-            $DC = Get-ADDomainController -Server $LocalServer -Filter * -ErrorAction Stop
+            $DC = Get-ADDomainController -Server $LocalServer.HostName[0] -Filter * -ErrorAction Stop
             foreach ($S in $DC) {
                 $Server = [ordered] @{
                     Domain               = $D
