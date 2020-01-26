@@ -10,3 +10,8 @@ PSSharedGoods is little PowerShell Module that primary purpose is to be useful f
 - Many others - just review other GitHub projects of mine
 
 More information can be found on dedicated page for [PSSharedGoods](https://evotec.xyz/hub/scripts/pssharedgoods-powershell-module/) module.
+
+## Changelog
+
+- 2020.01.26
+  - [x] Fix for ConvertFrom-DistinguishedName to cover OU/DC properly (wrong regex)
