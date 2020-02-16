@@ -1,11 +1,10 @@
 ﻿function Get-PSRegistry {
     [cmdletbinding()]
     param(
-        [string[]] $ComputerName = $Env:COMPUTERNAME,
-        [string[]] $RegistryPath,
-        [string] $Value #,
-        #[switch] $CustomObject
+        [alias('Path')][string[]] $RegistryPath,
+        [string[]] $ComputerName = $Env:COMPUTERNAME
     )
+
     $RootKeyDictionary = @{
         HKEY_CLASSES_ROOT   = 2147483648 #(0x80000000)
         HKCR                = 2147483648 #(0x80000000)
@@ -24,23 +23,34 @@
         '1'  = 'GetStringValue' #'REG_SZ'
         '2'  = 'GetExpandedStringValue' #'REG_EXPAND_SZ'
         '3'  = 'GetBinaryValue' # REG_BINARY
-        # GetMultiStringValue
         '4'  = 'GetDWORDValue' #'REG_DWORD'
-        '7'  = 'GetExpandedStringValue' # REG_MULTI_SZ
+        '7'  = 'GetMultiStringValue'  # REG_MULTI_SZ
         '11' = 'GetQWORDValue' # 'REG_QWORD'
         # https://docs.microsoft.com/en-us/previous-versions/windows/desktop/regprov/stdregprov
+    }
+    $Dictionary = @{
+        'HKCR:' = 'HKEY_CLASSES_ROOT'
+        'HKCU:' = 'HKEY_CURRENT_USER'
+        'HKLM:' = 'HKEY_LOCAL_MACHINE'
+        'HKU:'  = 'HKEY_USERS'
+        'HKCC:' = 'HKEY_CURRENT_CONFIG'
+        'HKDD:' = 'HKEY_DYN_DATA'
     }
 
     [uint32] $RootKey = $null
 
-    [Array] $Computers = $ComputerName.Where( { $_ -ne $Env:COMPUTERNAME }, 'Split' )
+    [Array] $Computers = Get-ComputerSplit -ComputerName $ComputerName
+    #[Array] $Computers = $ComputerName.Where( { $_ -ne $Env:COMPUTERNAME }, 'Split' )
     foreach ($Registry in $RegistryPath) {
-
-
-        #if ($Value) {
-        #$Output1 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumKey -ComputerName $ComputerName -Arguments $Arguments
-        #$Output1.sNames
-
+        # Fix regkey if used with :
+        If ($Registry -like '*:*') {
+            foreach ($Key in $Dictionary.Keys) {
+                if ($Registry.StartsWith($Key)) {
+                    $Registry = $Registry -replace $Key, $Dictionary[$Key]
+                    break
+                }
+            }
+        }
 
         for ($ComputerSplit = 0; $ComputerSplit -lt $Computers.Count; $ComputerSplit++) {
             if ($Computers[$ComputerSplit].Count -gt 0) {
@@ -55,47 +65,93 @@
                     }
                 }
                 if ($ComputerSplit -eq 0) {
-                    $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
-                } else {
                     $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments $Arguments -Verbose:$false
+                    $OutputKeys = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumKey -Arguments $Arguments -Verbose:$false
+                    #$OutputPermissions = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName GetSecurityDescriptor -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                    #$OutputCheckAccess = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName CheckAccess -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                } else {
+                    $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments $Arguments -ComputerName $Computers[$ComputerSplit] -Verbose:$false
+                    $OutputKeys = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumKey -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                    #$OutputPermissions = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName GetSecurityDescriptor -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                    #$OutputCheckAccess =  Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName CheckAccess -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
                 }
-                #$Output2 = Get-RegistryData -ComputerName $Computers[0] -MethodName EnumValues -Arguments $Arguments
                 foreach ($Entry in $Output2) {
                     $RegistryOutput = [ordered] @{ }
-                    $Types = $Entry.Types
-                    $Names = $Entry.sNames
-                    for ($i = 0; $i -lt $Names.Count; $i++) {
-                        $Arguments['sValueName'] = $Names[$i]
-                        $MethodName = $TypesDictionary["$($Types[$i])"]
-
-                        if ($ComputerSplit -eq 0) {
-                            $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $Entry.PSComputerName -Verbose:$false
-                        } else {
-                            $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -Verbose:$false #-ComputerName $Entry.PSComputerName
-                        }
-                        #$Output2 = Get-RegistryData -ComputerName $Entry.PSComputerName -MethodName $MethodName -Arguments $Arguments
-                        if ($null -ne $Values.sValue) {
-                            $RegistryOutput[$Names[$i]] = $Values.sValue
-                        } elseif ($null -ne $Values.uValue) {
-                            $RegistryOutput[$Names[$i]] = $Values.uValue
-                        }
-
-                    }
-                    if ($ComputerSplit -eq 0) {
-                        $RegistryOutput['ComputerName'] = $Entry.PSComputerName
+                    if ($Entry.ReturnValue -ne 0) {
+                        $RegistryOutput['PSError'] = $true
                     } else {
-                        $RegistryOutput['ComputerName'] = $ENV:COMPUTERNAME
+                        $RegistryOutput['PSError'] = $false
+                        $Types = $Entry.Types
+                        $Names = $Entry.sNames
+                        for ($i = 0; $i -lt $Names.Count; $i++) {
+                            $Arguments['sValueName'] = $Names[$i]
+                            $MethodName = $TypesDictionary["$($Types[$i])"]
+
+                            if ($ComputerSplit -eq 0) {
+                                $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -Verbose:$false
+                            } else {
+                                $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $Entry.PSComputerName -Verbose:$false #-ComputerName $Entry.PSComputerName
+                            }
+                            #$Output2 = Get-RegistryData -ComputerName $Entry.PSComputerName -MethodName $MethodName -Arguments $Arguments
+                            if ($null -ne $Values.sValue) {
+
+                                if ($Names[$i]) {
+                                    $RegistryOutput[$Names[$i]] = $Values.sValue
+                                } else {
+                                    # Default value ''
+                                    $RegistryOutput['DefaultKey'] = $Values.sValue
+                                }
+                            } elseif ($null -ne $Values.uValue) {
+                                if ($Names[$i]) {
+                                    $RegistryOutput[$Names[$i]] = $Values.uValue
+                                } else {
+                                    # Default value ''
+                                    $RegistryOutput['DefaultKey'] = $Values.sValue
+                                }
+                            }
+
+                        }
                     }
-                    #if ($CustomObject) {
+                    if (-not $RegistryOutput['PSComputerName']) {
+                        # We check if COmputerName exists. Just in case someone actually set it up in registry with that name
+                        # We then use PSComputerName
+                        if ($ComputerSplit -eq 0) {
+                            $RegistryOutput['PSComputerName'] = $ENV:COMPUTERNAME
+                        } else {
+                            $RegistryOutput['PSComputerName'] = $Entry.PSComputerName
+                        }
+                    } else {
+                        if ($ComputerSplit -eq 0) {
+                            $RegistryOutput['ComputerName'] = $ENV:COMPUTERNAME
+                        } else {
+                            $RegistryOutput['ComputerName'] = $Entry.PSComputerName
+                        }
+                    }
+                    if (-not $RegistryOutput['PSSubKeys']) {
+                        # Same as above. If for some reason RegistryKeys exists we need to save it to different value
+                        $RegistryOutput['PSSubKeys'] = $OutputKeys.sNames
+                    } else {
+                        $RegistryOutput['SubKeys'] = $OutputKeys.sNames
+                    }
+                    $RegistryOutput['PSPath'] = $Registry
+
                     [PSCustomObject] $RegistryOutput
-                    # } else {
-                    #     $RegistryOutput
-                    # }
+
+                    <#
+                    PSPath       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EventLog\Internet Explorer
+                    PSParentPath : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EventLog
+                    PSChildName  : Internet Explorer
+                    PSDrive      : HKLM
+                    PSProvider   : Microsoft.PowerShell.Core\Registry
+                    #>
                 }
+
             }
         }
     }
 }
+
+
 
 #Get-PSRegistry -RegistryPath 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters' -ComputerName AD2
 
@@ -133,3 +189,14 @@ GetSecurityDescriptor
 #>
 
 #Get-PSRegistry -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\DFSR\Parameters" -ComputerName AD1,AD2,AD3 | ft -AutoSize
+
+#Get-PSRegistry -RegistryPath 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EventLog\Directory Service'
+#Get-PSRegistry -RegistryPath 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EventLog\Windows PowerShell' | Format-Table -AutoSize
+
+
+#Get-PSRegistry -RegistryPath 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels' | Format-Table -AutoSize
+#Get-PSRegistry -RegistryPath 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EventLog\'
+
+#Get-PSRegistry -registrypath 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet'
+
+#Get-PSRegistry -RegistryPath 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Search' -ComputerName AD1

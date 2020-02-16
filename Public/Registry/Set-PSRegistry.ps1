@@ -6,7 +6,13 @@
         [Parameter(Mandatory)][ValidateSet('REG_SZ', 'REG_EXPAND_SZ', 'REG_BINARY', 'REG_DWORD', 'REG_MULTI_SZ', 'REG_QWORD')][string] $Type,
         [Parameter(Mandatory)][string] $Key,
         [Parameter(Mandatory)][object] $Value
+       # [switch] $Force
     )
+    #if ($null -eq $Value -and $Force -eq $false) {
+    #    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $($ComputerName -join ', ') was terminated. Value is null."
+    #    return
+    #}
+    [Array] $ComputersSplit = Get-ComputerSplit -ComputerName $ComputerName
     # https://docs.microsoft.com/en-us/previous-versions/windows/desktop/regprov/setstringvalue-method-in-class-stdregprov
     [uint32] $RootKey = $null
 
@@ -28,9 +34,8 @@
         'REG_SZ'        = 'SetStringValue' #'REG_SZ'
         'REG_EXPAND_SZ' = 'SetExpandedStringValue' #'REG_EXPAND_SZ'
         'REG_BINARY'    = 'SetBinaryValue' # REG_BINARY
-        # GetMultiStringValue
         'REG_DWORD'     = 'SetDWORDValue' #'REG_DWORD'
-        'REG_MULTI_SZ'  = 'SetExpandedStringValue' # REG_MULTI_SZ
+        'REG_MULTI_SZ'  = 'SetMultiStringValue' # REG_MULTI_SZ
         'REG_QWORD'     = 'SetQWORDValue' # 'REG_QWORD'
         # https://docs.microsoft.com/en-us/previous-versions/windows/desktop/regprov/stdregprov
     }
@@ -54,13 +59,26 @@
             break
         }
     }
-    try {
-        $ReturnValues = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $ComputerName -ErrorAction Stop -Verbose:$false
-        if ($ReturnValues.ReturnValue -ne 0) {
-            Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $ComputerName may have failed. Please verify."
+    foreach ($Computer in $ComputersSplit[0]) {
+        # Local computer
+        try {
+            $ReturnValues = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ErrorAction Stop -Verbose:$false
+            if ($ReturnValues.ReturnValue -ne 0) {
+                Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer may have failed. Please verify."
+            }
+        } catch {
+            Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message)"
         }
-    } catch {
-        Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $ComputerName have failed. Error: $($_.Exception.Message)"
+    }
+    foreach ($Computer in $ComputersSplit[1]) {
+        # Remote computer
+        try {
+            $ReturnValues = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $Computer -ErrorAction Stop -Verbose:$false
+            if ($ReturnValues.ReturnValue -ne 0) {
+                Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer may have failed. Please verify."
+            }
+        } catch {
+            Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message)"
+        }
     }
 }
-

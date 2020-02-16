@@ -40,17 +40,13 @@ function Get-CimData {
     $ExcludeProperties = 'CimClass', 'CimInstanceProperties', 'CimSystemProperties', 'SystemCreationClassName', 'CreationClassName'
 
     # Querying CIM locally usually doesn't work. This means if you're querying same computer you neeed to skip CimSession/ComputerName if it's local query
-    try {
-        $LocalComputerDNSName = [System.Net.Dns]::GetHostByName($Env:COMPUTERNAME).HostName
-    } catch {
-        $LocalComputerDNSName = $Env:COMPUTERNAME
-    }
+    [Array] $ComputersSplit = Get-ComputerSplit -ComputerName $ComputerName
 
     $CimObject = @(
         # requires removal of this property for query
         [string[]] $PropertiesOnly = $Properties | Where-Object { $_ -ne 'PSComputerName' }
         # Process all remote computers
-        $Computers = $ComputerName | Where-Object { $_ -ne $Env:COMPUTERNAME -and $_ -ne $LocalComputerDNSName }
+        $Computers = $ComputersSplit[1]
         if ($Computers.Count -gt 0) {
             if ($Protocol = 'Default') {
                 Get-CimInstance -ClassName $Class -ComputerName $Computers -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
@@ -63,7 +59,7 @@ function Get-CimData {
             }
         }
         # Process local computer
-        $Computers = $ComputerName | Where-Object { $_ -eq $Env:COMPUTERNAME -or $_ -eq $LocalComputerDNSName }
+        $Computers = $ComputersSplit[0]
         if ($Computers.Count -gt 0) {
             $Info = Get-CimInstance -ClassName $Class -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
             $Info | Add-Member -Name 'PSComputerName' -Value $Computers -MemberType NoteProperty -Force

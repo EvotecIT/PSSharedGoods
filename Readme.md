@@ -13,5 +13,8 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
-- 2020.01.26
+- 0.0.123 - Unreleased
+  - [x] Updates to Get-PSRegistry
+
+- 0.0.122 - 2020.01.26
   - [x] Fix for ConvertFrom-DistinguishedName to cover OU/DC properly (wrong regex)
