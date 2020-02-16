@@ -13,8 +13,9 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
-- 0.0.123 - Unreleased
-  - [x] Updates to Get-PSRegistry
+- 0.0.123 - 2020.02.16
+  - [x] Updates to Get-PSRegistry/Set-PSRegistry/Get-CimData
+  - [x] Added Get-ComputerSplit for easiedr use of above functions but also for future use
 
 - 0.0.122 - 2020.01.26
   - [x] Fix for ConvertFrom-DistinguishedName to cover OU/DC properly (wrong regex)
