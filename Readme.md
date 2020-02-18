@@ -13,6 +13,8 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.125 - 2020.02.17
+  - [x] Improvments to Get-ComputerSMBSharePermissions
 - 0.0.124 - 2020.02.17
   - [x] Added Get-ComputerSMBSharePermissions
 - 0.0.123 - 2020.02.16
