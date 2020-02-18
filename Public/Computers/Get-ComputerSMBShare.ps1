@@ -3,8 +3,7 @@
     param(
         [string[]] $ComputerName
     )
-
-    [Array] $CollectionComputers = $ComputerName.Where( { $_ -eq $Env:COMPUTERNAME }, 'Split')
+    [Array] $CollectionComputers = Get-ComputerSplit -ComputerName $ComputerName
     $SMB = @(
         if ($CollectionComputers[0].Count -gt 0) {
             $Output = Get-SmbShare
@@ -22,7 +21,5 @@
     )
     $SMB
 }
-
-#
 
 #Get-ComputerSMBShare -ComputerName AD1, EVOWIN | ft -AutoSize Name, PSComputerName
