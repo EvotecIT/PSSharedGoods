@@ -13,6 +13,8 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.124 - 2020.02.17
+  - [x] Added Get-ComputerSMBSharePermissions
 - 0.0.123 - 2020.02.16
   - [x] Updates to Get-PSRegistry/Set-PSRegistry/Get-CimData
   - [x] Added Get-ComputerSplit for easiedr use of above functions but also for future use
