@@ -2,7 +2,7 @@
     [CmdletBinding()]
     param(
         [string[]] $ComputerName,
-        [Parameter(Mandatory = $true)][alias('Name')][string] $ShareName
+        [Parameter(Mandatory = $true)][alias('Name')][string[]] $ShareName
     )
     [Array] $Computers = Get-ComputerSplit -ComputerName $ComputerName
     $SMB = @(
@@ -33,4 +33,4 @@
     $SMB
 }
 
-#Get-ComputerSMBSharePermissions -ShareName Netlogon -ComputerName AD1,AD2
+#Get-ComputerSMBSharePermissions -ShareName Netlogon,Sysvol -ComputerName AD1,AD2
