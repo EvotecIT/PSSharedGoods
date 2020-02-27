@@ -13,6 +13,9 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.127 - 2020.02.27
+  - [x] Fix for ConvertFrom-DistinguishedName
+
 - 0.0.126 - 2020.02.27
   - [x] Added Get-FilePermissions
   - [x] Improved ConvertFrom-SID
