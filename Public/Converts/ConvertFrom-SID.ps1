@@ -3,6 +3,7 @@ function ConvertFrom-SID {
     param(
         [string[]] $SID
     )
+    # https://support.microsoft.com/en-au/help/243330/well-known-security-identifiers-in-windows-operating-systems
     $wellKnownSIDs = @{
         'S-1-0'        = 'Null Authority'
         'S-1-0-0'      = 'Nobody'
@@ -36,8 +37,8 @@ function ConvertFrom-SID {
         'S-1-5-15'     = 'This Organization'
         'S-1-5-17'     = 'This Organization'
         'S-1-5-18'     = 'Local System'
-        'S-1-5-19'     = 'NT Authority'
-        'S-1-5-20'     = 'NT Authority'
+        'S-1-5-19'     = 'NT Authority\Local Service'
+        'S-1-5-20'     = 'NT Authority\Network Service'
         'S-1-5-32-544' = 'Administrators'
         'S-1-5-32-545' = 'Users'
         'S-1-5-32-546' = 'Guests'
