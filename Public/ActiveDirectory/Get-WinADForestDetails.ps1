@@ -44,7 +44,7 @@
     $Findings['ForestDomainControllers'] = @()
     $Findings['QueryServers'] = @{ }
     $Findings['QueryServers']['Forest'] = $DC
-    $Findings.Domains = foreach ($_ in $ForestInformation.Domains) {
+    $Findings['Domains'] = foreach ($_ in $ForestInformation.Domains) {
         if ($IncludeDomains) {
             if ($_ -in $IncludeDomains) {
                 $_.ToLower()
@@ -165,6 +165,17 @@
         }
         # Building all DCs for whole Forest
         $Findings[$Domain]
+    }
+    if ($Extended) {
+        $Findings['DomainsExtended'] = @{ }
+        foreach ($DomainEx in $Findings['Domains']) {
+            try {
+                $Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0]
+            } catch {
+                Write-Warning "Get-WinADForestDetails - Error gathering Domain Information for domain $DomainEx - $($_.Exception.Message)"
+                continue
+            }
+        }
     }
     # Bring back setting as per default
     if ($TemporaryProgress) {
