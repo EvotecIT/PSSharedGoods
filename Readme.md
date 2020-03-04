@@ -13,6 +13,9 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.128 - 2020.03.05
+  - [x] Small update to Get-WinADForestDetails
+
 - 0.0.127 - 2020.02.27
   - [x] Fix for ConvertFrom-DistinguishedName
 

@@ -12,7 +12,8 @@
         [ValidateSet('All', 'Ping', 'WinRM', 'PortOpen', 'Ping+WinRM', 'Ping+PortOpen', 'WinRM+PortOpen')] $Test = 'All',
         [int[]] $Ports = 135,
         [int] $PortsTimeout = 100,
-        [int] $PingCount = 1
+        [int] $PingCount = 1,
+        [switch] $Extended
     )
     if ($Global:ProgressPreference -ne 'SilentlyContinue') {
         $TemporaryProgress = $Global:ProgressPreference
