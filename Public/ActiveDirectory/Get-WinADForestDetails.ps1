@@ -45,6 +45,7 @@
     $Findings['ForestDomainControllers'] = @()
     $Findings['QueryServers'] = @{ }
     $Findings['QueryServers']['Forest'] = $DC
+    $Findings['DomainDomainControllers'] = @{ }
     $Findings['Domains'] = foreach ($_ in $ForestInformation.Domains) {
         if ($IncludeDomains) {
             if ($_ -in $IncludeDomains) {
@@ -160,12 +161,14 @@
             }
         }
         if ($SkipRODC) {
-            $Findings[$Domain] = $AllDC | Where-Object { $_.IsReadOnly -eq $false }
+            $Findings['DomainDomainControllers'][$Domain] = $AllDC | Where-Object { $_.IsReadOnly -eq $false }
+            #$Findings[$Domain] = $AllDC | Where-Object { $_.IsReadOnly -eq $false }
         } else {
-            $Findings[$Domain] = $AllDC
+            $Findings['DomainDomainControllers'][$Domain] = $AllDC
+            #$Findings[$Domain] = $AllDC
         }
         # Building all DCs for whole Forest
-        $Findings[$Domain]
+        $Findings['DomainDomainControllers'][$Domain]
     }
     if ($Extended) {
         $Findings['DomainsExtended'] = @{ }
@@ -186,7 +189,9 @@
     $Findings
 }
 
-#Get-WinADForestDetails -Forest 'test.evotec.pl'
+#$F = Get-WinADForestDetails
+#$F.DomainDomainControllers['ad.evotec.xyz'] | Format-Table -AutoSize
+#$F
 
 <#
 $F = Get-WinADForestDetails -SkipRODC -ExcludeDomainControllers 'AD1.ad.evotec.xyz' #-TestAvailability #-IncludeDomains 'ad.evotec.xyz'
