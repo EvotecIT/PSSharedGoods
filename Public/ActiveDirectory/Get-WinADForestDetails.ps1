@@ -46,7 +46,7 @@
     $Findings['QueryServers'] = @{ }
     $Findings['QueryServers']['Forest'] = $DC
     $Findings['DomainDomainControllers'] = @{ }
-    $Findings['Domains'] = foreach ($_ in $ForestInformation.Domains) {
+    [Array] $Findings['Domains'] = foreach ($_ in $ForestInformation.Domains) {
         if ($IncludeDomains) {
             if ($_ -in $IncludeDomains) {
                 $_.ToLower()
@@ -58,7 +58,7 @@
             $_.ToLower()
         }
     }
-    $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
+    [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
         try {
             $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
         } catch {
@@ -161,14 +161,14 @@
             }
         }
         if ($SkipRODC) {
-            $Findings['DomainDomainControllers'][$Domain] = $AllDC | Where-Object { $_.IsReadOnly -eq $false }
+            [Array] $Findings['DomainDomainControllers'][$Domain] = $AllDC | Where-Object { $_.IsReadOnly -eq $false }
             #$Findings[$Domain] = $AllDC | Where-Object { $_.IsReadOnly -eq $false }
         } else {
-            $Findings['DomainDomainControllers'][$Domain] = $AllDC
+            [Array] $Findings['DomainDomainControllers'][$Domain] = $AllDC
             #$Findings[$Domain] = $AllDC
         }
         # Building all DCs for whole Forest
-        $Findings['DomainDomainControllers'][$Domain]
+        [Array] $Findings['DomainDomainControllers'][$Domain]
     }
     if ($Extended) {
         $Findings['DomainsExtended'] = @{ }
@@ -189,7 +189,9 @@
     $Findings
 }
 
-#$F = Get-WinADForestDetails
+#$F = Get-WinADForestDetails -Forest 'test.evotec.pl'
+#$F
+
 #$F.DomainDomainControllers['ad.evotec.xyz'] | Format-Table -AutoSize
 #$F
 

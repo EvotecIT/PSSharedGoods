@@ -13,6 +13,9 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.130 - 2020.03.14
+  - [x] Small update to Get-WinADForestDetails
+
 - 0.0.129 - 2020.03.13
   - [x] Typo fix for string
 
