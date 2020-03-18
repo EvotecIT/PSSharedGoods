@@ -13,6 +13,10 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.131 - 2020.03.18
+  - [x] Improvements to Get-WinADForestDetails for subsequent use, fix for excluding d
+  - [x Copy-Dictionary added
+
 - 0.0.130 - 2020.03.14
   - [x] Small update to Get-WinADForestDetails
 
