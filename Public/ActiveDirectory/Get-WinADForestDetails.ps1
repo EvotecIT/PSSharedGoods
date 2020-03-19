@@ -40,7 +40,6 @@
         $Findings['Forest'] = $ForestInformation
         $Findings['ForestDomainControllers'] = @()
         $Findings['QueryServers'] = @{ }
-        $Findings['QueryServers']['Forest'] = $DC
         $Findings['DomainDomainControllers'] = @{ }
         [Array] $Findings['Domains'] = foreach ($_ in $ForestInformation.Domains) {
             if ($IncludeDomains) {
@@ -60,6 +59,9 @@
             } catch {
                 Write-Warning "Get-WinADForestDetails - Error discovering DC for domain $Domain - $($_.Exception.Message)"
                 continue
+            }
+            if ($Domain -eq $Findings['Forest']['Name']) {
+                $Findings['QueryServers']['Forest'] = $DC
             }
             $Findings['QueryServers']["$Domain"] = $DC
             [Array] $AllDC = try {
