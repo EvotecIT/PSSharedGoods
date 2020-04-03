@@ -31,7 +31,7 @@ function Format-AddSpaceToSentence {
 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)][string[]] $Text,
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true, Position = 0)][string[]] $Text,
         [switch] $ToLowerCase
     )
     Begin { }

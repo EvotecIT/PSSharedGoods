@@ -1,8 +1,8 @@
 function Find-TypesNeeded {
     [CmdletBinding()]
     param (
-        $TypesRequired,
-        $TypesNeeded
+        [Array] $TypesRequired,
+        [Array] $TypesNeeded
     )
     [bool] $Found = $False
     foreach ($Type in $TypesNeeded) {
