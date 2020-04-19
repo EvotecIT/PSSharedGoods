@@ -56,14 +56,23 @@
         [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
             try {
                 $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
+                $OrderedDC = [ordered] @{
+                    Domain      = $DC.Domain
+                    Forest      = $DC.Forest
+                    HostName    = [Array] $DC.HostName
+                    IPv4Address = $DC.IPv4Address
+                    IPv6Address = $DC.IPv6Address
+                    Name        = $DC.Name
+                    Site        = $DC.Site
+                }
             } catch {
                 Write-Warning "Get-WinADForestDetails - Error discovering DC for domain $Domain - $($_.Exception.Message)"
                 continue
             }
             if ($Domain -eq $Findings['Forest']['Name']) {
-                $Findings['QueryServers']['Forest'] = $DC
+                $Findings['QueryServers']['Forest'] = $OrderedDC
             }
-            $Findings['QueryServers']["$Domain"] = $DC
+            $Findings['QueryServers']["$Domain"] = $OrderedDC
             [Array] $AllDC = try {
                 try {
                     $DomainControllers = Get-ADDomainController -Filter $Filter -Server $DC.HostName[0] -ErrorAction Stop
@@ -172,7 +181,40 @@
             $Findings['DomainsExtended'] = @{ }
             foreach ($DomainEx in $Findings['Domains']) {
                 try {
-                    $Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0]
+                    $Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0] | ForEach-Object {
+                        [ordered] @{
+                            AllowedDNSSuffixes                 = $_.AllowedDNSSuffixes                 #: { }
+                            ChildDomains                       = $_.ChildDomains                       #: { }
+                            ComputersContainer                 = $_.ComputersContainer                 #: CN = Computers, DC = ad, DC = evotec, DC = xyz
+                            DeletedObjectsContainer            = $_.DeletedObjectsContainer            #: CN = Deleted Objects, DC = ad, DC = evotec, DC = xyz
+                            DistinguishedName                  = $_.DistinguishedName                  #: DC = ad, DC = evotec, DC = xyz
+                            DNSRoot                            = $_.DNSRoot                            #: ad.evotec.xyz
+                            DomainControllersContainer         = $_.DomainControllersContainer         #: OU = Domain Controllers, DC = ad, DC = evotec, DC = xyz
+                            DomainMode                         = $_.DomainMode                         #: Windows2012R2Domain
+                            DomainSID                          = $_.DomainSID                          #: S - 1 - 5 - 21 - 853615985 - 2870445339 - 3163598659
+                            ForeignSecurityPrincipalsContainer = $_.ForeignSecurityPrincipalsContainer #: CN = ForeignSecurityPrincipals, DC = ad, DC = evotec, DC = xyz
+                            Forest                             = $_.Forest                             #: ad.evotec.xyz
+                            InfrastructureMaster               = $_.InfrastructureMaster               #: AD1.ad.evotec.xyz
+                            LastLogonReplicationInterval       = $_.LastLogonReplicationInterval       #:
+                            LinkedGroupPolicyObjects           = $_.LinkedGroupPolicyObjects           #:
+                            LostAndFoundContainer              = $_.LostAndFoundContainer              #: CN = LostAndFound, DC = ad, DC = evotec, DC = xyz
+                            ManagedBy                          = $_.ManagedBy                          #:
+                            Name                               = $_.Name                               #: ad
+                            NetBIOSName                        = $_.NetBIOSName                        #: EVOTEC
+                            ObjectClass                        = $_.ObjectClass                        #: domainDNS
+                            ObjectGUID                         = $_.ObjectGUID                         #: bc875580 - 4c70-41ad-a487-c57337e26024
+                            ParentDomain                       = $_.ParentDomain                       #:
+                            PDCEmulator                        = $_.PDCEmulator                        #: AD1.ad.evotec.xyz
+                            PublicKeyRequiredPasswordRolling   = $_.PublicKeyRequiredPasswordRolling   #:
+                            QuotasContainer                    = $_.QuotasContainer                    #: CN = NTDS Quotas, DC = ad, DC = evotec, DC = xyz
+                            ReadOnlyReplicaDirectoryServers    = $_.ReadOnlyReplicaDirectoryServers    #: { }
+                            ReplicaDirectoryServers            = $_.ReplicaDirectoryServers            #: { AD1.ad.evotec.xyz, AD2.ad.evotec.xyz, AD3.ad.evotec.xyz }
+                            RIDMaster                          = $_.RIDMaster                          #: AD1.ad.evotec.xyz
+                            SubordinateReferences              = $_.SubordinateReferences              #: { DC = ForestDnsZones, DC = ad, DC = evotec, DC = xyz, DC = DomainDnsZones, DC = ad, DC = evotec, DC = xyz, CN = Configuration, DC = ad, DC = evotec, DC = xyz }
+                            SystemsContainer                   = $_.SystemsContainer                   #: CN = System, DC = ad, DC = evotec, DC = xyz
+                            UsersContainer                     = $_.UsersContainer                     #: CN = Users, DC = ad, DC = evotec, DC = xyz
+                        }
+                    }
                 } catch {
                     Write-Warning "Get-WinADForestDetails - Error gathering Domain Information for domain $DomainEx - $($_.Exception.Message)"
                     continue
@@ -214,7 +256,12 @@
                 $Findings.QueryServers.Remove($_)
             }
         }
-
+        # Now that we have Domains we need to remove all Domains that are excluded or included
+        foreach ($_ in [string[]] $Findings.DomainsExtended.Keys) {
+            if ($_ -notin $Findings.Domains) {
+                $Findings.DomainsExtended.Remove($_)
+            }
+        }
         [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
             [Array] $AllDC = foreach ($S in $Findings.DomainDomainControllers["$Domain"]) {
                 if ($IncludeDomainControllers.Count -gt 0) {

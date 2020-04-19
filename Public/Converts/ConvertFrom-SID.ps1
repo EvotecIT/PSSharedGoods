@@ -1,7 +1,8 @@
 function ConvertFrom-SID {
     [cmdletbinding()]
     param(
-        [string[]] $SID
+        [string[]] $SID,
+        [switch] $OnlyWellKnown
     )
     # https://support.microsoft.com/en-au/help/243330/well-known-security-identifiers-in-windows-operating-systems
     $wellKnownSIDs = @{
@@ -81,6 +82,12 @@ function ConvertFrom-SID {
         'S-1-5-32-580' = 'BUILTIN\Remote Management Users'
     }
     foreach ($_ in $SID) {
+        if ($OnlyWellKnown) {
+            [PSCustomObject] @{
+                Name = $wellKnownSIDs[$_]
+                SID  = $_
+            }
+        } else {
         if ($wellKnownSIDs[$_]) {
             [PSCustomObject] @{
                 Name = $wellKnownSIDs[$_]
@@ -100,5 +107,6 @@ function ConvertFrom-SID {
                 }
             }
         }
+    }
     }
 }
