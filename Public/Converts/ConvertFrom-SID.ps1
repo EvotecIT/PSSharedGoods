@@ -2,9 +2,13 @@ function ConvertFrom-SID {
     [cmdletbinding()]
     param(
         [string[]] $SID,
-        [switch] $OnlyWellKnown
+        [switch] $OnlyWellKnown,
+        [switch] $OnlyWellKnownAdministrative
     )
     # https://support.microsoft.com/en-au/help/243330/well-known-security-identifiers-in-windows-operating-systems
+    $WellKnownAdministrative = @{
+        'S-1-5-18' = 'NT AUTHORITY\SYSTEM'
+    }
     $wellKnownSIDs = @{
         'S-1-0'        = 'Null Authority'
         'S-1-0-0'      = 'Nobody'
@@ -21,11 +25,11 @@ function ConvertFrom-SID {
         'S-1-3-4'      = 'Owner Rights'
         'S-1-5-80-0'   = 'All Services'
         'S-1-4'        = 'Non-unique Authority'
-        'S-1-5'        = 'NT Authority'
-        'S-1-5-1'      = 'Dialup'
-        'S-1-5-2'      = 'Network'
-        'S-1-5-3'      = 'Batch'
-        'S-1-5-4'      = 'Interactive'
+        'S-1-5'        = 'NT AUTHORITY'
+        'S-1-5-1'      = 'NT AUTHORITY\DIALUP'
+        'S-1-5-2'      = 'NT AUTHORITY\NETWORK'
+        'S-1-5-3'      = 'NT AUTHORITY\BATCH'
+        'S-1-5-4'      = 'NT AUTHORITY\INTERACTIVE'
         'S-1-5-6'      = 'Service'
         'S-1-5-7'      = 'Anonymous'
         'S-1-5-8'      = 'Proxy'
@@ -37,9 +41,9 @@ function ConvertFrom-SID {
         'S-1-5-14'     = 'Remote Interactive Logon'
         'S-1-5-15'     = 'This Organization'
         'S-1-5-17'     = 'This Organization'
-        'S-1-5-18'     = 'Local System'
-        'S-1-5-19'     = 'NT Authority\Local Service'
-        'S-1-5-20'     = 'NT Authority\Network Service'
+        'S-1-5-18'     = 'NT AUTHORITY\SYSTEM'
+        'S-1-5-19'     = 'NT AUTHORITY\NETWORK SERVICE'
+        'S-1-5-20'     = 'NT AUTHORITY\NETWORK SERVICE'
         'S-1-5-32-544' = 'Administrators'
         'S-1-5-32-545' = 'Users'
         'S-1-5-32-546' = 'Guests'
@@ -52,7 +56,7 @@ function ConvertFrom-SID {
         'S-1-5-64-10'  = 'NTLM Authentication'
         'S-1-5-64-14'  = 'SChannel Authentication'
         'S-1-5-64-21'  = 'Digest Authority'
-        'S-1-5-80'     = 'NT Service'
+        'S-1-5-80'     = 'NT SERVICE'
         'S-1-5-83-0'   = 'NT VIRTUAL MACHINE\Virtual Machines'
         'S-1-16-0'     = 'Untrusted Mandatory Level'
         'S-1-16-4096'  = 'Low Mandatory Level'
@@ -82,31 +86,43 @@ function ConvertFrom-SID {
         'S-1-5-32-580' = 'BUILTIN\Remote Management Users'
     }
     foreach ($_ in $SID) {
-        if ($OnlyWellKnown) {
-            [PSCustomObject] @{
-                Name = $wellKnownSIDs[$_]
-                SID  = $_
-            }
-        } else {
-        if ($wellKnownSIDs[$_]) {
-            [PSCustomObject] @{
-                Name = $wellKnownSIDs[$_]
-                SID  = $_
-            }
-        } else {
-            try {
+        if ($OnlyWellKnownAdministrative) {
+            # In this case we only return very few high permissions, otherwise nothing
+            if ($WellKnownAdministrative[$_]) {
                 [PSCustomObject] @{
-                    Name = (([System.Security.Principal.SecurityIdentifier]::new($_)).Translate([System.Security.Principal.NTAccount])).Value
+                    Name = $WellKnownAdministrative[$_]
                     SID  = $_
                 }
-            } catch {
-                # Return unchanged object
+            }
+        } elseif ($OnlyWellKnown) {
+            # In this case we only return well known cases, otherwise nothing
+            if ($wellKnownSIDs[$_]) {
                 [PSCustomObject] @{
-                    Name = $_
+                    Name = $wellKnownSIDs[$_]
                     SID  = $_
+                }
+            }
+        } else {
+            # In this case we return WellKnown, or try to resolve stuff
+            if ($wellKnownSIDs[$_]) {
+                [PSCustomObject] @{
+                    Name = $wellKnownSIDs[$_]
+                    SID  = $_
+                }
+            } else {
+                try {
+                    [PSCustomObject] @{
+                        Name = (([System.Security.Principal.SecurityIdentifier]::new($_)).Translate([System.Security.Principal.NTAccount])).Value
+                        SID  = $_
+                    }
+                } catch {
+                    # Return unchanged object
+                    [PSCustomObject] @{
+                        Name = $_
+                        SID  = $_
+                    }
                 }
             }
         }
-    }
     }
 }

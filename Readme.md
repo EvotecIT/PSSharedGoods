@@ -13,9 +13,12 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.136 - 2020.04.24
+  - [x] Added `OnlyWellKnownAdministrative` switch to `ConvertFrom-SID`
+
 - 0.0.135 - 2020.04.19
   - [x] Improvements to Get-WinADForestDetails
-  - [x] Added `OnlyWellKnown` switch to ConvertFrom-SID
+  - [x] Added `OnlyWellKnown` switch to `ConvertFrom-SID`
 
 - 0.0.134 - 2020.04.09
   - [x] Improvements to Get-WinADForestDetails
