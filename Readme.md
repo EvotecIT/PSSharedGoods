@@ -13,6 +13,9 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.147 - 2020.04.24
+  - [x] Removed aliases for `Set-FileInheritance`, `Set-FilePermission`, `Remove-FilePermission`
+
 - 0.0.136 - 2020.04.24
   - [x] Added `OnlyWellKnownAdministrative` switch to `ConvertFrom-SID`
 
