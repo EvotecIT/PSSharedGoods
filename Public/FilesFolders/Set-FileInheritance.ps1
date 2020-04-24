@@ -1,5 +1,5 @@
 function Set-FileInheritance {
-    [alias('Set-Inheritance')]
+    [cmdletBinding()]
     param(
         [string] $StartingDir,
         [switch] $DisableInheritance,

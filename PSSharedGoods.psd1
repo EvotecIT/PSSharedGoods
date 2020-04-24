@@ -12,7 +12,7 @@
     RootModule           = 'PSSharedGoods.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.136'
+    ModuleVersion        = '0.0.137'
 
     # Supported PSEditions
     CompatiblePSEditions = 'Desktop', 'Core'
@@ -165,7 +165,6 @@
     'Get-ComputerNetworkCard', 'Get-RDPSecurity', 'Get-MyIP', 
     'Convert-FromColor', 'Convert-HTMLToString', 
     'Set-EmailBodyTableReplacement', 'Get-PSPermissions', 
-    'Remove-Permission', 'Set-Inheritance', 'Set-Permission', 
     'Copy-Hashtable', 'Copy-OrderedHashtable', 'FS', 'Format-TableStream', 
     'Format-ListStream', 'FV', 'Format-Verbose', 'Format-Debug', 
     'Format-Warning', 'Remove-StringLatinCharacters', 'Set-Recovery', 

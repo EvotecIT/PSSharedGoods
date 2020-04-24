@@ -1,11 +1,11 @@
 function Remove-FilePermission {
-    [alias('Remove-Permission')]
+    [cmdletBinding()]
     param(
         [string] $StartingDir,
         [string] $UserOrGroup = "",
         [switch] $All
     )
-    $acl = get-acl -Path $StartingDir
+    $acl = Get-Acl -Path $StartingDir
     if ($UserOrGroup -ne "") {
         foreach ($access in $acl.Access) {
             if ($access.IdentityReference.Value -eq $UserOrGroup) {

@@ -1,5 +1,5 @@
 function Set-FilePermission {
-    [alias('Set-Permission')]
+    [cmdletBinding()]
     param (
         [string] $StartingDir,
         [string] $UserOrGroup = "",
@@ -26,5 +26,5 @@ function Set-FilePermission {
     $perm = $UserOrGroup, $AclRightsToAssign, $InheritedFolderPermissions, $PropagationFlags, $AccessControlType
     $rule = New-Object -TypeName System.Security.AccessControl.FileSystemAccessRule -ArgumentList $perm
     $acl.SetAccessRule($rule)
-    set-acl -Path $StartingDir $acl
+    Set-Acl -Path $StartingDir $acl
 }
