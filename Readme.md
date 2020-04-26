@@ -13,7 +13,19 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
-- 0.0.147 - 2020.04.24
+- 0.0.138 - 2020.04.26
+  - [x] ConvertFrom-DistinguishedName added switch `ToDomainCN`
+
+    ```powershell
+    $Oops = 'cn={55FB3860-74C9-4262-AD77-30197EAB9999},cn=policies,cn=system,DC=ad,DC=evotec,DC=xyz'
+    ConvertFrom-DistinguishedName -DistinguishedName $Oops -ToDomainCN
+    ```
+
+    ```output
+    ad.evotec.xyz
+    ```
+
+- 0.0.137 - 2020.04.24
   - [x] Removed aliases for `Set-FileInheritance`, `Set-FilePermission`, `Remove-FilePermission`
 
 - 0.0.136 - 2020.04.24

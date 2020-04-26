@@ -33,14 +33,19 @@
     param(
         [string[]] $DistinguishedName,
         [switch] $ToOrganizationalUnit,
-        [switch] $ToDC
+        [switch] $ToDC,
+        [switch] $ToDomainCN
     )
-    if ($ToOrganizationalUnit) {
+    if ($ToDomainCN) {
+        $DN = $DistinguishedName -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
+        $CN = $DN -replace ',DC=','.' -replace "DC="
+        $CN
+    } elseif ($ToOrganizationalUnit) {
         return [Regex]::Match($DistinguishedName, '(?=OU=)(.*\n?)(?<=.)').Value
     } elseif ($ToDC) {
         #return [Regex]::Match($DistinguishedName, '(?=DC=)(.*\n?)(?<=.)').Value
-       # return [Regex]::Match($DistinguishedName, '.*?(DC=.*)').Value
-       $DistinguishedName -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
+        # return [Regex]::Match($DistinguishedName, '.*?(DC=.*)').Value
+        $DistinguishedName -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
         #return [Regex]::Match($DistinguishedName, 'CN=.*?(DC=.*)').Groups[1].Value
     } else {
         $Regex = '^CN=(?<cn>.+?)(?<!\\),(?<ou>(?:(?:OU|CN).+?(?<!\\),)+(?<dc>DC.+?))$'
@@ -51,7 +56,11 @@
         $Output.cn
     }
 }
+
 <#
+$Oops = 'cn={55FB3860-74C9-4262-AD77-30197EAB9999},cn=policies,cn=system,DC=ad,DC=evotec,DC=xyz'
+ConvertFrom-DistinguishedName -DistinguishedName $Oops -ToDomainCN | Format-Table -AutoSize
+
 $Con = @(
     'CN=Windows Authorization Access Group,CN=Builtin,DC=ad,DC=evotec,DC=xyz'
     'CN=Mmm,DC=elo,CN=nee,DC=RootDNSServers,CN=MicrosoftDNS,CN=System,DC=ad,DC=evotec,DC=xyz'
