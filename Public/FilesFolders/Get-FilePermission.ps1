@@ -1,20 +1,20 @@
-﻿function Get-FilePermissions {
-    [alias('Get-PSPermissions')]
+﻿function Get-FilePermission {
+    [alias('Get-PSPermissions', 'Get-FilePermissions')]
     [cmdletBinding()]
     param(
-        [string[]] $ComputerName,
         [Array] $Path,
         [switch] $Inherited,
-        [switch] $NotInherited
+        [switch] $NotInherited,
+        [switch] $ResolveTypes,
+        [switch] $Extended,
+        [switch] $IncludeACLObject
     )
-    [Array] $LiteralPath = foreach ($_ in $Path) {
-        if ($Path[0] -is [System.IO.FileSystemInfo]) {
-            $Path.FullName
-        } elseif ($Path[0] -is [string]) {
-            $Path
+    foreach ($P in $Path) {
+        if ($P -is [System.IO.FileSystemInfo]) {
+            $FullPath = $P.FullName
+        } elseif ($P -is [string]) {
+            $FullPath = $P
         }
-    }
-    foreach ($FullPath in $LiteralPath) {
         $TestPath = Test-Path -Path $FullPath
         if ($TestPath) {
             $ACLS = (Get-Acl -Path $FullPath).Access
@@ -32,34 +32,49 @@
                     }
                 }
                 $TranslateRights = Convert-GenericRightsToFileSystemRights -OriginalRights $ACL.FileSystemRights
+                <#
                 if ($ACL.IdentityReference -like '*\*') {
                     if ($ResolveTypes -and $Script:ForestCache ) {
                         $TemporaryIdentity = $Script:ForestCache["$($ACL.IdentityReference)"]
                         $IdentityReferenceType = $TemporaryIdentity.ObjectClass
                         $IdentityReference = $ACL.IdentityReference.Value
                     } else {
-                        $IdentityReferenceType = ''
+                        $IdentityReferenceType = 'Standard'
                         $IdentityReference = $ACL.IdentityReference.Value
                     }
                 } elseif ($ACL.IdentityReference -like '*-*-*-*') {
-                    $ConvertedSID = ConvertFrom-SID -sid $ACL.IdentityReference
+                    $ConvertedSID = ConvertFrom-SID -SID $ACL.IdentityReference
                     if ($ResolveTypes -and $Script:ForestCache) {
                         $TemporaryIdentity = $Script:ForestCache["$($ConvertedSID.Name)"]
                         $IdentityReferenceType = $TemporaryIdentity.ObjectClass
                     } else {
-                        $IdentityReferenceType = ''
+                        $IdentityReferenceType = $ConvertedSID.Type
                     }
                     $IdentityReference = $ConvertedSID.Name
                 } else {
                     $IdentityReference = $ACL.IdentityReference
-                    $IdentityReferenceType = 'Unknown'
+                    $IdentityReferenceType = 'Standard'
                 }
+                #>
                 $ReturnObject = [ordered] @{ }
                 $ReturnObject['Path' ] = $FullPath
                 $ReturnObject['AccessControlType'] = $ACL.AccessControlType
-                $ReturnObject['Principal'] = $IdentityReference
                 if ($ResolveTypes) {
-                    $ReturnObject['PrincipalType'] = $IdentityReferenceType
+                    $Identity = Convert-Identity -Identity $ACL.IdentityReference
+                    if ($Identity) {
+                        $ReturnObject['Principal'] = $ACL.IdentityReference
+                        $ReturnObject['PrincipalName'] = $Identity.Name
+                        $ReturnObject['PrincipalSid'] = $Identity.Sid
+                        $ReturnObject['PrincipalType'] = $Identity.Type
+                    } else {
+                        # this shouldn't happen because Identity should always return value
+                        $ReturnObject['Principal'] = $Identity
+                        $ReturnObject['PrincipalName'] = ''
+                        $ReturnObject['PrincipalSid'] = ''
+                        $ReturnObject['PrincipalType'] = ''
+                    }
+                } else {
+                    $ReturnObject['Principal'] = $ACL.IdentityReference.Value
                 }
                 #$ReturnObject['ObjectTypeName'] = $Script:ForestGUIDs["$($ACL.objectType)"]
                 #$ReturnObject['InheritedObjectTypeName'] = $Script:ForestGUIDs["$($ACL.inheritedObjectType)"]
@@ -69,11 +84,15 @@
                 $ReturnObject['IsInherited'] = $ACL.IsInherited
 
                 if ($Extended) {
-                    $ReturnObject['ObjectType'] = $ACL.ObjectType
-                    $ReturnObject['InheritedObjectType'] = $ACL.InheritedObjectType
-                    $ReturnObject['ObjectFlags'] = $ACL.ObjectFlags
+                    #$ReturnObject['ObjectType'] = $ACL.ObjectType
+                    #$ReturnObject['InheritedObjectType'] = $ACL.InheritedObjectType
+                    #$ReturnObject['ObjectFlags'] = $ACL.ObjectFlags
                     $ReturnObject['InheritanceFlags'] = $ACL.InheritanceFlags
                     $ReturnObject['PropagationFlags'] = $ACL.PropagationFlags
+                }
+                if ($IncludeACLObject) {
+                    $ReturnObject['ACL'] = $ACL
+                    $ReturnObject['AllACL'] = $ACLS
                 }
                 [PSCustomObject] $ReturnObject
             }

@@ -179,24 +179,31 @@
         }
         if ($Extended) {
             $Findings['DomainsExtended'] = @{ }
+            $Findings['DomainsExtendedNetBIOS'] = @{ }
             foreach ($DomainEx in $Findings['Domains']) {
                 try {
                     $Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0] | ForEach-Object {
+                        # We need to use ForEach-Object to convert ADPropertyValueCollection to normal strings. Otherwise Copy-Dictionary fails
+                        <#
+                        IsPublic IsSerial Name                                     BaseType
+                        -------- -------- ----                                     --------
+                        True     False    ADPropertyValueCollection                System.Collections.CollectionBase
+                        #>
                         [ordered] @{
-                            AllowedDNSSuffixes                 = $_.AllowedDNSSuffixes                 #: { }
-                            ChildDomains                       = $_.ChildDomains                       #: { }
+                            AllowedDNSSuffixes                 = $_.AllowedDNSSuffixes | ForEach-Object -Process { $_ }                #: { }
+                            ChildDomains                       = $_.ChildDomains | ForEach-Object -Process { $_ }                      #: { }
                             ComputersContainer                 = $_.ComputersContainer                 #: CN = Computers, DC = ad, DC = evotec, DC = xyz
                             DeletedObjectsContainer            = $_.DeletedObjectsContainer            #: CN = Deleted Objects, DC = ad, DC = evotec, DC = xyz
                             DistinguishedName                  = $_.DistinguishedName                  #: DC = ad, DC = evotec, DC = xyz
                             DNSRoot                            = $_.DNSRoot                            #: ad.evotec.xyz
                             DomainControllersContainer         = $_.DomainControllersContainer         #: OU = Domain Controllers, DC = ad, DC = evotec, DC = xyz
                             DomainMode                         = $_.DomainMode                         #: Windows2012R2Domain
-                            DomainSID                          = $_.DomainSID                          #: S - 1 - 5 - 21 - 853615985 - 2870445339 - 3163598659
+                            DomainSID                          = $_.DomainSID.Value                        #: S - 1 - 5 - 21 - 853615985 - 2870445339 - 3163598659
                             ForeignSecurityPrincipalsContainer = $_.ForeignSecurityPrincipalsContainer #: CN = ForeignSecurityPrincipals, DC = ad, DC = evotec, DC = xyz
                             Forest                             = $_.Forest                             #: ad.evotec.xyz
                             InfrastructureMaster               = $_.InfrastructureMaster               #: AD1.ad.evotec.xyz
                             LastLogonReplicationInterval       = $_.LastLogonReplicationInterval       #:
-                            LinkedGroupPolicyObjects           = $_.LinkedGroupPolicyObjects           #:
+                            LinkedGroupPolicyObjects           = $_.LinkedGroupPolicyObjects | ForEach-Object -Process { $_ }           #:
                             LostAndFoundContainer              = $_.LostAndFoundContainer              #: CN = LostAndFound, DC = ad, DC = evotec, DC = xyz
                             ManagedBy                          = $_.ManagedBy                          #:
                             Name                               = $_.Name                               #: ad
@@ -207,14 +214,16 @@
                             PDCEmulator                        = $_.PDCEmulator                        #: AD1.ad.evotec.xyz
                             PublicKeyRequiredPasswordRolling   = $_.PublicKeyRequiredPasswordRolling   #:
                             QuotasContainer                    = $_.QuotasContainer                    #: CN = NTDS Quotas, DC = ad, DC = evotec, DC = xyz
-                            ReadOnlyReplicaDirectoryServers    = $_.ReadOnlyReplicaDirectoryServers    #: { }
-                            ReplicaDirectoryServers            = $_.ReplicaDirectoryServers            #: { AD1.ad.evotec.xyz, AD2.ad.evotec.xyz, AD3.ad.evotec.xyz }
+                            ReadOnlyReplicaDirectoryServers    = $_.ReadOnlyReplicaDirectoryServers | ForEach-Object -Process { $_ }    #: { }
+                            ReplicaDirectoryServers            = $_.ReplicaDirectoryServers | ForEach-Object -Process { $_ }           #: { AD1.ad.evotec.xyz, AD2.ad.evotec.xyz, AD3.ad.evotec.xyz }
                             RIDMaster                          = $_.RIDMaster                          #: AD1.ad.evotec.xyz
-                            SubordinateReferences              = $_.SubordinateReferences              #: { DC = ForestDnsZones, DC = ad, DC = evotec, DC = xyz, DC = DomainDnsZones, DC = ad, DC = evotec, DC = xyz, CN = Configuration, DC = ad, DC = evotec, DC = xyz }
+                            SubordinateReferences              = $_.SubordinateReferences | ForEach-Object -Process { $_ }            #: { DC = ForestDnsZones, DC = ad, DC = evotec, DC = xyz, DC = DomainDnsZones, DC = ad, DC = evotec, DC = xyz, CN = Configuration, DC = ad, DC = evotec, DC = xyz }
                             SystemsContainer                   = $_.SystemsContainer                   #: CN = System, DC = ad, DC = evotec, DC = xyz
                             UsersContainer                     = $_.UsersContainer                     #: CN = Users, DC = ad, DC = evotec, DC = xyz
                         }
                     }
+                    $NetBios = $Findings['DomainsExtended'][$DomainEx]['NetBIOSName']
+                    $Findings['DomainsExtendedNetBIOS'][$NetBios] = $Findings['DomainsExtended'][$DomainEx]
                 } catch {
                     Write-Warning "Get-WinADForestDetails - Error gathering Domain Information for domain $DomainEx - $($_.Exception.Message)"
                     continue
@@ -260,6 +269,7 @@
         foreach ($_ in [string[]] $Findings.DomainsExtended.Keys) {
             if ($_ -notin $Findings.Domains) {
                 $Findings.DomainsExtended.Remove($_)
+                $Findings.DomainsExtendedNetBIOS.Remove($_.NetBIOSName)
             }
         }
         [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {

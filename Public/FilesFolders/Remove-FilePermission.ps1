@@ -1,23 +1,23 @@
 function Remove-FilePermission {
     [cmdletBinding()]
     param(
-        [string] $StartingDir,
+        [string] $Path,
         [string] $UserOrGroup = "",
         [switch] $All
     )
-    $acl = Get-Acl -Path $StartingDir
+    $ACL = Get-Acl -Path $Path
     if ($UserOrGroup -ne "") {
-        foreach ($access in $acl.Access) {
+        foreach ($access in $ACL.Access) {
             if ($access.IdentityReference.Value -eq $UserOrGroup) {
-                $acl.RemoveAccessRule($access) | Out-Null
+                $ACL.RemoveAccessRule($access) | Out-Null
             }
         }
     }
     if ($All -eq $true) {
-        foreach ($access in $acl.Access) {
-            $acl.RemoveAccessRule($access) | Out-Null
+        foreach ($access in $ACL.Access) {
+            $ACL.RemoveAccessRule($access) | Out-Null
         }
 
     }
-    Set-Acl -Path $folder.FullName -AclObject $acl
+    Set-Acl -Path $Path -AclObject $ACL
 }
