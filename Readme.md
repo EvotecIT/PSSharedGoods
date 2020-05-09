@@ -13,6 +13,18 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.139 - Unreleased
+  - Added `Convert-Identity`
+  - Improved `ConvertFrom-Sid`
+  - Improved `ConvertTo-Sid`
+  - Added `Get-FileOwner`
+  - Improved `Get-FilePermission`
+  - Improved `Remove-FilePermission`
+  - Added `Set-FileOwner`
+  - Improved `Set-FilePermission`
+  - Improved `Get-WinADForestDetails`
+  - Added `Get-ADAdministrativeGroups`
+
 - 0.0.138 - 2020.04.26
   - [x] ConvertFrom-DistinguishedName added switch `ToDomainCN`
 
