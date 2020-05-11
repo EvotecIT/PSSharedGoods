@@ -1,3 +1,22 @@
+<p align="center">
+  <a href="https://www.powershellgallery.com/packages/PSSharedGoods"><img src="https://img.shields.io/powershellgallery/v/PSSharedGoods.svg"></a>
+  <a href="https://www.powershellgallery.com/packages/PSSharedGoods"><img src="https://img.shields.io/powershellgallery/vpre/PSSharedGoods.svg?label=powershell%20gallery%20preview&colorB=yellow"></a>
+  <a href="https://github.com/EvotecIT/PSSharedGoods"><img src="https://img.shields.io/github/license/EvotecIT/PSSharedGoods.svg"></a>
+</p>
+
+<p align="center">
+  <a href="https://www.powershellgallery.com/packages/PSSharedGoods"><img src="https://img.shields.io/powershellgallery/p/PSSharedGoods.svg"></a>
+  <a href="https://github.com/EvotecIT/PSSharedGoods"><img src="https://img.shields.io/github/languages/top/evotecit/PSSharedGoods.svg"></a>
+  <a href="https://github.com/EvotecIT/PSSharedGoods"><img src="https://img.shields.io/github/languages/code-size/evotecit/PSSharedGoods.svg"></a>
+  <a href="https://www.powershellgallery.com/packages/PSSharedGoods"><img src="https://img.shields.io/powershellgallery/dt/PSSharedGoods.svg"></a>
+</p>
+
+<p align="center">
+  <a href="https://twitter.com/PrzemyslawKlys"><img src="https://img.shields.io/twitter/follow/PrzemyslawKlys.svg?label=Twitter%20%40PrzemyslawKlys&style=social"></a>
+  <a href="https://evotec.xyz/hub"><img src="https://img.shields.io/badge/Blog-evotec.xyz-2A6496.svg"></a>
+  <a href="https://www.linkedin.com/in/pklys"><img src="https://img.shields.io/badge/LinkedIn-pklys-0077B5.svg?logo=LinkedIn"></a>
+</p>
+
 # PSSharedGoods - PowerShell Module
 
 PSSharedGoods is little PowerShell Module that primary purpose is to be useful for multiple tasks, unrelated to each other. I've created this module as "a glue" between my other modules. I've noticed the more I build my modules, the more I use the same stuff and it became apparent I've two choices. Keep 3 or more versions of the same function across all my modules or export functions to separate module and bundle this module together. I chose the second option. This module currently is used by following modules
