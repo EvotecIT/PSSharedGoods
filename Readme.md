@@ -13,7 +13,9 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
-- 0.0.139 - Unreleased
+- 0.0.140 - 2020.05.10
+  - Improved `Get-FilePermission`
+- 0.0.139 - 2020.05.09
   - Added `Convert-Identity`
   - Improved `ConvertFrom-Sid`
   - Improved `ConvertTo-Sid`

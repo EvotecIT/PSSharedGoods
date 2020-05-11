@@ -17,9 +17,9 @@
         }
         $TestPath = Test-Path -Path $FullPath
         if ($TestPath) {
-            $ACLS = (Get-Acl -Path $FullPath).Access
+            $ACLS = (Get-Acl -Path $FullPath)
 
-            $Output = foreach ($ACL in $ACLS) {
+            $Output = foreach ($ACL in $ACLS.Access) {
                 if ($Inherited) {
                     if ($ACL.IsInherited -eq $false) {
                         # if it's not inherited and we require inherited lets continue
