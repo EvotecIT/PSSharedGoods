@@ -32,6 +32,8 @@ More information can be found on dedicated page for [PSSharedGoods](https://evot
 
 ## Changelog
 
+- 0.0.142 - 2020.05.14
+  - Improved `Get-WinADForestDetails`
 - 0.0.141 - 2020.05.14
   - Improved `Set-FileOwner`
   - Improved `Get-WinADForestDetails`
