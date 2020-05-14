@@ -229,7 +229,7 @@
                             ObjectGUID                         = $_.ObjectGUID                         #: bc875580 - 4c70-41ad-a487-c57337e26024
                             ParentDomain                       = $_.ParentDomain                       #:
                             PDCEmulator                        = $_.PDCEmulator                        #: AD1.ad.evotec.xyz
-                            PublicKeyRequiredPasswordRolling   = $_.PublicKeyRequiredPasswordRolling   #:
+                            PublicKeyRequiredPasswordRolling   = $_.PublicKeyRequiredPasswordRolling | ForEach-Object -Process { $_ }   #:
                             QuotasContainer                    = $_.QuotasContainer                    #: CN = NTDS Quotas, DC = ad, DC = evotec, DC = xyz
                             ReadOnlyReplicaDirectoryServers    = $_.ReadOnlyReplicaDirectoryServers | ForEach-Object -Process { $_ }    #: { }
                             ReplicaDirectoryServers            = $_.ReplicaDirectoryServers | ForEach-Object -Process { $_ }           #: { AD1.ad.evotec.xyz, AD2.ad.evotec.xyz, AD3.ad.evotec.xyz }
