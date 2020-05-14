@@ -73,6 +73,7 @@
         [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
             try {
                 $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
+
                 $OrderedDC = [ordered] @{
                     Domain      = $DC.Domain
                     Forest      = $DC.Forest
@@ -82,6 +83,7 @@
                     Name        = $DC.Name
                     Site        = $DC.Site
                 }
+
             } catch {
                 Write-Warning "Get-WinADForestDetails - Error discovering DC for domain $Domain - $($_.Exception.Message)"
                 continue
@@ -199,13 +201,12 @@
             $Findings['DomainsExtendedNetBIOS'] = @{ }
             foreach ($DomainEx in $Findings['Domains']) {
                 try {
+                    #$Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0]
+
                     $Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0] | ForEach-Object {
                         # We need to use ForEach-Object to convert ADPropertyValueCollection to normal strings. Otherwise Copy-Dictionary fails
-                        <#
-                        IsPublic IsSerial Name                                     BaseType
-                        -------- -------- ----                                     --------
-                        True     False    ADPropertyValueCollection                System.Collections.CollectionBase
-                        #>
+                        #True     False    ADPropertyValueCollection                System.Collections.CollectionBase
+
                         [ordered] @{
                             AllowedDNSSuffixes                 = $_.AllowedDNSSuffixes | ForEach-Object -Process { $_ }                #: { }
                             ChildDomains                       = $_.ChildDomains | ForEach-Object -Process { $_ }                      #: { }
@@ -239,6 +240,7 @@
                             UsersContainer                     = $_.UsersContainer                     #: CN = Users, DC = ad, DC = evotec, DC = xyz
                         }
                     }
+
                     $NetBios = $Findings['DomainsExtended'][$DomainEx]['NetBIOSName']
                     $Findings['DomainsExtendedNetBIOS'][$NetBios] = $Findings['DomainsExtended'][$DomainEx]
                 } catch {
@@ -257,7 +259,7 @@
         # this takes care of limiting output to only what we requested, but based on prior input
         # this makes sure we ask once for all AD stuff and then subsequent calls just filter out things
         # this should be much faster then asking again and again for stuff from AD
-        $Findings = Copy-Dictionary -Dictionary $ExtendedForestInformation
+        $Findings = Copy-DictionaryManual -Dictionary $ExtendedForestInformation
         [Array] $Findings['Domains'] = foreach ($_ in $Findings.Domains) {
             if ($IncludeDomains) {
                 if ($_ -in $IncludeDomains) {

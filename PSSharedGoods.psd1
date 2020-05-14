@@ -12,7 +12,7 @@
     RootModule           = 'PSSharedGoods.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.142'
+    ModuleVersion        = '0.0.143'
 
     # Supported PSEditions
     CompatiblePSEditions = 'Desktop', 'Core'
@@ -126,12 +126,12 @@
     'Add-ToArray', 'Add-ToArrayAdvanced', 'Add-ToHashTable', 
     'Clear-DataInformation', 'Compare-MultipleObjects', 
     'Compare-ObjectsAdvanced', 'Compare-ObjectProperties', 
-    'Copy-Dictionary', 'Format-AddSpaceToSentence', 'Format-FirstXChars', 
-    'Format-PSTable', 'Format-Stream', 'Format-ToTitleCase', 
-    'Format-TransposeTable', 'Format-View', 'Get-Colors', 
-    'Get-DataInformation', 'Get-HashMaxValue', 'Get-MimeType', 
-    'Get-ObjectCount', 'Get-ObjectData', 'Get-ObjectEnumValues', 
-    'Get-ObjectKeys', 'Get-ObjectProperties', 
+    'Copy-Dictionary', 'Copy-DictionaryManual', 
+    'Format-AddSpaceToSentence', 'Format-FirstXChars', 'Format-PSTable', 
+    'Format-Stream', 'Format-ToTitleCase', 'Format-TransposeTable', 
+    'Format-View', 'Get-Colors', 'Get-DataInformation', 'Get-HashMaxValue', 
+    'Get-MimeType', 'Get-ObjectCount', 'Get-ObjectData', 
+    'Get-ObjectEnumValues', 'Get-ObjectKeys', 'Get-ObjectProperties', 
     'Get-ObjectPropertiesAdvanced', 'Get-ObjectTitles', 'Get-ObjectType', 
     'Get-Types', 'Merge-Array', 'Merge-Objects', 'New-ArrayList', 
     'New-GenericList', 'Remove-DuplicateObjects', 'Remove-EmptyValues', 
