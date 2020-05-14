@@ -14,9 +14,9 @@
     Begin { }
     Process {
         foreach ($P in $Path) {
-            if ($P[0] -is [System.IO.FileSystemInfo]) {
+            if ($P -is [System.IO.FileSystemInfo]) {
                 $FullPath = $P.FullName
-            } elseif ($P[0] -is [string]) {
+            } elseif ($P -is [string]) {
                 $FullPath = $P
             }
             $OwnerTranslated = [System.Security.Principal.NTAccount]::new($Owner)

@@ -30,6 +30,23 @@
             } else {
                 $ForestInformation = Get-ADForest -ErrorAction Stop
             }
+            <#
+            $ForestInformation = [ordered] @{
+                ApplicationPartitions = $ForestInf.ApplicationPartitions | ForEach-Object -Process { $_ } # : {DC=DomainDnsZones,DC=ad,DC=evotec,DC=xyz, DC=DomainDnsZones,DC=ad,DC=evotec,DC=pl, DC=ForestDnsZones,DC=ad,DC=evotec,DC=xyz}
+                CrossForestReferences = $ForestInf.CrossForestReferences | ForEach-Object -Process { $_ } # : {}
+                DomainNamingMaster    = $ForestInf.DomainNamingMaster    # : AD1.ad.evotec.xyz
+                Domains               = $ForestInf.Domains | ForEach-Object -Process { $_ }              # : {ad.evotec.xyz, ad.evotec.pl}
+                ForestMode            = $ForestInf.ForestMode            # : Windows2012R2Forest
+                GlobalCatalogs        = $ForestInf.GlobalCatalogs | ForEach-Object -Process { $_ }        # : {AD1.ad.evotec.xyz, AD2.ad.evotec.xyz, ADRODC.ad.evotec.pl, AD3.ad.evotec.xyz...}
+                Name                  = $ForestInf.Name                  # : ad.evotec.xyz
+                PartitionsContainer   = $ForestInf.PartitionsContainer   # : CN=Partitions,CN=Configuration,DC=ad,DC=evotec,DC=xyz
+                RootDomain            = $ForestInf.RootDomain            # : ad.evotec.xyz
+                SchemaMaster          = $ForestInf.SchemaMaster          # : AD1.ad.evotec.xyz
+                Sites                 = $ForestInf.Sites | ForEach-Object -Process { $_ }                # : {KATOWICE-1, KATOWICE-2}
+                SPNSuffixes           = $ForestInf.SPNSuffixes | ForEach-Object -Process { $_ }         # : {}
+                UPNSuffixes           = $ForestInf.UPNSuffixes | ForEach-Object -Process { $_ }          # : {myneva.eu, single.evotec.xyz, newUPN@com, evotec.xyz...}
+            }
+            #>
         } catch {
             Write-Warning "Get-WinADForestDetails - Error discovering DC for Forest - $($_.Exception.Message)"
             return
@@ -269,7 +286,10 @@
         foreach ($_ in [string[]] $Findings.DomainsExtended.Keys) {
             if ($_ -notin $Findings.Domains) {
                 $Findings.DomainsExtended.Remove($_)
-                $Findings.DomainsExtendedNetBIOS.Remove($_.NetBIOSName)
+                $NetBiosName = $Findings.DomainsExtended.$_.'NetBIOSName'
+                if ($NetBiosName) {
+                    $Findings.DomainsExtendedNetBIOS.Remove($NetBiosName)
+                }
             }
         }
         [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
