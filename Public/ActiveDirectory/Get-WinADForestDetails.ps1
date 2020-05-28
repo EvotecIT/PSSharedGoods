@@ -70,7 +70,8 @@
                 $_.ToLower()
             }
         }
-        [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
+        # We want to have QueryServers always available for all domains
+        foreach ($Domain in $ForestInformation.Domains) {
             try {
                 $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
 
@@ -92,9 +93,38 @@
                 $Findings['QueryServers']['Forest'] = $OrderedDC
             }
             $Findings['QueryServers']["$Domain"] = $OrderedDC
+        }
+
+
+        [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
+            <#
+            try {
+                $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
+
+                $OrderedDC = [ordered] @{
+                    Domain      = $DC.Domain
+                    Forest      = $DC.Forest
+                    HostName    = [Array] $DC.HostName
+                    IPv4Address = $DC.IPv4Address
+                    IPv6Address = $DC.IPv6Address
+                    Name        = $DC.Name
+                    Site        = $DC.Site
+                }
+
+            } catch {
+                Write-Warning "Get-WinADForestDetails - Error discovering DC for domain $Domain - $($_.Exception.Message)"
+                continue
+            }
+            if ($Domain -eq $Findings['Forest']['Name']) {
+                $Findings['QueryServers']['Forest'] = $OrderedDC
+            }
+            $Findings['QueryServers']["$Domain"] = $OrderedDC
+            #>
+            $QueryServer = $Findings['QueryServers'][$Domain]['HostName'][0]
+
             [Array] $AllDC = try {
                 try {
-                    $DomainControllers = Get-ADDomainController -Filter $Filter -Server $DC.HostName[0] -ErrorAction Stop
+                    $DomainControllers = Get-ADDomainController -Filter $Filter -Server $QueryServer -ErrorAction Stop
                 } catch {
                     Write-Warning "Get-WinADForestDetails - Error listing DCs for domain $Domain - $($_.Exception.Message)"
                     continue
