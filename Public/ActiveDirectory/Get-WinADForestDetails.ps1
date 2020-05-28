@@ -308,12 +308,12 @@
                 $Findings.DomainDomainControllers.Remove($_)
             }
         }
-        # Same as above but for query servers
-        foreach ($_ in [string[]] $Findings.QueryServers.Keys) {
-            if ($_ -notin $Findings.Domains -and $_ -ne 'Forest') {
-                $Findings.QueryServers.Remove($_)
-            }
-        }
+        # Same as above but for query servers - we don't remove queried servers
+        #foreach ($_ in [string[]] $Findings.QueryServers.Keys) {
+        #    if ($_ -notin $Findings.Domains -and $_ -ne 'Forest') {
+        #        $Findings.QueryServers.Remove($_)
+        #    }
+        #}
         # Now that we have Domains we need to remove all Domains that are excluded or included
         foreach ($_ in [string[]] $Findings.DomainsExtended.Keys) {
             if ($_ -notin $Findings.Domains) {
