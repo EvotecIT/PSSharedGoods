@@ -19,7 +19,7 @@
 
 # PSSharedGoods - PowerShell Module
 
-PSSharedGoods is little PowerShell Module that primary purpose is to be useful for multiple tasks, unrelated to each other. I've created this module as "a glue" between my other modules. I've noticed the more I build my modules, the more I use the same stuff and it became apparent I've two choices. Keep 3 or more versions of the same function across all my modules or export functions to separate module and bundle this module together. I chose the second option. This module currently is used by following modules
+PSSharedGoods is a little PowerShell Module that primary purpose is to be useful for multiple tasks, unrelated to each other. I've created this module as "a glue" between my other modules. I've noticed the more I build my modules, the more I use the same stuff and it became apparent I've two choices. Keep 3 or more versions of the same function across all my modules or export functions to separate module and bundle this module together. I chose the second option. This module currently is used by following modules
 
 - [PSWriteWord](https://evotec.xyz/hub/scripts/pswriteword-powershell-module/) - module to create Microsoft Word documents without Word being installed.
 - [PSWriteExcel](https://evotec.xyz/hub/scripts/pswriteexcel-powershell-module/) - cross-platform module to create Microsoft Excel documents without Excel being installed.
@@ -28,10 +28,12 @@ PSSharedGoods is little PowerShell Module that primary purpose is to be useful f
 - [PSAutomator](https://evotec.xyz/hub/scripts/psautomator-powershell-module/) - proof-of-concept module for onboarding, offboarding and business as usual
 - Many others - just review other GitHub projects of mine
 
-More information can be found on dedicated page for [PSSharedGoods](https://evotec.xyz/hub/scripts/pssharedgoods-powershell-module/) module.
+More information can be found on a dedicated page for [PSSharedGoods](https://evotec.xyz/hub/scripts/pssharedgoods-powershell-module/) module.
 
 ## Changelog
 
+- 0.0.144 - 2020.05.31
+  - Improved `Get-WinADForestDetails`
 - 0.0.143 - 2020.05.17
   - Improved `Get-WinADForestDetails`
   - Added `Copy-DictionaryManual`, alternative to `Copy-Dictionary` which is driving me nuts - tnx joel~!
