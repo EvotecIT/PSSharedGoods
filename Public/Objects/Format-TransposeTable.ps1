@@ -4,36 +4,75 @@ function Format-TransposeTable {
         [Parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)][System.Collections.ICollection] $Object,
         [ValidateSet("ASC", "DESC", "NONE")][String] $Sort = 'NONE'
     )
-    begin {
-        $i = 0;
-    }
     process {
         foreach ($myObject in $Object) {
             if ($myObject -is [System.Collections.IDictionary]) {
-                #Write-Verbose "Format-TransposeTable - Converting HashTable/OrderedDictionary to PSCustomObject - $($myObject.GetType().Name)"
-                $output = New-Object -TypeName PsObject;
-                Add-Member -InputObject $output -MemberType ScriptMethod -Name AddNote -Value {
-                    Add-Member -InputObject $this -MemberType NoteProperty -Name $args[0] -Value $args[1];
-                };
                 if ($Sort -eq 'ASC') {
-                    $myObject.Keys | Sort-Object -Descending:$false | ForEach-Object { $output.AddNote($_, $myObject.$_); }
+                    [PSCustomObject] $myObject.GetEnumerator() | Sort-Object -Property Name -Descending:$false
                 } elseif ($Sort -eq 'DESC') {
-                    $myObject.Keys | Sort-Object -Descending:$true | ForEach-Object { $output.AddNote($_, $myObject.$_); }
+                    [PSCustomObject] $myObject.GetEnumerator() | Sort-Object -Property Name -Descending:$true
                 } else {
-                    $myObject.Keys | ForEach-Object { $output.AddNote($_, $myObject.$_); }
+                    [PSCustomObject] $myObject
                 }
-                $output;
             } else {
-                #Write-Verbose "Format-TransposeTable - Converting PSCustomObject to HashTable/OrderedDictionary - $($myObject.GetType().Name)"
-                # Write-Warning "Index $i is not of type [hashtable]";
-                $output = [ordered] @{ };
-                $myObject | Get-Member -MemberType *Property | ForEach-Object {
-                    $output.($_.name) = $myObject.($_.name);
+                $Output = [ordered] @{ }
+                if ($Sort -eq 'ASC') {
+                    $myObject.PSObject.Properties | Sort-Object -Property Name -Descending:$false | ForEach-Object {
+                        $Output["$($_.Name)"] = $_.Value
+                    }
+                } elseif ($Sort -eq 'DESC') {
+                    $myObject.PSObject.Properties | Sort-Object -Property Name -Descending:$true | ForEach-Object {
+                        $Output["$($_.Name)"] = $_.Value
+                    }
+                } else {
+                    $myObject.PSObject.Properties | ForEach-Object {
+                        $Output["$($_.Name)"] = $_.Value
+                    }
                 }
-                $output
+                $Output
 
             }
-            $i += 1;
         }
     }
 }
+<#
+
+$T = [PSCustomObject] @{
+    Test   = 1
+    Test2  = 7
+    Ole    = 'bole'
+    Trolle = 'A'
+    Alle   = 'sd'
+}
+
+$T1 = [PSCustomObject] @{
+    Test   = 1
+    Test2  = 7
+    Ole    = 'bole'
+    Trolle = 'A'
+    Alle   = 'sd'
+}
+
+$T2 = [ordered] @{
+    Test   = 1
+    Test2  = 7
+    Ole    = 'bole'
+    Trolle = 'A'
+    Alle   = 'sd'
+}
+$T3 = @{
+    Test   = 1
+    Test2  = 7
+    Ole    = 'bole'
+    Trolle = 'A'
+    Alle   = 'sd'
+}
+Clear-Host
+Format-TransposeTable -Object @($T) -Sort ASC | Format-Table
+Format-TransposeTable -Object @($T) -Sort DESC | Format-Table
+Format-TransposeTable -Object @($T) | Format-Table
+
+Format-TransposeTable -Object @($T2) -Sort ASC | Format-Table
+Format-TransposeTable -Object @($T2) -Sort DESC | Format-Table
+Format-TransposeTable -Object @($T2) | Format-Table
+#>
