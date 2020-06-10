@@ -11,4 +11,9 @@
         return $Script:RGBColors
     }
 }
-Register-ArgumentCompleter -CommandName Get-Colors -ParameterName Color -ScriptBlock { $Script:RGBColors.Keys }
+$ScriptBlockColors = {
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+    $Script:RGBColors.Keys | Where-Object { $_ -like "$wordToComplete*" }
+}
+
+Register-ArgumentCompleter -CommandName Get-Colors -ParameterName Color -ScriptBlock $ScriptBlockColors
