@@ -32,6 +32,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.146 - 2020.06.11
+  - Improved `Get-Colors`
+  - Improved `ConvertFrom-Color`
 - 0.0.144 - 2020.05.31
   - Improved `Get-WinADForestDetails`
 - 0.0.143 - 2020.05.17
