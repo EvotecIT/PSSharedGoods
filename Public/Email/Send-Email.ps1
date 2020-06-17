@@ -179,9 +179,7 @@ function Send-Email {
             $SmtpClient.Send($MailMessage)
             #$att.Dispose();
             $MailMessage.Dispose();
-
-
-            return @{
+            return [PSCustomObject] @{
                 Status = $True
                 Error  = ""
                 SentTo = $MailSentTo
@@ -189,7 +187,7 @@ function Send-Email {
         }
     } catch {
         $MailMessage.Dispose();
-        return @{
+        return [PSCustomObject] @{
             Status = $False
             Error  = $($_.Exception.Message)
             SentTo = ""
