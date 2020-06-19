@@ -32,6 +32,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.148 - 2020.06.19
+  - Fixes for nuget versioning [#11](https://github.com/EvotecIT/PSSharedGoods/issues/11)
+  - `Send-Email` now returns [PSCustomObject] instead of hashtable. Makes it easier to process in loops
 - 0.0.146 - 2020.06.11
   - Improved `Get-Colors`
   - Improved `ConvertFrom-Color`
