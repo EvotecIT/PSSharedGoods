@@ -19,17 +19,16 @@
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Position = 0, ValueFromPipeline)][Object] $File
+        [Parameter(Position = 0, ValueFromPipeline)][Object] $File,
+        [switch] $Signature
     )
-    Begin {
-        $MetaDataObject = [ordered] @{}
-    }
     Process {
         foreach ($F in $File) {
+            $MetaDataObject = [ordered] @{}
             if ($F -is [string]) {
                 $FileInformation = Get-ItemProperty -Path $F
             } elseif ($F -is [System.IO.DirectoryInfo]) {
-                Write-Warning "Get-FileMetaData - Directories are not supported. Skipping $F."
+                #Write-Warning "Get-FileMetaData - Directories are not supported. Skipping $F."
                 continue
             } elseif ($F -is [System.IO.FileInfo]) {
                 $FileInformation = $F
@@ -67,19 +66,18 @@
             $MetaDataObject['IsReadOnly'] = $FileInformation.IsReadOnly
             $MetaDataObject['IsHidden'] = $FileInformation.Attributes -like '*Hidden*'
             $MetaDataObject['IsSystem'] = $FileInformation.Attributes -like '*System*'
-
-            $DigitalSignature = Get-AuthenticodeSignature -FilePath $FileInformation.Fullname
-            $MetaDataObject['SignatureCertificateSubject'] = $DigitalSignature.SignerCertificate.Subject
-            $MetaDataObject['SignatureCertificateIssuer'] = $DigitalSignature.SignerCertificate.Issuer
-            $MetaDataObject['SignatureCertificateSerialNumber'] = $DigitalSignature.SignerCertificate.SerialNumber
-            $MetaDataObject['SignatureCertificateNotBefore'] = $DigitalSignature.SignerCertificate.NotBefore
-            $MetaDataObject['SignatureCertificateNotAfter'] = $DigitalSignature.SignerCertificate.NotAfter
-            $MetaDataObject['SignatureCertificateThumbprint'] = $DigitalSignature.SignerCertificate.Thumbprint
-            $MetaDataObject['SignatureStatus'] = $DigitalSignature.Status
-            $MetaDataObject['IsOSBinary'] = $DigitalSignature.IsOSBinary
+            if ($Signature) {
+                $DigitalSignature = Get-AuthenticodeSignature -FilePath $FileInformation.Fullname
+                $MetaDataObject['SignatureCertificateSubject'] = $DigitalSignature.SignerCertificate.Subject
+                $MetaDataObject['SignatureCertificateIssuer'] = $DigitalSignature.SignerCertificate.Issuer
+                $MetaDataObject['SignatureCertificateSerialNumber'] = $DigitalSignature.SignerCertificate.SerialNumber
+                $MetaDataObject['SignatureCertificateNotBefore'] = $DigitalSignature.SignerCertificate.NotBefore
+                $MetaDataObject['SignatureCertificateNotAfter'] = $DigitalSignature.SignerCertificate.NotAfter
+                $MetaDataObject['SignatureCertificateThumbprint'] = $DigitalSignature.SignerCertificate.Thumbprint
+                $MetaDataObject['SignatureStatus'] = $DigitalSignature.Status
+                $MetaDataObject['IsOSBinary'] = $DigitalSignature.IsOSBinary
+            }
             [PSCustomObject] $MetaDataObject
         }
     }
 }
-#Get-ChildItem -Path $Env:USERPROFILE\Desktop -Force | Get-FileMetaData | Out-HtmlView -ScrollX -Filtering -AllProperties
-#Get-ChildItem -Path $Env:USERPROFILE\Desktop -Force | Where-Object { $_.Attributes -like '*Hidden*' } | Get-FileMetaData | Out-HtmlView -ScrollX -Filtering -AllProperties
