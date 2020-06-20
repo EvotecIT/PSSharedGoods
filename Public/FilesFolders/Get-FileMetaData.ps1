@@ -85,9 +85,3 @@
         }
     }
 }
-
-Measure-Command {
-    $Files = "$Env:USERPROFILE\Desktop\LAPS.x64.msi", "$Env:USERPROFILE\Desktop\DigiCertUtil.exe"
-    $Files | Get-FileMetaData -Signature
-}
-#| Format-List
