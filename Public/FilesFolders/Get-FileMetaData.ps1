@@ -39,13 +39,17 @@
             $ShellApplication = New-Object -ComObject Shell.Application
             $ShellFolder = $ShellApplication.Namespace($FileInformation.Directory.FullName)
             $ShellFile = $ShellFolder.ParseName($FileInformation.Name)
-            $MetaDataProperties = 0..287 | ForEach-Object -Process {
-                '{0} = {1}' -f $_, $ShellFolder.GetDetailsOf($null, $_)
+            $MetaDataProperties = [ordered] @{}
+            0..400 | ForEach-Object -Process {
+                $DataValue = $ShellFolder.GetDetailsOf($null, $_)
+                $PropertyValue = (Get-Culture).TextInfo.ToTitleCase($DataValue.Trim()).Replace(' ', '')
+                if ($PropertyValue -ne '') {
+                    $MetaDataProperties["$_"] = $PropertyValue
+                }
             }
-            For ($i = 0; $i -le 287; $i++) {
-                $Property = ($MetaDataProperties[$i].split("="))[1].Trim()
-                $Property = (Get-Culture).TextInfo.ToTitleCase($Property).Replace(' ', '')
-                $Value = $ShellFolder.GetDetailsOf($ShellFile, $i)
+            foreach ($Key in $MetaDataProperties.Keys) {
+                $Property = $MetaDataProperties[$Key]
+                $Value = $ShellFolder.GetDetailsOf($ShellFile, [int] $Key)
                 if ($Property -in 'Attributes', 'Folder', 'Type', 'SpaceFree', 'TotalSize', 'SpaceUsed') {
                     continue
                 }
@@ -81,3 +85,9 @@
         }
     }
 }
+
+Measure-Command {
+    $Files = "$Env:USERPROFILE\Desktop\LAPS.x64.msi", "$Env:USERPROFILE\Desktop\DigiCertUtil.exe"
+    $Files | Get-FileMetaData -Signature
+}
+#| Format-List
