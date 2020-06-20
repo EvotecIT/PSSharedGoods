@@ -32,6 +32,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.151 - 2020.06.20
+  - Improvements to `Get-FileMetaData`
 - 0.0.150 - 2020.06.20
   - Bugfix `Get-FileMetaData`
 - 0.0.149 - 2020.06.20

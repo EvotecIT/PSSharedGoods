@@ -12,3 +12,7 @@ Get-FileMetaData -File $Files | Out-HtmlView -ScrollX -Filtering -AllProperties
 
 # Option 4
 Get-ChildItem -Path $Env:USERPROFILE\Desktop -Force | Where-Object { $_.Attributes -like '*Hidden*' } | Get-FileMetaData -Signature | Out-HtmlView -ScrollX -Filtering -AllProperties
+
+# Option 5
+$Files = "$Env:USERPROFILE\Desktop\LAPS.x64.msi", "$Env:USERPROFILE\Desktop\DigiCertUtil.exe"
+$Files | Get-FileMetaData -Signature | Format-List

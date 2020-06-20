@@ -57,7 +57,7 @@
                 $SplitInfo = ([string] $FileInformation.VersionInfo).Split([char]13)
                 foreach ($Item in $SplitInfo) {
                     $Property = $Item.Split(":").Trim()
-                    if ($Property[0]) {
+                    if ($Property[0] -and $Property[1] -ne '') {
                         $MetaDataObject["$($Property[0])"] = $Property[1]
                     }
                 }
