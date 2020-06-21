@@ -20,6 +20,7 @@
     [CmdletBinding()]
     param (
         [Parameter(Position = 0, ValueFromPipeline)][Object] $File,
+        [ValidateSet('None', 'MACTripleDES', 'MD5', 'RIPEMD160', 'SHA1', 'SHA256', 'SHA384', 'SHA512')][string] $HashAlgorithm = 'None',
         [switch] $Signature
     )
     Process {
@@ -62,7 +63,11 @@
                 foreach ($Item in $SplitInfo) {
                     $Property = $Item.Split(":").Trim()
                     if ($Property[0] -and $Property[1] -ne '') {
-                        $MetaDataObject["$($Property[0])"] = $Property[1]
+                        if ($Property[1] -in 'False', 'True') {
+                            $MetaDataObject["$($Property[0])"] = [bool] $Property[1]
+                        } else {
+                            $MetaDataObject["$($Property[0])"] = $Property[1]
+                        }
                     }
                 }
             }
@@ -80,6 +85,9 @@
                 $MetaDataObject['SignatureCertificateThumbprint'] = $DigitalSignature.SignerCertificate.Thumbprint
                 $MetaDataObject['SignatureStatus'] = $DigitalSignature.Status
                 $MetaDataObject['IsOSBinary'] = $DigitalSignature.IsOSBinary
+            }
+            if ($HashAlgorithm -ne 'None') {
+                $MetaDataObject[$HashAlgorithm] = (Get-FileHash -LiteralPath $FileInformation.FullName -Algorithm $HashAlgorithm).Hash
             }
             [PSCustomObject] $MetaDataObject
         }
