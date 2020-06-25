@@ -27,7 +27,15 @@
         foreach ($F in $File) {
             $MetaDataObject = [ordered] @{}
             if ($F -is [string]) {
-                $FileInformation = Get-ItemProperty -Path $F
+                if ($F -and (Test-Path -LiteralPath $F)) {
+                    $FileInformation = Get-ItemProperty -Path $F
+                    if ($FileInformation -is [System.IO.DirectoryInfo]) {
+                        continue
+                    }
+                } else {
+                    Write-Warning "Get-FileMetaData - Doesn't exists. Skipping $F."
+                    continue
+                }
             } elseif ($F -is [System.IO.DirectoryInfo]) {
                 #Write-Warning "Get-FileMetaData - Directories are not supported. Skipping $F."
                 continue
@@ -93,3 +101,5 @@
         }
     }
 }
+
+Get-FileMetaData -File 'c:\Support\GitHub\PSSharedGoods\Public\FilesFolders'
