@@ -32,6 +32,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.156 - 2020.07.02
+  - Improvements to `Convert-Identity`
 - 0.0.155 - 2020.06.25
   - Improvements to `Convert-Office365License`
 - 0.0.154 - 2020.06.25

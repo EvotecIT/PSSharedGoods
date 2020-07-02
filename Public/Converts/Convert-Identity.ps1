@@ -1,7 +1,7 @@
 ﻿function Convert-Identity {
     [cmdletBinding(DefaultParameterSetName = 'Identity')]
     param(
-        [parameter(ParameterSetName = 'Identity')][string[]] $Identity,
+        [parameter(ParameterSetName = 'Identity', Position = 0)][string[]] $Identity,
         [parameter(ParameterSetName = 'SID', Mandatory)][System.Security.Principal.SecurityIdentifier[]] $SID,
         [parameter(ParameterSetName = 'Name', Mandatory)][string[]] $Name
     )
@@ -185,12 +185,13 @@
     Process {
         if ($Identity) {
             foreach ($Ident in $Identity) {
-                if ($Ident -like '*-*-*') {
+                # regex check if SID .. do something
+                if ([Regex]::IsMatch($Ident, "^S-\d-\d+-(\d+-){1,14}\d+$")) {
                     if ($Script:GlobalCacheSidConvert[$Ident]) {
                         if ($Script:GlobalCacheSidConvert[$Ident] -is [string]) {
                             # I could have built full blown $Script:GlobalCacheSidConvert cache but opted to built it manually here
                             # basically Server Operators or Account Operators won't be resolved by SID on non-domain controllers so we need to build it manually
-                            [ordered] @{
+                            [PSCustomObject] @{
                                 Name  = $Script:GlobalCacheSidConvert[$Ident]
                                 SID   = $Ident
                                 Type  = $wellKnownSIDs[$Ident]
@@ -227,28 +228,60 @@
                     if ($Script:GlobalCacheSidConvert[$Ident]) {
                         $Script:GlobalCacheSidConvert[$Ident]
                     } else {
-                        try {
-                            $SIDValue = ([System.Security.Principal.NTAccount] $Ident).Translate([System.Security.Principal.SecurityIdentifier]).Value
-                            if ($SIDValue -like "S-1-5-21-*-519" -or $SIDValue -like "S-1-5-21-*-512") {
-                                $Type = 'Administrative'
-                            } elseif ($wellKnownSIDs[$SIDValue]) {
-                                $Type = $wellKnownSIDs[$SIDValue]
-                            } else {
-                                $Type = 'NotAdministrative'
+                        if ($Ident -like '*DC=*') {
+                            # DistinguishedName resolving
+                            try {
+                                $Object = Get-ADObject -Identity $Ident -Properties objectSid
+                                if ($Object) {
+                                    # We resolved it, but now we want to give it name similar to other commands
+                                    # This is so name like CN=S-1-5-21-1928204107-2710010574-1926425344-512,CN=ForeignSecurityPrincipals,DC=ad,DC=evotec,DC=xyz can be properly changed
+                                    [string] $Name = (([System.Security.Principal.SecurityIdentifier]::new($Object.objectSid.Value)).Translate([System.Security.Principal.NTAccount])).Value
+                                }
+                                $ErrorMessage = ''
+                                if ($Ident -like "S-1-5-21-*-519" -or $Ident -like "S-1-5-21-*-512") {
+                                    $Type = 'Administrative'
+                                } elseif ($wellKnownSIDs[$Ident]) {
+                                    $Type = $wellKnownSIDs[$Ident]
+                                } else {
+                                    $Type = 'NotAdministrative'
+                                }
+                                $SIDValue = $Object.objectSid.Value
+                            } catch {
+                                [string] $Name = $Ident
+                                $Type = 'Unknown'
+                                $ErrorMessage = $_.Exception.Message
+                                $SIDValue = $null
                             }
-                            $ErrorMessage = ''
-                        } catch {
-                            $Type = 'Unknown'
-                            $ErrorMessage = $_.Exception.Message
+                            $Script:GlobalCacheSidConvert[$Ident] = [PSCustomObject] @{
+                                Name  = $Name
+                                SID   = $SIDValue
+                                Type  = $Type
+                                Error = $ErrorMessage
+                            }
+                            $Script:GlobalCacheSidConvert[$Ident]
+                        } else {
+                            try {
+                                $SIDValue = ([System.Security.Principal.NTAccount] $Ident).Translate([System.Security.Principal.SecurityIdentifier]).Value
+                                if ($SIDValue -like "S-1-5-21-*-519" -or $SIDValue -like "S-1-5-21-*-512") {
+                                    $Type = 'Administrative'
+                                } elseif ($wellKnownSIDs[$SIDValue]) {
+                                    $Type = $wellKnownSIDs[$SIDValue]
+                                } else {
+                                    $Type = 'NotAdministrative'
+                                }
+                                $ErrorMessage = ''
+                            } catch {
+                                $Type = 'Unknown'
+                                $ErrorMessage = $_.Exception.Message
+                            }
+                            $Script:GlobalCacheSidConvert[$Ident] = [PSCustomObject] @{
+                                Name  = $Ident
+                                SID   = $SIDValue
+                                Type  = $Type
+                                Error = $ErrorMessage
+                            }
+                            $Script:GlobalCacheSidConvert[$Ident]
                         }
-
-                        $Script:GlobalCacheSidConvert[$Ident] = [PSCustomObject] @{
-                            Name  = $Ident
-                            SID   = $SIDValue
-                            Type  = $Type
-                            Error = $ErrorMessage
-                        }
-                        $Script:GlobalCacheSidConvert[$Ident]
                     }
                 }
             }
