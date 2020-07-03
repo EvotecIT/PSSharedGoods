@@ -101,5 +101,4 @@
         }
     }
 }
-
-Get-FileMetaData -File 'c:\Support\GitHub\PSSharedGoods\Public\FilesFolders'
+#Get-FileMetaData -File 'c:\Support\GitHub\PSSharedGoods\Public\FilesFolders'
