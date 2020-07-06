@@ -188,6 +188,7 @@
                 # regex check if SID .. do something
                 if ([Regex]::IsMatch($Ident, "^S-\d-\d+-(\d+-){1,14}\d+$")) {
                     if ($Script:GlobalCacheSidConvert[$Ident]) {
+                        Write-Verbose "Convert-Identity - Processing SID $Ident from cache."
                         if ($Script:GlobalCacheSidConvert[$Ident] -is [string]) {
                             # I could have built full blown $Script:GlobalCacheSidConvert cache but opted to built it manually here
                             # basically Server Operators or Account Operators won't be resolved by SID on non-domain controllers so we need to build it manually
@@ -201,6 +202,7 @@
                             $Script:GlobalCacheSidConvert[$Ident]
                         }
                     } else {
+                        Write-Verbose "Convert-Identity - Processing SID $Ident"
                         try {
                             [string] $Name = (([System.Security.Principal.SecurityIdentifier]::new($Ident)).Translate([System.Security.Principal.NTAccount])).Value
                             $ErrorMessage = ''
@@ -225,17 +227,34 @@
                         $Script:GlobalCacheSidConvert[$Ident]
                     }
                 } else {
+                    Write-Verbose "Convert-Identity - Processing $Ident"
                     if ($Script:GlobalCacheSidConvert[$Ident]) {
                         $Script:GlobalCacheSidConvert[$Ident]
                     } else {
                         if ($Ident -like '*DC=*') {
+                            Write-Verbose "Convert-Identity - Processing DistinguishedName $Ident"
                             # DistinguishedName resolving
                             try {
+                                <#
                                 $Object = Get-ADObject -Identity $Ident -Properties objectSid
                                 if ($Object) {
                                     # We resolved it, but now we want to give it name similar to other commands
                                     # This is so name like CN=S-1-5-21-1928204107-2710010574-1926425344-512,CN=ForeignSecurityPrincipals,DC=ad,DC=evotec,DC=xyz can be properly changed
                                     [string] $Name = (([System.Security.Principal.SecurityIdentifier]::new($Object.objectSid.Value)).Translate([System.Security.Principal.NTAccount])).Value
+                                }
+                                #>
+                                $Object = [adsi]"LDAP://$($Ident)"
+                                if ($Object) {
+                                    $SIDValue = [System.Security.Principal.SecurityIdentifier]::new($Object.objectSid.Value, 0).Value
+                                    [string] $Name = (([System.Security.Principal.SecurityIdentifier]::new($SIDValue)).Translate([System.Security.Principal.NTAccount])).Value
+                                    #if ($Object.SchemaClassName -eq 'foreignSecurityPrincipal') {
+                                    #    [string] $Name = (([System.Security.Principal.SecurityIdentifier]::new($SIDValue)).Translate([System.Security.Principal.NTAccount])).Value
+                                    #} else {
+                                    #    [string] $Name = $Object.Name.Value
+                                    #}
+                                } else {
+                                    [string] $Name = $Ident
+                                    $SIDValue = $null
                                 }
                                 $ErrorMessage = ''
                                 if ($Ident -like "S-1-5-21-*-519" -or $Ident -like "S-1-5-21-*-512") {
@@ -245,7 +264,7 @@
                                 } else {
                                     $Type = 'NotAdministrative'
                                 }
-                                $SIDValue = $Object.objectSid.Value
+                                #$SIDValue = $Object.objectSid.Value
                             } catch {
                                 [string] $Name = $Ident
                                 $Type = 'Unknown'
@@ -312,3 +331,10 @@
 
     }
 }
+
+#$DN = 'CN=S-1-5-21-1928204107-2710010574-1926425344-512,CN=ForeignSecurityPrincipals,DC=ad,DC=evotec,DC=xyz'
+#Convert-Identity -Identity $DN
+#$DN = 'CN=Test Test 2,OU=Users,OU=Production,DC=ad,DC=evotec,DC=pl'
+#Convert-Identity -Identity $DN
+#$Group = Get-ADGroup -Identity 'Test Local Group'
+#Convert-Identity -Identity $Group.SID.Value
