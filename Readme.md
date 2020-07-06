@@ -32,6 +32,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.158 - 2020.07.06
+  - Update `Convert-Identity`
 - 0.0.157 - 2020.07.03
   - Improvements to `Remove-EmptyValue`
   - Accidentally `Get-FileMetaData` would run during import
