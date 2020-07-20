@@ -34,8 +34,6 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 - 0.0.160 - 2020.07.20
   - Updated `ConvertTo-OperatingSystem`
-  - Updated `Convert-Office365License`
-- 0.0.159 - 2020.07.09
   - Update SKU mapping table $O365SKU for `Convert-Office365License` #12 tnx diecknet
 - 0.0.158 - 2020.07.06
   - Update `Convert-Identity`
