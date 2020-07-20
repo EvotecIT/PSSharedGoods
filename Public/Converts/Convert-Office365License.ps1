@@ -190,7 +190,7 @@ function Convert-Office365License {
             "MS_TEAMS_IW"                        = "Microsoft Teams"
             "Win10_VDA_E3"                       = "Windows 10 Enterprise E3"
             "WIN10_PRO_ENT_SUB"                  = "Windows 10 Enterprise E3"
-            "WIN10_VDA_E5"						 = "Windows 10 Enterprise E5"
+            "WIN10_VDA_E5"                       = "Windows 10 Enterprise E5"
             "SMB_APPS"                           = "Microsoft Bookings"
             "BUSINESS_VOICE_DIRECTROUTING"       = "Microsoft 365 Business Voice (without calling plan)"
         }

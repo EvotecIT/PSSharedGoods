@@ -1,4 +1,28 @@
 ﻿function ConvertTo-OperatingSystem {
+    <#
+    .SYNOPSIS
+    Allows easy conversion of OperatingSystem, Operating System Version to proper Windows 10 naming based on WMI or AD
+
+    .DESCRIPTION
+    Allows easy conversion of OperatingSystem, Operating System Version to proper Windows 10 naming based on WMI or AD
+
+    .PARAMETER OperatingSystem
+    Operating System as returned by Active Directory
+
+    .PARAMETER OperatingSystemVersion
+    Operating System Version as returned by Active Directory
+
+    .EXAMPLE
+    $Computers = Get-ADComputer -Filter * -Properties OperatingSystem, OperatingSystemVersion | ForEach-Object {
+        $OPS = ConvertTo-OperatingSystem -OperatingSystem $_.OperatingSystem -OperatingSystemVersion $_.OperatingSystemVersion
+        Add-Member -MemberType NoteProperty -Name 'OperatingSystemTranslated' -Value $OPS -InputObject $_ -Force
+        $_
+    }
+    $Computers | Select-Object DNS*, Name, SamAccountName, Enabled, OperatingSystem*, DistinguishedName | Format-Table
+
+    .NOTES
+    General notes
+    #>
     [CmdletBinding()]
     param(
         [string] $OperatingSystem,
@@ -8,6 +32,7 @@
     if ($OperatingSystem -like '*Windows 10*') {
         $Systems = @{
             # This is how it's written in AD
+            '10.0 (19041)' = 'Windows 10 2004'
             '10.0 (18363)' = "Windows 10 1909"
             '10.0 (18362)' = "Windows 10 1903"
             '10.0 (17763)' = "Windows 10 1809"
@@ -20,6 +45,7 @@
             '10.0 (18898)' = 'Windows 10 Insider Preview'
 
             # This is how WMI/CIM stores it
+            '10.0.19041'   = 'Windows 10 2004'
             '10.0.18363'   = "Windows 10 1909"
             '10.0.18362'   = "Windows 10 1903"
             '10.0.17763'   = "Windows 10 1809"
@@ -67,3 +93,12 @@
         'Unknown'
     }
 }
+
+<#
+$Computers = Get-ADComputer -Filter * -Properties OperatingSystem, OperatingSystemVersion | ForEach-Object {
+    $OPS = ConvertTo-OperatingSystem -OperatingSystem $_.OperatingSystem -OperatingSystemVersion $_.OperatingSystemVersion
+    Add-Member -MemberType NoteProperty -Name 'OperatingSystemTranslated' -Value $OPS -InputObject $_ -Force
+    $_
+}
+$Computers | Select-Object DNS*, Name, SamAccountName, Enabled, OperatingSystem*, DistinguishedName | Format-Table
+#>
