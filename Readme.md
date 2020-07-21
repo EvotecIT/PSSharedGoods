@@ -32,7 +32,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.160 - 2020.07.20
+- 0.0.160 - 2020.07.21
+  - Updated `Get-FileMetaData`
+- 0.0.159 - 2020.07.20
   - Updated `ConvertTo-OperatingSystem`
   - Update SKU mapping table $O365SKU for `Convert-Office365License` #12 tnx diecknet
 - 0.0.158 - 2020.07.06
