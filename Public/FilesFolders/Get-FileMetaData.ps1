@@ -21,7 +21,8 @@
     param (
         [Parameter(Position = 0, ValueFromPipeline)][Object] $File,
         [ValidateSet('None', 'MACTripleDES', 'MD5', 'RIPEMD160', 'SHA1', 'SHA256', 'SHA384', 'SHA512')][string] $HashAlgorithm = 'None',
-        [switch] $Signature
+        [switch] $Signature,
+        [switch] $AsHashTable
     )
     Process {
         foreach ($F in $File) {
@@ -97,7 +98,11 @@
             if ($HashAlgorithm -ne 'None') {
                 $MetaDataObject[$HashAlgorithm] = (Get-FileHash -LiteralPath $FileInformation.FullName -Algorithm $HashAlgorithm).Hash
             }
-            [PSCustomObject] $MetaDataObject
+            if ($AsHashTable) {
+                $MetaDataObject
+            } else {
+                [PSCustomObject] $MetaDataObject
+            }
         }
     }
 }
