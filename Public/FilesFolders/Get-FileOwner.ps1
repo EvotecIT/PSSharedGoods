@@ -45,7 +45,7 @@
                         }
                     }
                 } else {
-                    Get-ChildItem -LiteralPath $FullPath -Recurse:$Recursive | ForEach-Object -Process {
+                    Get-ChildItem -LiteralPath $FullPath -Recurse:$Recursive -Force | ForEach-Object -Process {
                         $File = $_
                         $ACL = Get-Acl -Path $File.FullName
                         $Object = [ordered] @{
