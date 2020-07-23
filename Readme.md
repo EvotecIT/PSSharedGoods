@@ -32,6 +32,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.161 - 2020.07.23
+  - Updated `Get-FilePermission`
+  - Updated `Get-FileOwner`
 - 0.0.160 - 2020.07.21
   - Updated `Get-FileMetaData`
 - 0.0.159 - 2020.07.20
