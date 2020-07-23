@@ -4,7 +4,8 @@
         [Array] $Path,
         [switch] $Recursive,
         [switch] $JustPath,
-        [switch] $Resolve
+        [switch] $Resolve,
+        [switch] $AsHashTable
     )
     Begin {
 
@@ -37,7 +38,11 @@
                                 $Object['OwnerType'] = ''
                             }
                         }
-                        [PSCustomObject] $Object
+                        if ($AsHashTable) {
+                            $Object
+                        } else {
+                            [PSCustomObject] $Object
+                        }
                     }
                 } else {
                     Get-ChildItem -LiteralPath $FullPath -Recurse:$Recursive | ForEach-Object -Process {
@@ -64,7 +69,11 @@
                                 $Object['OwnerType'] = ''
                             }
                         }
-                        [PSCustomObject] $Object
+                        if ($AsHashTable) {
+                            $Object
+                        } else {
+                            [PSCustomObject] $Object
+                        }
                     }
                 }
             }

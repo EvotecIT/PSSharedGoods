@@ -7,7 +7,8 @@
         [switch] $NotInherited,
         [switch] $ResolveTypes,
         [switch] $Extended,
-        [switch] $IncludeACLObject
+        [switch] $IncludeACLObject,
+        [switch] $AsHashTable
     )
     foreach ($P in $Path) {
         if ($P -is [System.IO.FileSystemInfo]) {
@@ -94,7 +95,11 @@
                     $ReturnObject['ACL'] = $ACL
                     $ReturnObject['AllACL'] = $ACLS
                 }
-                [PSCustomObject] $ReturnObject
+                if ($AsHashTable) {
+                    $ReturnObject
+                } else {
+                    [PSCustomObject] $ReturnObject
+                }
             }
             $Output
         } else {
