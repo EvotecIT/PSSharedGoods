@@ -73,7 +73,7 @@
         Remove-EmptyValue -Splat $SplatDictionary -Recursive
         $SplatDictionary.Keys | Should -not -Contain 'Test7'
     }
-    It 'From OrderedDictionary Recursive' {
+    It 'From OrderedDictionary Recursive with ILIST check' {
         $SplatDictionary = [ordered] @{
             Test  = $NotExistingParameter
             Test1 = 'Existing Entry'
