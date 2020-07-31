@@ -32,6 +32,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.164 - 2020.07.31
+  - `Remove-EmptyValue` fix for ILIST 0
 - 0.0.163 - 2020.07.31
   - `Remove-EmptyValue` fix for ILIST
 - 0.0.162 - 2020.07.31
