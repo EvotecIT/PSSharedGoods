@@ -12,6 +12,9 @@ function Format-ToTitleCase {
     .PARAMETER RemoveWhiteSpace
     Removes spaces after formatting string to Title Case.
 
+    .PARAMETER RemoveChar
+    Array of characters to remove
+
     .EXAMPLE
     Format-ToTitleCase 'me'
 
@@ -38,22 +41,30 @@ function Format-ToTitleCase {
     Output:
     ThisIsMyThing
 
+    .EXAMPLE
+    Format-ToTitleCase -Text "This is my thing: That - No I don't want all chars" -RemoveWhiteSpace -RemoveChar ',', '-', "'", '\(', '\)', ':'
+
     .NOTES
     General notes
+
     #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)][string[]] $Text,
-        [switch] $RemoveWhiteSpace
+        [switch] $RemoveWhiteSpace,
+        [string[]] $RemoveChar
     )
     Begin {}
     Process {
         $Conversion = foreach ($T in $Text) {
-            if ($RemoveWhiteSpace) {
-                (Get-Culture).TextInfo.ToTitleCase($T) -replace ' ', ''
-            } else {
-                (Get-Culture).TextInfo.ToTitleCase($T)
+            $Output = (Get-Culture).TextInfo.ToTitleCase($T)
+            foreach ($Char in $RemoveChar) {
+                $Output = $Output -replace $Char
             }
+            if ($RemoveWhiteSpace) {
+                $Output = $Output -replace ' ', ''
+            }
+            $Output
         }
     }
     End {
