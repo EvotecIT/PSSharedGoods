@@ -32,6 +32,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.162 - 2020.07.31
+  - `Format-ToTitleCase` updates
 - 0.0.161 - 2020.07.23
   - Updated `Get-FilePermission`
   - Updated `Get-FileOwner`
