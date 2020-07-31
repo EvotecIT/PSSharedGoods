@@ -17,12 +17,12 @@
                         Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
                     }
                 } else {
-                    if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+                    if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '') {
                         $Hashtable.Remove($Key)
                     }
                 }
             } else {
-                if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+                if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '') {
                     $Hashtable.Remove($Key)
                 }
             }
@@ -34,6 +34,7 @@
         }
     }
 }
+
 
 <#
 $SplatDictionary = [ordered] @{
