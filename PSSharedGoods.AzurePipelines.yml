@@ -5,7 +5,7 @@ jobs:
     steps:
       - powershell: |
           Install-Module -Name Pester -Repository PSGallery -Force -SkipPublisherCheck
-          .\PSsharedGoods.Tests.ps1
+          .\PSSharedGoods.Tests.ps1
         displayName: "Run Pester Tests - PowerShell 5"
         # - script: |
         #       pwsh -c '.\PSWritePDF.Tests.ps1'
@@ -21,7 +21,7 @@ jobs:
           sudo apt-get install -y powershell
         displayName: "Install PowerShell Core"
       - script: |
-          pwsh -c '.\PSsharedGoods.Tests.ps1'
+          pwsh -c '.\PSSharedGoods.Tests.ps1'
         displayName: "Run Pester Tests"
 
   - job: Build_PSCore_MacOS1013
@@ -35,5 +35,5 @@ jobs:
           brew cask install powershell
         displayName: "Install PowerShell Core"
       - script: |
-          pwsh -c '.\PSsharedGoods.Tests.ps1'
+          pwsh -c '.\PSSharedGoods.Tests.ps1'
         displayName: "Run Pester Tests"

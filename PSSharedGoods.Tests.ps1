@@ -27,7 +27,9 @@ foreach ($Module in $RequiredModules) {
     }
 }
 
-Write-Color 'ModuleName: ', $ModuleName -Color Yellow, Green -LinesBefore 2
+Write-Color 'ModuleName: ', $ModuleName, ' Version: ', $PSDInformation.ModuleVersion -Color Yellow, Green, Yellow, Green -LinesBefore 2
+Write-Color 'PowerShell Version: ', $PSVersionTable.PSVersion -Color Yellow, Green
+Write-Color 'PowerShell Edition: ', $PSVersionTable.PSEdition -Color Yellow, Green
 Write-Color 'Required modules: ' -Color Yellow
 foreach ($Module in $PSDInformation.RequiredModules) {
     if ($Module -is [System.Collections.IDictionary]) {
@@ -36,6 +38,7 @@ foreach ($Module in $PSDInformation.RequiredModules) {
         Write-Color '   [>] ', $Module -Color Yellow, Green
     }
 }
+Write-Color
 
 Import-Module $PSScriptRoot\*.psd1 -Force
 $result = Invoke-Pester -Script $PSScriptRoot\Tests -Verbose -EnableExit
