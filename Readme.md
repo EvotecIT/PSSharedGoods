@@ -1,4 +1,5 @@
 <p align="center">
+  <a href="https://dev.azure.com/evotecpl/PSSharedGoods/_build/latest?definitionId=3"><img src="https://dev.azure.com/evotecpl/PSSharedGoods/_apis/build/status/EvotecIT.PSSharedGoods"></a>
   <a href="https://www.powershellgallery.com/packages/PSSharedGoods"><img src="https://img.shields.io/powershellgallery/v/PSSharedGoods.svg"></a>
   <a href="https://www.powershellgallery.com/packages/PSSharedGoods"><img src="https://img.shields.io/powershellgallery/vpre/PSSharedGoods.svg?label=powershell%20gallery%20preview&colorB=yellow"></a>
   <a href="https://github.com/EvotecIT/PSSharedGoods"><img src="https://img.shields.io/github/license/EvotecIT/PSSharedGoods.svg"></a>
