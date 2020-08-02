@@ -18,5 +18,4 @@ Describe -Name 'Testing Format-ToTitleCase' {
     It 'Testing short string' {
         Format-ToTitleCase 'MerRe' | Should -BeExactly 'Merre'
     }
-
 }
