@@ -66,8 +66,7 @@ function Format-ToTitleCase {
             }
             $Output
         }
+        $Conversion
     }
-    End {
-        return $Conversion
-    }
+    End {}
 }
