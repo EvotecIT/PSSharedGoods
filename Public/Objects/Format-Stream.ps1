@@ -33,7 +33,7 @@ function Format-Stream {
         [switch] $Transpose,
 
         [Parameter(Mandatory = $false, ValueFromPipeline = $false, Position = 9)]
-        [ValidateSet("ASC", "DESC", "NONE")]
+        [ValidateSet('ASC', 'DESC', 'NONE')]
         [string] $TransposeSort = 'NONE',
 
         [alias('Color')]
@@ -43,7 +43,7 @@ function Format-Stream {
         [int[]] $ForegroundColorRow
     )
     Begin {
-        $IsVerbosePresent = $PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent
+        $IsVerbosePresent = $PSCmdlet.MyInvocation.BoundParameters['Verbose'].IsPresent
 
         if ($Stream -eq 'Output') {
             #
@@ -210,9 +210,9 @@ function Format-Stream {
                     # Prepare Data
                     if ($ColumnHeaderSize) {
                         # if ColumnHeaderSize is defined we need to trim text and make sure there is space between for the ones being trimmed
-                        $ColumnValue = ("$ColumnValue".ToCharArray() | Select-Object -First ($PadLength - 1)) -join ""
+                        $ColumnValue = ("$ColumnValue".ToCharArray() | Select-Object -First ($PadLength - 1)) -join ''
                     } else {
-                        $ColumnValue = ("$ColumnValue".ToCharArray() | Select-Object -First ($PadLength)) -join ""
+                        $ColumnValue = ("$ColumnValue".ToCharArray() | Select-Object -First ($PadLength)) -join ''
                     }
                     if ($Output -eq '') {
                         if ($AlignRight) {

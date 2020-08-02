@@ -21,8 +21,8 @@ function Get-ComputerApplications {
         $objapp1 = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*
         $objapp2 = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*
 
-        $app1 = $objapp1 | Select-Object Displayname, Displayversion , Publisher, Installdate, @{Expression = { 'x64' }; Label = "WindowsType" }
-        $app2 = $objapp2 | Select-Object Displayname, Displayversion , Publisher, Installdate, @{Expression = { 'x86' }; Label = "WindowsType" } | Where-Object { -NOT (([string]$_.displayname).contains("Security Update for Microsoft") -or ([string]$_.displayname).contains("Update for Microsoft")) }
+        $app1 = $objapp1 | Select-Object Displayname, Displayversion , Publisher, Installdate, @{Expression = { 'x64' }; Label = 'WindowsType' }
+        $app2 = $objapp2 | Select-Object Displayname, Displayversion , Publisher, Installdate, @{Expression = { 'x86' }; Label = 'WindowsType' } | Where-Object { -NOT (([string]$_.displayname).contains('Security Update for Microsoft') -or ([string]$_.displayname).contains('Update for Microsoft')) }
         $app = $app1 + $app2 #| Sort-Object -Unique
         return $app | Where-Object { $null -ne $_.Displayname } | Sort-Object DisplayName
     }
