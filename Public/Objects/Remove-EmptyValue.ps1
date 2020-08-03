@@ -17,12 +17,12 @@
                         Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
                     }
                 } else {
-                    if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '' -or ($Hashtable[$Key] -is [System.Collections.IList] -and $Hashtable[$Key].Count -eq 0)) {
+                    if ($null -eq $Hashtable[$Key] -or ($Hashtable[$Key] -is [string] -and $Hashtable[$Key] -eq '') -or ($Hashtable[$Key] -is [System.Collections.IList] -and $Hashtable[$Key].Count -eq 0)) {
                         $Hashtable.Remove($Key)
                     }
                 }
             } else {
-                if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '' -or ($Hashtable[$Key] -is [System.Collections.IList] -and $Hashtable[$Key].Count -eq 0)) {
+                if ($null -eq $Hashtable[$Key] -or ($Hashtable[$Key] -is [string] -and $Hashtable[$Key] -eq '') -or ($Hashtable[$Key] -is [System.Collections.IList] -and $Hashtable[$Key].Count -eq 0)) {
                     $Hashtable.Remove($Key)
                 }
             }

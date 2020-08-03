@@ -98,15 +98,15 @@
     }
     It 'From OrderedDictionary Recursive with ILIST check for Empty Arrays' {
         $SplatDictionary = [ordered] @{
-            Test  = $NotExistingParameter
-            Test1 = 'Existing Entry'
-            Test2 = $null
-            Test3 = ''
-            Test5 = 0
-            Test6 = [System.Collections.Generic.List[PSCustomObject]]::new()
-            Test7 = @{}
-            Test8 = @()
-            Test9 = [System.Collections.Generic.List[PSCustomObject]]::new()
+            Test   = $NotExistingParameter
+            Test1  = 'Existing Entry'
+            Test2  = $null
+            Test3  = ''
+            Test5  = 0
+            Test6  = [System.Collections.Generic.List[PSCustomObject]]::new()
+            Test7  = @{}
+            Test8  = @()
+            Test9  = [System.Collections.Generic.List[PSCustomObject]]::new()
             Test10 = @('Test')
         }
         $DummyObject = [PSCustomObject] @{
@@ -124,5 +124,50 @@
 
         Remove-EmptyValue -Splat $SplatDictionary -Recursive
         $SplatDictionary.Keys | Should -not -Contain 'Test7'
+    }
+    It 'Testing edge cases' {
+        $Splat = [ordered]@{
+            PageContent = 'Text'
+            Settings    = 'Oops', 'oops'
+            Margins     = @{
+                MarginLeft    = 250
+                MarginTop     = 250
+                MarginBottom  = 200
+                MarginRight   = 100
+                MarginRight1  = 0
+                MarginRight2  = $null
+                TestBool1     = $True
+                TestBool2     = $false
+                TestBoolArray = $false, $true
+            }
+            PageSize    = 'A4'
+            Rotate1     = $False, $True, $false
+            Rotate2     = $False
+            Rotate3     = $true
+            Rotate4     = $true, $false
+            Rotate5     = ''
+            Rotate6     = $null, ''
+        }
+
+        Remove-EmptyValue -Hashtable $Splat
+        $Splat.Keys | Should -Contain 'Rotate6'
+        $Splat.Keys | Should -Not -Contain 'Rotate5'
+        $Splat.Keys | Should -Contain 'Rotate4'
+        $Splat.Keys | Should -Contain 'Rotate3'
+        $Splat.Keys | Should -Contain 'Rotate2'
+        $Splat.Keys | Should -Contain 'Rotate1'
+        $Splat.Margins.Keys | Should -Contain MarginLeft
+        $Splat.Margins.Keys | Should -Contain MarginTop
+        $Splat.Margins.Keys | Should -Contain MarginBottom
+        $Splat.Margins.Keys | Should -Contain MarginRight
+        $Splat.Margins.Keys | Should -Contain MarginRight1
+        $Splat.Margins.Keys | Should -Contain MarginRight2
+        $Splat.Margins.Keys | Should -Contain TestBool1
+        $Splat.Margins.Keys | Should -Contain TestBool2
+        $Splat.Margins.Keys | Should -Contain TestBoolArray
+
+        Remove-EmptyValue -Hashtable $Splat -Recursive
+        $Splat.Margins.Keys | Should -Not -Contain MarginRight2
+
     }
 }
