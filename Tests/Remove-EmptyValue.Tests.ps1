@@ -168,6 +168,5 @@
 
         Remove-EmptyValue -Hashtable $Splat -Recursive
         $Splat.Margins.Keys | Should -Not -Contain MarginRight2
-
     }
 }
