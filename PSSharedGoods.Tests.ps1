@@ -14,7 +14,7 @@ $RequiredModules = @(
 )
 foreach ($Module in $RequiredModules) {
     if ($Module -is [System.Collections.IDictionary]) {
-        $Exists = Get-Module -ListAvailable $Module.ModuleName
+        $Exists = Get-Module -ListAvailable -Name $Module.ModuleName
         if (-not $Exists) {
             Write-Warning "$ModuleName - Downloading $($Module.ModuleName) from PSGallery"
             Install-Module -Name $Module.ModuleName -Force -SkipPublisherCheck
