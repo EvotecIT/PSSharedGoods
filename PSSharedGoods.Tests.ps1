@@ -10,7 +10,9 @@ $PSDInformation = Import-PowerShellDataFile -Path $PrimaryModule.FullName
 $RequiredModules = @(
     'Pester'
     'PSWriteColor'
-    $PSDInformation.RequiredModules
+    if ($PSDInformation.RequiredModules) {
+        $PSDInformation.RequiredModules
+    }
 )
 foreach ($Module in $RequiredModules) {
     if ($Module -is [System.Collections.IDictionary]) {
@@ -20,7 +22,7 @@ foreach ($Module in $RequiredModules) {
             Install-Module -Name $Module.ModuleName -Force -SkipPublisherCheck
         }
     } else {
-        $Exists = Get-Module -ListAvailable $Module
+        $Exists = Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue
         if (-not $Exists) {
             Install-Module -Name $Module -Force -SkipPublisherCheck
         }
