@@ -8,9 +8,9 @@ function Get-RandomStringName {
     )
     [string] $MyValue = @(
         if ($LettersOnly) {
-            ( -join ((1..$Size) | ForEach-Object {(65..90) + (97..122) | Get-Random} | ForEach-Object {[char]$_}))
+            ( -join ((1..$Size) | ForEach-Object { (65..90) + (97..122) | Get-Random } | ForEach-Object { [char]$_ }))
         } else {
-            ( -join ((48..57) + (97..122) | Get-Random -Count $Size | ForEach-Object {[char]$_}))
+            ( -join ((48..57) + (97..122) | Get-Random -Count $Size | ForEach-Object { [char]$_ }))
         }
     )
     if ($ToLower) {

@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.167 - 2020.08.23
+  - `Select-Properties` updated to skip some types
 - 0.0.166 - 2020.08.03
   - `Remove-EmptyValue` fix for bool values
 - 0.0.165 - 2020.07.31

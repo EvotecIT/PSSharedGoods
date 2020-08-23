@@ -127,7 +127,8 @@
                     }
                 }
             }
-
+        } elseif ($ObjectsList[0].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
+            Write-Warning "Select-Properties - Object of type $($ObjectsList[0].GetType().Name). Skipping."
         } else {
             if ($Property.Count -gt 0 -and $ExcludeProperty.Count -gt 0) {
                 $ObjectsList = $ObjectsList | Select-Object -Property $Property -ExcludeProperty $ExcludeProperty
