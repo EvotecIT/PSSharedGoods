@@ -18,6 +18,9 @@
     .PARAMETER AllProperties
     All unique properties from all objects
 
+    .PARAMETER PropertyNameReplacement
+    Default property name when object has no properties
+
     .EXAMPLE
     $Object1 = [PSCustomobject] @{
         Name1 = '1'
@@ -60,7 +63,8 @@
         [Array][Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName)] $Objects,
         [string[]] $Property,
         [string[]] $ExcludeProperty,
-        [switch] $AllProperties
+        [switch] $AllProperties,
+        [string] $PropertyNameReplacement = '*'
     )
     Begin {
         function Select-Unique {
@@ -128,7 +132,8 @@
                 }
             }
         } elseif ($ObjectsList[0].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
-            Write-Warning "Select-Properties - Object of type $($ObjectsList[0].GetType().Name). Skipping."
+            $FirstObjectProperties = $PropertyNameReplacement
+            #Write-Warning "Select-Properties - Object of type $($ObjectsList[0].GetType().Name). Skipping."
         } else {
             if ($Property.Count -gt 0 -and $ExcludeProperty.Count -gt 0) {
                 $ObjectsList = $ObjectsList | Select-Object -Property $Property -ExcludeProperty $ExcludeProperty
