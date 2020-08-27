@@ -33,6 +33,10 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.169 - 2020.08.27
+  - Added `ConvertTo-DistinguishedName`
+  - Updated `ConvertFrom-DistinguishedName`
+  - Added tests for both
 - 0.0.168 - 2020.08.25
   - `Convert-UserAccountControl` - alterntive to `Convert-UAC`, should be faster
 - 0.0.167 - 2020.08.23
