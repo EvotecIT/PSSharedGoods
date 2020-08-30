@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.170 - Unreleased
+  - Added `Test-IsDistinguishedName`
 - 0.0.169 - 2020.08.27
   - Added `ConvertTo-DistinguishedName`
   - Updated `ConvertFrom-DistinguishedName`
