@@ -35,6 +35,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 - 0.0.170 - Unreleased
   - Added `Test-IsDistinguishedName`
+  - Added `ConvertFrom-NetbiosName`
+  - Improvements to `Convert-Identity`
+  - Improvements to `Get-Colors`
 - 0.0.169 - 2020.08.27
   - Added `ConvertTo-DistinguishedName`
   - Updated `ConvertFrom-DistinguishedName`

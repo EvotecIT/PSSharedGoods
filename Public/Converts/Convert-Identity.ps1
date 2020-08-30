@@ -186,49 +186,70 @@
         if ($Identity) {
             foreach ($Ident in $Identity) {
                 # regex check if SID .. do something
-                if ([Regex]::IsMatch($Ident, "^S-\d-\d+-(\d+-){1,14}\d+$")) {
+                if ([Regex]::IsMatch($Ident, "S-\d-\d+-(\d+-){1,14}\d+")) {
                     if ($Script:GlobalCacheSidConvert[$Ident]) {
                         Write-Verbose "Convert-Identity - Processing SID $Ident from cache."
                         if ($Script:GlobalCacheSidConvert[$Ident] -is [string]) {
                             # I could have built full blown $Script:GlobalCacheSidConvert cache but opted to built it manually here
                             # basically Server Operators or Account Operators won't be resolved by SID on non-domain controllers so we need to build it manually
                             [PSCustomObject] @{
-                                Name  = $Script:GlobalCacheSidConvert[$Ident]
-                                SID   = $Ident
-                                Type  = $wellKnownSIDs[$Ident]
-                                Error = ''
+                                Name       = $Script:GlobalCacheSidConvert[$Ident]
+                                SID        = $Ident
+                                DomainName = (ConvertFrom-NetbiosName -Identity $Ident).DomainName
+                                Type       = $wellKnownSIDs[$Ident]
+                                Error      = ''
                             }
                         } else {
                             $Script:GlobalCacheSidConvert[$Ident]
                         }
                     } else {
-                        Write-Verbose "Convert-Identity - Processing SID $Ident"
-                        try {
-                            [string] $Name = (([System.Security.Principal.SecurityIdentifier]::new($Ident)).Translate([System.Security.Principal.NTAccount])).Value
-                            $ErrorMessage = ''
-                            if ($Ident -like "S-1-5-21-*-519" -or $Ident -like "S-1-5-21-*-512") {
-                                $Type = 'Administrative'
-                            } elseif ($wellKnownSIDs[$Ident]) {
-                                $Type = $wellKnownSIDs[$Ident]
-                            } else {
-                                $Type = 'NotAdministrative'
+                        if ([Regex]::IsMatch($Ident, "^S-\d-\d+-(\d+-){1,14}\d+$")) {
+                            # This is SID
+                            Write-Verbose "Convert-Identity - Processing SID $Ident"
+                            try {
+                                [string] $Name = (([System.Security.Principal.SecurityIdentifier]::new($Ident)).Translate([System.Security.Principal.NTAccount])).Value
+                                $ErrorMessage = ''
+                                if ($Ident -like "S-1-5-21-*-519" -or $Ident -like "S-1-5-21-*-512") {
+                                    $Type = 'Administrative'
+                                } elseif ($wellKnownSIDs[$Ident]) {
+                                    $Type = $wellKnownSIDs[$Ident]
+                                } else {
+                                    $Type = 'NotAdministrative'
+                                }
+                            } catch {
+                                [string] $Name = ''
+                                $ErrorMessage = $_.Exception.Message
+                                $Type = 'Unknown'
                             }
-                        } catch {
-                            [string] $Name = ''
-                            $ErrorMessage = $_.Exception.Message
-                            $Type = 'Unknown'
+                            $Script:GlobalCacheSidConvert[$Ident] = [PSCustomObject] @{
+                                Name       = $Name
+                                SID        = $Ident
+                                DomainName = if ($Name) { (ConvertFrom-NetbiosName -Identity $Name).DomainName } else { '' }
+                                Type       = $Type
+                                Error      = $ErrorMessage
+                            }
+                            $Script:GlobalCacheSidConvert[$Ident]
+                        } else {
+                            Write-Verbose "Convert-Identity - Processing SID within DN - $Ident"
+                            # THis is SID within full string so we exctract it # 'CN=S-1-5-21-1928204107-2710010574-1926425344-512,CN=ForeignSecurityPrincipals,DC=ad,DC=evotec,DC=xyz'
+                            $Output = [Regex]::Matches($Ident, "S-\d-\d+-(\d+-){1,14}\d+")
+                            if ($Output.Count -eq 1 -and $Output.Value) {
+                                Convert-Identity -Identity $Output.Value
+                            } else {
+                                $Script:GlobalCacheSidConvert[$Ident] = [PSCustomObject] @{
+                                    Name       = ''
+                                    SID        = $Ident
+                                    DomainName = (ConvertFrom-NetbiosName -Identity $Name).DomainName
+                                    Type       = 'Unknown'
+                                    Error      = 'Unable to process properly. SID within DN not found.'
+                                }
+                            }
                         }
-                        $Script:GlobalCacheSidConvert[$Ident] = [PSCustomObject] @{
-                            Name  = $Name
-                            SID   = $Ident
-                            Type  = $Type
-                            Error = $ErrorMessage
-                        }
-                        $Script:GlobalCacheSidConvert[$Ident]
                     }
                 } else {
-                    Write-Verbose "Convert-Identity - Processing $Ident"
+                    Write-Verbose "Convert-Identity - Processing $Ident (not regex)"
                     if ($Script:GlobalCacheSidConvert[$Ident]) {
+                        #Write-Verbose "Convert-Identity - Processing $Ident (from cache)"
                         $Script:GlobalCacheSidConvert[$Ident]
                     } else {
                         if ($Ident -like '*DC=*') {
@@ -272,10 +293,11 @@
                                 $SIDValue = $null
                             }
                             $Script:GlobalCacheSidConvert[$Ident] = [PSCustomObject] @{
-                                Name  = $Name
-                                SID   = $SIDValue
-                                Type  = $Type
-                                Error = $ErrorMessage
+                                Name       = $Name
+                                SID        = $SIDValue
+                                DomainName = (ConvertFrom-NetbiosName -Identity $Name).DomainName
+                                Type       = $Type
+                                Error      = $ErrorMessage
                             }
                             $Script:GlobalCacheSidConvert[$Ident]
                         } else {
@@ -293,11 +315,22 @@
                                 $Type = 'Unknown'
                                 $ErrorMessage = $_.Exception.Message
                             }
+                            if ($Type -in 'WellKnown', 'WellKnownAdministrative') {
+                                # If we query for things like 'NT AUTHORITY\NETWORK' it will take very long time to process
+                                $DomainName = ''
+                            } else {
+                                if ($Ident -like '*@*') {
+                                    $DomainName = ''
+                                } else {
+                                    $DomainName = (ConvertFrom-NetbiosName -Identity $Ident).DomainName
+                                }
+                            }
                             $Script:GlobalCacheSidConvert[$Ident] = [PSCustomObject] @{
-                                Name  = $Ident
-                                SID   = $SIDValue
-                                Type  = $Type
-                                Error = $ErrorMessage
+                                Name       = $Ident
+                                SID        = $SIDValue
+                                DomainName = $DomainName
+                                Type       = $Type
+                                Error      = $ErrorMessage
                             }
                             $Script:GlobalCacheSidConvert[$Ident]
                         }
@@ -331,10 +364,3 @@
 
     }
 }
-
-#$DN = 'CN=S-1-5-21-1928204107-2710010574-1926425344-512,CN=ForeignSecurityPrincipals,DC=ad,DC=evotec,DC=xyz'
-#Convert-Identity -Identity $DN
-#$DN = 'CN=Test Test 2,OU=Users,OU=Production,DC=ad,DC=evotec,DC=pl'
-#Convert-Identity -Identity $DN
-#$Group = Get-ADGroup -Identity 'Test Local Group'
-#Convert-Identity -Identity $Group.SID.Value
