@@ -33,7 +33,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.170 - Unreleased
+- 0.0.170 - 2020.09.01
   - Added `Test-IsDistinguishedName`
   - Added `ConvertFrom-NetbiosName`
   - Improvements to `Convert-Identity`
