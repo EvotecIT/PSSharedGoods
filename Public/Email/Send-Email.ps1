@@ -13,6 +13,9 @@ function Send-Email {
         # Following code makes sure both formats are accepted.
         if ($Email.EmailTo) {
             $EmailParameters = $Email.Clone()
+            $EmailParameters.EmailEncoding = $EmailParameters.EmailEncoding -replace "-", ''
+            $EmailParameters.EmailEncodingSubject = $EmailParameters.EmailEncodingSubject -replace "-", ''
+            $EmailParameters.EmailEncodingBody = $EmailParameters.EmailEncodingSubject -replace "-", ''
         } else {
             $EmailParameters = @{
                 EmailFrom                   = $Email.From
@@ -27,9 +30,9 @@ function Send-Email {
                 EmailServerPort             = $Email.Port
                 EmailServerLogin            = $Email.Login
                 EmailServerEnableSSL        = $Email.EnableSsl
-                EmailEncoding               = $Email.Encoding
-                EmailEncodingSubject        = $Email.EncodingSubject
-                EmailEncodingBody           = $Email.EncodingBody
+                EmailEncoding               = $Email.Encoding -replace "-", ''
+                EmailEncodingSubject        = $Email.EncodingSubject -replace "-", ''
+                EmailEncodingBody           = $Email.EncodingBody -replace "-", ''
                 EmailSubject                = $Email.Subject
                 EmailPriority               = $Email.Priority
                 EmailDeliveryNotifications  = $Email.DeliveryNotifications
@@ -107,14 +110,15 @@ function Send-Email {
     #  Encoding
     if ($EmailParameters.EmailEncodingSubject) {
         $MailMessage.SubjectEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncodingSubject)
-    } else {
+    } elseif ($EmailParameters.EmailEncoding) {
         $MailMessage.SubjectEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
     }
     if ($EmailParameters.EmailEncodingBody) {
         $MailMessage.BodyEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncodingBody)
-    } else {
+    } elseif ($EmailParameters.EmailEncoding) {
         $MailMessage.BodyEncoding = [System.Text.Encoding]::$($EmailParameters.EmailEncoding)
     }
+    #$MailMessage.BodyTransferEncoding = [System.Net.Mime.TransferEncoding]::QuotedPrintable
     if ($EmailParameters.EmailUseDefaultCredentials) {
         $SmtpClient.UseDefaultCredentials = $EmailParameters.EmailUseDefaultCredentials
     }
@@ -124,11 +128,21 @@ function Send-Email {
 
     # Inlining attachment (s)
     if ($PSBoundParameters.ContainsKey('InlineAttachments')) {
-        $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString( $Body, 'text/html' )
-        $MailMessage.AlternateViews.Add( $BodyPart )
-        foreach ( $Entry in $InlineAttachments.GetEnumerator() ) {
+        # having any other encoding here caused Thunderbird to play weird things
+        $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString($Body, [System.Text.Encoding]::UTF8, 'text/html' )
+        <#
+        if ($EmailParameters.EmailEncodingBody) {
+            $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString($Body, [System.Text.Encoding]::$($EmailParameters.EmailEncodingBody), 'text/html' )
+        } elseif ($EmailParameters.EmailEncoding) {
+            $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString($Body, [System.Text.Encoding]::$($EmailParameters.EmailEncoding), 'text/html' )
+        } else {
+            $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString($Body, 'text/html' )
+        }
+        #>
+        #$BodyPart.TransferEncoding = [System.Net.Mime.TransferEncoding]::QuotedPrintable
+        $MailMessage.AlternateViews.Add($BodyPart)
+        foreach ($Entry in $InlineAttachments.GetEnumerator()) {
             try {
-
                 $FilePath = $Entry.Value
                 Write-Verbose $FilePath
                 if ($Entry.Value.StartsWith('http')) {
@@ -141,8 +155,6 @@ function Send-Email {
                 $InAttachment.ContentId = $Entry.Key
                 $BodyPart.LinkedResources.Add( $InAttachment )
             } catch {
-                #$MailMessage.Dispose()
-                #throw
                 $ErrorMessage = $_.Exception.Message -replace "`n", " " -replace "`r", " "
                 Write-Error "Error inlining attachments: $ErrorMessage"
             }
