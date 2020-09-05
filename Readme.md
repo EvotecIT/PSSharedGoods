@@ -33,6 +33,10 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.171 - 2020.09.05
+  - Small updates to email commands but those will be removed in future
+    - Need to migrate them to modules that use them
+    - Only Send-Email will be left
 - 0.0.170 - 2020.09.01
   - Added `Test-IsDistinguishedName`
   - Added `ConvertFrom-NetbiosName`
