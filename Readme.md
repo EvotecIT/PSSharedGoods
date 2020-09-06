@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.173 - 2020.09.06
+  - `Send-Email` more fixes to encoding
 - 0.0.172 - 2020.09.05
   - `Send-Email` now sets encoding utf-8 for AlternativeView (inline attachments)
 - 0.0.171 - 2020.09.05

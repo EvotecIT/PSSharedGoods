@@ -16,6 +16,7 @@ function Send-Email {
             $EmailParameters.EmailEncoding = $EmailParameters.EmailEncoding -replace "-", ''
             $EmailParameters.EmailEncodingSubject = $EmailParameters.EmailEncodingSubject -replace "-", ''
             $EmailParameters.EmailEncodingBody = $EmailParameters.EmailEncodingSubject -replace "-", ''
+            $EmailParameters.EmailEncodingAlternateView = $EmailParameters.EmailEncodingAlternateView -replace "-", ''
         } else {
             $EmailParameters = @{
                 EmailFrom                   = $Email.From
@@ -33,6 +34,7 @@ function Send-Email {
                 EmailEncoding               = $Email.Encoding -replace "-", ''
                 EmailEncodingSubject        = $Email.EncodingSubject -replace "-", ''
                 EmailEncodingBody           = $Email.EncodingBody -replace "-", ''
+                EmailEncodingAlternateView  = $Email.EncodingAlternateView -replace "-", ''
                 EmailSubject                = $Email.Subject
                 EmailPriority               = $Email.Priority
                 EmailDeliveryNotifications  = $Email.DeliveryNotifications
@@ -129,7 +131,11 @@ function Send-Email {
     # Inlining attachment (s)
     if ($PSBoundParameters.ContainsKey('InlineAttachments')) {
         # having any other encoding here caused Thunderbird to play weird things
-        $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString($Body, [System.Text.Encoding]::UTF8, 'text/html' )
+        if ($EmailParameters.EmailEncodingAlternateView) {
+            $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString($Body, [System.Text.Encoding]::$($EmailParameters.EmailEncodingAlternateView) , 'text/html' )
+        } else {
+            $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString($Body, [System.Text.Encoding]::UTF8, 'text/html' )
+        }
         <#
         if ($EmailParameters.EmailEncodingBody) {
             $BodyPart = [Net.Mail.AlternateView]::CreateAlternateViewFromString($Body, [System.Text.Encoding]::$($EmailParameters.EmailEncodingBody), 'text/html' )
