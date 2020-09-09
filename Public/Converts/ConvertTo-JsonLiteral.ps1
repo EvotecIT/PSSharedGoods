@@ -9,14 +9,15 @@
     )
     Begin {
         $TextBuilder = [System.Text.StringBuilder]::new()
-        if ($Object.Count -gt 1 -or $AsArray) {
-            $null = $TextBuilder.AppendLine('[')
-        }
+        $CountObjects = 0
     }
     Process {
         for ($a = 0; $a -lt $Object.Count; $a++) {
+            $CountObjects++
+            if ($CountObjects -gt 1) {
+                $null = $TextBuilder.Append(',')
+            }
             if ($Object[$a] -is [System.Collections.IDictionary]) {
-
                 if (-not $HashTableAsIs) {
                     # Push to TEXT the same as [PSCustomObject]
                     $null = $TextBuilder.AppendLine("{")
@@ -65,14 +66,14 @@
                 }
                 $null = $TextBuilder.Append("}")
             }
-            if ($a -ne $Object.Count - 1) {
-                $null = $TextBuilder.Append(',')
-            }
         }
-        if ($Object.Count -gt 1 -or $AsArray) {
-            $null = $TextBuilder.AppendLine(']')
+    }
+    End {
+        if ($CountObjects -gt 1 -or $AsArray) {
+            "[$($TextBuilder.ToString())]"
+        } else {
+            $TextBuilder.ToString()
         }
-        $TextBuilder.ToString()
     }
 }
 function ConvertTo-StringByType {
