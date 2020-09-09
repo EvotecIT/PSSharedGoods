@@ -1,22 +1,4 @@
-﻿function ConvertTo-StringByType {
-    param(
-        [Object] $Value,
-        [string] $DateTimeFormat
-    )
-    if ($null -eq $Value ) {
-        ''
-    } elseif ($Value -is [DateTime]) {
-        $($Value).ToString($DateTimeFormat)
-    } else {
-        try {
-            [System.Text.RegularExpressions.Regex]::Unescape($Value)
-        } catch {
-            $Value.Replace('\', "\\")
-        }
-    }
-}
-
-function ConvertTo-JsonLiteral {
+﻿function ConvertTo-JsonLiteral {
     [cmdletBinding()]
     param(
         [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)][Array] $Object,
@@ -48,7 +30,7 @@ function ConvertTo-JsonLiteral {
                         $Value = $($Object[$a][$i])
                     }
                     #>
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$Property]) -DateTimeFormat $DateTimeFormat
                         $null = $TextBuilder.Append("`"$Property`":`"$Value`"")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
                             $null = $TextBuilder.AppendLine(',')
@@ -105,5 +87,23 @@ function ConvertTo-JsonLiteral {
             $null = $TextBuilder.AppendLine(']')
         }
         $TextBuilder.ToString()
+    }
+}
+function ConvertTo-StringByType {
+    [cmdletBinding()]
+    param(
+        [Object] $Value,
+        [string] $DateTimeFormat
+    )
+    if ($null -eq $Value ) {
+        ''
+    } elseif ($Value -is [DateTime]) {
+        $($Value).ToString($DateTimeFormat)
+    } else {
+        try {
+            [System.Text.RegularExpressions.Regex]::Unescape($Value)
+        } catch {
+            $Value.Replace('\', "\\")
+        }
     }
 }
