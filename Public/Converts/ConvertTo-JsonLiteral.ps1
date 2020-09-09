@@ -103,12 +103,3 @@ function ConvertTo-JsonLiteral {
     }
     $TextBuilder.ToString()
 }
-
-
-Measure-Command {
-    $Test1 = ConvertTo-Json (Get-Process)
-}
-
-Measure-Command {
-    $Test = ConvertTo-JsonLiteral (Get-Process)
-}
