@@ -112,12 +112,6 @@ $Object = [PSCustomObject] @{
     Test2        = $false
     Date         = Get-Date
     Enum         = [Fruit]::Kiwi
-    NestedObject = [PSCustomObject] @{
-        Test  = '1'
-        Test2 = $false
-        Date  = Get-Date
-        Enum  = [Fruit]::Kiwi
-    }
 }
 
 $Object = [PSCustomObject] @{
@@ -132,14 +126,6 @@ $Object1 = [ordered] @{
     Test2 = $false
     Date  = Get-Date
     Enum  = [Fruit]::Kiwi
-    <#
-    NestedObject = [PSCustomObject] @{
-        Test  = '1'
-        Test2 = $false
-        Date  = Get-Date
-        Enum  = [Fruit]::Kiwi
-    }
-    #>
 }
 
 #$Object, $Object, 1, $false | ConvertTo-Json
