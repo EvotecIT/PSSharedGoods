@@ -19,17 +19,10 @@
 
                 if (-not $HashTableAsIs) {
                     # Push to TEXT the same as [PSCustomObject]
-
                     $null = $TextBuilder.AppendLine("{")
                     for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
                         $Property = ([string[]]$Object[$a].Keys)[$i]
-                        <#
-                    if ($Object[$a][$i] -is [DateTime]) {
-                        $Value = $($Object[$a][$i]).ToString($DateTimeFormat)
-                    } else {
-                        $Value = $($Object[$a][$i])
-                    }
-                    #>
+
                         $Value = ConvertTo-StringByType -Value $($Object[$a][$Property]) -DateTimeFormat $DateTimeFormat
                         $null = $TextBuilder.Append("`"$Property`":`"$Value`"")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
@@ -43,9 +36,8 @@
                     for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
                         $null = $TextBuilder.AppendLine("{")
                         $Property = ([string[]]$Object[$a].Keys)[$i]
-                        #$Value = $Object[$a][$i]
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i])
 
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i])
                         $null = $TextBuilder.Append("`"$Property`":`"$Value`"")
                         $null = $TextBuilder.Append("}")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
@@ -63,13 +55,7 @@
                 $null = $TextBuilder.AppendLine("{")
                 for ($i = 0; $i -lt ($Object[$a].PSObject.Properties.Name).Count; $i++) {
                     $Property = $($Object[$a].PSObject.Properties.Name)[$i]
-                    <#
-                if ($($Object[$a].$Property) -is [DateTime]) {
-                    $Value = $($Object[$a].$Property).ToString($DateTimeFormat)
-                } else {
-                    $Value = $($Object[$a].$Property)
-                }
-                #>
+
                     $Value = ConvertTo-StringByType -Value $($Object[$a].$Property) -DateTimeFormat $DateTimeFormat
                     # Push to Text
                     $null = $TextBuilder.Append("`"$Property`":`"$Value`"")
