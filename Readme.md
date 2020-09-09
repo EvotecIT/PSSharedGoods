@@ -36,7 +36,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 - 0.0.175 - 2020.09.06
   - Added `ConvertTo-JsonLiteral`
 - 0.0.174 - 2020.09.06
-  - No changes
+  - Removed from PSGallery
 - 0.0.173 - 2020.09.06
   - `Send-Email` more fixes to encoding
 - 0.0.172 - 2020.09.05
