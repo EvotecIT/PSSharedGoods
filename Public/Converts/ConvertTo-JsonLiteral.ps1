@@ -2,7 +2,7 @@
     [cmdletBinding()]
     param(
         [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)][Array] $Object,
-        [int] $Depth,
+        #[int] $Depth,
         [switch] $HashTableAsIs,
         [switch] $AsArray,
         [string] $DateTimeFormat = "yyyy-MM-dd HH:mm:ss"
@@ -38,7 +38,7 @@
                         $null = $TextBuilder.AppendLine("{")
                         $Property = ([string[]]$Object[$a].Keys)[$i]
 
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i])
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat
                         $null = $TextBuilder.Append("`"$Property`":`"$Value`"")
                         $null = $TextBuilder.Append("}")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
@@ -73,24 +73,6 @@
             "[$($TextBuilder.ToString())]"
         } else {
             $TextBuilder.ToString()
-        }
-    }
-}
-function ConvertTo-StringByType {
-    [cmdletBinding()]
-    param(
-        [Object] $Value,
-        [string] $DateTimeFormat
-    )
-    if ($null -eq $Value ) {
-        ''
-    } elseif ($Value -is [DateTime]) {
-        $($Value).ToString($DateTimeFormat)
-    } else {
-        try {
-            [System.Text.RegularExpressions.Regex]::Unescape($Value)
-        } catch {
-            $Value.Replace('\', "\\")
         }
     }
 }
