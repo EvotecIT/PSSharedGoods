@@ -1,25 +1,57 @@
 ﻿function ConvertTo-DistinguishedName {
     <#
     .SYNOPSIS
-    Short description
+    Converts CanonicalName to DistinguishedName
 
     .DESCRIPTION
-    Long description
+    Converts CanonicalName to DistinguishedName for 3 different options
 
     .PARAMETER CanonicalName
-    Parameter description
+    One or multiple canonical names
 
     .PARAMETER ToOU
-    Parameter description
+    Converts CanonicalName to OrganizationalUnit DistinguishedName
 
     .PARAMETER ToObject
-    Parameter description
+    Converts CanonicalName to Full Object DistinguishedName
 
     .PARAMETER ToDomain
-    Parameter description
+    Converts CanonicalName to Domain DistinguishedName
 
     .EXAMPLE
-    An example
+
+    $CanonicalObjects = @(
+    'ad.evotec.xyz/Production/Groups/Security/ITR03_AD Admins'
+    'ad.evotec.xyz/Production/Accounts/Special/SADM Testing 2'
+    )
+    $CanonicalOU = @(
+        'ad.evotec.xyz/Production/Groups/Security/NetworkAdministration'
+        'ad.evotec.xyz/Production'
+    )
+
+    $CanonicalDomain = @(
+        'ad.evotec.xyz/Production/Groups/Security/ITR03_AD Admins'
+        'ad.evotec.pl'
+        'ad.evotec.xyz'
+        'test.evotec.pl'
+        'ad.evotec.xyz/Production'
+    )
+    $CanonicalObjects | ConvertTo-DistinguishedName -ToObject
+    $CanonicalOU | ConvertTo-DistinguishedName -ToOU
+    $CanonicalDomain | ConvertTo-DistinguishedName -ToDomain
+
+    Output:
+    CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz
+    CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz
+    Output2:
+    OU=NetworkAdministration,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz
+    OU=Production,DC=ad,DC=evotec,DC=xyz
+    Output3:
+    DC=ad,DC=evotec,DC=xyz
+    DC=ad,DC=evotec,DC=pl
+    DC=ad,DC=evotec,DC=xyz
+    DC=test,DC=evotec,DC=pl
+    DC=ad,DC=evotec,DC=xyz
 
     .NOTES
     General notes
@@ -55,30 +87,11 @@
                     $DN += ",DC=" + $_
                 }
             } else {
+                $ADObject = $CN.Replace(',', '\,').Split('/')
                 # Assemble the DN by replacing
-                $DN = 'DC=' + $CN.Replace('.', ',DC=')
+                $DN = 'DC=' + $ADObject[0].Replace('.', ',DC=')
             }
             $DN
         }
     }
 }
-
-<#
-$CanonicalObjects = @(
-    'ad.evotec.xyz/Production/Groups/Security/ITR03_AD Admins'
-    'ad.evotec.xyz/Production/Accounts/Special/SADM Testing 2'
-)
-$CanonicalOU = @(
-    'ad.evotec.xyz/Production/Groups/Security/NetworkAdministration'
-    'ad.evotec.xyz/Production'
-)
-$CanonicalDomain = @(
-    'ad.evotec.pl'
-    'ad.evotec.xyz'
-    'test.evotec.pl'
-)
-
-$CanonicalObjects | ConvertTo-DistinguishedName -ToObject
-$CanonicalOU | ConvertTo-DistinguishedName -ToOU
-$CanonicalDomain | ConvertTo-DistinguishedName -ToDomain
-#>

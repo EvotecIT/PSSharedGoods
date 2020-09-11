@@ -45,28 +45,36 @@
     }
     It 'ToDomain Conversion' {
         $CanonicalDomain = @(
+            'ad.evotec.xyz/Production/Groups/Security/ITR03_AD Admins'
             'ad.evotec.pl'
             'ad.evotec.xyz'
             'test.evotec.pl'
+            'ad.evotec.xyz/Production'
         )
         $Output = $CanonicalDomain | ConvertTo-DistinguishedName -ToDomain
         $Output | Should -be @(
+            'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=pl'
             'DC=ad,DC=evotec,DC=xyz'
             'DC=test,DC=evotec,DC=pl'
+            'DC=ad,DC=evotec,DC=xyz'
         )
     }
     It 'ToDomain Conversion' {
         $CanonicalDomain = @(
+            'ad.evotec.xyz/Production/Groups/Security/ITR03_AD Admins'
             'ad.evotec.pl'
             'ad.evotec.xyz'
             'test.evotec.pl'
+            'ad.evotec.xyz/Production'
         )
         $Output = ConvertTo-DistinguishedName -ToDomain -CanonicalName $CanonicalDomain
         $Output | Should -be @(
+            'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=pl'
             'DC=ad,DC=evotec,DC=xyz'
             'DC=test,DC=evotec,DC=pl'
+            'DC=ad,DC=evotec,DC=xyz'
         )
     }
 }
