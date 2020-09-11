@@ -51,9 +51,9 @@
         )
         $Output = $CanonicalDomain | ConvertTo-DistinguishedName -ToDomain
         $Output | Should -be @(
-            'DN=ad,DC=evotec,DC=pl'
-            'DN=ad,DC=evotec,DC=xyz'
-            'DN=test,DC=evotec,DC=pl'
+            'DC=ad,DC=evotec,DC=pl'
+            'DC=ad,DC=evotec,DC=xyz'
+            'DC=test,DC=evotec,DC=pl'
         )
     }
     It 'ToDomain Conversion' {
@@ -64,9 +64,9 @@
         )
         $Output = ConvertTo-DistinguishedName -ToDomain -CanonicalName $CanonicalDomain
         $Output | Should -be @(
-            'DN=ad,DC=evotec,DC=pl'
-            'DN=ad,DC=evotec,DC=xyz'
-            'DN=test,DC=evotec,DC=pl'
+            'DC=ad,DC=evotec,DC=pl'
+            'DC=ad,DC=evotec,DC=xyz'
+            'DC=test,DC=evotec,DC=pl'
         )
     }
 }

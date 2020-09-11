@@ -56,12 +56,13 @@
                 }
             } else {
                 # Assemble the DN by replacing
-                $DN = 'DN=' + $CN.Replace('.', ',DC=')
+                $DN = 'DC=' + $CN.Replace('.', ',DC=')
             }
             $DN
         }
     }
 }
+
 <#
 $CanonicalObjects = @(
     'ad.evotec.xyz/Production/Groups/Security/ITR03_AD Admins'
