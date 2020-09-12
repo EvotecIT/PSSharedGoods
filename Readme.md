@@ -33,6 +33,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.178 - 2020.09.12
+  - Updated `Get-ADTrustAttributes` with more attributes, renamed some
+  - Added `Get-ADEncryptionTypes`
 - 0.0.177 - 2020.09.11
   - Fixed `ConvertTo-DistinguishedName`
 - 0.0.176 - 2020.09.07
