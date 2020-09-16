@@ -1,6 +1,6 @@
 ﻿
 Import-Module $PSScriptRoot\..\PSSharedGoods.psd1 -Force
-Describe -Name 'Testing ConvertTo-SID' {
+Describe -Name 'Testing ConvertFrom-SID' {
     It 'OnlyWellKnownAdministrative - Given 2 sids, only 1 should return' {
         $SIDs = @(
             'S-1-5-18'
@@ -19,7 +19,7 @@ Describe -Name 'Testing ConvertTo-SID' {
         $OutputPS.Name | Should -be $ExpectedResult.Name
     }
 }
-Describe -Name 'Testing ConvertTo-SID' {
+Describe -Name 'Testing ConvertFrom-SID' {
     It 'OnlyWellKnown - Given 3 sids, only 2 should return' {
         $SIDs = @(
             'S-1-5-18'
@@ -49,7 +49,7 @@ Describe -Name 'Testing ConvertTo-SID' {
         $OutputPS[1].Name | Should -be $ExpectedResult1.Name
     }
 }
-Describe -Name 'Testing ConvertTo-SID - return as NotAdministrative' {
+Describe -Name 'Testing ConvertFrom-SID - return as NotAdministrative' {
     It 'Given 3 sids, 3 should return' {
         $SIDs = @(
             'S-1-5-18'
@@ -91,7 +91,7 @@ Describe -Name 'Testing ConvertTo-SID - return as NotAdministrative' {
     }
 }
 
-Describe -Name 'Testing ConvertTo-SID' {
+Describe -Name 'Testing ConvertFrom-SID' {
     It 'Given 3 sids, 3 should return - Try Resolve and Fail' {
         $SIDs = @(
             'S-1-5-18'
@@ -131,7 +131,7 @@ Describe -Name 'Testing ConvertTo-SID' {
         $OutputPS[2].Name | Should -be $ExpectedResult2.Name
     }
 }
-Describe -Name 'Testing ConvertTo-SID' {
+Describe -Name 'Testing ConvertFrom-SID' {
     It 'Given 3 sids, 3 should return - Return Administrative' {
         $SIDs = @(
             'S-1-5-18'
@@ -160,7 +160,8 @@ Describe -Name 'Testing ConvertTo-SID' {
             SID  = 'S-1-5-20-20-10-51'
             Type = 'Unknown'
         }
-        $ExpectedDomainAdmins = 'Administrative'
+        # locally from AD it will be Administrative, on CI - Unknown
+        $ExpectedDomainAdmins = 'Administrative', 'Unknown'
         $OutputPS[0].Error | Should -be $ExpectedResult0.Error
         $OutputPS[0].SID | Should -be $ExpectedResult0.SID
         $OutputPS[0].Type | Should -be $ExpectedResult0.Type
@@ -174,9 +175,9 @@ Describe -Name 'Testing ConvertTo-SID' {
         $OutputPS[2].Type | Should -be $ExpectedResult2.Type
         $OutputPS[2].Name | Should -be $ExpectedResult2.Name
 
-        $OutputPS[3].Type | Should -be $ExpectedDomainAdmins
-        $OutputPS[4].Type | Should -be $ExpectedDomainAdmins
-        $OutputPS[5].Type | Should -be $ExpectedDomainAdmins
+        $OutputPS[3].Type | Should -BeIn $ExpectedDomainAdmins
+        $OutputPS[4].Type | Should -BeIn $ExpectedDomainAdmins
+        $OutputPS[5].Type | Should -BeIn $ExpectedDomainAdmins
     }
 }
 
