@@ -49,7 +49,7 @@ Describe -Name 'Testing ConvertTo-SID' {
         $OutputPS[1].Name | Should -be $ExpectedResult1.Name
     }
 }
-Describe -Name 'Testing ConvertTo-SID' {
+Describe -Name 'Testing ConvertTo-SID - return as NotAdministrative' {
     It 'Given 3 sids, 3 should return' {
         $SIDs = @(
             'S-1-5-18'
@@ -92,7 +92,7 @@ Describe -Name 'Testing ConvertTo-SID' {
 }
 
 Describe -Name 'Testing ConvertTo-SID' {
-    It 'Given 3 sids, 3 should return' {
+    It 'Given 3 sids, 3 should return - Try Resolve and Fail' {
         $SIDs = @(
             'S-1-5-18'
             'S-1-5-19'
@@ -132,7 +132,7 @@ Describe -Name 'Testing ConvertTo-SID' {
     }
 }
 Describe -Name 'Testing ConvertTo-SID' {
-    It 'Given 3 sids, 3 should return' {
+    It 'Given 3 sids, 3 should return - Return Administrative' {
         $SIDs = @(
             'S-1-5-18'
             'S-1-5-19'
