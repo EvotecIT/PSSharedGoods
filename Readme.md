@@ -33,6 +33,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.179 - Unreleased
+  - Rewritten `Convert-Identity` and added tests for it - basic ones as no AD in Cloud
+  - Rewritten `ConvertTo-SID` and added tests for it
 - 0.0.178 - 2020.09.12
   - Updated `Get-ADTrustAttributes` with more attributes, renamed some
   - Added `Get-ADEncryptionTypes`
