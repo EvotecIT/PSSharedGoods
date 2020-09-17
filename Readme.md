@@ -33,7 +33,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.179 - Unreleased
+- 0.0.179 - 2020.09.17
   - Rewritten `Convert-Identity` and added tests for it - basic ones as no AD in Cloud
   - Rewritten `ConvertTo-SID` and added tests for it
 - 0.0.178 - 2020.09.12
