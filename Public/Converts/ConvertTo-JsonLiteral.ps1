@@ -1,7 +1,38 @@
 ﻿function ConvertTo-JsonLiteral {
+    <#
+    .SYNOPSIS
+    Converts an object to a JSON-formatted string.
+
+    .DESCRIPTION
+    The ConvertTo-Json cmdlet converts any object to a string in JavaScript Object Notation (JSON) format. The properties are converted to field names, the field values are converted to property values, and the methods are removed.
+
+    .PARAMETER Object
+    Specifies the objects to convert to JSON format. Enter a variable that contains the objects, or type a command or expression that gets the objects. You can also pipe an object to ConvertTo-JsonLiteral
+
+    .PARAMETER Depth
+    Specifies how many levels of contained objects are included in the JSON representation. The default value is 0.
+
+    .PARAMETER AsArray
+    Outputs the object in array brackets, even if the input is a single object.
+
+    .PARAMETER DateTimeFormat
+    Changes DateTime string format. Default "yyyy-MM-dd HH:mm:ss"
+
+    .PARAMETER NumberAsString
+    Provides an alternative serialization option that converts all numbers to their string representation.
+
+    .PARAMETER BoolAsString
+    Provides an alternative serialization option that converts all bool to their string representation.
+
+    .EXAMPLE
+    Get-Process | Select-Object -First 2 | ConvertTo-JsonLiteral
+
+    .NOTES
+    General notes
+    #>
     [cmdletBinding()]
     param(
-        [alias('InputObject')][Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)][Array] $Object,
+        [alias('InputObject')][Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0, Mandatory)][Array] $Object,
         [int] $Depth,
         #[switch] $HashTableAsIs,
         [switch] $AsArray,

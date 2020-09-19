@@ -26,15 +26,14 @@ $Test1 = [PSCustomObject] @{
             "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
         )
     }
-    DateTime = Get-Date
+    DateTime   = Get-Date
 }
 
-$Test = @{
+$Test2 = @{
     Test1 = 1
     Test2 = 2
     Test3 = 3
 }
 
-$Test | ConvertTo-JsonLiteral -Depth 1
-#$Test | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
-#$Test | ConvertTo-Json -Depth 3
+$Test1 | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
+$Test2 | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json

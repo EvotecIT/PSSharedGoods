@@ -20,7 +20,7 @@
     #>
     [cmdletBinding()]
     param(
-        $Value,
+        [Object] $Value,
         [int] $Depth,
         [int] $MaxDepth,
         [string] $DateTimeFormat,
