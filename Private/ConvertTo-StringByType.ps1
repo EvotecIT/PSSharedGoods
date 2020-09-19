@@ -59,7 +59,7 @@
             }
             $null = $TextBuilder.Append("}")
         }
-    } elseif ($Value -is [System.Collections.IList]) {
+    } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
         if ($MaxDepth -eq 0 -or $Depth -eq $MaxDepth) {
             $Value = "$Value".Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, "\r\n")
             "`"$Value`""
@@ -95,7 +95,9 @@
             }
             $null = $TextBuilder.Append("}")
         }
-    } elseif ($Value | IsNumeric) {
+    } elseif ($Value -is [System.Enum]) {
+        "`"$($($Value).ToString())`""
+    } elseif (($Value | IsNumeric) -eq $true) {
         if ($NumberAsString) {
             "`"$($Value)`""
         } else {
