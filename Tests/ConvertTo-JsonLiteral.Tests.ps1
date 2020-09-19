@@ -1,6 +1,4 @@
-﻿Import-Module .\PSSharedGoods.psd1 -Force
-
-Describe -Name 'Testing ConvertTo-JsonLiteral' {
+﻿Describe -Name 'Testing ConvertTo-JsonLiteral' {
     It 'PSCustomObject Conversion' {
         Enum Fruit{
             Apple = 29

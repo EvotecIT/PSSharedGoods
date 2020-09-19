@@ -21,12 +21,13 @@
     [cmdletBinding()]
     param(
         [Object] $Value,
+        [int] $Depth,
         [string] $DateTimeFormat,
         [switch] $NumberAsNumber,
         [switch] $BoolAsBool
     )
-    if ($null -eq $Value ) {
-        ''
+    if ($null -eq $Value) {
+        "`"`""
     } elseif ($Value -is [DateTime]) {
         "`"$($($Value).ToString($DateTimeFormat))`""
     } elseif ($Value -is [bool]) {
@@ -34,6 +35,12 @@
             "`"$($Value)`""
         } else {
             $Value.ToString().ToLower()
+        }
+    } elseif ($Value -is [System.Collections.IList]) {
+        if ($Depth -eq 0) {
+            "`"$($Value.ToString())`""
+        } else {
+
         }
     } elseif ($Value | IsNumeric) {
         if (-not $NumberAsNumber) {
@@ -43,6 +50,7 @@
         }
     } else {
         try {
+            $Value = $Value.ToString().Replace('"', '\\"')
             "`"$([System.Text.RegularExpressions.Regex]::Unescape($Value))`""
             #"`"$Value`""
         } catch {

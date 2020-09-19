@@ -2,7 +2,7 @@
     [cmdletBinding()]
     param(
         [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)][Array] $Object,
-        #[int] $Depth,
+        [int] $Depth,
         [switch] $HashTableAsIs,
         [switch] $AsArray,
         [string] $DateTimeFormat = "yyyy-MM-dd HH:mm:ss",
@@ -32,7 +32,7 @@
                     for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
                         $Property = ([string[]]$Object[$a].Keys)[$i]
 
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$Property]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$Property]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth
                         $null = $TextBuilder.Append("`"$Property`":$Value")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
                             $null = $TextBuilder.AppendLine(',')
@@ -46,7 +46,7 @@
                         $null = $TextBuilder.AppendLine("{")
                         $Property = ([string[]]$Object[$a].Keys)[$i]
 
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth
                         $null = $TextBuilder.Append("`"$Property`":$Value")
                         $null = $TextBuilder.Append("}")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
@@ -57,7 +57,7 @@
                 }
 
             } elseif ($Object[$a].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
-                $Value = ConvertTo-StringByType -Value $($Object[$a]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool
+                $Value = ConvertTo-StringByType -Value $($Object[$a]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth
                 #$null = $TextBuilder.Append("`"$($Object[$a].ToString())`"")
                 $null = $TextBuilder.Append($Value)
             } else {
@@ -65,7 +65,7 @@
                 for ($i = 0; $i -lt ($Object[$a].PSObject.Properties.Name).Count; $i++) {
                     $Property = $($Object[$a].PSObject.Properties.Name)[$i]
 
-                    $Value = ConvertTo-StringByType -Value $($Object[$a].$Property) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool
+                    $Value = ConvertTo-StringByType -Value $($Object[$a].$Property) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth
                     # Push to Text
                     $null = $TextBuilder.Append("`"$Property`":$Value")
                     if ($i -ne ($Object[$a].PSObject.Properties.Name).Count - 1) {
