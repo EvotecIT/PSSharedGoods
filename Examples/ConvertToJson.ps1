@@ -1,6 +1,6 @@
 ﻿Import-Module .\PSSharedGoods.psd1 -Force
 
-
+<#
 $Test = [PSCustomObject] @{
     Test                   = 1
     Test1                  = $false
@@ -11,16 +11,8 @@ $Test = [PSCustomObject] @{
     PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
     PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
 }
-$Test | ConvertTo-JsonLiteral -BoolAsBool -NumberAsNumber | ConvertFrom-Json | Format-Table
-#$Test | ConvertTo-JsonLiteral -BoolAsBool -NumberAsNumber
-
+$Test | ConvertTo-JsonLiteral -BoolAsBool -NumberAsNumber | ConvertFrom-Json #| Format-Table
 $Test | ConvertTo-Json | ConvertFrom-Json
-
-
-
-
-
-return
 
 $Test = [PSCustomObject] @{
     Test                   = 1
@@ -31,8 +23,7 @@ $Test = [PSCustomObject] @{
     PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
 }
 $Test, $Test, $Test | ConvertTo-JsonLiteral | ConvertFrom-Json | Format-Table
-
-
+#>
 
 [string] | ConvertTo-JsonLiteral | ConvertFrom-Json | Format-Table
 <#

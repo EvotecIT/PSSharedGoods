@@ -533,43 +533,11 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
 }
-
-<#
-return
-
-Enum Fruit{
-    Apple = 29
-    Pear = 30
-    Kiwi = 31
+Describe -Name 'Testing ConvertTo-JsonLiteral string type' {
+    It 'string type conversion' {
+        # Generally it should not throw
+        $ConvertedObject = [string] | ConvertTo-JsonLiteral | ConvertFrom-Json
+        $ConvertedObject.Module | Should -Be 'CommonLanguageRuntimeLibrary'
+        $ConvertedObject.Namespace | Should -Be 'System'
+    }
 }
-
-$Object = [PSCustomObject] @{
-    Test         = '1'
-    Test2        = $false
-    Date         = Get-Date
-    Enum         = [Fruit]::Kiwi
-}
-
-$Object = [PSCustomObject] @{
-    Test  = '1'
-    Test2 = $false
-    Date  = Get-Date
-    Enum  = [Fruit]::Kiwi
-}
-
-$Object1 = [ordered] @{
-    Test  = '1'
-    Test2 = $false
-    Date  = Get-Date
-    Enum  = [Fruit]::Kiwi
-}
-
-#$Object, $Object, 1, $false | ConvertTo-Json
-
-#$Json = ConvertTo-JsonLiteral -Object 1, 1, $false, $Object, $Object1
-$Json = ConvertTo-JsonLiteral -Object $Object1 #, $Object #-HashTableAsIs
-$Json
-$Test = $Json | ConvertFrom-Json #| Format-Table
-$Test
-
-#>
