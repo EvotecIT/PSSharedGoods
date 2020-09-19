@@ -1,6 +1,4 @@
-﻿Import-Module .\PSSharedGoods.psd1 -Force
-
-Enum Fruit{
+﻿Enum Fruit{
     Apple = 29
     Pear = 30
     Kiwi = 31
@@ -18,6 +16,8 @@ $PSCustomObject = [PSCustomObject] @{
     PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
     PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
     PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+    EmptyArray             = @()
+    EmptyList              = [System.Collections.Generic.List[string]]::new()
     HashTable              = @{
         NumberAgain       = 2
         OrderedDictionary = [ordered] @{
@@ -62,6 +62,8 @@ $HashTableObject = @{
     PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
     PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
     PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+    EmptyArray             = @()
+    EmptyList              = [System.Collections.Generic.List[string]]::new()
     HashTable              = @{
         NumberAgain       = 2
         OrderedDictionary = [ordered] @{
@@ -106,6 +108,8 @@ $OrderedObject = [ordered] @{
     PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
     PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
     PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+    EmptyArray             = @()
+    EmptyList              = [System.Collections.Generic.List[string]]::new()
     HashTable              = @{
         NumberAgain       = 2
         OrderedDictionary = [ordered] @{
@@ -147,9 +151,12 @@ $PSDefaultParameterValues = @{
     }
 }
 
+#$PSCustomObject | ConvertTo-JsonLiteral -Depth 5 -NumberAsString
+#return
+
 Describe -Name 'Testing ConvertTo-JsonLiteral' {
     It 'PSCustomObject Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject
+        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
@@ -160,9 +167,11 @@ Describe -Name 'Testing ConvertTo-JsonLiteral' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
     It 'Ordered Dictionary Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $OrderedObject
+        $Json = ConvertTo-JsonLiteral -Object $OrderedObject -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
@@ -173,9 +182,11 @@ Describe -Name 'Testing ConvertTo-JsonLiteral' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
     It 'Hashtable Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $HashTableObject
+        $Json = ConvertTo-JsonLiteral -Object $HashTableObject -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
@@ -186,12 +197,14 @@ Describe -Name 'Testing ConvertTo-JsonLiteral' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
 }
 
 Describe -Name 'Testing ConvertTo-JsonLiteral Pipeline' {
     It 'PSCustomObject Conversion' {
-        $Json = $PSCustomObject | ConvertTo-JsonLiteral
+        $Json = $PSCustomObject | ConvertTo-JsonLiteral -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
@@ -202,9 +215,11 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Pipeline' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
     It 'Ordered Dictionary Conversion' {
-        $Json = $OrderedObject | ConvertTo-JsonLiteral
+        $Json = $OrderedObject | ConvertTo-JsonLiteral -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
@@ -215,9 +230,11 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Pipeline' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
     It 'Hashtable Conversion' {
-        $Json = $HashTableObject | ConvertTo-JsonLiteral
+        $Json = $HashTableObject | ConvertTo-JsonLiteral -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
@@ -228,12 +245,14 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Pipeline' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
 }
 
 Describe -Name 'Testing ConvertTo-JsonLiteral Array' {
     It 'PSCustomObject Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject, $PSCustomObject
+        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject, $PSCustomObject -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -253,9 +272,13 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array' {
         $FromJson[1].PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson[0].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[1].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[0].EmptyList | Should -be ''
+        $FromJson[1].EmptyList | Should -be ''
     }
     It 'Ordered Dictionary Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $OrderedObject, $OrderedObject
+        $Json = ConvertTo-JsonLiteral -Object $OrderedObject, $OrderedObject -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -275,9 +298,13 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array' {
         $FromJson[1].PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson[0].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[1].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[0].EmptyList | Should -be ''
+        $FromJson[1].EmptyList | Should -be ''
     }
     It 'Hashtable Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $HashTableObject, $HashTableObject
+        $Json = ConvertTo-JsonLiteral -Object $HashTableObject, $HashTableObject -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -297,12 +324,16 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array' {
         $FromJson[1].PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson[0].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[1].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[0].EmptyList | Should -be ''
+        $FromJson[1].EmptyList | Should -be ''
     }
 }
 
 Describe -Name 'Testing ConvertTo-JsonLiteral Array Pipeline' {
     It 'PSCustomObject Conversion' {
-        $Json = $PSCustomObject, $PSCustomObject | ConvertTo-JsonLiteral
+        $Json = $PSCustomObject, $PSCustomObject | ConvertTo-JsonLiteral -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -322,9 +353,13 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array Pipeline' {
         $FromJson[1].PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson[0].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[1].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[0].EmptyList | Should -be ''
+        $FromJson[1].EmptyList | Should -be ''
     }
     It 'Ordered Dictionary Conversion' {
-        $Json = $OrderedObject, $OrderedObject | ConvertTo-JsonLiteral
+        $Json = $OrderedObject, $OrderedObject | ConvertTo-JsonLiteral -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -344,9 +379,13 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array Pipeline' {
         $FromJson[1].PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson[0].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[1].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[0].EmptyList | Should -be ''
+        $FromJson[1].EmptyList | Should -be ''
     }
     It 'Hashtable Conversion' {
-        $Json = $HashTableObject, $HashTableObject | ConvertTo-JsonLiteral
+        $Json = $HashTableObject, $HashTableObject | ConvertTo-JsonLiteral -NumberAsString -BoolAsString
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -366,11 +405,15 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array Pipeline' {
         $FromJson[1].PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson[0].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[1].EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson[0].EmptyList | Should -be ''
+        $FromJson[1].EmptyList | Should -be ''
     }
 }
 Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
     It 'PSCustomObject Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject -NumberAsNumber -BoolAsBool
+        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be 1
         $FromJson.Bool | Should -Be $false
@@ -383,9 +426,11 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
     It 'Ordered Dictionary Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $OrderedObject -NumberAsNumber -BoolAsBool
+        $Json = ConvertTo-JsonLiteral -Object $OrderedObject
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be 1
         $FromJson.Bool | Should -Be $false
@@ -398,9 +443,11 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
     It 'Hashtable Conversion' {
-        $Json = ConvertTo-JsonLiteral -Object $HashTableObject -NumberAsNumber -BoolAsBool
+        $Json = ConvertTo-JsonLiteral -Object $HashTableObject
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be 1
         $FromJson.Bool | Should -Be $false
@@ -413,6 +460,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -be ''
     }
 }
 Describe -Name 'Testing ConvertTo-JsonLiteral string type' {
@@ -443,24 +492,30 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Depth 5' {
 }
 Describe -Name 'Testing ConvertTo-JsonLiteral Depth 1' {
     It 'PSCustomObject Conversion' {
-        $Converted = $PSCustomObject | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
+        $Converted = $PSCustomObject | ConvertTo-JsonLiteral -Depth 1 -NumberAsString -BoolAsString | ConvertFrom-Json
         $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -Not -Be 'oops'
         $Converted.HashTable.OrderedDictionary = "System.Collections.Specialized.OrderedDictionary"
         $Converted.HashTable.NumberAgain = "2"
-        $Converted.HashTable.Array | Should -Be "System.Object[]"
+        $Converted.HashTable.Array | Should -Be "C:\Users\1Password.exe C:\Users\Ooops.exe \\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe \\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $Converted.EmptyArray | Should -Be @()
+        $Converted.EmptyList | Should -Be @()
     }
     It 'Ordered Conversion' {
-        $Converted = $OrderedObject | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
+        $Converted = $OrderedObject | ConvertTo-JsonLiteral -Depth 1 -NumberAsString -BoolAsString | ConvertFrom-Json
         $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -Not -Be 'oops'
         $Converted.HashTable.OrderedDictionary = "System.Collections.Specialized.OrderedDictionary"
         $Converted.HashTable.NumberAgain = "2"
-        $Converted.HashTable.Array | Should -Be "System.Object[]"
+        $Converted.HashTable.Array | Should -Be "C:\Users\1Password.exe C:\Users\Ooops.exe \\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe \\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $Converted.EmptyArray | Should -Be @()
+        $Converted.EmptyList | Should -Be @()
     }
     It 'HashTable Conversion' {
-        $Converted = $HashTableObject | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
+        $Converted = $HashTableObject | ConvertTo-JsonLiteral -Depth 1 -NumberAsString -BoolAsString | ConvertFrom-Json
         $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -Not -Be 'oops'
         $Converted.HashTable.OrderedDictionary = "System.Collections.Specialized.OrderedDictionary"
         $Converted.HashTable.NumberAgain = "2"
-        $Converted.HashTable.Array | Should -Be "System.Object[]"
+        $Converted.HashTable.Array | Should -Be "C:\Users\1Password.exe C:\Users\Ooops.exe \\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe \\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $Converted.EmptyArray | Should -Be @()
+        $Converted.EmptyList | Should -Be @()
     }
 }
