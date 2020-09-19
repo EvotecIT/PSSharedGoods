@@ -43,9 +43,10 @@
             $Value.ToString().ToLower()
         }
     } elseif ($Value -is [System.Collections.IDictionary]) {
-        if ($Depth -eq 0) {
+        if ($MaxDepth -eq 0 -or $Depth -eq $MaxDepth) {
             "`"$($Value.ToString())`""
         } else {
+            $Depth++
             $null = $TextBuilder.AppendLine("{")
             for ($i = 0; $i -lt ($Value.Keys).Count; $i++) {
                 $Property = ([string[]]$Value.Keys)[$i]
@@ -59,7 +60,7 @@
             $null = $TextBuilder.Append("}")
         }
     } elseif ($Value -is [System.Collections.IList]) {
-        if ($Depth -eq 0) {
+        if ($MaxDepth -eq 0 -or $Depth -eq $MaxDepth) {
             "`"$($Value.ToString())`""
         } else {
             $CountInternalObjects = 0

@@ -23,34 +23,35 @@ $Test = [PSCustomObject] @{
     PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
 }
 $Test, $Test, $Test | ConvertTo-JsonLiteral | ConvertFrom-Json | Format-Table
+[string] | ConvertTo-JsonLiteral | ConvertFrom-Json | Format-Table
 #>
 
-[string] | ConvertTo-JsonLiteral | ConvertFrom-Json | Format-Table
-<#
-#>
 Clear-Host
 $Test = [PSCustomObject] @{
-    <#
-    Test  = 1
-    Test1 = $false
-    Test2 = @(
+    Number    = 1
+    Bool      = $false
+    Array     = @(
         'C:\Users\1Password.exe'
         "C:\Users\Ooops.exe"
         "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     )
-    #>
-
-    Test1 = @{
-        Test2 = 2
-        Test3 = [ordered] @{
-            Test4 = 'test'
-            Test5 = @{
-                Test6 = "oops"
+    HashTable = @{
+        NumberAgain       = 2
+        OrderedDictionary = [ordered] @{
+            String    = 'test'
+            HashTable = @{
+                StringAgain = "oops"
             }
         }
+        Array             = @(
+            'C:\Users\1Password.exe'
+            "C:\Users\Ooops.exe"
+            "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+            "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        )
     }
 }
-$Test | ConvertTo-JsonLiteral -Depth 1
-#$Converted = $Test | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
-#$Converted | Format-Table
+$Test | ConvertTo-JsonLiteral -Depth 0
+$Converted = $Test | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
+$Converted

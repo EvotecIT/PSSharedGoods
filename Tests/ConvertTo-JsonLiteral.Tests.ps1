@@ -1,25 +1,156 @@
-﻿Describe -Name 'Testing ConvertTo-JsonLiteral' {
-    It 'PSCustomObject Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [PSCustomObject] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object
-        $FromJson = $Json | ConvertFrom-Json
+﻿Import-Module .\PSSharedGoods.psd1 -Force
 
+Enum Fruit{
+    Apple = 29
+    Pear = 30
+    Kiwi = 31
+}
+$DateTime = Get-Date
+$PSCustomObject = [PSCustomObject] @{
+    Int                    = '1'
+    Bool                   = $false
+    Date                   = $DateTime
+    Enum                   = [Fruit]::Kiwi
+    String                 = 'This a test, or maybe not;'
+    NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
+    Quotes                 = 'OIo*`*sd"`'
+    PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
+    PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+    PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+    PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+    HashTable              = @{
+        NumberAgain       = 2
+        OrderedDictionary = [ordered] @{
+            String    = 'test'
+            HashTable = @{
+                StringAgain = "oops"
+            }
+        }
+        Array             = @(
+            'C:\Users\1Password.exe'
+            "C:\Users\Ooops.exe"
+            "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+            "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        )
+    }
+    OrderedDictionary      = [ordered] @{
+        NumberAgain       = 2
+        OrderedDictionary = [ordered] @{
+            String    = 'test'
+            HashTable = @{
+                StringAgain = "oops"
+            }
+        }
+        Array             = @(
+            'C:\Users\1Password.exe'
+            "C:\Users\Ooops.exe"
+            "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+            "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        )
+    }
+}
+
+$HashTableObject = @{
+    Int                    = '1'
+    Bool                   = $false
+    Date                   = $DateTime
+    Enum                   = [Fruit]::Kiwi
+    String                 = 'This a test, or maybe not;'
+    NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
+    Quotes                 = 'OIo*`*sd"`'
+    PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
+    PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+    PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+    PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+    HashTable              = @{
+        NumberAgain       = 2
+        OrderedDictionary = [ordered] @{
+            String    = 'test'
+            HashTable = @{
+                StringAgain = "oops"
+            }
+        }
+        Array             = @(
+            'C:\Users\1Password.exe'
+            "C:\Users\Ooops.exe"
+            "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+            "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        )
+    }
+    OrderedDictionary      = [ordered] @{
+        NumberAgain       = 2
+        OrderedDictionary = [ordered] @{
+            String    = 'test'
+            HashTable = @{
+                StringAgain = "oops"
+            }
+        }
+        Array             = @(
+            'C:\Users\1Password.exe'
+            "C:\Users\Ooops.exe"
+            "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+            "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        )
+    }
+}
+
+$OrderedObject = [ordered] @{
+    Int                    = '1'
+    Bool                   = $false
+    Date                   = $DateTime
+    Enum                   = [Fruit]::Kiwi
+    String                 = 'This a test, or maybe not;'
+    NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
+    Quotes                 = 'OIo*`*sd"`'
+    PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
+    PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+    PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+    PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+    HashTable              = @{
+        NumberAgain       = 2
+        OrderedDictionary = [ordered] @{
+            String    = 'test'
+            HashTable = @{
+                StringAgain = "oops"
+            }
+        }
+        Array             = @(
+            'C:\Users\1Password.exe'
+            "C:\Users\Ooops.exe"
+            "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+            "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        )
+    }
+    OrderedDictionary      = [ordered] @{
+        NumberAgain       = 2
+        OrderedDictionary = [ordered] @{
+            String    = 'test'
+            HashTable = @{
+                StringAgain = "oops"
+            }
+        }
+        Array             = @(
+            'C:\Users\1Password.exe'
+            "C:\Users\Ooops.exe"
+            "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+            "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        )
+    }
+}
+
+$PSDefaultParameterValues = @{
+    "It:TestCases" = @{
+        PSCustomObject  = $PSCustomObject
+        OrderedObject   = $OrderedObject
+        HashTableObject = $HashTableObject
+        DateTime        = $DateTime
+    }
+}
+
+Describe -Name 'Testing ConvertTo-JsonLiteral' {
+    It 'PSCustomObject Conversion' {
+        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject
+        $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
@@ -31,26 +162,8 @@
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Ordered Dictionary Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [ordered] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object
+        $Json = ConvertTo-JsonLiteral -Object $OrderedObject
         $FromJson = $Json | ConvertFrom-Json
-
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
@@ -62,24 +175,7 @@
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Hashtable Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object
+        $Json = ConvertTo-JsonLiteral -Object $HashTableObject
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
@@ -95,26 +191,8 @@
 
 Describe -Name 'Testing ConvertTo-JsonLiteral Pipeline' {
     It 'PSCustomObject Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [PSCustomObject] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = $Object | ConvertTo-JsonLiteral
+        $Json = $PSCustomObject | ConvertTo-JsonLiteral
         $FromJson = $Json | ConvertFrom-Json
-
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
@@ -126,26 +204,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Pipeline' {
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Ordered Dictionary Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [ordered] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = $Object | ConvertTo-JsonLiteral
+        $Json = $OrderedObject | ConvertTo-JsonLiteral
         $FromJson = $Json | ConvertFrom-Json
-
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
@@ -157,24 +217,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Pipeline' {
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Hashtable Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = $Object | ConvertTo-JsonLiteral
+        $Json = $HashTableObject | ConvertTo-JsonLiteral
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be '1'
         $FromJson.Bool | Should -Be 'False'
@@ -190,24 +233,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Pipeline' {
 
 Describe -Name 'Testing ConvertTo-JsonLiteral Array' {
     It 'PSCustomObject Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [PSCustomObject] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object, $Object
+        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject, $PSCustomObject
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -229,24 +255,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array' {
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Ordered Dictionary Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [ordered] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object, $Object
+        $Json = ConvertTo-JsonLiteral -Object $OrderedObject, $OrderedObject
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -268,24 +277,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array' {
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Hashtable Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object, $Object
+        $Json = ConvertTo-JsonLiteral -Object $HashTableObject, $HashTableObject
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -310,24 +302,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array' {
 
 Describe -Name 'Testing ConvertTo-JsonLiteral Array Pipeline' {
     It 'PSCustomObject Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [PSCustomObject] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = $Object, $Object | ConvertTo-JsonLiteral
+        $Json = $PSCustomObject, $PSCustomObject | ConvertTo-JsonLiteral
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -349,24 +324,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array Pipeline' {
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Ordered Dictionary Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [ordered] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = $Object, $Object | ConvertTo-JsonLiteral
+        $Json = $OrderedObject, $OrderedObject | ConvertTo-JsonLiteral
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -388,24 +346,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array Pipeline' {
         $FromJson[1].PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Hashtable Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = $Object, $Object | ConvertTo-JsonLiteral
+        $Json = $HashTableObject, $HashTableObject | ConvertTo-JsonLiteral
         $FromJson = $Json | ConvertFrom-Json
         $FromJson[0].Int | Should -Be '1'
         $FromJson[0].Bool | Should -Be 'False'
@@ -429,28 +370,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Array Pipeline' {
 }
 Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
     It 'PSCustomObject Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [PSCustomObject] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
-            Quotes                 = 'OIo*`*sd"`'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object -NumberAsNumber -BoolAsBool
+        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject -NumberAsNumber -BoolAsBool
         $FromJson = $Json | ConvertFrom-Json
-
         $FromJson.Int | Should -Be 1
         $FromJson.Bool | Should -Be $false
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
@@ -464,28 +385,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Ordered Dictionary Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = [ordered] @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
-            Quotes                 = 'OIo*`*sd"`'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object -NumberAsNumber -BoolAsBool
+        $Json = ConvertTo-JsonLiteral -Object $OrderedObject -NumberAsNumber -BoolAsBool
         $FromJson = $Json | ConvertFrom-Json
-
         $FromJson.Int | Should -Be 1
         $FromJson.Bool | Should -Be $false
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
@@ -499,26 +400,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     }
     It 'Hashtable Conversion' {
-        Enum Fruit{
-            Apple = 29
-            Pear = 30
-            Kiwi = 31
-        }
-        $DateTime = Get-Date
-        $Object = @{
-            Int                    = '1'
-            Bool                   = $false
-            Date                   = $DateTime
-            Enum                   = [Fruit]::Kiwi
-            String                 = 'This a test, or maybe not;'
-            NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
-            Quotes                 = 'OIo*`*sd"`'
-            PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
-            PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
-            PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
-        }
-        $Json = ConvertTo-JsonLiteral -Object $Object -NumberAsNumber -BoolAsBool
+        $Json = ConvertTo-JsonLiteral -Object $HashTableObject -NumberAsNumber -BoolAsBool
         $FromJson = $Json | ConvertFrom-Json
         $FromJson.Int | Should -Be 1
         $FromJson.Bool | Should -Be $false
@@ -539,5 +421,46 @@ Describe -Name 'Testing ConvertTo-JsonLiteral string type' {
         $ConvertedObject = [string] | ConvertTo-JsonLiteral | ConvertFrom-Json
         $ConvertedObject.Module | Should -Be 'CommonLanguageRuntimeLibrary'
         $ConvertedObject.Namespace | Should -Be 'System'
+    }
+}
+
+Describe -Name 'Testing ConvertTo-JsonLiteral Depth 5' {
+    It 'PSCustomObject Conversion' {
+        $Converted = $PSCustomObject | ConvertTo-JsonLiteral -Depth 5 | ConvertFrom-Json
+        $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -be 'oops'
+        $Converted.HashTable.Array[1] | Should -Be "C:\Users\Ooops.exe"
+    }
+    It 'Ordered Conversion' {
+        $Converted = $OrderedObject | ConvertTo-JsonLiteral -Depth 5 | ConvertFrom-Json
+        $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -be 'oops'
+        $Converted.HashTable.Array[1] | Should -Be "C:\Users\Ooops.exe"
+    }
+    It 'HashTable Conversion' {
+        $Converted = $HashTableObject | ConvertTo-JsonLiteral -Depth 5 | ConvertFrom-Json
+        $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -be 'oops'
+        $Converted.HashTable.Array[1] | Should -Be "C:\Users\Ooops.exe"
+    }
+}
+Describe -Name 'Testing ConvertTo-JsonLiteral Depth 1' {
+    It 'PSCustomObject Conversion' {
+        $Converted = $PSCustomObject | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
+        $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -Not -Be 'oops'
+        $Converted.HashTable.OrderedDictionary = "System.Collections.Specialized.OrderedDictionary"
+        $Converted.HashTable.NumberAgain = "2"
+        $Converted.HashTable.Array | Should -Be "System.Object[]"
+    }
+    It 'Ordered Conversion' {
+        $Converted = $OrderedObject | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
+        $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -Not -Be 'oops'
+        $Converted.HashTable.OrderedDictionary = "System.Collections.Specialized.OrderedDictionary"
+        $Converted.HashTable.NumberAgain = "2"
+        $Converted.HashTable.Array | Should -Be "System.Object[]"
+    }
+    It 'HashTable Conversion' {
+        $Converted = $HashTableObject | ConvertTo-JsonLiteral -Depth 1 | ConvertFrom-Json
+        $Converted.HashTable.OrderedDictionary.HashTable.StringAgain | Should -Not -Be 'oops'
+        $Converted.HashTable.OrderedDictionary = "System.Collections.Specialized.OrderedDictionary"
+        $Converted.HashTable.NumberAgain = "2"
+        $Converted.HashTable.Array | Should -Be "System.Object[]"
     }
 }

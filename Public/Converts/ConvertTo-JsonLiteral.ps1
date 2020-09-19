@@ -18,6 +18,7 @@
                 -or $_ -is [float] -or $_ -is [double] -or $_ -is [decimal]
         }
         [int] $MaxDepth = $Depth
+        [int] $InitialDepth = 0
     }
     Process {
         for ($a = 0; $a -lt $Object.Count; $a++) {
@@ -32,7 +33,7 @@
                     for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
                         $Property = ([string[]]$Object[$a].Keys)[$i]
                         $null = $TextBuilder.Append("`"$Property`":")
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$Property]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$Property]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
                         $null = $TextBuilder.Append("$Value")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
                             $null = $TextBuilder.AppendLine(',')
@@ -47,7 +48,7 @@
                         $Property = ([string[]]$Object[$a].Keys)[$i]
 
                         $null = $TextBuilder.Append("`"$Property`":")
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
                         $null = $TextBuilder.Append("$Value")
                         $null = $TextBuilder.Append("}")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
@@ -58,7 +59,7 @@
                 }
 
             } elseif ($Object[$a].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
-                $Value = ConvertTo-StringByType -Value $($Object[$a]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
+                $Value = ConvertTo-StringByType -Value $($Object[$a]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
                 #$null = $TextBuilder.Append("`"$($Object[$a].ToString())`"")
                 $null = $TextBuilder.Append($Value)
             } else {
@@ -66,7 +67,7 @@
                 for ($i = 0; $i -lt ($Object[$a].PSObject.Properties.Name).Count; $i++) {
                     $Property = ([string[]] $($Object[$a].PSObject.Properties.Name))[$i]
                     $null = $TextBuilder.Append("`"$Property`":")
-                    $Value = ConvertTo-StringByType -Value $($Object[$a].$Property) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $MaxDepth -MaxDepth $Depth -TextBuilder $TextBuilder
+                    $Value = ConvertTo-StringByType -Value $($Object[$a].$Property) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
                     # Push to Text
                     $null = $TextBuilder.Append("$Value")
                     if ($i -ne ($Object[$a].PSObject.Properties.Name).Count - 1) {
@@ -75,6 +76,7 @@
                 }
                 $null = $TextBuilder.Append("}")
             }
+            $InitialDepth = 0
         }
     }
     End {
