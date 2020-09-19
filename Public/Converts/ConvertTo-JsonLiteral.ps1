@@ -12,12 +12,12 @@
     Begin {
         $TextBuilder = [System.Text.StringBuilder]::new()
         $CountObjects = 0
-
         filter IsNumeric() {
             return $_ -is [byte] -or $_ -is [int16] -or $_ -is [int32] -or $_ -is [int64]  `
                 -or $_ -is [sbyte] -or $_ -is [uint16] -or $_ -is [uint32] -or $_ -is [uint64] `
                 -or $_ -is [float] -or $_ -is [double] -or $_ -is [decimal]
         }
+        [int] $MaxDepth = $Depth
     }
     Process {
         for ($a = 0; $a -lt $Object.Count; $a++) {
@@ -31,9 +31,9 @@
                     $null = $TextBuilder.AppendLine("{")
                     for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
                         $Property = ([string[]]$Object[$a].Keys)[$i]
-
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$Property]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth
-                        $null = $TextBuilder.Append("`"$Property`":$Value")
+                        $null = $TextBuilder.Append("`"$Property`":")
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$Property]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
+                        $null = $TextBuilder.Append("$Value")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
                             $null = $TextBuilder.AppendLine(',')
                         }
@@ -46,8 +46,9 @@
                         $null = $TextBuilder.AppendLine("{")
                         $Property = ([string[]]$Object[$a].Keys)[$i]
 
-                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth
-                        $null = $TextBuilder.Append("`"$Property`":$Value")
+                        $null = $TextBuilder.Append("`"$Property`":")
+                        $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
+                        $null = $TextBuilder.Append("$Value")
                         $null = $TextBuilder.Append("}")
                         if ($i -ne ($Object[$a].Keys).Count - 1) {
                             $null = $TextBuilder.AppendLine(',')
@@ -57,17 +58,17 @@
                 }
 
             } elseif ($Object[$a].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
-                $Value = ConvertTo-StringByType -Value $($Object[$a]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth
+                $Value = ConvertTo-StringByType -Value $($Object[$a]) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
                 #$null = $TextBuilder.Append("`"$($Object[$a].ToString())`"")
                 $null = $TextBuilder.Append($Value)
             } else {
                 $null = $TextBuilder.AppendLine("{")
                 for ($i = 0; $i -lt ($Object[$a].PSObject.Properties.Name).Count; $i++) {
-                    $Property = $($Object[$a].PSObject.Properties.Name)[$i]
-
-                    $Value = ConvertTo-StringByType -Value $($Object[$a].$Property) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $Depth
+                    $Property = ([string[]] $($Object[$a].PSObject.Properties.Name))[$i]
+                    $null = $TextBuilder.Append("`"$Property`":")
+                    $Value = ConvertTo-StringByType -Value $($Object[$a].$Property) -DateTimeFormat $DateTimeFormat -NumberAsNumber:$NumberAsNumber -BoolAsBool:$BoolAsBool -Depth $MaxDepth -MaxDepth $Depth -TextBuilder $TextBuilder
                     # Push to Text
-                    $null = $TextBuilder.Append("`"$Property`":$Value")
+                    $null = $TextBuilder.Append("$Value")
                     if ($i -ne ($Object[$a].PSObject.Properties.Name).Count - 1) {
                         $null = $TextBuilder.AppendLine(',')
                     }

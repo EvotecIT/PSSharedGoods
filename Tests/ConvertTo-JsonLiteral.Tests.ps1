@@ -441,6 +441,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
             Date                   = $DateTime
             Enum                   = [Fruit]::Kiwi
             String                 = 'This a test, or maybe not;'
+            NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
+            Quotes                 = 'OIo*`*sd"`'
             PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
             PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
             PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
@@ -454,6 +456,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
         $FromJson.Enum | Should -Be 'Kiwi'
         $FromJson.String | Should -Be 'This a test, or maybe not;'
+        $FromJson.NewLine | Should -Be ( -join ('Test,', [System.Environment]::NewLine, 'test2'))
+        $FromJson.Quotes | Should -Be 'OIo*`*sd"`'
         $FromJson.PathWithoutSpaces | Should -Be 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
@@ -472,6 +476,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
             Date                   = $DateTime
             Enum                   = [Fruit]::Kiwi
             String                 = 'This a test, or maybe not;'
+            NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
+            Quotes                 = 'OIo*`*sd"`'
             PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
             PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
             PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
@@ -485,6 +491,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
         $FromJson.Enum | Should -Be 'Kiwi'
         $FromJson.String | Should -Be 'This a test, or maybe not;'
+        $FromJson.NewLine | Should -Be ( -join ('Test,', [System.Environment]::NewLine, 'test2'))
+        $FromJson.Quotes | Should -Be 'OIo*`*sd"`'
         $FromJson.PathWithoutSpaces | Should -Be 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
@@ -503,6 +511,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
             Date                   = $DateTime
             Enum                   = [Fruit]::Kiwi
             String                 = 'This a test, or maybe not;'
+            NewLine                = 'Test,' + [System.Environment]::NewLine + 'test2'
+            Quotes                 = 'OIo*`*sd"`'
             PathWithoutSpaces      = 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
             PathWithSpaces         = "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
             PathWithNetwork        = "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
@@ -515,6 +525,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral (bool as bool/number as number)' {
         $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
         $FromJson.Enum | Should -Be 'Kiwi'
         $FromJson.String | Should -Be 'This a test, or maybe not;'
+        $FromJson.NewLine | Should -Be ( -join ('Test,', [System.Environment]::NewLine, 'test2'))
+        $FromJson.Quotes | Should -Be 'OIo*`*sd"`'
         $FromJson.PathWithoutSpaces | Should -Be 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
         $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
