@@ -31,6 +31,11 @@ $Identity = @(
     'EVOTEC\Domain Admins'
     'EVOTECPL\Domain Admins'
     'Test\Domain Admins'
+    'EVOTECPL\Backup Operators' # this will not return anything, in Get-WinADObject we solve it using different method
+    'EVOTECPL\Print Operators' # this will not return anything, in Get-WinADObject we solve it using different method
+    'EVOTEC\Print Operators' # this will not return anything, in Get-WinADObject we solve it using different method
+    'Print Operators' # this will not return anything, in Get-WinADObject we solve it using different method
+    'S-1-5-32-550'
     'CN=S-1-5-21-1928204107-2710010574-1926425344-512,CN=ForeignSecurityPrincipals,DC=ad,DC=evotec,DC=xyz' # Valid
     'CN=S-1-5-21-1928204107-2710010574-512,CN=ForeignSecurityPrincipals,DC=ad,DC=evotec,DC=xyz' # not valid
     'CN=S-1-5-21-1928204107-2710010574-1926425344-512,CN=ForeignSecurityPrincipals,DC=ad,DC=evotec,DC=xyz' # cached
