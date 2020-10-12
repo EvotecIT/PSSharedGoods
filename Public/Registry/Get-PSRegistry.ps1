@@ -45,7 +45,7 @@
         # Fix regkey if used with :
         If ($Registry -like '*:*') {
             foreach ($Key in $Dictionary.Keys) {
-                if ($Registry.StartsWith($Key)) {
+                if ($Registry.StartsWith($Key, [System.StringComparison]::CurrentCultureIgnoreCase)) {
                     $Registry = $Registry -replace $Key, $Dictionary[$Key]
                     break
                 }
@@ -55,7 +55,7 @@
         for ($ComputerSplit = 0; $ComputerSplit -lt $Computers.Count; $ComputerSplit++) {
             if ($Computers[$ComputerSplit].Count -gt 0) {
                 $Arguments = foreach ($_ in $RootKeyDictionary.Keys) {
-                    if ($Registry.StartsWith($_)) {
+                    if ($Registry.StartsWith($_, [System.StringComparison]::CurrentCultureIgnoreCase)) {
                         $RootKey = [uint32] $RootKeyDictionary[$_]
                         @{
                             hDefKey     = [uint32] $RootKeyDictionary[$_]

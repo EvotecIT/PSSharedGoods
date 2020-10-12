@@ -6,7 +6,7 @@
         [Parameter(Mandatory)][ValidateSet('REG_SZ', 'REG_EXPAND_SZ', 'REG_BINARY', 'REG_DWORD', 'REG_MULTI_SZ', 'REG_QWORD')][string] $Type,
         [Parameter(Mandatory)][string] $Key,
         [Parameter(Mandatory)][object] $Value
-       # [switch] $Force
+        # [switch] $Force
     )
     #if ($null -eq $Value -and $Force -eq $false) {
     #    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $($ComputerName -join ', ') was terminated. Value is null."
@@ -41,7 +41,7 @@
     }
     $MethodName = $TypesDictionary["$($Type)"]
     $Arguments = foreach ($_ in $RootKeyDictionary.Keys) {
-        if ($RegistryPath.StartsWith($_)) {
+        if ($RegistryPath.StartsWith($_, [System.StringComparison]::CurrentCultureIgnoreCase)) {
             $RootKey = [uint32] $RootKeyDictionary[$_]
             $RegistryValue = @{
                 hDefKey     = [uint32] $RootKeyDictionary[$_]

@@ -1,8 +1,13 @@
-function Get-ComputerServices {
+function Get-ComputerService {
+    [alias('Get-ComputerServices')]
     [CmdletBinding()]
     param(
-        [string] $ComputerName = $Env:COMPUTERNAME
+        [string[]] $ComputerName = $Env:COMPUTERNAME
     )
-    $Services = Get-PSService -ComputerName $ComputerName | Select-Object Name, Displayname, Status
-    return $Services
+    Process {
+        foreach ($Computer in $ComputerName) {
+            $Services = Get-PSService -ComputerName $Computer | Select-Object ComputerName, Name, Displayname, Status, StartType
+            $Services
+        }
+    }
 }

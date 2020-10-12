@@ -12,25 +12,15 @@
         $LocalComputerDNSName = $Env:COMPUTERNAME
     }
     $ComputersLocal = $null
-    [Array] $Computers = foreach ($_ in $ComputerName) {
-        if ($_ -eq '' -or $null -eq $_) {
-            $_ = $Env:COMPUTERNAME
+    [Array] $Computers = foreach ($Computer in $ComputerName) {
+        if ($Computer -eq '' -or $null -eq $Computer) {
+            $Computer = $Env:COMPUTERNAME
         }
-        if ($_ -ne $Env:COMPUTERNAME -and $_ -ne $LocalComputerDNSName) {
-            $_
+        if ($Computer -ne $Env:COMPUTERNAME -and $Computer -ne $LocalComputerDNSName) {
+            $Computer
         } else {
-            $ComputersLocal = $_
+            $ComputersLocal = $Computer
         }
     }
-    #[Array] $ComputersLocal = foreach ($_ in $ComputerName) {
-    #    if ($_ -eq $Env:COMPUTERNAME -or $_ -eq $LocalComputerDNSName) {
-    #        $_
-    #    }
-    #}
     , @($ComputersLocal, $Computers)
 }
-
-#$T = Get-ComputerSplit -ComputerName $Env:COMPUTERNAME, 'EVOWin','AD1'
-#$T
-#$T[0]
-#$T[1]

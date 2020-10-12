@@ -40,16 +40,16 @@ function Get-PSService {
             if ($Verbose) { $verbosepreference = 'continue' }
             try {
                 if ($ServiceName -eq '') {
-                    Write-Verbose "Get-Service - [i] Processing $Computer for all services"
+                    Write-Verbose "Get-PSService - [i] Processing $Computer for all services"
                     $GetServices = Get-Service -ComputerName $Computer -ErrorAction Stop
 
                 } else {
-                    Write-Verbose "Get-Service - [i] Processing $Computer with $ServiceName"
+                    Write-Verbose "Get-PSService - [i] Processing $Computer with $ServiceName"
                     $GetServices = Get-Service -ComputerName $Computer -ServiceName $ServiceName -ErrorAction Stop
                 }
             } catch {
-                [PsCustomObject][ordered] @{
-                    Computer       = $Computer
+                [PsCustomObject] @{
+                    ComputerName   = $Computer
                     Status         = 'N/A'
                     Name           = $ServiceName
                     ServiceType    = 'N/A'
@@ -61,8 +61,8 @@ function Get-PSService {
             }
             foreach ($GetService in $GetServices) {
                 if ($GetService) {
-                    [PsCustomObject][ordered] @{
-                        Computer       = $Computer
+                    [PsCustomObject] @{
+                        ComputerName   = $Computer
                         Status         = $GetService.Status
                         Name           = $GetService.Name
                         ServiceType    = $GetService.ServiceType
@@ -72,8 +72,8 @@ function Get-PSService {
                         Comment        = ''
                     }
                 } else {
-                    [PsCustomObject][ordered] @{
-                        Computer       = $Computer
+                    [PsCustomObject] @{
+                        ComputerName   = $Computer
                         Status         = 'N/A'
                         Name           = $ServiceName
                         ServiceType    = 'N/A'
@@ -85,28 +85,28 @@ function Get-PSService {
                 }
             }
         )
-        Write-Verbose "Get-Service - [i] Processed $Computer with $ServiceName - Time elapsed: $($Measure.Elapsed)"
+        Write-Verbose "Get-PSService - [i] Processed $Computer with $ServiceName - Time elapsed: $($Measure.Elapsed)"
         $Measure.Stop()
         return $ServiceList
     }
 
     if ($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent) { $Verbose = $true } else { $Verbose = $false }
-    Write-Verbose 'Get-Service - Starting parallel processing....'
+    Write-Verbose 'Get-PSService - Starting parallel processing....'
     $ComputersToProcess = ($ComputerName | Measure-Object).Count
     $ServicesToProcess = ($Services | Measure-Object).Count
-    Write-Verbose -Message "Get-Service - Computers to process: $ComputersToProcess"
-    Write-Verbose -Message "Get-Service - Computers List: $($ComputerName -join ', ')"
-    Write-Verbose -Message "Get-Service - Services to process: $ServicesToProcess"
+    Write-Verbose -Message "Get-PSService - Computers to process: $ComputersToProcess"
+    Write-Verbose -Message "Get-PSService - Computers List: $($ComputerName -join ', ')"
+    Write-Verbose -Message "Get-PSService - Services to process: $ServicesToProcess"
     $MeasureTotal = [System.Diagnostics.Stopwatch]::StartNew() # Timer Start
 
     ### Define Runspace START
-    $Pool = New-Runspace -MaxRunspaces $maxRunspaces
+    $Pool = New-Runspace -maxRunspaces $maxRunspaces
     ### Define Runspace END
     $runspaces = @(
         foreach ($Computer in $ComputerName) {
             if ($null -ne $Services) {
                 foreach ($ServiceName in $Services) {
-                    Write-Verbose "Get-Service - Getting service $ServiceName on $Computer"
+                    Write-Verbose "Get-PSService - Getting service $ServiceName on $Computer"
                     # processing runspace start
                     $Parameters = @{
                         Computer    = $Computer
@@ -117,7 +117,7 @@ function Get-PSService {
                     # processing runspace end
                 }
             } else {
-                Write-Verbose "Get-Service - Getting all services on $Computer"
+                Write-Verbose "Get-PSService - Getting all services on $Computer"
                 $Parameters = @{
                     Computer    = $Computer
                     ServiceName = ''
@@ -131,7 +131,7 @@ function Get-PSService {
     $List = Stop-Runspace -Runspaces $runspaces -FunctionName 'Get-Service' -RunspacePool $Pool
     ### End Runspaces END
     $MeasureTotal.Stop()
-    Write-Verbose "Get-Service - Ending....$($measureTotal.Elapsed)"
+    Write-Verbose "Get-PSService - Ending....$($measureTotal.Elapsed)"
 
     return $List
 }
