@@ -31,7 +31,7 @@ function Get-CimData {
 
     [CmdletBinding()]
     param(
-        [string] $Class,
+        [parameter(Mandatory)][string] $Class,
         [string] $NameSpace = 'root\cimv2',
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',

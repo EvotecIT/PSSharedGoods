@@ -2,19 +2,19 @@ function Get-ComputerSystem {
     <#
     .SYNOPSIS
     Short description
-    
+
     .DESCRIPTION
     Long description
-    
+
     .PARAMETER ComputerName
     Parameter description
-    
+
     .PARAMETER Protocol
     Parameter description
-    
+
     .PARAMETER All
     Parameter description
-    
+
     .EXAMPLE
     Get-ComputerSystem -ComputerName AD1, AD2, EVO1, ADFFS | ft -a *
 
@@ -26,11 +26,11 @@ function Get-ComputerSystem {
     AD2          AD2  Microsoft Corporation ad.evotec.xyz Virtual Machine x64-based PC Windows User                1         True              60 Normal boot Virtual Machine LM_Workstation, LM_Server, Backup_Domain_Controller, Timesource, NT, DFS
     EVO1         EVO1 MSI                   ad.evotec.xyz MS-7980         x64-based PC                             1         True              60 Normal boot Default string  LM_Workstation, LM_Server, SQLServer, NT, Potential_Browser, Master_Browser
 
-    
+
     .NOTES
     General notes
     #>
-    
+
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
@@ -50,7 +50,7 @@ function Get-ComputerSystem {
         foreach ($Info in $Information) {
             foreach ($Data in $Info) {
                 # # Remember to expand if changing properties above
-                [PSCustomObject] @{ 
+                [PSCustomObject] @{
                     ComputerName     = if ($Data.PSComputerName) { $Data.PSComputerName } else { $Env:COMPUTERNAME }
                     Name             = $Data.Name
                     Manufacturer     = $Data.Manufacturer
@@ -58,7 +58,7 @@ function Get-ComputerSystem {
                     Model            = $Data.Model
                     Systemtype       = $Data.Systemtype
                     PrimaryOwnerName = $Data.PrimaryOwnerName
-                    PCSystemType     = $Data.PCSystemType
+                    PCSystemType     = [Microsoft.PowerShell.Commands.PCSystemType] $Data.PCSystemType
                     PartOfDomain     = $Data.PartOfDomain
                     CurrentTimeZone  = $Data.CurrentTimeZone
                     BootupState      = $Data.BootupState

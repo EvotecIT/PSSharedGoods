@@ -151,7 +151,7 @@ function Send-Email {
             try {
                 $FilePath = $Entry.Value
                 Write-Verbose $FilePath
-                if ($Entry.Value.StartsWith('http')) {
+                if ($Entry.Value.StartsWith('http', [System.StringComparison]::CurrentCultureIgnoreCase)) {
                     $FileName = $Entry.Value.Substring($Entry.Value.LastIndexOf("/") + 1)
                     $FilePath = Join-Path $env:temp $FileName
                     Invoke-WebRequest -Uri $Entry.Value -OutFile $FilePath
