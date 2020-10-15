@@ -528,3 +528,33 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Depth 1' {
         $Converted.EmptyList | Should -Be @()
     }
 }
+Describe -Name 'Testing ConvertTo-JsonLiteral NewLines' {
+    It 'Converts the same way ConvertTo-JSON' {
+        $DataTable3 = @(
+            [PSCustomObject] @{
+                'Test1' = 'Test' + [System.Environment]::NewLine + 'test3';
+                'Test2' = 'Test' + [System.Environment]::NewLine + 'test3' + "`n test"
+                'Test3' = 'Test' + [System.Environment]::NewLine + 'test3' + "`r`n test"
+                'Test4' = 'Test' + [System.Environment]::NewLine + 'test3' + "`r test"
+                'Test5' = 'Test' + "`r`n" + 'test3' + "test"
+                'Test6' = @"
+                Test1
+                Test2
+                Test3
+
+                Test4
+"@
+                'Test7' = 'Test' + "`n`n" + "Oops \n\n"
+            }
+        )
+
+        $Output1 = $DataTable3 | ConvertTo-JsonLiteral | ConvertFrom-Json
+        $Output2 = $DataTable3 | ConvertTo-Json | ConvertFrom-Json
+        $Output1.Test1 | Should -be $Output2.Test1
+        $Output1.Test2 | Should -be $Output2.Test2
+        $Output1.Test3 | Should -be $Output2.Test3
+        $Output1.Test4 | Should -be $Output2.Test4
+        $Output1.Test5 | Should -be $Output2.Test5
+        $Output1.Test6 | Should -be $Output2.Test6
+    }
+}
