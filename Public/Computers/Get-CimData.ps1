@@ -49,11 +49,11 @@ function Get-CimData {
         $Computers = $ComputersSplit[1]
         if ($Computers.Count -gt 0) {
             if ($Protocol = 'Default') {
-                Get-CimInstance -ClassName $Class -ComputerName $Computers -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
+                Get-CimInstance -ClassName $Class -ComputerName $Computers -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
             } else {
                 $Option = New-CimSessionOption -Protocol
                 $Session = New-CimSession -ComputerName $Computers -SessionOption $Option -ErrorAction SilentlyContinue
-                $Info = Get-CimInstance -ClassName $Class -CimSession $Session -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
+                $Info = Get-CimInstance -ClassName $Class -CimSession $Session -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
                 $null = Remove-CimSession -CimSession $Session -ErrorAction SilentlyContinue
                 $Info
             }
@@ -61,7 +61,7 @@ function Get-CimData {
         # Process local computer
         $Computers = $ComputersSplit[0]
         if ($Computers.Count -gt 0) {
-            $Info = Get-CimInstance -ClassName $Class -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
+            $Info = Get-CimInstance -ClassName $Class -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
             $Info | Add-Member -Name 'PSComputerName' -Value $Computers -MemberType NoteProperty -Force
             $Info
         }

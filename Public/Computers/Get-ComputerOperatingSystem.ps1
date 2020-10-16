@@ -26,7 +26,7 @@ function Get-ComputerOperatingSystem {
                     Manufacturer           = $Data.Manufacturer
                     OSArchitecture         = $Data.OSArchitecture
                     OSLanguage             = ConvertFrom-LanguageCode -LanguageCode $Data.OSLanguage
-                    OSProductSuite         = $Data.OSProductSuite
+                    OSProductSuite         = [Microsoft.PowerShell.Commands.OSProductSuite] $($Data.OSProductSuite)
                     InstallDate            = $Data.InstallDate
                     LastBootUpTime         = $Data.LastBootUpTime
                     LocalDateTime          = $Data.LocalDateTime
