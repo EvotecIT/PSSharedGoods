@@ -33,6 +33,14 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.181 - Unreleased
+  - Improvements to `ConvertTo-JsonLiteral`
+  - Rewritten `Get-PSService` to CIM, small change on output parameter
+  - Added `Get-ComputerDevice`
+  - Added `Get-ComputerRAM`
+  - Improved `Get-ComputerBIOS`
+  - Moved `Get-ComputerSplit` to private functions as it shouldn't be used outside
+  - Added `Get-Computer` which is supposed to b
 - 0.0.180 - 2020.09.20
   - Updates to `Convert-Identity`
   - Updated PSD1 to better version

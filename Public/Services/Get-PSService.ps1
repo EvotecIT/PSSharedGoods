@@ -1,137 +1,143 @@
 function Get-PSService {
     <#
     .SYNOPSIS
-    Short description
+    Alternative way to Get-Service
 
     .DESCRIPTION
-    Long description
+    Alternative way to Get-Service which works using CIM queries
 
-    .PARAMETER Computers
-    Parameter description
+    .PARAMETER ComputerName
+    ComputerName(s) to query for services
 
-    .PARAMETER Services
-    Parameter description
+    .PARAMETER Protocol
+    Protocol to use to gather services
 
-    .PARAMETER MaxRunspaces
-    Parameter description
+    .PARAMETER Service
+    Limit output to just few services
+
+    .PARAMETER All
+    Return all data without filtering
+
+    .PARAMETER Extended
+    Return more data
 
     .EXAMPLE
-    Get-PSService -Services 'Dnscache', 'DNS', 'PeerDistSvc', 'WebClient','Netlogon' -Computers 'AD1.AD.EVOTEC.XYZ', 'AD2'
+    Get-PSService -ComputerName AD1, AD2, AD3, AD4 -Service 'Dnscache', 'DNS', 'PeerDistSvc', 'WebClient', 'Netlogon'
+
+    .EXAMPLE
+    Get-PSService -ComputerName AD1, AD2 -Extended
+
+    .EXAMPLE
+    Get-PSService
+
+    .EXAMPLE
+    Get-PSService -Extended
 
     .NOTES
     General notes
     #>
-
-    [cmdletbinding()]
-    param (
+    [cmdletBinding()]
+    param(
         [alias('Computer', 'Computers')][string[]] $ComputerName = $Env:COMPUTERNAME,
-        [alias('Service')][string[]] $Services,
-        [int] $MaxRunspaces = [int]$env:NUMBER_OF_PROCESSORS + 1
+        [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [alias('Services')][string[]] $Service,
+        [switch] $All,
+        [switch] $Extended
     )
-
-    $sbGetService = {
-        Param (
-            [string]$Computer,
-            [string]$ServiceName,
-            [bool] $Verbose
+    [string] $Class = 'win32_service'
+    if ($All) {
+        [string] $Properties = '*'
+    } else {
+        [string[]] $Properties = @(
+            'Name'
+            'Status'
+            'ExitCode'
+            'DesktopInteract'
+            'ErrorControl'
+            'PathName'
+            'ServiceType'
+            'StartMode'
+            'Caption'
+            'Description'
+            #'InstallDate'
+            'Started'
+            'SystemName'
+            'AcceptPause'
+            'AcceptStop'
+            'DisplayName'
+            'ServiceSpecificExitCode'
+            'StartName'
+            'State'
+            'TagId'
+            'CheckPoint'
+            'DelayedAutoStart'
+            'ProcessId'
+            'WaitHint'
+            'PSComputerName'
         )
-        $Measure = [System.Diagnostics.Stopwatch]::StartNew() # Timer Start
-        $ServiceList = @(
-            if ($Verbose) { $verbosepreference = 'continue' }
-            try {
-                if ($ServiceName -eq '') {
-                    Write-Verbose "Get-PSService - [i] Processing $Computer for all services"
-                    $GetServices = Get-Service -ComputerName $Computer -ErrorAction Stop
-
-                } else {
-                    Write-Verbose "Get-PSService - [i] Processing $Computer with $ServiceName"
-                    $GetServices = Get-Service -ComputerName $Computer -ServiceName $ServiceName -ErrorAction Stop
-                }
-            } catch {
-                [PsCustomObject] @{
-                    ComputerName   = $Computer
-                    Status         = 'N/A'
-                    Name           = $ServiceName
-                    ServiceType    = 'N/A'
-                    StartType      = 'N/A'
-                    DisplayName    = 'N/A'
-                    TimeProcessing = $Measure.Elapsed
-                    Comment        = $_.Exception.Message -replace "`n", " " -replace "`r", " "
-                }
-            }
-            foreach ($GetService in $GetServices) {
-                if ($GetService) {
-                    [PsCustomObject] @{
-                        ComputerName   = $Computer
-                        Status         = $GetService.Status
-                        Name           = $GetService.Name
-                        ServiceType    = $GetService.ServiceType
-                        StartType      = $GetService.StartType
-                        DisplayName    = $GetService.DisplayName
-                        TimeProcessing = $Measure.Elapsed
-                        Comment        = ''
-                    }
-                } else {
-                    [PsCustomObject] @{
-                        ComputerName   = $Computer
-                        Status         = 'N/A'
-                        Name           = $ServiceName
-                        ServiceType    = 'N/A'
-                        StartType      = 'N/A'
-                        DisplayName    = 'N/A'
-                        TimeProcessing = $Measure.Elapsed
-                        Comment        = ''
-                    }
-                }
-            }
-        )
-        Write-Verbose "Get-PSService - [i] Processed $Computer with $ServiceName - Time elapsed: $($Measure.Elapsed)"
-        $Measure.Stop()
-        return $ServiceList
     }
-
-    if ($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent) { $Verbose = $true } else { $Verbose = $false }
-    Write-Verbose 'Get-PSService - Starting parallel processing....'
-    $ComputersToProcess = ($ComputerName | Measure-Object).Count
-    $ServicesToProcess = ($Services | Measure-Object).Count
-    Write-Verbose -Message "Get-PSService - Computers to process: $ComputersToProcess"
-    Write-Verbose -Message "Get-PSService - Computers List: $($ComputerName -join ', ')"
-    Write-Verbose -Message "Get-PSService - Services to process: $ServicesToProcess"
-    $MeasureTotal = [System.Diagnostics.Stopwatch]::StartNew() # Timer Start
-
-    ### Define Runspace START
-    $Pool = New-Runspace -maxRunspaces $maxRunspaces
-    ### Define Runspace END
-    $runspaces = @(
-        foreach ($Computer in $ComputerName) {
-            if ($null -ne $Services) {
-                foreach ($ServiceName in $Services) {
-                    Write-Verbose "Get-PSService - Getting service $ServiceName on $Computer"
-                    # processing runspace start
-                    $Parameters = @{
-                        Computer    = $Computer
-                        ServiceName = $ServiceName
-                        Verbose     = $Verbose
-                    }
-                    Start-Runspace -ScriptBlock $sbGetService -Parameters $Parameters -RunspacePool $Pool
-                    # processing runspace end
+    # instead of looping multiple times we create cache for services
+    if ($Service) {
+        $CachedServices = @{}
+        foreach ($S in $Service) {
+            $CachedServices[$S] = $true
+        }
+    }
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    if ($All) {
+        if ($Service) {
+            foreach ($Entry in $Information) {
+                if ($CachedServices[$Entry.Name]) {
+                    $Entry
                 }
+            }
+        } else {
+            $Information
+        }
+    } else {
+        foreach ($Data in $Information) {
+            # # Remember to expand if changing properties above
+            if ($Service) {
+                if (-not $CachedServices[$Data.Name]) {
+                    continue
+                }
+            }
+            $OutputService = [ordered] @{
+                ComputerName = if ($Data.PSComputerName) { $Data.PSComputerName } else { $Env:COMPUTERNAME }
+                Status       = $Data.State
+                Name         = $Data.Name
+                ServiceType  = $Data.ServiceType
+                StartType    = $Data.StartMode
+                DisplayName  = $Data.DisplayName
+            }
+            if ($Extended) {
+                $OutputServiceExtended = [ordered] @{
+                    StatusOther             = $Data.Status
+                    ExitCode                = $Data.ExitCode
+                    DesktopInteract         = $Data.DesktopInteract
+                    ErrorControl            = $Data.ErrorControl
+                    PathName                = $Data.PathName
+                    Caption                 = $Data.Caption
+                    Description             = $Data.Description
+                    #InstallDate             = $Data.InstallDate
+                    Started                 = $Data.Started
+                    SystemName              = $Data.SystemName
+                    AcceptPause             = $Data.AcceptPause
+                    AcceptStop              = $Data.AcceptStop
+                    ServiceSpecificExitCode = $Data.ServiceSpecificExitCode
+                    StartName               = $Data.StartName
+                    #State                   = $Data.State
+                    TagId                   = $Data.TagId
+                    CheckPoint              = $Data.CheckPoint
+                    DelayedAutoStart        = $Data.DelayedAutoStart
+                    ProcessId               = $Data.ProcessId
+                    WaitHint                = $Data.WaitHint
+                }
+                [PSCustomObject] ($OutputService + $OutputServiceExtended)
             } else {
-                Write-Verbose "Get-PSService - Getting all services on $Computer"
-                $Parameters = @{
-                    Computer    = $Computer
-                    ServiceName = ''
-                    Verbose     = $Verbose
-                }
-                Start-Runspace -ScriptBlock $sbGetService -Parameters $Parameters -RunspacePool $Pool
+                [PSCustomObject] $OutputService
             }
         }
-    )
-    ### End Runspaces START
-    $List = Stop-Runspace -Runspaces $runspaces -FunctionName 'Get-Service' -RunspacePool $Pool
-    ### End Runspaces END
-    $MeasureTotal.Stop()
-    Write-Verbose "Get-PSService - Ending....$($measureTotal.Elapsed)"
 
-    return $List
+    }
 }

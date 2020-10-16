@@ -5,10 +5,6 @@ function Get-ComputerBios {
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
         [switch] $All
     )
-
-    #$Data1 = Get-WmiObject win32_bios -ComputerName $ComputerName| Select-Object Status, Version, PrimaryBIOS, Manufacturer, ReleaseDate, SerialNumber
-    #return $Data1
-
     [string] $Class = 'win32_bios'
     if ($All) {
         [string] $Properties = '*'
