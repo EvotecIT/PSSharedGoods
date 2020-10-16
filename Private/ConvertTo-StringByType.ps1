@@ -26,13 +26,18 @@
         [string] $DateTimeFormat,
         [switch] $NumberAsString,
         [switch] $BoolAsString,
+        [System.Collections.IDictionary] $NewLineFormat = @{
+            NewLineCarriage = '\r\n'
+            NewLine         = "\n"
+            Carriage        = "\r"
+        },
         [System.Text.StringBuilder] $TextBuilder
     )
     if ($null -eq $Value) {
         "`"`""
     } elseif ($Value -is [string]) {
         #"`"$Value`""
-        $Value = $Value.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, "\r\n").Replace("`n", "\n").Replace("`r", '\r') #.Replace("`r`n", '\r\n')
+        $Value = $Value.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage) #.Replace("`r`n", '\r\n')
         #$Value = $Value.Replace('\', "\\").Replace('"', '\"') -replace '\r?\n', '\n'
         "`"$Value`""
     } elseif ($Value -is [DateTime]) {
@@ -91,6 +96,7 @@
                 if ($CountInternalObjects -gt 1) {
                     $null = $TextBuilder.AppendLine(',')
                 }
+                $Property = $Property.Replace('\', "\\").Replace('"', '\"')
                 $null = $TextBuilder.Append("`"$Property`":")
                 $OutputValue = ConvertTo-StringByType -Value $Value.$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
                 $null = $TextBuilder.Append("$OutputValue")

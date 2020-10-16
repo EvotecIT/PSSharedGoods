@@ -545,6 +545,8 @@ Describe -Name 'Testing ConvertTo-JsonLiteral NewLines' {
                 Test4
 "@
                 'Test7' = 'Test' + "`n`n" + "Oops \n\n"
+                'Test8"Oopps"' = 'MyTest "Ofcourse"'
+                "Test9'Ooops'" = "MyTest 'Ofcourse'"
             }
         )
 
@@ -556,5 +558,7 @@ Describe -Name 'Testing ConvertTo-JsonLiteral NewLines' {
         $Output1.Test4 | Should -be $Output2.Test4
         $Output1.Test5 | Should -be $Output2.Test5
         $Output1.Test6 | Should -be $Output2.Test6
+        $Output1.'Test8"Oopps"' | Should -be $Output2.'Test8"Oopps"'
+        $Output1."Test9'Ooops'" | Should -be $Output2."Test9'Ooops'"
     }
 }
