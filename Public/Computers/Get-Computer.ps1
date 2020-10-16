@@ -1,4 +1,4 @@
-﻿function Get-ComputerAll {
+﻿function Get-Computer {
     [cmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
