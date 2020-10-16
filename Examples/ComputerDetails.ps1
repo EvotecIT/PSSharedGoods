@@ -2,6 +2,9 @@
 
 $Data = Get-Computer -ComputerName EVOWIN, AD1,AD2 -Verbose
 $Data
+$Data.RAM
+
+return
 
 New-HTML {
     New-HTMLTableOption -DataStore JavaScript
