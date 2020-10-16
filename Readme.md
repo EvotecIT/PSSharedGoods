@@ -40,7 +40,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
   - Added `Get-ComputerRAM`
   - Improved `Get-ComputerBIOS`
   - Moved `Get-ComputerSplit` to private functions as it shouldn't be used outside
-  - Added `Get-Computer` which is supposed to b
+  - Added `Get-Computer`
+  - Improvements to other `Get-Computer*` cmdlets
 - 0.0.180 - 2020.09.20
   - Updates to `Convert-Identity`
   - Updated PSD1 to better version
