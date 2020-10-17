@@ -31,6 +31,11 @@
             NewLine         = "\n"
             Carriage        = "\r"
         },
+        [System.Collections.IDictionary] $NewLineFormatProperty = @{
+            NewLineCarriage = '\r\n'
+            NewLine         = "\n"
+            Carriage        = "\r"
+        },
         [System.Text.StringBuilder] $TextBuilder
     )
     if ($null -eq $Value) {
@@ -56,7 +61,8 @@
             $null = $TextBuilder.AppendLine("{")
             for ($i = 0; $i -lt ($Value.Keys).Count; $i++) {
                 $Property = ([string[]]$Value.Keys)[$i]
-                $null = $TextBuilder.Append("`"$Property`":")
+                $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                $null = $TextBuilder.Append("`"$DisplayProperty`":")
                 $OutputValue = ConvertTo-StringByType -Value $Value[$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
                 $null = $TextBuilder.Append("$OutputValue")
                 if ($i -ne ($Value.Keys).Count - 1) {
@@ -96,8 +102,8 @@
                 if ($CountInternalObjects -gt 1) {
                     $null = $TextBuilder.AppendLine(',')
                 }
-                $Property = $Property.Replace('\', "\\").Replace('"', '\"')
-                $null = $TextBuilder.Append("`"$Property`":")
+                $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                $null = $TextBuilder.Append("`"$DisplayProperty`":")
                 $OutputValue = ConvertTo-StringByType -Value $Value.$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
                 $null = $TextBuilder.Append("$OutputValue")
             }
