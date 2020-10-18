@@ -41,9 +41,7 @@
     if ($null -eq $Value) {
         "`"`""
     } elseif ($Value -is [string]) {
-        #"`"$Value`""
         $Value = $Value.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage) #.Replace("`r`n", '\r\n')
-        #$Value = $Value.Replace('\', "\\").Replace('"', '\"') -replace '\r?\n', '\n'
         "`"$Value`""
     } elseif ($Value -is [DateTime]) {
         "`"$($($Value).ToString($DateTimeFormat))`""
@@ -74,9 +72,7 @@
     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
         if ($MaxDepth -eq 0 -or $Depth -eq $MaxDepth) {
             $Value = "$Value".Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, "\r\n").Replace("`n", "\n").Replace("`r", '\r') #.Replace("`r`n", '\r\n')
-            #$Value = $Value.Replace('\', "\\").Replace('"', '\"') -replace '\r?\n', '\n'
             "`"$Value`""
-            #"`"$($Value)`""
         } else {
             $CountInternalObjects = 0
             $null = $TextBuilder.Append("[")
@@ -121,7 +117,6 @@
         try {
             $Value = $Value.ToString().Replace('"', '\"')
             "`"$([System.Text.RegularExpressions.Regex]::Unescape($Value))`""
-            #"`"$Value`""
         } catch {
             "`"$($Value.Replace('\', "\\"))`""
         }

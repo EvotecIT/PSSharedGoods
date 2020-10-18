@@ -75,7 +75,6 @@
                 $null = $TextBuilder.Append(',')
             }
             if ($Object[$a] -is [System.Collections.IDictionary]) {
-                #if (-not $HashTableAsIs) {
                 # Push to TEXT the same as [PSCustomObject]
                 $null = $TextBuilder.AppendLine("{")
                 for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
@@ -89,29 +88,9 @@
                     }
                 }
                 $null = $TextBuilder.Append("}")
-                <#
-                } else {
-                    # Push to TEXT as real [ordered]
-                    $null = $TextBuilder.AppendLine('[')
-                    for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
-                        $null = $TextBuilder.AppendLine("{")
-                        $Property = ([string[]]$Object[$a].Keys)[$i]
-
-                        $null = $TextBuilder.Append("`"$Property`":")
-                        $Value = ConvertTo-StringByType -Value $Object[$a][$i] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
-                        $null = $TextBuilder.Append("$Value")
-                        $null = $TextBuilder.Append("}")
-                        if ($i -ne ($Object[$a].Keys).Count - 1) {
-                            $null = $TextBuilder.AppendLine(',')
-                        }
-                    }
-                    $null = $TextBuilder.AppendLine(']')
-                }
-                #>
                 #} elseif ($Object[$a].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
             } elseif ($Object[$a] | IsOfType) {
                 $Value = ConvertTo-StringByType -Value $Object[$a] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty
-                #$null = $TextBuilder.Append("`"$($Object[$a].ToString())`"")
                 $null = $TextBuilder.Append($Value)
             } else {
                 $null = $TextBuilder.AppendLine("{")
