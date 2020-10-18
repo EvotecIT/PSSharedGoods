@@ -532,19 +532,19 @@ Describe -Name 'Testing ConvertTo-JsonLiteral NewLines' {
     It 'Converts the same way ConvertTo-JSON' {
         $DataTable3 = @(
             [PSCustomObject] @{
-                'Test1' = 'Test' + [System.Environment]::NewLine + 'test3';
-                'Test2' = 'Test' + [System.Environment]::NewLine + 'test3' + "`n test"
-                'Test3' = 'Test' + [System.Environment]::NewLine + 'test3' + "`r`n test"
-                'Test4' = 'Test' + [System.Environment]::NewLine + 'test3' + "`r test"
-                'Test5' = 'Test' + "`r`n" + 'test3' + "test"
-                'Test6' = @"
+                'Test1'        = 'Test' + [System.Environment]::NewLine + 'test3';
+                'Test2'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`n test"
+                'Test3'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`r`n test"
+                'Test4'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`r test"
+                'Test5'        = 'Test' + "`r`n" + 'test3' + "test"
+                'Test6'        = @"
                 Test1
                 Test2
                 Test3
 
                 Test4
 "@
-                'Test7' = 'Test' + "`n`n" + "Oops \n\n"
+                'Test7'        = 'Test' + "`n`n" + "Oops \n\n"
                 'Test8"Oopps"' = 'MyTest "Ofcourse"'
                 "Test9'Ooops'" = "MyTest 'Ofcourse'"
             }
@@ -560,5 +560,90 @@ Describe -Name 'Testing ConvertTo-JsonLiteral NewLines' {
         $Output1.Test6 | Should -be $Output2.Test6
         $Output1.'Test8"Oopps"' | Should -be $Output2.'Test8"Oopps"'
         $Output1."Test9'Ooops'" | Should -be $Output2."Test9'Ooops'"
+    }
+}
+
+
+Describe -Name 'Testing ConvertTo-JsonLiteral Using Force' {
+    It 'Forces convesion according to first object in array' {
+        $DataTable3 = @(
+            [PSCustomObject] @{
+                'property1' = 'Test1'
+                'property2' = 'Test2'
+            }
+            [PSCustomObject] @{
+                'Property1' = 'Test1'
+                'Property2' = 'Test2'
+                'Property3' = 'Test3'
+            }
+        )
+
+        $Output1 = $DataTable3 | ConvertTo-JsonLiteral -Force | ConvertFrom-Json
+        $Output1[0].PSObject.Properties.Name.Count | Should -be 2
+        $Output1[1].PSObject.Properties.Name.Count | Should -be 2
+    }
+    It 'Forces convesion according to first object in array' {
+        $DataTable3 = @(
+            [PSCustomObject] @{
+                'Property1' = 'Test1'
+                'Property2' = 'Test2'
+                'Property3' = 'Test3'
+            }
+            [PSCustomObject] @{
+                'property1' = 'Test1'
+                'property2' = 'Test2'
+            }
+        )
+        $Output1 = $DataTable3 | ConvertTo-JsonLiteral -Force | ConvertFrom-Json
+        $Output1[0].PSObject.Properties.Name.Count | Should -be 3
+        $Output1[1].PSObject.Properties.Name.Count | Should -be 3
+        ($Output1[1].PSObject.Properties.Name)[0] | Should -BeExactly 'Property1' # checks case
+        ($Output1[1].PSObject.Properties.Name)[1] | Should -BeExactly 'Property2' # checks case
+    }
+}
+
+
+Describe -Name 'Testing ConvertTo-JsonLiteral Using Force' {
+    It 'Forces convesion according to first object in array' {
+        $DataTable3 = @(
+            [PSCustomObject] @{
+                'property1' = 'Test1'
+                'property2' = 'Test2'
+                'property3' = @(
+                    [PSCustomObject] @{
+                        'Property1' = 'Test1'
+                        'Property2' = 'Test2'
+                        'Property3' = 'Test3'
+                    }
+                    [PSCustomObject] @{
+                        'Property1' = 'Test1'
+                        'Property2' = 'Test2'
+                        'Property3' = 'Test3'
+                    }
+                    [PSCustomObject] @{
+                        'property1' = 'Test1'
+                        'property2' = 'Test2'
+                        'property3' = 'Test3'
+                    }
+                )
+            }
+            [PSCustomObject] @{
+                'Property1' = 'Test1'
+                'Property2' = 'Test2'
+            }
+        )
+
+        $Output1 = $DataTable3 | ConvertTo-JsonLiteral -Force -Depth 2 | ConvertFrom-Json
+        $Output1[0].PSObject.Properties.Name.Count | Should -be 3
+        $Output1[1].PSObject.Properties.Name.Count | Should -be 3
+        $Output1[0].property3[0].PSObject.Properties.Name.Count | Should -be 3
+        $Output1[0].property3[1].PSObject.Properties.Name.Count | Should -be 3
+        $Output1[0].property3[2].PSObject.Properties.Name.Count | Should -be 3
+        ($Output1[0].property3[0].PSObject.Properties.Name)[0] | Should -BeExactly 'Property1'
+        ($Output1[0].property3[0].PSObject.Properties.Name)[1] | Should -BeExactly 'Property2'
+        ($Output1[0].property3[1].PSObject.Properties.Name)[0] | Should -BeExactly 'Property1'
+        ($Output1[0].property3[1].PSObject.Properties.Name)[1] | Should -BeExactly 'Property2'
+        ($Output1[0].property3[2].PSObject.Properties.Name)[0] | Should -BeExactly 'Property1'
+        ($Output1[0].property3[2].PSObject.Properties.Name)[1] | Should -BeExactly 'Property2'
     }
 }

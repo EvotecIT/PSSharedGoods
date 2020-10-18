@@ -24,6 +24,12 @@
     .PARAMETER BoolAsString
     Provides an alternative serialization option that converts all bool to their string representation.
 
+    .PARAMETER PropertyName
+    Uses PropertyNames provided by user (only works with Force)
+
+    .PARAMETER Force
+    Forces using property names from first object or given thru PropertyName parameter
+
     .EXAMPLE
     Get-Process | Select-Object -First 2 | ConvertTo-JsonLiteral
 
@@ -48,7 +54,9 @@
             NewLineCarriage = '\r\n'
             NewLine         = "\n"
             Carriage        = "\r"
-        }
+        },
+        [string[]]$PropertyName,
+        [switch] $Force
     )
     Begin {
         $TextBuilder = [System.Text.StringBuilder]::new()
@@ -81,7 +89,7 @@
                     $Property = ([string[]]$Object[$a].Keys)[$i].Replace('\', "\\").Replace('"', '\"')
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
-                    $Value = ConvertTo-StringByType -Value $Object[$a][$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty
+                    $Value = ConvertTo-StringByType -Value $Object[$a][$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force
                     $null = $TextBuilder.Append("$Value")
                     if ($i -ne ($Object[$a].Keys).Count - 1) {
                         $null = $TextBuilder.AppendLine(',')
@@ -90,18 +98,26 @@
                 $null = $TextBuilder.Append("}")
                 #} elseif ($Object[$a].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
             } elseif ($Object[$a] | IsOfType) {
-                $Value = ConvertTo-StringByType -Value $Object[$a] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty
+                $Value = ConvertTo-StringByType -Value $Object[$a] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force
                 $null = $TextBuilder.Append($Value)
             } else {
                 $null = $TextBuilder.AppendLine("{")
-                for ($i = 0; $i -lt ($Object[$a].PSObject.Properties.Name).Count; $i++) {
-                    $Property = ([string[]] $($Object[$a].PSObject.Properties.Name))[$i]
+                if ($Force -and -not $PropertyName) {
+                    $PropertyName = $Object[0].PSObject.Properties.Name
+                } elseif ($Force -and $PropertyName) {
+
+                } else {
+                    $PropertyName = $Object[$a].PSObject.Properties.Name
+                }
+                $PropertyCount = 0
+                foreach ($Property in $PropertyName) {
+                    $PropertyCount++
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
-                    $Value = ConvertTo-StringByType -Value $Object[$a].$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty
+                    $Value = ConvertTo-StringByType -Value $Object[$a].$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force
                     # Push to Text
                     $null = $TextBuilder.Append("$Value")
-                    if ($i -ne ($Object[$a].PSObject.Properties.Name).Count - 1) {
+                    if ($PropertyCount -ne $PropertyName.Count) {
                         $null = $TextBuilder.AppendLine(',')
                     }
                 }

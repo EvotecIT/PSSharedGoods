@@ -23,6 +23,8 @@ $DataTable3 = @(
         "Test9'Ooops'" = "MyTest 'Ofcourse'"
         $PropertyName1 = 'Test' + [System.Environment]::NewLine + 'test3';
         $PropertyName2 = 'Test' + [System.Environment]::NewLine + 'test3';
+        'Property1' = 'Test1'
+        'property2' = 'Test2'
     }
 )
 
