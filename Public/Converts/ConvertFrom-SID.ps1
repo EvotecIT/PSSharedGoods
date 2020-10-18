@@ -112,7 +112,7 @@ function ConvertFrom-SID {
             Name       = 'CREATOR OWNER'
             SID        = 'S-1-3-0'
             DomainName = ''
-            Type       = 'WellKnownGroup'
+            Type       = 'WellKnownAdministrative'
             Error      = ''
         }
         'S-1-3-1'      = [PSCustomObject] @{

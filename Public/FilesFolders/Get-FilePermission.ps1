@@ -8,7 +8,8 @@
         [switch] $ResolveTypes,
         [switch] $Extended,
         [switch] $IncludeACLObject,
-        [switch] $AsHashTable
+        [switch] $AsHashTable,
+        [System.Security.AccessControl.FileSystemSecurity] $ACLS
     )
     foreach ($P in $Path) {
         if ($P -is [System.IO.FileSystemInfo]) {
@@ -18,8 +19,9 @@
         }
         $TestPath = Test-Path -Path $FullPath
         if ($TestPath) {
-            $ACLS = (Get-Acl -Path $FullPath)
-
+            if (-not $ACLS) {
+                $ACLS = (Get-Acl -Path $FullPath)
+            }
             $Output = foreach ($ACL in $ACLS.Access) {
                 if ($Inherited) {
                     if ($ACL.IsInherited -eq $false) {
