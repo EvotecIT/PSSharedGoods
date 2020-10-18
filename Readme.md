@@ -33,7 +33,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.181 - Unreleased
+- 0.0.181 - 2020.10.18
   - Improvements to `ConvertTo-JsonLiteral`
   - Rewritten `Get-PSService` to CIM, small change on output parameter
   - Added `Get-ComputerDevice`
