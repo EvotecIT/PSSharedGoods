@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.184 - 2020.10.20
+  - Improvements to `ConvertTo-JsonLiteral`
 - 0.0.183 - 2020.10.18
   - Update to `ConvertFrom-SID`
   - Update to `Get-FilePermission`
