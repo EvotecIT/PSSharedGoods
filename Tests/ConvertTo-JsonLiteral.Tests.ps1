@@ -647,3 +647,41 @@ Describe -Name 'Testing ConvertTo-JsonLiteral Using Force' {
         ($Output1[0].property3[2].PSObject.Properties.Name)[1] | Should -BeExactly 'Property2'
     }
 }
+
+Describe -Name 'Testing ConvertTo-JsonLiteral with more escaping check' {
+    It 'Makes sure escaping is done properly' {
+        $DataTable3 = @(
+            [PSCustomObject] @{
+                'Tree Parent?'                                      = 'Testing Tree ?'
+                'Other Tree (Rigth)'                                = 'Ok You mean Me (Test)'
+                'Hierarchy Table Recaluculation interval (minutes)' = "\\*\NETLOGON"
+                "Test"                                              = "\\Ooops\C$\Windows\System32\config\netlogon.dns"
+                "\\*\SYSVOL"                                        = 'Test me \\*\SYSVOL and \\*\NETLOGON shares.'
+                "\\*\NETLOGON"                                      = 'Test me \\*\SYSVOL and \\*\NETLOGON shares.'
+                'Test^'                                             = 'Oops1'
+                "Hello+Motto"                                       = 'Oops2'
+                'Hello|Motto'                                       = 'Oops3'
+                'Hello{Value}'                                      = 'Oops4'
+                'Hello$Value'                                       = 'Oops5'
+                'Hello.Value'                                       = 'Oops6'
+                'Hello Value'                                       = 'Oops7.Test'
+            }
+        )
+
+        $Output1 = $DataTable3 | ConvertTo-JsonLiteral | ConvertFrom-Json
+        $Output1[0].PSObject.Properties.Name.Count | Should -be 13
+        $Output1[0].'Tree Parent?' | Should -BeExactly 'Testing Tree ?'
+        $Output1[0].'Other Tree (Rigth)' | Should -BeExactly 'Ok You mean Me (Test)'
+        $Output1[0].'Hierarchy Table Recaluculation interval (minutes)' | Should -BeExactly '\\*\NETLOGON'
+        $Output1[0].'Test' | Should -BeExactly '\\Ooops\C$\Windows\System32\config\netlogon.dns'
+        $Output1[0].'\\*\SYSVOL' | Should -BeExactly 'Test me \\*\SYSVOL and \\*\NETLOGON shares.'
+        $Output1[0].'\\*\NETLOGON' | Should -BeExactly 'Test me \\*\SYSVOL and \\*\NETLOGON shares.'
+        $Output1[0].'Test^' | Should -BeExactly 'Oops1'
+        $Output1[0].'Hello+Motto' | Should -BeExactly 'Oops2'
+        $Output1[0].'Hello|Motto' | Should -BeExactly 'Oops3'
+        $Output1[0].'Hello{Value}' | Should -BeExactly 'Oops4'
+        $Output1[0].'Hello$Value' | Should -BeExactly 'Oops5'
+        $Output1[0].'Hello.Value' | Should -BeExactly 'Oops6'
+        $Output1[0].'Hello Value' | Should -BeExactly 'Oops7.Test'
+    }
+}

@@ -86,7 +86,7 @@
                 # Push to TEXT the same as [PSCustomObject]
                 $null = $TextBuilder.AppendLine("{")
                 for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
-                    $Property = ([string[]]$Object[$a].Keys)[$i].Replace('\', "\\").Replace('"', '\"')
+                    $Property = ([string[]]$Object[$a].Keys)[$i] #.Replace('\', "\\").Replace('"', '\"')
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
                     $Value = ConvertTo-StringByType -Value $Object[$a][$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force
