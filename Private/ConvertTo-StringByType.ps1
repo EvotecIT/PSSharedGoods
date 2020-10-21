@@ -9,8 +9,26 @@
     .PARAMETER Value
     Value to convert to JsonValue
 
+     .PARAMETER Depth
+    Specifies how many levels of contained objects are included in the JSON representation. The default value is 0.
+
+    .PARAMETER AsArray
+    Outputs the object in array brackets, even if the input is a single object.
+
     .PARAMETER DateTimeFormat
-    Format to use when converting DateTime to string
+    Changes DateTime string format. Default "yyyy-MM-dd HH:mm:ss"
+
+    .PARAMETER NumberAsString
+    Provides an alternative serialization option that converts all numbers to their string representation.
+
+    .PARAMETER BoolAsString
+    Provides an alternative serialization option that converts all bool to their string representation.
+
+    .PARAMETER PropertyName
+    Uses PropertyNames provided by user (only works with Force)
+
+    .PARAMETER Force
+    Forces using property names from first object or given thru PropertyName parameter
 
     .EXAMPLE
     $Value = ConvertTo-StringByType -Value $($Object[$a][$i]) -DateTimeFormat $DateTimeFormat
@@ -64,7 +82,7 @@
                     $Property = ([string[]]$Value.Keys)[$i]
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
-                    $OutputValue = ConvertTo-StringByType -Value $Value[$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
+                    $OutputValue = ConvertTo-StringByType -Value $Value[$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -Force:$Force
                     $null = $TextBuilder.Append("$OutputValue")
                     if ($i -ne ($Value.Keys).Count - 1) {
                         $null = $TextBuilder.AppendLine(',')
@@ -74,7 +92,8 @@
             }
         } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
             if ($MaxDepth -eq 0 -or $Depth -eq $MaxDepth) {
-                $Value = "$Value".Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, "\r\n").Replace("`n", "\n").Replace("`r", '\r') #.Replace("`r`n", '\r\n')
+                #$Value = "$Value".Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, "\r\n").Replace("`n", "\n").Replace("`r", '\r') #.Replace("`r`n", '\r\n')
+                $Value = "$Value".Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                 "`"$Value`""
             } else {
                 $CountInternalObjects = 0
@@ -117,7 +136,7 @@
                     }
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
-                    $OutputValue = ConvertTo-StringByType -Value $Value.$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder
+                    $OutputValue = ConvertTo-StringByType -Value $Value.$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -Force:$Force
                     $null = $TextBuilder.Append("$OutputValue")
                 }
                 $null = $TextBuilder.Append("}")
@@ -131,12 +150,14 @@
                 $($Value)
             }
         } else {
-            try {
-                $Value = $Value.ToString().Replace('"', '\"')
-                "`"$([System.Text.RegularExpressions.Regex]::Unescape($Value))`""
-            } catch {
-                "`"$($Value.Replace('\', "\\"))`""
-            }
+            #try {
+            #$Value = $Value.ToString().Replace('"', '\"')
+            $Value = $Value.ToString().Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+            "`"$Value`""
+            #"`"$([System.Text.RegularExpressions.Regex]::Unescape($Value))`""
+            #} catch {
+            #   "`"$($Value.Replace('\', "\\"))`""
+            #}
         }
     }
 }

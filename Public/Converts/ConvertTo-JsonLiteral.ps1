@@ -27,11 +27,33 @@
     .PARAMETER PropertyName
     Uses PropertyNames provided by user (only works with Force)
 
+    .PARAMETER NewLineFormat
+    Provides a way to configure how new lines are converted for property names
+
+    .PARAMETER NewLineFormatProperty
+    Provides a way to configure how new lines are converted for values
+
+    .PARAMETER PropertyName
+    Allows passing property names to be used for custom objects (hashtables and alike are unaffected)
+
     .PARAMETER Force
     Forces using property names from first object or given thru PropertyName parameter
 
     .EXAMPLE
     Get-Process | Select-Object -First 2 | ConvertTo-JsonLiteral
+
+    .EXAMPLE
+    Get-Process | Select-Object -First 2 | ConvertTo-JsonLiteral -Depth 3
+
+    .EXAMPLE
+    Get-Process | Select-Object -First 2 | ConvertTo-JsonLiteral -NewLineFormat $NewLineFormat = @{
+        NewLineCarriage = '\r\n'
+        NewLine         = "\n"
+        Carriage        = "\r"
+    } -NumberAsString -BoolAsString
+
+    .EXAMPLE
+    Get-Process | Select-Object -First 2 | ConvertTo-JsonLiteral -NumberAsString -BoolAsString -DateTimeFormat "yyyy-MM-dd HH:mm:ss"
 
     .NOTES
     General notes
@@ -40,7 +62,6 @@
     param(
         [alias('InputObject')][Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0, Mandatory)][Array] $Object,
         [int] $Depth,
-        #[switch] $HashTableAsIs,
         [switch] $AsArray,
         [string] $DateTimeFormat = "yyyy-MM-dd HH:mm:ss",
         [switch] $NumberAsString,
