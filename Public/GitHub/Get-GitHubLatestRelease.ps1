@@ -3,6 +3,7 @@
     param(
         [alias('ReleasesUrl')][uri] $Url
     )
+    $ProgressPreference = 'SilentlyContinue'
     Try {
         [Array] $JsonOutput = (Invoke-WebRequest -Uri $Url -ErrorAction Stop | ConvertFrom-Json)
         foreach ($JsonContent in $JsonOutput) {
@@ -27,4 +28,5 @@
             Errors      = $_.Exception.Message
         }
     }
+    $ProgressPreference = 'Continue'
 }
