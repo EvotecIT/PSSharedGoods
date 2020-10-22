@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.186 - 2020.10.22
+  - Disabled progress for `Get-GitHubLatestRelease`
 - 0.0.185 - 2020.10.21
   - Improvements to `ConvertTo-JsonLiteral`
 - 0.0.184 - 2020.10.20
