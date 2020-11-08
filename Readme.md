@@ -33,6 +33,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.187
+  - Added tests for `Copy-Dictionary`
+  - Improved `Get-FilePermission`
 - 0.0.186 - 2020.10.22
   - Disabled progress for `Get-GitHubLatestRelease`
 - 0.0.185 - 2020.10.21

@@ -20,7 +20,12 @@
         $TestPath = Test-Path -Path $FullPath
         if ($TestPath) {
             if (-not $ACLS) {
-                $ACLS = (Get-Acl -Path $FullPath)
+                try {
+                    $ACLS = (Get-Acl -Path $FullPath -ErrorAction Stop)
+                } catch {
+                    Write-Warning -Message "Get-FilePermission - Can't access $FullPath. Error $($_.Exception.Message)"
+                    continue
+                }
             }
             $Output = foreach ($ACL in $ACLS.Access) {
                 if ($Inherited) {
@@ -35,30 +40,6 @@
                     }
                 }
                 $TranslateRights = Convert-GenericRightsToFileSystemRights -OriginalRights $ACL.FileSystemRights
-                <#
-                if ($ACL.IdentityReference -like '*\*') {
-                    if ($ResolveTypes -and $Script:ForestCache ) {
-                        $TemporaryIdentity = $Script:ForestCache["$($ACL.IdentityReference)"]
-                        $IdentityReferenceType = $TemporaryIdentity.ObjectClass
-                        $IdentityReference = $ACL.IdentityReference.Value
-                    } else {
-                        $IdentityReferenceType = 'Standard'
-                        $IdentityReference = $ACL.IdentityReference.Value
-                    }
-                } elseif ($ACL.IdentityReference -like '*-*-*-*') {
-                    $ConvertedSID = ConvertFrom-SID -SID $ACL.IdentityReference
-                    if ($ResolveTypes -and $Script:ForestCache) {
-                        $TemporaryIdentity = $Script:ForestCache["$($ConvertedSID.Name)"]
-                        $IdentityReferenceType = $TemporaryIdentity.ObjectClass
-                    } else {
-                        $IdentityReferenceType = $ConvertedSID.Type
-                    }
-                    $IdentityReference = $ConvertedSID.Name
-                } else {
-                    $IdentityReference = $ACL.IdentityReference
-                    $IdentityReferenceType = 'Standard'
-                }
-                #>
                 $ReturnObject = [ordered] @{ }
                 $ReturnObject['Path' ] = $FullPath
                 $ReturnObject['AccessControlType'] = $ACL.AccessControlType
@@ -79,17 +60,9 @@
                 } else {
                     $ReturnObject['Principal'] = $ACL.IdentityReference.Value
                 }
-                #$ReturnObject['ObjectTypeName'] = $Script:ForestGUIDs["$($ACL.objectType)"]
-                #$ReturnObject['InheritedObjectTypeName'] = $Script:ForestGUIDs["$($ACL.inheritedObjectType)"]
                 $ReturnObject['FileSystemRights'] = $TranslateRights
-                #$ReturnObject['FileSystemRights'] = $ACL.FileSystemRights
-                # $ReturnObject['InheritanceType'] = $ACL.InheritanceType
                 $ReturnObject['IsInherited'] = $ACL.IsInherited
-
                 if ($Extended) {
-                    #$ReturnObject['ObjectType'] = $ACL.ObjectType
-                    #$ReturnObject['InheritedObjectType'] = $ACL.InheritedObjectType
-                    #$ReturnObject['ObjectFlags'] = $ACL.ObjectFlags
                     $ReturnObject['InheritanceFlags'] = $ACL.InheritanceFlags
                     $ReturnObject['PropagationFlags'] = $ACL.PropagationFlags
                 }
