@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.188 - 2020.11.12
+  - Improved `Set-FileOwner`
 - 0.0.187
   - Added tests for `Copy-Dictionary`
   - Improved `Get-FilePermission`
