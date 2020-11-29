@@ -33,6 +33,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.189 - 2020.11.29
+  - Improved `Get-ComputerWindowsFeatures`
+  - Improved `Get-ComputerRoles`
 - 0.0.188 - 2020.11.12
   - Improved `Set-FileOwner`
 - 0.0.187

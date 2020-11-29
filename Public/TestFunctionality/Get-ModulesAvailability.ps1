@@ -1,4 +1,5 @@
 Function Get-ModulesAvailability {
+    [cmdletBinding()]
     param(
         [string]$Name
     )

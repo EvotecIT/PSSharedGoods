@@ -1,4 +1,5 @@
 function Set-EmailReportBranding {
+    [cmdletBinding()]
     param(
         [alias('FormattingOptions')] $FormattingParameters
     )
