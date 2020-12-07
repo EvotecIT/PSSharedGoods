@@ -2,7 +2,11 @@
     [cmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
-        [ValidateSet('BIOS', 'CPU', 'RAM', 'Disk', 'DiskLogical', 'OperatingSystem', 'Services', 'System', 'Time')][string[]] $Type,
+        [ValidateSet(
+            'BIOS', 'CPU', 'RAM', 'Disk', 'DiskLogical',
+            'Network', 'NetworkFirewall',
+            'OperatingSystem', 'Services', 'System', 'Startup', 'Time', 'WindowsUpdates'
+        )][string[]] $Type,
         [switch] $AsHashtable
     )
     Begin {
@@ -41,6 +45,21 @@
                 $OperatingSystem = Get-ComputerOperatingSystem -ComputerName $Computer
                 $OutputObject['OperatingSystem'] = $OperatingSystem
             }
+            if ($Type -contains 'Network' -or $null -eq $Type) {
+                Write-Verbose "Get-Computer - Processing Network for $Computer"
+                $Network = Get-ComputerNetwork -ComputerName $Computer
+                $OutputObject['Network'] = $Network
+            }
+            if ($Type -contains 'NetworkFirewall' -or $null -eq $Type) {
+                Write-Verbose "Get-Computer - Processing NetworkFirewall for $Computer"
+                $NetworkFirewall = Get-ComputerNetwork -ComputerName $Computer -NetworkFirewallOnly
+                $OutputObject['NetworkFirewall'] = $NetworkFirewall
+            }
+            if ($Type -contains 'RDP' -or $null -eq $Type) {
+                Write-Verbose "Get-Computer - Processing RDP for $Computer"
+                $RDP = Get-ComputerRDP -ComputerName $Computer
+                $OutputObject['RDP'] = $RDP
+            }
             if ($Type -contains 'Services' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Services for $Computer"
                 $Services = Get-ComputerService -ComputerName $Computer
@@ -51,10 +70,20 @@
                 $System = Get-ComputerSystem -ComputerName $Computer
                 $OutputObject['System'] = $System
             }
+            if ($Type -contains 'Startup' -or $null -eq $Type) {
+                Write-Verbose "Get-Computer - Processing Startup for $Computer"
+                $Startup = Get-ComputerStartup -ComputerName $Computer
+                $OutputObject['Startup'] = $Startup
+            }
             if ($Type -contains 'Time' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Time for $Computer"
                 $Time = Get-ComputerTime -TimeTarget $Computer
                 $OutputObject['Time'] = $Time
+            }
+            if ($Type -contains 'WindowsUpdates' -or $null -eq $Type) {
+                Write-Verbose "Get-Computer - Processing Time for $Computer"
+                $WindowsUpdates = Get-ComputerWindowsUpdates -ComputerName $Computer
+                $OutputObject['WindowsUpdates'] = $WindowsUpdates
             }
             if ($AsHashtable) {
                 $OutputObject

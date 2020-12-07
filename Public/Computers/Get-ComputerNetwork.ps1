@@ -45,7 +45,7 @@
     #>
     [CmdletBinding()]
     param(
-        [string[]] $ComputerName,
+        [string[]] $ComputerName = $Env:COMPUTERNAME,
         [switch] $NetworkFirewallOnly,
         [switch] $NetworkFirewallSummaryOnly,
         [alias('Joiner')][string] $Splitter
