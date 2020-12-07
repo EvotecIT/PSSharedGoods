@@ -33,6 +33,12 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.190 - 2020.12.07
+  - Improved `Get-Computer`
+  - Improved `Get-ComputerNetwork`
+  - Improved `Get-ComputerStartup`
+  - Improved `Get-ComputerApplication` (renamed from `Get-ComputerApplications`, but alias left in place)
+  - Improved `Get-ComputerTask` (renamed from `Get-ComputerTasks`, but alias left in place)
 - 0.0.189 - 2020.11.29
   - Improved `Get-ComputerWindowsFeatures`
   - Improved `Get-ComputerRoles`

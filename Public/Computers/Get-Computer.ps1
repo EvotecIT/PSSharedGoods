@@ -2,7 +2,7 @@
     [cmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
-        [ValidateSet(
+        [ValidateSet('Application',
             'BIOS', 'CPU', 'RAM', 'Disk', 'DiskLogical',
             'Network', 'NetworkFirewall',
             'OperatingSystem', 'Services', 'System', 'Startup', 'Time', 'WindowsUpdates'
@@ -15,6 +15,11 @@
     Process {
         foreach ($Computer in $ComputerName) {
             $OutputObject = [ordered] @{}
+            if ($Type -contains 'Application' -or $null -eq $Type) {
+                Write-Verbose "Get-Computer - Processing BIOS for $Computer"
+                $Application = Get-ComputerApplications -ComputerName $Computer
+                $OutputObject['Application'] = $Application
+            }
             if ($Type -contains 'BIOS' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing BIOS for $Computer"
                 $BIOS = Get-ComputerBios -ComputerName $Computer
@@ -79,6 +84,11 @@
                 Write-Verbose "Get-Computer - Processing Time for $Computer"
                 $Time = Get-ComputerTime -TimeTarget $Computer
                 $OutputObject['Time'] = $Time
+            }
+            if ($Type -contains 'Tasks' -or $null -eq $Type) {
+                Write-Verbose "Get-Computer - Processing Tasks for $Computer"
+                $Tasks = Get-ComputerTask -ComputerName $Computer
+                $OutputObject['Tasks'] = $Tasks
             }
             if ($Type -contains 'WindowsUpdates' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Time for $Computer"
