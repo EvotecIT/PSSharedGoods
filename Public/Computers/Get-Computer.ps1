@@ -16,7 +16,7 @@
         foreach ($Computer in $ComputerName) {
             $OutputObject = [ordered] @{}
             if ($Type -contains 'Application' -or $null -eq $Type) {
-                Write-Verbose "Get-Computer - Processing BIOS for $Computer"
+                Write-Verbose "Get-Computer - Processing Application for $Computer"
                 $Application = Get-ComputerApplications -ComputerName $Computer
                 $OutputObject['Application'] = $Application
             }
@@ -91,7 +91,7 @@
                 $OutputObject['Tasks'] = $Tasks
             }
             if ($Type -contains 'WindowsUpdates' -or $null -eq $Type) {
-                Write-Verbose "Get-Computer - Processing Time for $Computer"
+                Write-Verbose "Get-Computer - Processing WindowsUpdates for $Computer"
                 $WindowsUpdates = Get-ComputerWindowsUpdates -ComputerName $Computer
                 $OutputObject['WindowsUpdates'] = $WindowsUpdates
             }
