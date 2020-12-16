@@ -45,6 +45,8 @@ function Get-PSService {
         [switch] $Extended
     )
     [string] $Class = 'win32_service'
+    [string] $Properties = '*'
+    <# Disabled as per https://github.com/EvotecIT/PSSharedGoods/issues/14
     if ($All) {
         [string] $Properties = '*'
     } else {
@@ -76,6 +78,7 @@ function Get-PSService {
             'PSComputerName'
         )
     }
+    #>
     # instead of looping multiple times we create cache for services
     if ($Service) {
         $CachedServices = @{}
