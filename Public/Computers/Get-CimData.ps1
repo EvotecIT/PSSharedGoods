@@ -1,22 +1,22 @@
 function Get-CimData {
     <#
     .SYNOPSIS
-    Short description
+    Helper function for retreiving CIM data from local and remote computers
 
     .DESCRIPTION
-    Long description
+    Helper function for retreiving CIM data from local and remote computers
 
     .PARAMETER ComputerName
-    Parameter description
+    Specifies computer on which you want to run the CIM operation. You can specify a fully qualified domain name (FQDN), a NetBIOS name, or an IP address. If you do not specify this parameter, the cmdlet performs the operation on the local computer using Component Object Model (COM).
 
     .PARAMETER Protocol
-    Parameter description
+    Specifies the protocol to use. The acceptable values for this parameter are: DCOM, Default, or Wsman.
 
     .PARAMETER Class
-    Parameter description
+    Specifies the name of the CIM class for which to retrieve the CIM instances. You can use tab completion to browse the list of classes, because PowerShell gets a list of classes from the local WMI server to provide a list of class names.
 
     .PARAMETER Properties
-    Parameter description
+    Specifies a set of instance properties to retrieve. Use this parameter when you need to reduce the size of the object returned, either in memory or over the network. The object returned also contains the key properties even if you have not listed them using the Property parameter. Other properties of the class are present but they are not populated.
 
     .EXAMPLE
     Get-CimData -Class 'win32_bios' -ComputerName AD1,EVOWIN
@@ -49,30 +49,28 @@ function Get-CimData {
         $Computers = $ComputersSplit[1]
         if ($Computers.Count -gt 0) {
             if ($Protocol = 'Default') {
-                Get-CimInstance -ClassName $Class -ComputerName $Computers -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
+                Get-CimInstance -ClassName $Class -ComputerName $Computers -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false -ErrorVariable ErrorsToProcess | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
             } else {
-                $Option = New-CimSessionOption -Protocol
+                $Option = New-CimSessionOption -Protocol $Protocol
                 $Session = New-CimSession -ComputerName $Computers -SessionOption $Option -ErrorAction SilentlyContinue
-                $Info = Get-CimInstance -ClassName $Class -CimSession $Session -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
+                $Info = Get-CimInstance -ClassName $Class -CimSession $Session -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false -ErrorVariable ErrorsToProcess | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
                 $null = Remove-CimSession -CimSession $Session -ErrorAction SilentlyContinue
                 $Info
             }
         }
+        foreach ($E in $ErrorsToProcess) {
+            Write-Warning -Message "Get-CimData - No data for computer $($E.OriginInfo.PSComputerName). Failed with errror: $($E.Exception.Message)"
+        }
         # Process local computer
         $Computers = $ComputersSplit[0]
         if ($Computers.Count -gt 0) {
-            $Info = Get-CimInstance -ClassName $Class -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
+            $Info = Get-CimInstance -ClassName $Class -ErrorAction SilentlyContinue -Property $PropertiesOnly -Namespace $NameSpace -Verbose:$false -ErrorVariable ErrorsLocal | Select-Object -Property $Properties -ExcludeProperty $ExcludeProperties
             $Info | Add-Member -Name 'PSComputerName' -Value $Computers -MemberType NoteProperty -Force
             $Info
         }
-    )
-    # Find computers that are not part of data return and warn user
-    $CimComputers = $CimObject.PSComputerName | Sort-Object -Unique
-    foreach ($Computer in $ComputerName) {
-        if ($CimComputers -notcontains $Computer) {
-            Write-Warning "Get-CimData - No data for computer $Computer. Most likely an error on receiving side."
+        foreach ($E in $ErrorsLocal) {
+            Write-Warning -Message "Get-CimData - No data for computer $($Env:COMPUTERNAME). Failed with errror: $($E.Exception.Message)"
         }
-    }
-    # removes unneeded properties
-    return $CimObject
+    )
+    $CimObject
 }
