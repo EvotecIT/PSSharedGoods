@@ -33,6 +33,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.192 - 2020.12.16
+  - Improved `Get-PSService`
+  - Improved `Get-CimData`
 - 0.0.191 - 2020.12.16
   - Improved `Set-PasswordRemotly` with more secure approach and autodetect DC
 - 0.0.190 - 2020.12.07
