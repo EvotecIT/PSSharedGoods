@@ -41,7 +41,7 @@
         foreach ($Task in $Tasks) {
             $Info = $Task | Get-ScheduledTaskInfo @TaskParameters
 
-            $Actions = foreach ($_ in $Info.Actions) {
+            $Actions = foreach ($_ in $Task.Actions) {
                 -join ($_.Execute, $_.Arguments)
             }
 
