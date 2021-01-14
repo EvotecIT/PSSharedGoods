@@ -33,7 +33,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.193 - 2021.01.13
+- 0.0.193 - 2021.01.14
   - Added `Invoke-CommandCustom`
   - Fixed actions property in `Get-ComputerTask`
 - 0.0.192 - 2020.12.16
