@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.194 - 2021.01.20
+  - Fixed `Get-WinADForestControllers` to discover only writable DCs
 - 0.0.193 - 2021.01.14
   - Added `Invoke-CommandCustom`
   - Fixed actions property in `Get-ComputerTask`
