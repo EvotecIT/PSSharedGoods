@@ -3,7 +3,6 @@ function Get-WinADForestControllers {
     <#
     .SYNOPSIS
 
-
     .DESCRIPTION
     Long description
 
@@ -48,7 +47,7 @@ function Get-WinADForestControllers {
     }
     $Servers = foreach ($D in $Domain) {
         try {
-            $LocalServer = Get-ADDomainController -Discover -DomainName $D -ErrorAction Stop
+            $LocalServer = Get-ADDomainController -Discover -DomainName $D -ErrorAction Stop -Writable
             $DC = Get-ADDomainController -Server $LocalServer.HostName[0] -Filter * -ErrorAction Stop
             foreach ($S in $DC) {
                 $Server = [ordered] @{
@@ -106,5 +105,3 @@ function Get-WinADForestControllers {
     }
     return $Servers
 }
-
-#Get-WinADForestControllers | Format-Table -AutoSize
