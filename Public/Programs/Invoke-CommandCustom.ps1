@@ -46,7 +46,12 @@ function Invoke-CommandCustom {
             $null = $ps.AddArgument($Arg)
         }
     }
-    $InvokedCommand = $ps.Invoke()
+    $ErrorCaught = $null
+    try {
+        $InvokedCommand = $ps.Invoke()
+    } catch {
+        $ErrorCaught = $_
+    }
     if ($InvokedCommand) {
         $Output['Output'] = $InvokedCommand
     }
@@ -61,8 +66,12 @@ function Invoke-CommandCustom {
         }
     }
     if ($ReturnError) {
-        if ($Ps.Streams.Error) {
-            $Output['Error'] = $ps.Streams.Error
+        if ($ErrorCaught) {
+            $Output['Error'] = $ErrorCaught
+        } else {
+            if ($Ps.Streams.Error) {
+                $Output['Error'] = $ps.Streams.Error
+            }
         }
     }
     if ($ReturnError -or $ReturnVerbose -or $ReturnWarning) {
