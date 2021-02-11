@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.196 - 2021.02.11
+  - Fixed `ConvertFrom-Color` when using multiple hex colors
 - 0.0.195 - 2021.01.26
   - Improved/Fixed `Invoke-CommandCustom` to catch errors properly
 - 0.0.194 - 2021.01.20
