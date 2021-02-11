@@ -14,10 +14,11 @@ function ConvertFrom-Color {
     $Colors = foreach ($C in $Color) {
         $Value = $Script:RGBColors."$C"
         if ($C -match "^#([A-Fa-f0-9]{6})$") {
-            return $C
+            $C
+            continue
         }
         if ($null -eq $Value) {
-            return
+            continue
         }
         $HexValue = Convert-Color -RGB $Value
         Write-Verbose "Convert-FromColor - Color Name: $C Value: $Value HexValue: $HexValue"
