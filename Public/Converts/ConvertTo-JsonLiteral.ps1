@@ -36,6 +36,12 @@
     .PARAMETER PropertyName
     Allows passing property names to be used for custom objects (hashtables and alike are unaffected)
 
+    .PARAMETER ArrayJoin
+    Forces any array to be a string regardless of depth level
+
+    .PARAMETER ArrayJoinString
+    Uses defined string or char for array join. By default it uses comma with a space when used.
+
     .PARAMETER Force
     Forces using property names from first object or given thru PropertyName parameter
 
@@ -76,6 +82,8 @@
             NewLine         = "\n"
             Carriage        = "\r"
         },
+        [string] $ArrayJoinString,
+        [switch] $ArrayJoin,
         [string[]]$PropertyName,
         [switch] $Force
     )
@@ -110,16 +118,15 @@
                     $Property = ([string[]]$Object[$a].Keys)[$i] #.Replace('\', "\\").Replace('"', '\"')
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
-                    $Value = ConvertTo-StringByType -Value $Object[$a][$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force
+                    $Value = ConvertTo-StringByType -Value $Object[$a][$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force -ArrayJoin:$ArrayJoin -ArrayJoinString $ArrayJoinString
                     $null = $TextBuilder.Append("$Value")
                     if ($i -ne ($Object[$a].Keys).Count - 1) {
                         $null = $TextBuilder.AppendLine(',')
                     }
                 }
                 $null = $TextBuilder.Append("}")
-                #} elseif ($Object[$a].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
             } elseif ($Object[$a] | IsOfType) {
-                $Value = ConvertTo-StringByType -Value $Object[$a] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force
+                $Value = ConvertTo-StringByType -Value $Object[$a] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force -ArrayJoin:$ArrayJoin -ArrayJoinString $ArrayJoinString
                 $null = $TextBuilder.Append($Value)
             } else {
                 $null = $TextBuilder.AppendLine("{")
@@ -135,7 +142,7 @@
                     $PropertyCount++
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
-                    $Value = ConvertTo-StringByType -Value $Object[$a].$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force
+                    $Value = ConvertTo-StringByType -Value $Object[$a].$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $InitialDepth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -Force:$Force -ArrayJoin:$ArrayJoin -ArrayJoinString $ArrayJoinString
                     # Push to Text
                     $null = $TextBuilder.Append("$Value")
                     if ($PropertyCount -ne $PropertyName.Count) {
