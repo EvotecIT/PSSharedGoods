@@ -52,7 +52,7 @@ function Get-ComputerApplication {
         try {
             $Data = Invoke-Command @Parameters
         } catch {
-            Write-Warning "Get-ComputerApplications - No data for computer $Computer"
+            Write-Warning "Get-ComputerApplication - No data for computer $Computer"
             continue
         }
         foreach ($Information in $Data) {
@@ -60,7 +60,7 @@ function Get-ComputerApplication {
                 try {
                     $InstallDate = [datetime]::ParseExact($Information.Installdate, 'yyyyMMdd', $null)
                 } catch {
-                    Write-Verbose "Get-ComputerApplications - InstallDate $($Information.Installdate) couldn't be converted."
+                    Write-Verbose "Get-ComputerApplication - InstallDate $($Information.Installdate) couldn't be converted."
                     $InstallDate = $null
                 }
             } else {

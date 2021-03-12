@@ -17,7 +17,7 @@
             $OutputObject = [ordered] @{}
             if ($Type -contains 'Application' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Application for $Computer"
-                $Application = Get-ComputerApplications -ComputerName $Computer
+                $Application = Get-ComputerApplication -ComputerName $Computer
                 $OutputObject['Application'] = $Application
             }
             if ($Type -contains 'BIOS' -or $null -eq $Type) {
