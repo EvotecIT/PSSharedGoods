@@ -1,4 +1,4 @@
-@{
+﻿@{
     AliasesToExport      = @('Add-ADUserGroups', 'Find-ADSyncServer', 'Get-WinADDomainControllers', 'Get-WinADDomainGUIDs', 'Get-ADUserSnapshot', 'Remove-ADUserGroups', 'Set-ADUserName', 'Set-ADUserSettingGAL', 'Set-ADUserStatus', 'Get-ComputerApplications', 'Get-ComputerNetworkCard', 'Get-RDPSecurity', 'Get-ServerRoles', 'Get-ComputerServices', 'Get-ComputerTasks', 'Get-MyIP', 'Convert-FromColor', 'Convert-HTMLToString', 'Set-EmailBodyTableReplacement', 'Get-PSPermissions', 'Get-FilePermissions', 'Copy-Hashtable', 'Copy-OrderedHashtable', 'FS', 'Format-TableStream', 'Format-ListStream', 'FV', 'Format-Verbose', 'Format-Debug', 'Format-Warning', 'Remove-EmptyValues', 'Remove-StringLatinCharacters', 'Test-IsDN', 'Set-Recovery', 'Get-TimeSynchronization')
     Author               = 'Przemyslaw Klys'
     CmdletsToExport      = @()
@@ -19,12 +19,12 @@
     }
     RequiredModules      = @(@{
             ModuleVersion = '0.87.2'
-            Guid          = '0b0ba5c5-ec85-4c2b-a718-874e55a8bc3f'
             ModuleName    = 'PSWriteColor'
+            Guid          = '0b0ba5c5-ec85-4c2b-a718-874e55a8bc3f'
         }, @{
             ModuleVersion = '0.0.6'
-            Guid          = 'e4f4f8a6-473e-4ba5-8166-480658c11421'
             ModuleName    = 'Connectimo'
+            Guid          = 'e4f4f8a6-473e-4ba5-8166-480658c11421'
         })
     RootModule           = 'PSSharedGoods.psm1'
 }
