@@ -33,6 +33,12 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.198 - 2021.03.12
+  - Improved `ConvertTo-JsonLiteral`
+    - [x] Added `AdvancedReplace` parameter to be able to fix strings like `@{ '.' = '\.'; '$' = '\$' }` which break JSON, but useful for other stuff
+    - [x] Moved enum/numeric conversions around to prevent issues with arrays
+- 0.0.197 - 2021.02.21
+  - Improved `ConvertTo-JsonLiteral` - `ArrayJoin` and `ArrayJoinString` to better control `JavaScript` output
 - 0.0.196 - 2021.02.11
   - Fixed `ConvertFrom-Color` when using multiple hex colors
 - 0.0.195 - 2021.01.26
