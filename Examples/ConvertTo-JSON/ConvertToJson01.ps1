@@ -1,5 +1,11 @@
 ﻿Import-Module .\PSSharedGoods.psd1 -Force
 
+Enum Fruit{
+    Apple = 29
+    Pear = 30
+    Kiwi = 31
+}
+
 $PSCustomObject = [PSCustomObject] @{
     Int                    = '1'
     Bool                   = $false
