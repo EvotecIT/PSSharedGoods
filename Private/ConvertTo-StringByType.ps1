@@ -60,6 +60,7 @@
             NewLine         = "\n"
             Carriage        = "\r"
         },
+        [System.Collections.IDictionary] $AdvancedReplace,
         [System.Text.StringBuilder] $TextBuilder,
         [string[]] $PropertyName,
         [switch] $ArrayJoin,
@@ -71,7 +72,10 @@
             "`"`""
         } elseif ($Value -is [string]) {
             $Value = $Value.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
-            $Value = $Value.Replace('.', '\.').Replace('$', '\$')
+            #$Value = $Value.Replace('.', '\.').Replace('$', '\$')
+            foreach ($Key in $AdvancedReplace.Keys) {
+                $Value = $Value.Replace($Key, $AdvancedReplace[$Key])
+            }
             "`"$Value`""
         } elseif ($Value -is [DateTime]) {
             "`"$($($Value).ToString($DateTimeFormat))`""
@@ -129,6 +133,14 @@
                     $null = $TextBuilder.Append("]")
                 }
             }
+        } elseif ($Value -is [System.Enum]) {
+            "`"$($($Value).ToString())`""
+        } elseif (($Value | IsNumeric) -eq $true) {
+            if ($NumberAsString) {
+                "`"$($Value)`""
+            } else {
+                $($Value)
+            }
         } elseif ($Value -is [PSObject]) {
             if ($MaxDepth -eq 0 -or $Depth -eq $MaxDepth) {
                 "`"$($Value)`""
@@ -154,14 +166,6 @@
                     $null = $TextBuilder.Append("$OutputValue")
                 }
                 $null = $TextBuilder.Append("}")
-            }
-        } elseif ($Value -is [System.Enum]) {
-            "`"$($($Value).ToString())`""
-        } elseif (($Value | IsNumeric) -eq $true) {
-            if ($NumberAsString) {
-                "`"$($Value)`""
-            } else {
-                $($Value)
             }
         } else {
             $Value = $Value.ToString().Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
