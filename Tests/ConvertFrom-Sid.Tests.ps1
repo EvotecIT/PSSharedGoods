@@ -1,6 +1,4 @@
-﻿
-Import-Module $PSScriptRoot\..\PSSharedGoods.psd1 -Force
-Describe -Name 'Testing ConvertFrom-SID' {
+﻿Describe -Name 'Testing ConvertFrom-SID' {
     It 'OnlyWellKnownAdministrative - Given 2 sids, only 1 should return' {
         $SIDs = @(
             'S-1-5-18'

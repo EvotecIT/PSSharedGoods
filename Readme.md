@@ -33,6 +33,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.199 - 2021.04.12
+  - 📦 Added `Join-Uri` - Provides ability to join two Url paths together
+  - 📦 Added `Join-UriQuery` - Provides ability to join two Url paths together including advanced querying which is useful for RestAPI/GraphApi calls
 - 0.0.198 - 2021.03.12
   - Improved `ConvertTo-JsonLiteral`
     - [x] Added `AdvancedReplace` parameter to be able to fix strings like `@{ '.' = '\.'; '$' = '\$' }` which break JSON, but useful for other stuff
