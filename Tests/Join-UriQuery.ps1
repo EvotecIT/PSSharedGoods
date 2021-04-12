@@ -1,4 +1,4 @@
-﻿Describe 'Join-Uri' {
+﻿Describe 'Join-UriQuery' {
     It 'Testing Join-UriQuery joining two paths and multiple queries' {
         $JoinOutput = Join-UriQuery -BaseUri 'https://evotec.xyz/' -RelativeOrAbsoluteUri '/wp-json/wp/v2/posts' -QueryParameter ([ordered]@{
                 page     = 1
