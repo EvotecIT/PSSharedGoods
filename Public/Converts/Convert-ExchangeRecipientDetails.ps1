@@ -3,11 +3,12 @@ function Convert-ExchangeRecipientDetails {
     param(
         [string] $RecipientType,
         [switch] $FromKey
-    ) 
+    )
+    Write-Warning "Convert-ExchangeRecipientDetails - This cmdlet is deprecated. Please use Convert-ExchangeRecipient. It will be removed shortly."
     $RecipientTypeDetails = @{
         UserMailbox            = 1
         LinkedMailbox          = 2
-        SharedMailbox          = 4 
+        SharedMailbox          = 4
         RoomMailbox            = 16
         EquipmentMailbox       = 32
         MailUser               = 128
