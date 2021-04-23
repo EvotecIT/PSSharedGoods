@@ -193,6 +193,8 @@ function Convert-Office365License {
             "WIN10_VDA_E5"                       = "Windows 10 Enterprise E5"
             "SMB_APPS"                           = "Microsoft Bookings"
             "BUSINESS_VOICE_DIRECTROUTING"       = "Microsoft 365 Business Voice (without calling plan)"
+            "FORMS_PRO"                          = "Dynamics 365 Customer Voice Trial"
+            "CCIBOTS_PRIVPREV_VIRAL"             = "Power Virtual Agents Viral Trial"
         }
     }
     Process {
