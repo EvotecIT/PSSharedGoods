@@ -37,6 +37,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
   - 📦 Added `Convert-ExchangeRecipient` (replacement to `Convert-ExchangfeRecipientDetails` which will be removed in the future (too slow))
   - 💡 Improved `Convert-Office365License` by adding licenses: FORMS_PRO, CCIBOTS_PRIVPREV_VIRAL [#19](https://github.com/EvotecIT/PSSharedGoods/pull/19) - tnx diecknet
   - 💡 Improved `Remove-EmptyValue` by adding ability to disable removing of different object types
+  - 🐛 Fixes `ConvertTo-JsonLiteral` when dealing with array of double, decimal values
 - 0.0.199 - 2021.04.12
   - 📦 Added `Join-Uri` - Provides ability to join two Url paths together
   - 📦 Added `Join-UriQuery` - Provides ability to join two Url paths together including advanced querying which is useful for RestAPI/GraphApi calls
