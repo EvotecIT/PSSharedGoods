@@ -136,10 +136,11 @@
         } elseif ($Value -is [System.Enum]) {
             "`"$($($Value).ToString())`""
         } elseif (($Value | IsNumeric) -eq $true) {
+            $Value = $($Value).ToString().Replace(',', '.')
             if ($NumberAsString) {
-                "`"$($Value)`""
+                "`"$Value`""
             } else {
-                $($Value)
+                $Value
             }
         } elseif ($Value -is [PSObject]) {
             if ($MaxDepth -eq 0 -or $Depth -eq $MaxDepth) {
