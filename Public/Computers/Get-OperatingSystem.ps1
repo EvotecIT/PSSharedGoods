@@ -6,7 +6,7 @@
 
     $ListOperatingSystems = [ordered] @{
         '10.0 (19043)' = [PSCustomObject] @{ Name = 'Windows 10 21H1'; Version = '10.0 (19043)'; CodeName = '21H1'; MarketingName = 'May 2021 Update'; BuildNumber = '19043';
-            ReleaseDate = $null; SupportEndPro = $null; SupportEndEnterprise = $null; LTSC = $null
+            ReleaseDate = (Get-Date -Year 2021 -Month 5 -Day 18 -Second 1 -Minute 1 -Hour 1 -Millisecond 1); SupportEndPro = (Get-Date -Year 2022 -Month 12 -Day 13 -Second 1 -Minute 1 -Hour 1 -Millisecond 1); SupportEndEnterprise = (Get-Date -Year 2022 -Month 12 -Day 13 -Second 1 -Minute 1 -Hour 1 -Millisecond 1); LTSC = $null
         }
         '10.0 (19042)' = [PSCustomObject] @{ Name = 'Windows 10 20H2'; Version = '10.0 (19042)'; CodeName = '20H2'; MarketingName = 'October 2020 Update'; BuildNumber = '19042';
             ReleaseDate = (Get-Date -Year 2020 -Month 9 -Day 20 -Second 1 -Minute 1 -Hour 1 -Millisecond 1); SupportEndPro = (Get-Date -Year 2022 -Month 5 -Day 10 -Second 1 -Minute 1 -Hour 1 -Millisecond 1); SupportEndEnterprise = (Get-Date -Year 2023 -Month 5 -Day 9 -Second 1 -Minute 1 -Hour 1 -Millisecond 1); LTSC = $null
