@@ -64,7 +64,8 @@
         [string[]] $Property,
         [string[]] $ExcludeProperty,
         [switch] $AllProperties,
-        [string] $PropertyNameReplacement = '*'
+        [string] $PropertyNameReplacement = '*',
+        [switch] $IncludeTypes
     )
     Begin {
         function Select-Unique {
@@ -99,13 +100,11 @@
                 [Array] $All = foreach ($_ in $ObjectsList) {
                     $_.Keys
                 }
-                #  $FirstObjectProperties = $All | Select-Object -Unique
                 $FirstObjectProperties = Select-Unique -Object $All
             } else {
                 $FirstObjectProperties = $ObjectsList[0].Keys
             }
             if ($Property.Count -gt 0 -and $ExcludeProperty.Count -gt 0) {
-                #$FirstObjectProperties = $FirstObjectProperties | Where-Object { $Property -contains $_ -and $ExcludeProperty -notcontains $_ }
                 $FirstObjectProperties = foreach ($_ in $FirstObjectProperties) {
                     if ($Property -contains $_ -and $ExcludeProperty -notcontains $_) {
                         $_
@@ -114,8 +113,6 @@
                 }
 
             } elseif ($Property.Count -gt 0) {
-                # $FirstObjectProperties = $FirstObjectProperties | Where-Object { $Property -contains $_ }
-
                 $FirstObjectProperties = foreach ($_ in $FirstObjectProperties) {
                     if ($Property -contains $_) {
                         $_
@@ -123,7 +120,6 @@
                     }
                 }
             } elseif ($ExcludeProperty.Count -gt 0) {
-                #$FirstObjectProperties = $FirstObjectProperties | Where-Object { $ExcludeProperty -notcontains $_ }
                 $FirstObjectProperties = foreach ($_ in $FirstObjectProperties) {
                     if ($ExcludeProperty -notcontains $_) {
                         $_
@@ -132,8 +128,15 @@
                 }
             }
         } elseif ($ObjectsList[0].GetType().Name -match 'bool|byte|char|datetime|decimal|double|ExcelHyperLink|float|int|long|sbyte|short|string|timespan|uint|ulong|URI|ushort') {
-            $FirstObjectProperties = $PropertyNameReplacement
-            #Write-Warning "Select-Properties - Object of type $($ObjectsList[0].GetType().Name). Skipping."
+            if (-not $IncludeTypes) {
+                $FirstObjectProperties = $PropertyNameReplacement
+            } else {
+                [ordered] @{
+                    Name  = $PropertyNameReplacement
+                    Type  = $ObjectsList[0].GetType().Name
+                    Value = $ObjectsList[0]
+                }
+            }
         } else {
             if ($Property.Count -gt 0 -and $ExcludeProperty.Count -gt 0) {
                 $ObjectsList = $ObjectsList | Select-Object -Property $Property -ExcludeProperty $ExcludeProperty
@@ -143,13 +146,45 @@
                 $ObjectsList = $ObjectsList | Select-Object -Property '*' -ExcludeProperty $ExcludeProperty
             }
             if ($AllProperties) {
-                [Array] $All = foreach ($_ in $ObjectsList) {
-                    $_.PSObject.Properties.Name
+                $All = [ordered] @{}
+                foreach ($_ in $ObjectsList) {
+                    if (-not $IncludeTypes) {
+                        foreach ($Name in $_.PSObject.Properties.Name) {
+                            if (-not $All[$Name]) {
+                                $All[$Name] = $true
+                            }
+                        }
+                    } else {
+                        foreach ($PropertyObject in $_.PSObject.Properties) {
+                            if (-not $All[$PropertyObject.Name]) {
+                                $All[$PropertyObject.Name] = [ordered] @{
+                                    Name  = $PropertyObject.Name
+                                    Type  = $PropertyObject.TypeNameOfValue
+                                    Value = $PropertyObject.Value
+                                }
+                            }
+                        }
+                    }
                 }
-                #$FirstObjectProperties = $All | Select-Object -Unique
-                $FirstObjectProperties = Select-Unique -Object $All
+                if (-not $IncludeTypes) {
+                    $FirstObjectProperties = $All.Keys
+                } else {
+                    $FirstObjectProperties = [ordered] @{
+                        Name  = $All.Keys
+                        Type  = foreach ($Key in $All.Keys) { $All.$Key.Type }
+                        Value = foreach ($Key in $All.Keys) { $All.$Key.Value }
+                    }
+                }
             } else {
-                $FirstObjectProperties = $ObjectsList[0].PSObject.Properties.Name
+                if (-not $IncludeTypes) {
+                    $FirstObjectProperties = $ObjectsList[0].PSObject.Properties.Name
+                } else {
+                    $FirstObjectProperties = [ordered] @{
+                        Name  = $ObjectsList[0].PSObject.Properties.Name
+                        Type  = $ObjectsList[0].PSObject.Properties.TypeNameOfValue
+                        Value = $ObjectsList[0].PSObject.Properties.Value
+                    }
+                }
             }
         }
         $FirstObjectProperties
