@@ -30,7 +30,7 @@
     param (
         [parameter(Mandatory)][uri] $BaseUri,
         [parameter(Mandatory = $false)][uri] $RelativeOrAbsoluteUri,
-        [Parameter(Mandatory)][System.Collections.IDictionary] $QueryParameter
+        [Parameter()][System.Collections.IDictionary] $QueryParameter
     )
     # Join primary url with additional path if needed
     if ($BaseUri -and $RelativeOrAbsoluteUri) {
@@ -40,9 +40,11 @@
     }
 
     # Create a http name value collection from an empty string
-    $Collection = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
-    foreach ($key in $QueryParameter.Keys) {
-        $Collection.Add($key, $QueryParameter.$key)
+    if ($QueryParameter) {
+        $Collection = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
+        foreach ($key in $QueryParameter.Keys) {
+            $Collection.Add($key, $QueryParameter.$key)
+        }
     }
 
     # Build the uri

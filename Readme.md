@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.203 - 2021.06.01
+  - 💡 Improved `Join-UriQuery`
 - 0.0.202 - 2021.06.01
   - 💡 Improved `Join-UriQuery`
 - 0.0.201 - 2021.05.19
