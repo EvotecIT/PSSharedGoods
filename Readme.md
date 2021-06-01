@@ -33,12 +33,11 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.203 - 2021.06.01
+- 0.0.202 - 2021.06.01
   - 💡 Improved `Join-UriQuery`
-- 0.0.202 - 2021.05.19
+- 0.0.201 - 2021.05.19
   - 📦 Added `Convert-DomainFqdnToNetBIOS`
   - 📦 Added `Convert-DomainToSid`
-- 0.0.201 - 2021.05.19
   - 📦 Improved `Get-OperatingSystem`
 - 0.0.200 - 2021.05.19
   - 📦 Added `Convert-ExchangeRecipient` (replacement to `Convert-ExchangeRecipientDetails` which will be removed in the future (too slow))
