@@ -47,7 +47,9 @@
 
     # Build the uri
     $uriRequest = [System.UriBuilder] $Url
-    $uriRequest.Query = $Collection.ToString()
+    if ($Collection) {
+        $uriRequest.Query = $Collection.ToString()
+    }
     #return $uriRequest.Uri.OriginalUri
     return $uriRequest.Uri.AbsoluteUri
 }
