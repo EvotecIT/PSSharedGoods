@@ -51,7 +51,7 @@ function ConvertTo-FlatHashtable {
             foreach ($SubKey in $HashTable.Keys) {
                 $MergedName = -join ($Name, $Delimiter, $SubKey)
                 if ($HashTable[$SubKey] -is [System.Collections.IDictionary]) {
-                    $NestedHashtable = Add-Keys -HashTable $HashTable[$SubKey] -Name $MergedName
+                    $NestedHashtable = Add-HashTableKeys -HashTable $HashTable[$SubKey] -Name $MergedName
                     $New = $New + $NestedHashtable
                 } else {
                     $New[$MergedName] = $HashTable[$SubKey]
