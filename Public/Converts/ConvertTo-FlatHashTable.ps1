@@ -37,36 +37,25 @@ function ConvertTo-FlatHashtable {
     [CmdletBinding()]
     param(
         [System.Collections.IDictionary] $InputObject,
-        [string] $Delimiter = ':'
+        [string] $Delimiter = ':',
+        [Parameter(DontShow)][string] $Name
     )
     Begin {
         $Output = [ordered] @{}
-        function Add-HashTableKeys {
-            [CmdletBinding()]
-            param(
-                [System.Collections.IDictionary] $HashTable,
-                [string] $Name
-            )
-            $New = [ordered] @{}
-            foreach ($SubKey in $HashTable.Keys) {
-                $MergedName = -join ($Name, $Delimiter, $SubKey)
-                if ($HashTable[$SubKey] -is [System.Collections.IDictionary]) {
-                    $NestedHashtable = Add-HashTableKeys -HashTable $HashTable[$SubKey] -Name $MergedName
-                    $New = $New + $NestedHashtable
-                } else {
-                    $New[$MergedName] = $HashTable[$SubKey]
-                }
-            }
-            $New
-        }
     }
     Process {
         foreach ($Key in $InputObject.Keys) {
+            if ($Name) {
+                $MergedName = -join ($Name, $Delimiter, $Key)
+            } else{
+                $MergedName = $Key
+            }
             if ($InputObject[$Key] -is [System.Collections.IDictionary]) {
-                $Found = Add-HashTableKeys -HashTable $InputObject[$Key] -Name $Key
+
+                $Found = ConvertTo-FlatHashtable -InputObject $InputObject[$Key] -Name $MergedName
                 $Output = $Output + $Found
             } else {
-                $Output[$Key] = $InputObject[$Key]
+                $Output[$MergedName] = $InputObject[$Key]
             }
         }
     }
