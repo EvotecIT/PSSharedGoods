@@ -10,6 +10,9 @@ function ConvertTo-FlatHashtable {
     .PARAMETER InputObject
     Ordered Dictionary or Hashtable
 
+    .PARAMETER Delimiter
+    Delimiter for key name when merging nested hashtables. By default colon is used
+
     .EXAMPLE
     ConvertTo-FlatHashTable -InputObject ([ordered] @{
         RootEntry       = 'OK1'
@@ -33,7 +36,8 @@ function ConvertTo-FlatHashtable {
     #>
     [CmdletBinding()]
     param(
-        [System.Collections.IDictionary] $InputObject
+        [System.Collections.IDictionary] $InputObject,
+        [string] $Delimiter = ':'
     )
     Begin {
         $Output = [ordered] @{}
@@ -45,7 +49,7 @@ function ConvertTo-FlatHashtable {
             )
             $New = [ordered] @{}
             foreach ($SubKey in $HashTable.Keys) {
-                $MergedName = -join ($Name, ':', $SubKey)
+                $MergedName = -join ($Name, $Delimiter, $SubKey)
                 if ($HashTable[$SubKey] -is [System.Collections.IDictionary]) {
                     $NestedHashtable = Add-Keys -HashTable $HashTable[$SubKey] -Name $MergedName
                     $New = $New + $NestedHashtable
