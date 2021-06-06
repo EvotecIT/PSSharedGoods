@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.205 - 2021.06.06
+  - ℹ Improved `ConvertTo-FlatHashtable`
 - 0.0.204 - 2021.06.05
   - 📦 Added `ConvertTo-FlatHashtable`
 - 0.0.203 - 2021.06.01
@@ -55,8 +57,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
   - 📦 Added `Join-UriQuery` - Provides ability to join two Url paths together including advanced querying which is useful for RestAPI/GraphApi calls
 - 0.0.198 - 2021.03.12
   - Improved `ConvertTo-JsonLiteral`
-    - [x] Added `AdvancedReplace` parameter to be able to fix strings like `@{ '.' = '\.'; '$' = '\$' }` which break JSON, but useful for other stuff
-    - [x] Moved enum/numeric conversions around to prevent issues with arrays
+    - ☑ Added `AdvancedReplace` parameter to be able to fix strings like `@{ '.' = '\.'; '$' = '\$' }` which break JSON, but useful for other stuff
+    - ☑ Moved enum/numeric conversions around to prevent issues with arrays
 - 0.0.197 - 2021.02.21
   - Improved `ConvertTo-JsonLiteral` - `ArrayJoin` and `ArrayJoinString` to better control `JavaScript` output
 - 0.0.196 - 2021.02.11
@@ -212,7 +214,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
   - Added `Get-ADAdministrativeGroups`
 
 - 0.0.138 - 2020.04.26
-  - [x] ConvertFrom-DistinguishedName added switch `ToDomainCN`
+  - ☑ ConvertFrom-DistinguishedName added switch `ToDomainCN`
 
     ```powershell
     $Oops = 'cn={55FB3860-74C9-4262-AD77-30197EAB9999},cn=policies,cn=system,DC=ad,DC=evotec,DC=xyz'
@@ -224,51 +226,51 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
     ```
 
 - 0.0.137 - 2020.04.24
-  - [x] Removed aliases for `Set-FileInheritance`, `Set-FilePermission`, `Remove-FilePermission`
+  - ☑ Removed aliases for `Set-FileInheritance`, `Set-FilePermission`, `Remove-FilePermission`
 
 - 0.0.136 - 2020.04.24
-  - [x] Added `OnlyWellKnownAdministrative` switch to `ConvertFrom-SID`
+  - ☑ Added `OnlyWellKnownAdministrative` switch to `ConvertFrom-SID`
 
 - 0.0.135 - 2020.04.19
-  - [x] Improvements to Get-WinADForestDetails
-  - [x] Added `OnlyWellKnown` switch to `ConvertFrom-SID`
+  - ☑ Improvements to Get-WinADForestDetails
+  - ☑ Added `OnlyWellKnown` switch to `ConvertFrom-SID`
 
 - 0.0.134 - 2020.04.09
-  - [x] Improvements to Get-WinADForestDetails
+  - ☑ Improvements to Get-WinADForestDetails
 
 - 0.0.133 - 2020.04.03
-  - [x] Improvements to Get-WinADForestDetails
+  - ☑ Improvements to Get-WinADForestDetails
 
 - 0.0.132 - 2020.03.19
-  - [x] Improvements to Get-WinADForestDetails
+  - ☑ Improvements to Get-WinADForestDetails
 
 - 0.0.131 - 2020.03.18
-  - [x] Improvements to Get-WinADForestDetails for subsequent use, fix for excluding d
-  - [x Copy-Dictionary added
+  - ☑ Improvements to Get-WinADForestDetails for subsequent use, fix for excluding d
+  - ☑ Copy-Dictionary added
 
 - 0.0.130 - 2020.03.14
-  - [x] Small update to Get-WinADForestDetails
+  - ☑ Small update to Get-WinADForestDetails
 
 - 0.0.129 - 2020.03.13
-  - [x] Typo fix for string
+  - ☑ Typo fix for string
 
 - 0.0.128 - 2020.03.05
-  - [x] Small update to Get-WinADForestDetails
+  - ☑ Small update to Get-WinADForestDetails
 
 - 0.0.127 - 2020.02.27
-  - [x] Fix for ConvertFrom-DistinguishedName
+  - ☑ Fix for ConvertFrom-DistinguishedName
 
 - 0.0.126 - 2020.02.27
-  - [x] Added Get-FilePermissions
-  - [x] Improved ConvertFrom-SID
+  - ☑ Added Get-FilePermissions
+  - ☑ Improved ConvertFrom-SID
 
 - 0.0.125 - 2020.02.17
-  - [x] Improvments to Get-ComputerSMBSharePermissions
+  - ☑ Improvments to Get-ComputerSMBSharePermissions
 - 0.0.124 - 2020.02.17
-  - [x] Added Get-ComputerSMBSharePermissions
+  - ☑ Added Get-ComputerSMBSharePermissions
 - 0.0.123 - 2020.02.16
-  - [x] Updates to Get-PSRegistry/Set-PSRegistry/Get-CimData
-  - [x] Added Get-ComputerSplit for easiedr use of above functions but also for future use
+  - ☑ Updates to Get-PSRegistry/Set-PSRegistry/Get-CimData
+  - ☑ Added Get-ComputerSplit for easiedr use of above functions but also for future use
 
 - 0.0.122 - 2020.01.26
-  - [x] Fix for ConvertFrom-DistinguishedName to cover OU/DC properly (wrong regex)
+  - ☑ Fix for ConvertFrom-DistinguishedName to cover OU/DC properly (wrong regex)
