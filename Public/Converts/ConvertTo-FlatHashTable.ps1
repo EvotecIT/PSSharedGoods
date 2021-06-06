@@ -46,8 +46,8 @@ function ConvertTo-FlatHashtable {
     Process {
         foreach ($Key in $InputObject.Keys) {
             if ($Name) {
-                $MergedName = -join ($Name, $Delimiter, $Key)
-            } else{
+                $MergedName = "$Name$($Delimiter)$Key"
+            } else {
                 $MergedName = $Key
             }
             if ($InputObject[$Key] -is [System.Collections.IDictionary]) {
