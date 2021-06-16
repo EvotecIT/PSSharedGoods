@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.206 - 2021.06.16
+  - ℹ Improved `Send-Email` to return object when using `WhatIf`
 - 0.0.205 - 2021.06.06
   - ℹ Improved `ConvertTo-FlatHashtable`
 - 0.0.204 - 2021.06.05

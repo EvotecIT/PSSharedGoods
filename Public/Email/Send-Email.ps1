@@ -202,6 +202,12 @@ function Send-Email {
                 Error  = ""
                 SentTo = $MailSentTo
             }
+        } else {
+            return [PSCustomObject] @{
+                Status = $False
+                Error  = 'Email not sent (WhatIf)'
+                SentTo = $MailSentTo
+            }
         }
     } catch {
         $MailMessage.Dispose();
