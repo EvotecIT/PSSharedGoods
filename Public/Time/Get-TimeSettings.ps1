@@ -82,15 +82,15 @@ function Get-TimeSettings {
         # The default value on domain members is NT5DS. The default value on stand-alone clients and servers is NTP.
     }
 
-    $NtpServerIntervals = @{
-        '0x1' = 'SpecialInterval' # flag indicate sync time with external server in special interval configured in “SpecialPollInterval” registry value.
-        '0x2' = 'UseAsFallbackOnly' #  use this as UseAsFallbackOnly time source – if primary is not available then sync to this server.
-        '0x4' = 'SymmetricActive' #- For more information about this mode, see Windows Time Server: 3.3 Modes of Operation.
-        '0x8' = 'Client' #use client mode association while sync time to external time source.
-        '0x9' = 'SpecialInterval+Client' # use special interval + client mode association to external time source. This is a good value when your machine sync time to an external time source.
-        #'0x10' = 'Unknown'
+    [flags()]
+    enum NtpServerFlags
+    {
+        None              = 0
+        SpecialInterval   = 0x1 # flag indicate sync time with external server in special interval configured in “SpecialPollInterval” registry value.
+        UseAsFallbackOnly = 0x2 # use this as UseAsFallbackOnly time source – if primary is not available then sync to this server.
+        SymmetricActive   = 0x4 # For more information about this mode, see Windows Time Server: 3.3 Modes of Operation.
+        Client            = 0x8 # use client mode association while sync time to external time source.
     }
-
 
     $CrossSiteSyncFlags = @{
         '0' = 'None'
@@ -140,10 +140,21 @@ function Get-TimeSettings {
             $SplitNTP = $NtpServer -split ','
 
             if ($SplitNTP.Count -eq 2) {
-                $Intervals = $NtpServerIntervals[$SplitNTP[1]]
-                if ($null -eq $Intervals) {
+
+                # sanity check what should be a small hex value
+                if ($flagVal = $SplitNTP[1] -as [int]) {
+                    # make sure it's within the bounds of our supported flags
+                    if ($flags = $flagVal -as [NtpServerFlags]) {
+                        $Intervals = $flags.ToString().Replace(', ','+')
+                    } else {
+                        Write-Warning "NtpServer flag value `"$flagVal`" could not be converted to NtpServerFlags enum"
+                        $Intervals = 'Incorrect'
+                    }
+                } else {
+                    Write-Warning "NtpServer flag value `"$($SplitNTP[1])`" could not be parsed as an integer"
                     $Intervals = 'Incorrect'
                 }
+
             } else {
                 $Intervals = 'Missing'
             }
