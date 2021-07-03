@@ -33,7 +33,18 @@ function Get-ComputerRoles {
         $Global:ProgressPreference = 'SilentlyContinue'
     }
     foreach ($Computer in $ComputerName) {
-        $Output = Get-WindowsFeature -ComputerName $Computer
+        try {
+            $Output = Get-WindowsFeature -ComputerName $Computer -ErrorAction Stop
+        }
+        #The request could not be processed against a server below Windows Server 2012. Use Invoke-Command and Import-Module
+        catch [System.Exception] {
+            if ($_.FullyQualifiedErrorId -like 'UnSupportedTargetDevice,*') {
+                $output = Invoke-Command -ComputerName $computer {
+                    Import-Module ServerManager
+                    Get-WindowsFeature
+                }
+            }
+        }
         #$ | Where-Object { $_.installed -eq $true -and $_.featuretype -eq 'Role' } | Select-Object name, installed -ExcludeProperty subfeatures
         #$Output | Select-Object Name, Installed , @{name = 'Server Name'; expression = { $Computer } }
         foreach ($Data in $Output) {

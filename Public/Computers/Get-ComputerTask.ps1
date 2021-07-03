@@ -56,6 +56,7 @@
                 Description                             = $Task.Description
                 Documentation                           = $Task.Documentation
                 PrincipalDisplayName                    = $Task.Principal.DisplayName
+				PrincipalUserID                        	= $Task.Principal.UserID
                 PrincipalGroupID                        = $Task.Principal.GroupID
                 PrincipalLogonType                      = $Task.Principal.LogonType
                 PrincipalRunLevel                       = $Task.Principal.RunLevel
