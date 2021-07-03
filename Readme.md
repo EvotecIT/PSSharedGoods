@@ -35,6 +35,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 - 0.0.207
   - 📦 Added Principal.UserID for ScheduledTask (run as account) - tnx itpro-tips - [#20](https://github.com/EvotecIT/PSSharedGoods/pull/20)
+  - Renamed function `Get-TimeSetttings` to `Get-TimeSettings` - tnx rmbolger - [Extra 't' in Get-TimeSetttings #22](https://github.com/EvotecIT/PSSharedGoods/issues/22)
 - 0.0.206 - 2021.06.16
   - ℹ Improved `Send-Email` to return object when using `WhatIf`
 - 0.0.205 - 2021.06.06
