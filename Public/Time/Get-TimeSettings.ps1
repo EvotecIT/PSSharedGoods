@@ -63,7 +63,7 @@ $w32tm
 #>
 
 
-function Get-TimeSetttings {
+function Get-TimeSettings {
     [alias('Get-TimeSynchronization')]
     param(
         [string[]] $ComputerName,
