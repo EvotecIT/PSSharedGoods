@@ -147,11 +147,11 @@ function Get-TimeSettings {
                     if ($flags = $flagVal -as [NtpServerFlags]) {
                         $Intervals = $flags.ToString().Replace(', ','+')
                     } else {
-                        Write-Warning "NtpServer flag value `"$flagVal`" could not be converted to NtpServerFlags enum"
+                        Write-Warning -Message "Get-TimeSettings - NtpServer flag value `"$flagVal`" could not be converted to NtpServerFlags enum"
                         $Intervals = 'Incorrect'
                     }
                 } else {
-                    Write-Warning "NtpServer flag value `"$($SplitNTP[1])`" could not be parsed as an integer"
+                    Write-Warning -Message "Get-TimeSettings - NtpServer flag value `"$($SplitNTP[1])`" could not be parsed as an integer"
                     $Intervals = 'Incorrect'
                 }
 
