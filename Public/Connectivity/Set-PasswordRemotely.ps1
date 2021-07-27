@@ -39,4 +39,11 @@ public static extern bool NetUserChangePassword(string domain, string username, 
             Write-Warning "Set-PasswordRemotely - Password change for account failed. All parameters are required. "
         }
     }
+    End {
+        $OldPassword = $null
+        $NewPassword = $null
+        $OldPasswordPlain = $null
+        $NewPasswordPlain = $null
+        [System.GC]::Collect()
+    }
 }
