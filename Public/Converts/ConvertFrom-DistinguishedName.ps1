@@ -1,22 +1,22 @@
 ﻿function ConvertFrom-DistinguishedName {
     <#
     .SYNOPSIS
-    Short description
+    Converts a Distinguished Name to CN, OU, Multiple OUs or DC
 
     .DESCRIPTION
-    Long description
+    Converts a Distinguished Name to CN, OU, Multiple OUs or DC
 
     .PARAMETER DistinguishedName
-    Parameter description
+    Distinguished Name to convert
 
     .PARAMETER ToOrganizationalUnit
-    Parameter description
+    Converts DistinguishedName to Organizational Unit
 
     .PARAMETER ToDC
-    Parameter description
+    Converts DistinguishedName to DC
 
     .PARAMETER ToDomainCN
-    Parameter description
+    Converts DistinguishedName to Domain CN
 
     .EXAMPLE
     $DistinguishedName = 'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
@@ -32,40 +32,85 @@
     Output:
     Przemyslaw Klys
 
+    .EXAMPLE
+    ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToMultipleOrganizationalUnit -IncludeParent
+
+    Output:
+    OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz
+    OU=Production,DC=ad,DC=evotec,DC=xyz
+
+    .EXAMPLE
+    ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToMultipleOrganizationalUnit
+
+    Output:
+    OU=Production,DC=ad,DC=evotec,DC=xyz
+
     .NOTES
     General notes
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
+        [Parameter(ParameterSetName = 'ToOrganizationalUnit')]
+        [Parameter(ParameterSetName = 'ToMultipleOrganizationalUnit')]
+        [Parameter(ParameterSetName = 'ToDC')]
+        [Parameter(ParameterSetName = 'ToDomainCN')]
+        [Parameter(ParameterSetName = 'Default')]
         [alias('Identity', 'DN')][Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)][string[]] $DistinguishedName,
-        [switch] $ToOrganizationalUnit,
-        [switch] $ToDC,
-        [switch] $ToDomainCN
+        [Parameter(ParameterSetName = 'ToOrganizationalUnit')][switch] $ToOrganizationalUnit,
+        [Parameter(ParameterSetName = 'ToMultipleOrganizationalUnit')][alias('ToMultipleOU')][switch] $ToMultipleOrganizationalUnit,
+        [Parameter(ParameterSetName = 'ToMultipleOrganizationalUnit')][switch] $IncludeParent,
+        [Parameter(ParameterSetName = 'ToDC')][switch] $ToDC,
+        [Parameter(ParameterSetName = 'ToDomainCN')][switch] $ToDomainCN
     )
-    process {
+    Process {
         foreach ($Distinguished in $DistinguishedName) {
             if ($ToDomainCN) {
                 $DN = $Distinguished -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
                 $CN = $DN -replace ',DC=', '.' -replace "DC="
-                $CN
+                if ($CN) {
+                    $CN
+                }
             } elseif ($ToOrganizationalUnit) {
-                [Regex]::Match($Distinguished, '(?=OU=)(.*\n?)(?<=.)').Value
+                $Value = [Regex]::Match($Distinguished, '(?=OU=)(.*\n?)(?<=.)').Value
+                if ($Value) {
+                    $Value
+                }
+            } elseif ($ToMultipleOrganizationalUnit) {
+                if ($IncludeParent) {
+                    $Distinguished
+                }
+                while ($true) {
+                    #$dn = $dn -replace '^.+?,(?=CN|OU|DC)'
+                    $Distinguished = $Distinguished -replace '^.+?,(?=..=)'
+                    if ($Distinguished -match '^DC=') {
+                        break
+                    }
+                    $Distinguished
+                }
             } elseif ($ToDC) {
                 #return [Regex]::Match($DistinguishedName, '(?=DC=)(.*\n?)(?<=.)').Value
                 # return [Regex]::Match($DistinguishedName, '.*?(DC=.*)').Value
-                $Distinguished -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
+                $Value = $Distinguished -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
+                if ($Value) {
+                    $Value
+                }
                 #return [Regex]::Match($DistinguishedName, 'CN=.*?(DC=.*)').Groups[1].Value
             } else {
                 $Regex = '^CN=(?<cn>.+?)(?<!\\),(?<ou>(?:(?:OU|CN).+?(?<!\\),)+(?<dc>DC.+?))$'
-                $Output = foreach ($_ in $Distinguished) {
-                    $_ -match $Regex
-                    $Matches
+                #$Output = foreach ($_ in $Distinguished) {
+                $Found = $Distinguished -match $Regex
+                if ($Found) {
+                    $Matches.cn
                 }
-                $Output.cn
+                #}
+                #$Output.cn
             }
         }
     }
 }
+
+#ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToMultipleOrganizationalUnit -IncludeParent
+#ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
 
 <#
 $DistinguishedName = @(

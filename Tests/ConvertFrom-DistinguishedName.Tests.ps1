@@ -6,7 +6,7 @@
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
         )
         $Output = ConvertFrom-DistinguishedName -ToOrganizationalUnit -DistinguishedName $DistinguishedName
-        $Output | Should -be @(
+        $Output | Should -Be @(
             'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
@@ -19,7 +19,7 @@
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
         )
         $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToOrganizationalUnit
-        $Output | Should -be @(
+        $Output | Should -Be @(
             'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
@@ -32,7 +32,7 @@
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
         )
         $Output = ConvertFrom-DistinguishedName -ToDC -DistinguishedName $DistinguishedName
-        $Output | Should -be @(
+        $Output | Should -Be @(
             'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=xyz'
@@ -45,7 +45,7 @@
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
         )
         $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToDC
-        $Output | Should -be @(
+        $Output | Should -Be @(
             'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=xyz'
@@ -58,7 +58,7 @@
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
         )
         $Output = ConvertFrom-DistinguishedName -ToDomainCN -DistinguishedName $DistinguishedName
-        $Output | Should -be @(
+        $Output | Should -Be @(
             'ad.evotec.xyz'
             'ad.evotec.xyz'
             'ad.evotec.xyz'
@@ -71,10 +71,43 @@
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
         )
         $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToDomainCN
-        $Output | Should -be @(
+        $Output | Should -Be @(
             'ad.evotec.xyz'
             'ad.evotec.xyz'
             'ad.evotec.xyz'
+        )
+    }
+    It 'ToMultipleOU Conversion - Pipeline' {
+        $DistinguishedName = @(
+            'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+        )
+        $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToMultipleOrganizationalUnit
+        $Output | Should -Be @(
+            'OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Production,DC=ad,DC=evotec,DC=xyz'
+        )
+    }
+    It 'ToMultipleOU Conversion with Parent - Pipeline' {
+        $DistinguishedName = @(
+            'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+        )
+        $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToMultipleOrganizationalUnit -IncludeParent
+        $Output | Should -Be @(
+            'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Production,DC=ad,DC=evotec,DC=xyz'
         )
     }
 }
