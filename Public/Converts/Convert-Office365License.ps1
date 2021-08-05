@@ -195,6 +195,7 @@ function Convert-Office365License {
             "BUSINESS_VOICE_DIRECTROUTING"       = "Microsoft 365 Business Voice (without calling plan)"
             "FORMS_PRO"                          = "Dynamics 365 Customer Voice Trial"
             "CCIBOTS_PRIVPREV_VIRAL"             = "Power Virtual Agents Viral Trial"
+            "DYN365_BUSCENTRAL_ESSENTIAL"        = "Dynamics 365 Business Central Essentials"
         }
     }
     Process {
