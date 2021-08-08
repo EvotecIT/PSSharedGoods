@@ -33,8 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.209
- - Improved `Convert-OfficeLicense` - adds [Dynamics 365 Business Central Essentials](https://github.com/EvotecIT/PSSharedGoods/pull/25) license - tnx diecknet
+- 0.0.209 - 2021.08.08
+  - ℹ Improved `Convert-OfficeLicense` - adds [Dynamics 365 Business Central Essentials](https://github.com/EvotecIT/PSSharedGoods/pull/25) license - tnx diecknet
 - 0.0.208 - 2021.08.04
   - ℹ Improved `Set-PasswordRemotely` to cleanup objects
   - ℹ Improved `ConvertFrom-DistinguishedName`
