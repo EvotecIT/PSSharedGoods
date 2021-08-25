@@ -22,6 +22,16 @@
         search   = 'SearchString'
     }
 
+    .EXAMPLE
+    Join-UriQuery -BaseUri 'https://evotec.xyz/wp-json/wp/v2/posts' -QueryParameter @{
+        page     = 1
+        per_page = 20
+        search   = 'SearchString'
+    }
+
+    .EXAMPLE
+    Join-UriQuery -BaseUri 'https://evotec.xyz' -RelativeOrAbsoluteUri '/wp-json/wp/v2/posts'
+
     .NOTES
     General notes
     #>
@@ -36,7 +46,7 @@
     if ($BaseUri -and $RelativeOrAbsoluteUri) {
         $Url = Join-Uri -BaseUri $BaseUri -RelativeOrAbsoluteUri $RelativeOrAbsoluteUri
     } else {
-        $Url = $PrimaryUrl
+        $Url = $BaseUri
     }
 
     # Create a http name value collection from an empty string

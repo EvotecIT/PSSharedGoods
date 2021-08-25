@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.211 - 2021.08.25
+-   ℹ Improved `Join-UriQuery`
 - 0.0.210 - 2021.08.12
   - ℹ Improved `Convert-OfficeLicense` - adds [more licenses](https://github.com/EvotecIT/PSSharedGoods/pull/26) license - tnx diecknet
 - 0.0.209 - 2021.08.08
