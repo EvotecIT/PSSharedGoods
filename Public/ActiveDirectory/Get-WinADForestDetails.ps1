@@ -58,20 +58,20 @@
         $Findings['ForestDomainControllers'] = @()
         $Findings['QueryServers'] = @{ }
         $Findings['DomainDomainControllers'] = @{ }
-        [Array] $Findings['Domains'] = foreach ($_ in $ForestInformation.Domains) {
+        [Array] $Findings['Domains'] = foreach ($Domain in $ForestInformation.Domains) {
             if ($IncludeDomains) {
-                if ($_ -in $IncludeDomains) {
-                    $_.ToLower()
+                if ($Domain -in $IncludeDomains) {
+                    $Domain.ToLower()
                 }
                 # We skip checking for exclusions
                 continue
             }
-            if ($_ -notin $ExcludeDomains) {
-                $_.ToLower()
+            if ($Domain -notin $ExcludeDomains) {
+                $Domain.ToLower()
             }
         }
         # We want to have QueryServers always available for all domains
-        foreach ($Domain in $ForestInformation.Domains) {
+        [Array] $DomainsActive = foreach ($Domain in $Findings['Domains']) {
             try {
                 $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
 
@@ -93,33 +93,20 @@
                 $Findings['QueryServers']['Forest'] = $OrderedDC
             }
             $Findings['QueryServers']["$Domain"] = $OrderedDC
+            # lets return domain as something that wroks
+            $Domain
         }
 
-
-        [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
-            <#
-            try {
-                $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
-
-                $OrderedDC = [ordered] @{
-                    Domain      = $DC.Domain
-                    Forest      = $DC.Forest
-                    HostName    = [Array] $DC.HostName
-                    IPv4Address = $DC.IPv4Address
-                    IPv6Address = $DC.IPv6Address
-                    Name        = $DC.Name
-                    Site        = $DC.Site
-                }
-
-            } catch {
-                Write-Warning "Get-WinADForestDetails - Error discovering DC for domain $Domain - $($_.Exception.Message)"
+        # we need to make sure to remove domains that don't have DCs for some reason
+        [Array] $Findings['Domains'] = foreach ($Domain in $Findings['Domains']) {
+            if ($Domain -notin $DomainsActive) {
+                Write-Warning "Get-WinADForestDetails - Domain $Domain doesn't seem to be active (no DCs). Skipping."
                 continue
             }
-            if ($Domain -eq $Findings['Forest']['Name']) {
-                $Findings['QueryServers']['Forest'] = $OrderedDC
-            }
-            $Findings['QueryServers']["$Domain"] = $OrderedDC
-            #>
+            $Domain
+        }
+
+        [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
             $QueryServer = $Findings['QueryServers'][$Domain]['HostName'][0]
 
             [Array] $AllDC = try {
