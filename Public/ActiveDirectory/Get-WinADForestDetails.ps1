@@ -71,7 +71,7 @@
             }
         }
         # We want to have QueryServers always available for all domains
-        [Array] $DomainsActive = foreach ($Domain in $Findings['Domains']) {
+        [Array] $DomainsActive = foreach ($Domain in $Findings['Forest'].Domains) {
             try {
                 $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
 
