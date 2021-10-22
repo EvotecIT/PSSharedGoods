@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.213 - 2021.10.22
+  - ℹ Fixes for forest domains handling `Get-WinADForestDetails`
 - 0.0.212 - 2021.09.30
   - ℹ Improved detection of dead domains in `Get-WinADForestDetails`
 - 0.0.211 - 2021.08.25
