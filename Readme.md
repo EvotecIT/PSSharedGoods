@@ -35,6 +35,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 - 0.0.214
   - ℹ Improved error handling `Get-PSRegistry` and added new property
+  - ℹ Improved `ConvertTo-OperatingSystem` adding registry handling + few more systems
+  - Added `Get-ProtocolDefaults` to get default values for SSL/TLS protocols per system
 - 0.0.213 - 2021.10.22
   - ℹ Fixes for forest domains handling `Get-WinADForestDetails`
 - 0.0.212 - 2021.09.30
