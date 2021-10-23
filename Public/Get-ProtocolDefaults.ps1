@@ -1,15 +1,16 @@
 ﻿function Get-ProtocolDefaults {
     <#
     .SYNOPSIS
-    Short description
+    Gets a list of default settings for SSL/TLS protocols
 
     .DESCRIPTION
-    Long description
+    Gets a list of default settings for SSL/TLS protocols
 
     .PARAMETER WindowsVersion
-    Parameter description
+    Windows Version to search for
 
     .PARAMETER AsList
+    If true, returns a list of protocol names for all Windows Versions, otherwise returns a single entry for the specified Windows Version
 
     .EXAMPLE
     Get-ProtocolDefaults -AsList | Format-Table
@@ -19,11 +20,13 @@
 
     .NOTES
     Based on: https://docs.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-
+
+    According to this https://github.com/MicrosoftDocs/windowsserverdocs/issues/2783 SCHANNEL service requires direct enablement so the list is kind of half useful
     #>
-    [cmdletbinding()]
+    [cmdletbinding(DefaultParameterSetName = 'WindowsVersion')]
     param(
-        [string] $WindowsVersion,
-        [switch] $AsList
+        [Parameter(Mandatory, ParameterSetName = 'WindowsVersion')][string] $WindowsVersion,
+        [Parameter(Mandatory, ParameterSetName = 'AsList')][switch] $AsList
     )
 
     $Defaults = [ordered] @{
