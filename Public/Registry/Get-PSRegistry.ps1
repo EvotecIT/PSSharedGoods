@@ -64,19 +64,53 @@
                         break
                     }
                 }
-                if ($ComputerSplit -eq 0) {
-                    $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments $Arguments -Verbose:$false
-                    $OutputKeys = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumKey -Arguments $Arguments -Verbose:$false
-                    #$OutputPermissions = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName GetSecurityDescriptor -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
-                    #$OutputCheckAccess = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName CheckAccess -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
-                } else {
-                    $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments $Arguments -ComputerName $Computers[$ComputerSplit] -Verbose:$false
-                    $OutputKeys = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumKey -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
-                    #$OutputPermissions = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName GetSecurityDescriptor -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
-                    #$OutputCheckAccess =  Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName CheckAccess -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                try {
+                    if ($ComputerSplit -eq 0) {
+                        $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments $Arguments -Verbose:$false -ErrorAction Stop
+                        $OutputKeys = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumKey -Arguments $Arguments -Verbose:$false -ErrorAction Stop
+                        #$OutputPermissions = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName GetSecurityDescriptor -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                        #$OutputCheckAccess = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName CheckAccess -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                    } else {
+                        $Output2 = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumValues -Arguments $Arguments -ComputerName $Computers[$ComputerSplit] -Verbose:$false -ErrorAction Stop
+                        $OutputKeys = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName EnumKey -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false -ErrorAction Stop
+                        #$OutputPermissions = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName GetSecurityDescriptor -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                        #$OutputCheckAccess =  Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName CheckAccess -ComputerName $Computers[$ComputerSplit] -Arguments $Arguments -Verbose:$false
+                    }
+                } catch {
+                    $RegistryOutput = [ordered] @{
+                        PSConnection = $false
+                        PSError      = $true
+                    }
+                    if (-not $RegistryOutput['PSComputerName']) {
+                        # We check if COmputerName exists. Just in case someone actually set it up in registry with that name
+                        # We then use PSComputerName
+                        if ($ComputerSplit -eq 0) {
+                            $RegistryOutput['PSComputerName'] = $ENV:COMPUTERNAME
+                        } else {
+                            $RegistryOutput['PSComputerName'] = $Entry.PSComputerName
+                        }
+                    } else {
+                        if ($ComputerSplit -eq 0) {
+                            $RegistryOutput['ComputerName'] = $ENV:COMPUTERNAME
+                        } else {
+                            $RegistryOutput['ComputerName'] = $Entry.PSComputerName
+                        }
+                    }
+                    if (-not $RegistryOutput['PSSubKeys']) {
+                        # Same as above. If for some reason RegistryKeys exists we need to save it to different value
+                        $RegistryOutput['PSSubKeys'] = $OutputKeys.sNames
+                    } else {
+                        $RegistryOutput['SubKeys'] = $OutputKeys.sNames
+                    }
+                    $RegistryOutput['PSPath'] = $Registry
+
+                    [PSCustomObject] $RegistryOutput
+                    continue
                 }
                 foreach ($Entry in $Output2) {
-                    $RegistryOutput = [ordered] @{ }
+                    $RegistryOutput = [ordered] @{
+                        PSConnection = $true
+                    }
                     if ($Entry.ReturnValue -ne 0) {
                         $RegistryOutput['PSError'] = $true
                     } else {
@@ -87,10 +121,14 @@
                             $Arguments['sValueName'] = $Names[$i]
                             $MethodName = $TypesDictionary["$($Types[$i])"]
 
-                            if ($ComputerSplit -eq 0) {
-                                $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -Verbose:$false
-                            } else {
-                                $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $Entry.PSComputerName -Verbose:$false #-ComputerName $Entry.PSComputerName
+                            try {
+                                if ($ComputerSplit -eq 0) {
+                                    $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -Verbose:$false -ErrorAction Stop
+                                } else {
+                                    $Values = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $Entry.PSComputerName -Verbose:$false -ErrorAction Stop #-ComputerName $Entry.PSComputerName
+                                }
+                            } catch {
+                                $Values = $null
                             }
                             #$Output2 = Get-RegistryData -ComputerName $Entry.PSComputerName -MethodName $MethodName -Arguments $Arguments
                             if ($null -ne $Values.sValue) {
