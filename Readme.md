@@ -33,7 +33,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.214
+- 0.0.214 - 2021.10.23
   - ℹ Improved error handling `Get-PSRegistry` and added new property
   - ℹ Improved `ConvertTo-OperatingSystem` adding registry handling + few more systems
   - Added `Get-ProtocolDefaults` to get default values for SSL/TLS protocols per system
