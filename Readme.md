@@ -33,7 +33,7 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
-- 0.0.215 - 2021.12.10
+- 0.0.215 - 2021.12.11
   - ℹ Improved `Rename-LatinCharacters` with docs and cmdletbinding
   - ℹ Improved `ConvertFrom-DistinguishedName` by adding `ToLastName` switch
 - 0.0.214 - 2021.10.23
