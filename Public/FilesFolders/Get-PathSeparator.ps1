@@ -1,6 +1,5 @@
 function Get-PathSeparator {
-    param(
-
-    )
-    return  [IO.Path]::PathSeparator
+    [CmdletBinding()]
+    param()
+    return [IO.Path]::PathSeparator
 }

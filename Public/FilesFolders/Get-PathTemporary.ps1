@@ -1,6 +1,5 @@
 function Get-PathTemporary {
-    param(
-
-    )
+    [CmdletBinding()]
+    param()
     return [IO.path]::GetTempPath()
 }
