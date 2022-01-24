@@ -41,7 +41,8 @@ function Get-FileName {
     )
 
     if ($Temporary) {
-        return "$($([System.IO.Path]::GetTempFileName()).Replace('.tmp','')).$Extension"
+        # C:\Users\przemyslaw.klys\AppData\Local\Temp\p0v4bbif.xlsx
+        return [io.path]::Combine([System.IO.Path]::GetTempPath(), "$($([System.IO.Path]::GetRandomFileName()).Split('.')[0]).$Extension")
     }
     if ($TemporaryFileOnly) {
         # Generates 3ymsxvav.tmp
