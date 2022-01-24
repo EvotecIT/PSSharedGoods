@@ -33,6 +33,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.216 - 2022.01.24
+  - 🐛 Fixes critical bug in `New-FileName` where it could lead to a lot of temporary files created by `New-FileName`
 - 0.0.215 - 2021.12.11
   - ℹ Improved `Rename-LatinCharacters` with docs and cmdletbinding
   - ℹ Improved `ConvertFrom-DistinguishedName` by adding `ToLastName` switch
