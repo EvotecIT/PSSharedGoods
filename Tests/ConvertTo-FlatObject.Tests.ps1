@@ -27,6 +27,7 @@
             }
         )
     }
+    TestEmpty = @()
     ListTest  = @(
         [PSCustomObject] @{
             "Name" = "Justyna Klys"
@@ -65,6 +66,7 @@ $PSCustomObject = [PSCustomObject] @{
             }
         )
     }
+    TestEmpty = @()
     ListTest  = @(
         [PSCustomObject] @{
             "Name" = "Justyna Klys"
@@ -103,6 +105,7 @@ Describe -Name 'Testing ConvertTo-FlatObject' {
         $result."Address.Street" | Should -Be "Kwiatowa"
         $result."ListTest.1.Name" | Should -Be "Justyna Klys"
         $result."ListTest.1.Age" | Should -Be 33
+        $result."TestEmpty" | Should -Be @()
     }
     It 'OrderedObject Conversion' {
         $result = ConvertTo-FlatObject $PSCustomObject
@@ -125,5 +128,6 @@ Describe -Name 'Testing ConvertTo-FlatObject' {
         $result."Address.Street" | Should -Be "Kwiatowa"
         $result."ListTest.1.Name" | Should -Be "Justyna Klys"
         $result."ListTest.1.Age" | Should -Be 33
+        $result."TestEmpty" | Should -Be @()
     }
 }
