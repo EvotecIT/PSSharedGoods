@@ -1,12 +1,12 @@
 ﻿Import-Module .\PSSharedGoods.psd1 -Force
 
 $Object1 = [PSCustomObject] @{
-    "Name"    = "Przemyslaw Klys"
-    "Age"     = "30"
-    "Test"    = $null
-    "EmptyArray" = @()
+    "Name"        = "Przemyslaw Klys"
+    "Age"         = "30"
+    "Test"        = $null
+    "EmptyArray"  = @()
     "EmptyArray1" = @()
-    "Address" = @{
+    "Address"     = @{
         "Street"  = "Kwiatowa"
         "City"    = "Warszawa"
 
@@ -32,7 +32,7 @@ $Object1 = [PSCustomObject] @{
             }
         )
     }
-    ListTest  = @(
+    ListTest      = @(
         [PSCustomObject] @{
             "Name" = "Sława Klys"
             "Age"  = "33"
@@ -40,11 +40,11 @@ $Object1 = [PSCustomObject] @{
     )
 }
 $Object2 = [PSCustomObject] @{
-    "Name"    = "Przemyslaw Klys"
-    "Age"     = "30"
-    "Test"    = $null
+    "Name"       = "Przemyslaw Klys"
+    "Age"        = "30"
+    "Test"       = $null
     "EmptyArray" = @()
-    "Address" = @{
+    "Address"    = @{
         "Street"  = "Kwiatowa"
         "City"    = "Warszawa"
 
@@ -70,7 +70,7 @@ $Object2 = [PSCustomObject] @{
             }
         )
     }
-    ListTest  = @(
+    ListTest     = @(
         [PSCustomObject] @{
             "Name" = "Sława Klys"
             "Age"  = "33"
@@ -78,4 +78,4 @@ $Object2 = [PSCustomObject] @{
     )
 }
 
-Compare-MultipleObjects -Objects $Object1, $Object2 -FlattenObject -SkipProperties | Format-Table
+Compare-MultipleObjects -Objects $Object1, $Object2 -FlattenObject -Summary | Format-Table *
