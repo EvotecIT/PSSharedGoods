@@ -197,12 +197,15 @@
                 }
 
                 # This will be used only if we don't use flattening of objects.
-                # 
+                #
                 if ($Value1 -is [PSCustomObject]) {
+                    [ordered] @{ Status = $null; Same = @(); Add =@(); Remove = @() }
                     continue
                 } elseif ($Value1 -is [System.Collections.IDictionary]) {
+                    [ordered] @{ Status = $null; Same = @(); Add =@(); Remove = @() }
                     continue
                 } elseif ($Value1 -is [Array] -and $Value1[0] -isnot [string]) {
+                    [ordered] @{ Status = $null; Same = @(); Add =@(); Remove = @() }
                     continue
                 }
 
@@ -218,7 +221,7 @@
                 }
                 $Status
             }
-            if (-not $IsSame) {
+            if ($null -eq $IsSame.Status) {
                 $EveryOtherElement['Status'] = $null
             } elseif ($IsSame.Status -notcontains $false) {
                 $EveryOtherElement['Status'] = $true
