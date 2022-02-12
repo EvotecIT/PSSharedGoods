@@ -3,6 +3,9 @@
 $Object1 = [PSCustomObject] @{
     "Name"    = "Przemyslaw Klys"
     "Age"     = "30"
+    "Test"    = $null
+    "EmptyArray" = @()
+    "EmptyArray1" = @()
     "Address" = @{
         "Street"  = "Kwiatowa"
         "City"    = "Warszawa"
@@ -39,6 +42,8 @@ $Object1 = [PSCustomObject] @{
 $Object2 = [PSCustomObject] @{
     "Name"    = "Przemyslaw Klys"
     "Age"     = "30"
+    "Test"    = $null
+    "EmptyArray" = @()
     "Address" = @{
         "Street"  = "Kwiatowa"
         "City"    = "Warszawa"
@@ -73,4 +78,4 @@ $Object2 = [PSCustomObject] @{
     )
 }
 
-Compare-MultipleObjects -Objects $Object1, $Object2 -ExcludeProperty '*@odata*' -FlattenObject | Format-Table
+Compare-MultipleObjects -Objects $Object1, $Object2 -FlattenObject -SkipProperties | Format-Table
