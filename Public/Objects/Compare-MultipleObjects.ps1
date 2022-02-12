@@ -168,7 +168,7 @@
         # Compare Objects
         foreach ($NameProperty in $FirstObjectProperties) {
             $EveryOtherElement = [ordered] @{ }
-            $EveryOtherElement['Name'] = $ObjectProperty
+            $EveryOtherElement['Name'] = $NameProperty
             if ($Summary) {
                 $EveryOtherElement['Same'] = $null
                 $EveryOtherElement['Different'] = $null
