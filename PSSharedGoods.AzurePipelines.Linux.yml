@@ -1,4 +1,4 @@
-﻿jobs:
+jobs:
   - job: Build_PSCore_Ubuntu1604
     pool:
       vmImage: ubuntu-latest

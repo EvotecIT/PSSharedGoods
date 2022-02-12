@@ -1,4 +1,4 @@
-﻿jobs:
+jobs:
   - job: Build_PSCore_MacOS1013
     pool:
       vmImage: macOS-latest
