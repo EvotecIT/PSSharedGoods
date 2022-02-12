@@ -40,6 +40,11 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.218 - 2022.02.12
+  - Fixes `Compare-MuplipleObjects`
+- 0.0.217 - 2022.02.12
+  - Improvement to `Compare-MultipleObjects`
+  - Added `ConvertTo-FlatObject`
 - 0.0.216 - 2022.01.24
   - 🐛 Fixes critical bug in `New-FileName` where it could lead to a lot of temporary files created by `New-FileName`
 - 0.0.215 - 2021.12.11
