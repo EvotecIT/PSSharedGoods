@@ -1,5 +1,4 @@
-﻿
-function ConvertTo-FlatHashtable {
+﻿function ConvertTo-FlatHashtable {
     <#
     .SYNOPSIS
     Converts nested hashtable into flat hashtable using delimiter
