@@ -199,13 +199,13 @@
                 # This will be used only if we don't use flattening of objects.
                 #
                 if ($Value1 -is [PSCustomObject]) {
-                    [ordered] @{ Status = $null; Same = @(); Add =@(); Remove = @() }
+                    [ordered] @{ Status = $null; Same = @(); Add = @(); Remove = @() }
                     continue
                 } elseif ($Value1 -is [System.Collections.IDictionary]) {
-                    [ordered] @{ Status = $null; Same = @(); Add =@(); Remove = @() }
+                    [ordered] @{ Status = $null; Same = @(); Add = @(); Remove = @() }
                     continue
-                } elseif ($Value1 -is [Array] -and $Value1[0] -isnot [string]) {
-                    [ordered] @{ Status = $null; Same = @(); Add =@(); Remove = @() }
+                } elseif ($Value1 -is [Array] -and $Value1.Count -ne 0 -and $Value1[0] -isnot [string]) {
+                    [ordered] @{ Status = $null; Same = @(); Add = @(); Remove = @() }
                     continue
                 }
 
