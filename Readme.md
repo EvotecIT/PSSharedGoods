@@ -31,6 +31,13 @@ PSSharedGoods is a little PowerShell Module that primary purpose is to be useful
 
 More information can be found on a dedicated page for [PSSharedGoods](https://evotec.xyz/hub/scripts/pssharedgoods-powershell-module/) module.
 
+| Platform | Status |
+| --- | --- |
+| Windows | <a href="https://dev.azure.com/evotecpl/PSSharedGoods/_build/results?buildId=latest"><img src="https://img.shields.io/azure-devops/tests/evotecpl/PSSharedGoods/11?label=Tests%20Windows"></a> |
+| Linux | <a href="https://dev.azure.com/evotecpl/PSSharedGoods/_build/results?buildId=latest"><img src="https://img.shields.io/azure-devops/tests/evotecpl/PSSharedGoods/24?label=Tests%20Linux"></a> |
+| MacOs | <a href="https://dev.azure.com/evotecpl/PSSharedGoods/_build/results?buildId=latest"><img src="https://img.shields.io/azure-devops/tests/evotecpl/PSSharedGoods/25?label=Tests%20MacOs"></a> |
+
+
 ## Changelog
 
 - 0.0.216 - 2022.01.24
