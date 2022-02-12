@@ -1,6 +1,6 @@
 jobs:
   - job: Build_PS_Win2016
-  - displayName: "Windows Tests"
+    displayName: "Windows Tests"
     pool:
       vmImage: windows-latest
     steps:
