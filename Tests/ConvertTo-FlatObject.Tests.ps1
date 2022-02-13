@@ -79,7 +79,6 @@ $PSDefaultParameterValues = @{
     "It:TestCases" = @{
         PSCustomObject  = $PSCustomObject
         OrderedObject   = $OrderedObject
-        DateTime        = $DateTime
     }
 }
 

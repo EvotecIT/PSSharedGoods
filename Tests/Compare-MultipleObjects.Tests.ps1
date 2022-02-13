@@ -1,4 +1,4 @@
-﻿$Object1 = [PSCustomObject] @{
+﻿$Object15 = [PSCustomObject] @{
     "Name"        = "Przemyslaw Klys"
     "Age"         = "30"
     "Test"        = $null
@@ -7,7 +7,6 @@
     "Address"     = @{
         "Street"  = "Kwiatowa"
         "City"    = "Warszawa"
-
         "Country" = [ordered] @{
             "Name" = "Poland"
         }
@@ -37,7 +36,7 @@
         }
     )
 }
-$Object2 = [PSCustomObject] @{
+$Object16 = [PSCustomObject] @{
     "Name"       = "Przemyslaw Klys"
     "Age"        = "30"
     "Test"       = $null
@@ -45,7 +44,6 @@ $Object2 = [PSCustomObject] @{
     "Address"    = @{
         "Street"  = "Kwiatowa"
         "City"    = "Warszawa"
-
         "Country" = [ordered] @{
             "Name" = "Gruzja"
         }
@@ -78,8 +76,8 @@ $Object2 = [PSCustomObject] @{
 
 $PSDefaultParameterValues = @{
     "It:TestCases" = @{
-        Object1 = $Object1
-        Object2 = $Object2
+        Object1 = $Object15
+        Object2 = $Object16
     }
 }
 
