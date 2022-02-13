@@ -78,4 +78,4 @@ $Object2 = [PSCustomObject] @{
     )
 }
 
-Compare-MultipleObjects -Objects $Object1, $Object2 -FlattenObject -Summary | Format-Table *
+Compare-MultipleObjects -Objects $Object1, $Object2 -FlattenObject -Summary -ObjectsName 'Object1', 'Object2' | Format-Table *
