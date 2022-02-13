@@ -40,6 +40,9 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.220 - 2022.02.13
+  - Improvement to `Compare-MultipleObjects`
+  - Improvement to `ConvertTo-FlatObject`
 - 0.0.219 - 2022.02.12
   - Fixes `Compare-MuplipleObjects`
 - 0.0.218 - 2022.02.12
