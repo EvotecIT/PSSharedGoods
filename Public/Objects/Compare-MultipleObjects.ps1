@@ -2,6 +2,7 @@
     [CmdLetBinding()]
     param(
         [System.Collections.IList] $Objects,
+        [Array] $ObjectsName = @(),
         [switch] $CompareSorted,
         [switch] $FormatOutput,
         [switch] $FormatDifferences,
@@ -19,6 +20,10 @@
     if ($null -eq $Objects -or $Objects.Count -eq 1) {
         Write-Warning "Compare-MultipleObjects - Unable to compare objects. Not enough objects to compare ($($Objects.Count))."
         return
+    }
+    if ($ObjectsName.Count -gt 0 -and $Objects.Count -gt $ObjectsName.Count) {
+        #$ObjectsName = @()
+        Write-Warning -Message "Compare-MultipleObjects - Unable to rename objects. ObjectsName small then amount of Objects ($($Objects.Count))."
     }
     # Default Select-Object -Unique is case sensitive, Sort-Object -Unique isn't but it sorts object.
     # Below is function that solves this, ugly but it works
@@ -84,6 +89,12 @@
         $Result
     }
 
+    if ($ObjectsName[0]) {
+        $ValueSourceName = $ObjectsName[0]
+    } else {
+        $ValueSourceName = "Source"
+    }
+
     if ($FlattenObject) {
         $Objects = ConvertTo-FlatObject -Objects $Objects
     }
@@ -110,11 +121,16 @@
         $FirstObjectProperties = Select-Properties -Objects $Objects -Property $Property -ExcludeProperty $ExcludeProperty -AllProperties:$AllProperties
         if (-not $SkipProperties) {
             if ($FormatOutput) {
-                $FirstElement["Source"] = $FirstObjectProperties -join $Splitter
+                $FirstElement[$ValueSourceName] = $FirstObjectProperties -join $Splitter
             } else {
-                $FirstElement["Source"] = $FirstObjectProperties
+                $FirstElement[$ValueSourceName] = $FirstObjectProperties
             }
             [Array] $IsSame = for ($i = 1; $i -lt $Objects.Count; $i++) {
+                if ($ObjectsName[$i]) {
+                    $ValueToUse = $ObjectsName[$i]
+                } else {
+                    $ValueToUse = $i
+                }
                 if ($Objects[0] -is [System.Collections.IDictionary]) {
                     [string[]] $CompareObjectProperties = $Objects[$i].Keys
                 } else {
@@ -123,9 +139,9 @@
                 }
 
                 if ($FormatOutput) {
-                    $FirstElement["$i"] = $CompareObjectProperties -join $Splitter
+                    $FirstElement["$ValueToUse"] = $CompareObjectProperties -join $Splitter
                 } else {
-                    $FirstElement["$i"] = $CompareObjectProperties
+                    $FirstElement["$ValueToUse"] = $CompareObjectProperties
                 }
                 if ($CompareSorted) {
                     $Value1 = $FirstObjectProperties | Sort-Object
@@ -137,13 +153,13 @@
 
                 $Status = Compare-TwoArrays -FieldName 'Properties' -Object1 $Value1 -Object2 $Value2 -Replace $Replace
                 if ($FormatDifferences) {
-                    $FirstElement["$i-Add"] = $Status['Add'] -join $Splitter
-                    $FirstElement["$i-Remove"] = $Status['Remove'] -join $Splitter
-                    $FirstElement["$i-Same"] = $Status['Same'] -join $Splitter
+                    $FirstElement["$ValueToUse-Add"] = $Status['Add'] -join $Splitter
+                    $FirstElement["$ValueToUse-Remove"] = $Status['Remove'] -join $Splitter
+                    $FirstElement["$ValueToUse-Same"] = $Status['Same'] -join $Splitter
                 } else {
-                    $FirstElement["$i-Add"] = $Status['Add']
-                    $FirstElement["$i-Remove"] = $Status['Remove']
-                    $FirstElement["$i-Same"] = $Status['Same']
+                    $FirstElement["$ValueToUse-Add"] = $Status['Add']
+                    $FirstElement["$ValueToUse-Remove"] = $Status['Remove']
+                    $FirstElement["$ValueToUse-Same"] = $Status['Same']
                 }
                 $Status
             }
@@ -155,11 +171,41 @@
             if ($Summary) {
                 [Array] $Collection = (0..($IsSame.Count - 1)).Where( { $IsSame[$_].Status -eq $true }, 'Split')
                 if ($FormatDifferences) {
-                    $FirstElement['Same'] = ($Collection[0] | ForEach-Object { $_ + 1 }) -join $Splitter
-                    $FirstElement['Different'] = ($Collection[1] | ForEach-Object { $_ + 1 }) -join $Splitter
+                    $FirstElement['Same'] = ($Collection[0] | ForEach-Object {
+                            $Count = $_ + 1
+                            if ($ObjectsName[$Count]) {
+                                $ObjectsName[$Count]
+                            } else {
+                                $Count
+                            }
+                        }
+                    ) -join $Splitter
+                    $FirstElement['Different'] = ($Collection[1] | ForEach-Object {
+                            $Count = $_ + 1
+                            if ($ObjectsName[$Count]) {
+                                $ObjectsName[$Count]
+                            } else {
+                                $Count
+                            }
+                        }
+                    ) -join $Splitter
                 } else {
-                    $FirstElement['Same'] = $Collection[0] | ForEach-Object { $_ + 1 }
-                    $FirstElement['Different'] = $Collection[1] | ForEach-Object { $_ + 1 }
+                    $FirstElement['Same'] = $Collection[0] | ForEach-Object {
+                        $Count = $_ + 1
+                        if ($ObjectsName[$Count]) {
+                            $ObjectsName[$Count]
+                        } else {
+                            $Count
+                        }
+                    }
+                    $FirstElement['Different'] = $Collection[1] | ForEach-Object {
+                        $Count = $_ + 1
+                        if ($ObjectsName[$Count]) {
+                            $ObjectsName[$Count]
+                        } else {
+                            $Count
+                        }
+                    }
                 }
             }
             [PSCustomObject] $FirstElement
@@ -176,16 +222,21 @@
             $EveryOtherElement.Status = $false
 
             if ($FormatOutput) {
-                $EveryOtherElement['Source'] = $Objects[0].$NameProperty -join $Splitter
+                $EveryOtherElement[$ValueSourceName] = $Objects[0].$NameProperty -join $Splitter
             } else {
-                $EveryOtherElement['Source'] = $Objects[0].$NameProperty
+                $EveryOtherElement[$ValueSourceName] = $Objects[0].$NameProperty
             }
 
             [Array] $IsSame = for ($i = 1; $i -lt $Objects.Count; $i++) {
-                if ($FormatOutput) {
-                    $EveryOtherElement["$i"] = $Objects[$i].$NameProperty -join $Splitter
+                if ($ObjectsName[$i]) {
+                    $ValueToUse = $ObjectsName[$i]
                 } else {
-                    $EveryOtherElement["$i"] = $Objects[$i].$NameProperty
+                    $ValueToUse = $i
+                }
+                if ($FormatOutput) {
+                    $EveryOtherElement["$ValueToUse"] = $Objects[$i].$NameProperty -join $Splitter
+                } else {
+                    $EveryOtherElement["$ValueToUse"] = $Objects[$i].$NameProperty
                 }
 
                 if ($CompareSorted) {
@@ -211,13 +262,13 @@
 
                 $Status = Compare-TwoArrays -FieldName $NameProperty -Object1 $Value1 -Object2 $Value2 -Replace $Replace
                 if ($FormatDifferences) {
-                    $EveryOtherElement["$i-Add"] = $Status['Add'] -join $Splitter
-                    $EveryOtherElement["$i-Remove"] = $Status['Remove'] -join $Splitter
-                    $EveryOtherElement["$i-Same"] = $Status['Same'] -join $Splitter
+                    $EveryOtherElement["$ValueToUse-Add"] = $Status['Add'] -join $Splitter
+                    $EveryOtherElement["$ValueToUse-Remove"] = $Status['Remove'] -join $Splitter
+                    $EveryOtherElement["$ValueToUse-Same"] = $Status['Same'] -join $Splitter
                 } else {
-                    $EveryOtherElement["$i-Add"] = $Status['Add']
-                    $EveryOtherElement["$i-Remove"] = $Status['Remove']
-                    $EveryOtherElement["$i-Same"] = $Status['Same']
+                    $EveryOtherElement["$ValueToUse-Add"] = $Status['Add']
+                    $EveryOtherElement["$ValueToUse-Remove"] = $Status['Remove']
+                    $EveryOtherElement["$ValueToUse-Same"] = $Status['Same']
                 }
                 $Status
             }
@@ -232,11 +283,41 @@
             if ($Summary) {
                 [Array] $Collection = (0..($IsSame.Count - 1)).Where( { $IsSame[$_].Status -eq $true }, 'Split')
                 if ($FormatDifferences) {
-                    $EveryOtherElement['Same'] = ($Collection[0] | ForEach-Object { $_ + 1 }) -join $Splitter
-                    $EveryOtherElement['Different'] = ($Collection[1] | ForEach-Object { $_ + 1 }) -join $Splitter
+                    $EveryOtherElement['Same'] = ($Collection[0] | ForEach-Object {
+                            $Count = $_ + 1
+                            if ($ObjectsName[$Count]) {
+                                $ObjectsName[$Count]
+                            } else {
+                                $Count
+                            }
+                        }
+                    ) -join $Splitter
+                    $EveryOtherElement['Different'] = ($Collection[1] | ForEach-Object {
+                            $Count = $_ + 1
+                            if ($ObjectsName[$Count]) {
+                                $ObjectsName[$Count]
+                            } else {
+                                $Count
+                            }
+                        }
+                    ) -join $Splitter
                 } else {
-                    $EveryOtherElement['Same'] = $Collection[0] | ForEach-Object { $_ + 1 }
-                    $EveryOtherElement['Different'] = $Collection[1] | ForEach-Object { $_ + 1 }
+                    $EveryOtherElement['Same'] = $Collection[0] | ForEach-Object {
+                        $Count = $_ + 1
+                        if ($ObjectsName[$Count]) {
+                            $ObjectsName[$Count]
+                        } else {
+                            $Count
+                        }
+                    }
+                    $EveryOtherElement['Different'] = $Collection[1] | ForEach-Object {
+                        $Count = $_ + 1
+                        if ($ObjectsName[$Count]) {
+                            $ObjectsName[$Count]
+                        } else {
+                            $Count
+                        }
+                    }
                 }
             }
             [PSCuStomObject] $EveryOtherElement
