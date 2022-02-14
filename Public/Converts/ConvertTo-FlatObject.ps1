@@ -77,10 +77,6 @@
         [Parameter(DontShow)][System.Collections.IDictionary] $OutputObject
     )
     Begin {
-        # $PipeLine = $Input | ForEach-Object { $_ }
-        # If ($PipeLine) {
-        #     $Objects = $PipeLine
-        # }
         $InputObjects = [System.Collections.Generic.List[Object]]::new()
     }
     Process {
@@ -120,17 +116,14 @@
                 }
             } else {
                 $Property = $Path -Join $Separator
-                #$Property = (($Path | Where-Object { $_ }) -Join $Separator)
                 $OutputObject[$Property] = $Object
             }
         } elseif ($InputObjects.Count -gt 0) {
-            $Output = [System.Collections.Generic.List[Object]]::new()
             foreach ($ItemObject in $InputObjects) {
                 $OutputObject = [ordered]@{}
                 ConvertTo-FlatObject -Objects @(, $ItemObject) -Separator $Separator -Base $Base -Depth $Depth -Path $Path -OutputObject $OutputObject
-                $Output.Add([PSCustomObject] $OutputObject)
+                [PSCustomObject] $OutputObject
             }
-            $Output
         }
     }
 }
