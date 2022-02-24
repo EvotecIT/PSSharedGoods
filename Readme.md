@@ -40,6 +40,8 @@ More information can be found on a dedicated page for [PSSharedGoods](https://ev
 
 ## Changelog
 
+- 0.0.222 - 2022.02.24
+  - For publishing PSSharedGoods no longer requires PSWriteColor, Connectimo. It's still required during development
 - 0.0.221 - 2022.02.14
   - Improvement to `Compare-MultipleObjects`
   - Improvement to `ConvertTo-FlatObject`
