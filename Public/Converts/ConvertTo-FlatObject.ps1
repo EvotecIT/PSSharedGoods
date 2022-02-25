@@ -96,7 +96,7 @@
                 $Depth--
                 If ($Object -is [System.Collections.IDictionary]) {
                     $Iterate = $Object
-                } elseif ($Object -is [Array]) {
+                } elseif ($Object -is [Array] -or $Object -is [System.Collections.IEnumerable]) {
                     $i = $Base
                     foreach ($Item in $Object.GetEnumerator()) {
                         $Iterate["$i"] = $Item
