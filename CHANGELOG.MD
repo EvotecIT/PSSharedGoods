@@ -1,5 +1,7 @@
 ﻿### Changelog
 
+#### 0.0.224 - 2022.03.02
+  - Improvement to `Compare-MultipleObjects`
 #### 0.0.223 - 2022.02.25
   - Improvement to `ConvertTo-FlatObject` which also improves `Compare-MultipleObjects`
 
