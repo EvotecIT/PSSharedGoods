@@ -21,10 +21,14 @@
         Write-Warning "Compare-MultipleObjects - Unable to compare objects. Not enough objects to compare ($($Objects.Count))."
         return
     }
+    if (-not $ObjectsName) {
+        $ObjectsName = @()
+    }
     if ($ObjectsName.Count -gt 0 -and $Objects.Count -gt $ObjectsName.Count) {
         #$ObjectsName = @()
         Write-Warning -Message "Compare-MultipleObjects - Unable to rename objects. ObjectsName small then amount of Objects ($($Objects.Count))."
     }
+
     # Default Select-Object -Unique is case sensitive, Sort-Object -Unique isn't but it sorts object.
     # Below is function that solves this, ugly but it works
     function Compare-TwoArrays {
