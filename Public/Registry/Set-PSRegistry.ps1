@@ -105,7 +105,11 @@
                 #Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer may have failed. Please verify."
                 # }
             } catch {
-                Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message)"
+                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                    throw
+                } else {
+                    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message)"
+                }
             }
         }
         foreach ($Computer in $ComputersSplit[1]) {
@@ -129,11 +133,19 @@
                 #    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer may have failed. Please verify."
                 #}
             } catch {
-                Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message)"
+                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                    throw
+                } else {
+                    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message)"
+                }
             }
         }
     } else {
-        # This shouldn't really happen
-        Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath have failed. Couldn't translate HIVE."
+        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+            throw
+        } else {
+            # This shouldn't really happen
+            Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath have failed. Couldn't translate HIVE."
+        }
     }
 }
