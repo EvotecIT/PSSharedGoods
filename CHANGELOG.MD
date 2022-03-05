@@ -1,5 +1,9 @@
 ﻿### Changelog
 
+#### 0.0.225
+  - Rewritten `Set-PSRegistry` to use .net methods
+  - Added `WhatIf` to `Set-PSRegistry`
+
 #### 0.0.224 - 2022.03.02
   - Improvement to `Compare-MultipleObjects`
 #### 0.0.223 - 2022.02.25
