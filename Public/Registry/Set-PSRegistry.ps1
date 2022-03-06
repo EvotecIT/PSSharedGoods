@@ -1,4 +1,41 @@
 ﻿function Set-PSRegistry {
+    <#
+    .SYNOPSIS
+    Sets/Udpates registry entries locally and remotely using .NET methods.
+
+    .DESCRIPTION
+    Sets/Udpates registry entries locally and remotely using .NET methods.
+
+    .PARAMETER ComputerName
+    The computer to run the command on. Defaults to local computer.
+
+    .PARAMETER RegistryPath
+    Registry Path to Update
+
+    .PARAMETER Type
+    Registry type
+
+    .PARAMETER Key
+    Registry key to set. If the path to registry key doesn't exists it will be created.
+
+    .PARAMETER Value
+    Registry value to set.
+
+    .EXAMPLE
+    Set-PSRegistry -RegistryPath 'HKLM\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics' -Type REG_DWORD -Key "16 LDAP Interface Events" -Value 2 -ComputerName AD1
+
+    .EXAMPLE
+    Set-PSRegistry -RegistryPath 'HKLM\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics' -Type REG_SZ -Key "LDAP Interface Events" -Value 'test' -ComputerName AD1
+
+    .EXAMPLE
+    Set-PSRegistry -RegistryPath "HKCU:\\Tests" -Key "LimitBlankPass1wordUse" -Value "0" -Type REG_DWORD
+
+    .EXAMPLE
+    Set-PSRegistry -RegistryPath "HKCU:\\Tests\MoreTests\Tests1" -Key "LimitBlankPass1wordUse" -Value "0" -Type REG_DWORD
+
+    .NOTES
+    General notes
+    #>
     [cmdletbinding(SupportsShouldProcess)]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
@@ -97,14 +134,8 @@
                             $SubKey = $SubKey.CreateSubKey($S)
                         }
                     }
-                    #$SubKey = $BaseHive.OpenSubKey($RegistryValue.SubKeyName, $true)
                     $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
                 }
-
-                # $ReturnValues = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ErrorAction Stop -Verbose:$false
-                # if ($ReturnValues.ReturnValue -ne 0) {
-                #Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer may have failed. Please verify."
-                # }
             } catch {
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
                     throw
@@ -126,13 +157,8 @@
                             $SubKey = $SubKey.CreateSubKey($S)
                         }
                     }
-                    #$SubKey = $BaseHive.OpenSubKey($RegistryValue.SubKeyName, $true)
                     $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
                 }
-                #$ReturnValues = Invoke-CimMethod -Namespace root\cimv2 -ClassName StdRegProv -MethodName $MethodName -Arguments $Arguments -ComputerName $Computer -ErrorAction Stop -Verbose:$false
-                #if ($ReturnValues.ReturnValue -ne 0) {
-                #    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer may have failed. Please verify."
-                #}
             } catch {
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
                     throw
