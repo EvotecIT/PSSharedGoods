@@ -28,7 +28,7 @@
             }
         }
     }
-    # Remove additional
+    # Remove additional slashes
     $RegistryPath = $RegistryPath.Replace("\\", "\")
 
     $HiveDictionary = @{
@@ -70,14 +70,15 @@
                 SubKeyName = $RegistryPath.substring($_.Length + 1)
                 ValueKind  = [Microsoft.Win32.RegistryValueKind]::($ReverseTypesDictionary[$Type])
                 Key        = $Key
+                Value      = $Value
             }
-            if ($Type -in ('REG_SZ', 'REG_EXPAND_SZ', 'REG_MULTI_SZ')) {
-                $RegistryValue['Value'] = [string] $Value
-            } elseif ($Type -in ('REG_DWORD', 'REG_QWORD')) {
-                $RegistryValue['Value'] = [uint32] $Value
-            } elseif ($Type -in ('REG_BINARY')) {
-                $RegistryValue['Value'] = [uint8] $Value
-            }
+            # if ($Type -in ('REG_SZ', 'REG_EXPAND_SZ', 'REG_MULTI_SZ')) {
+            #     $RegistryValue['Value'] = [string] $Value
+            # } elseif ($Type -in ('REG_DWORD', 'REG_QWORD')) {
+            #     $RegistryValue['Value'] = [uint32] $Value
+            # } elseif ($Type -in ('REG_BINARY')) {
+            #     $RegistryValue['Value'] = [uint8] $Value
+            # }
             break
         }
     }
@@ -108,7 +109,7 @@
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
                     throw
                 } else {
-                    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message)"
+                    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
                 }
             }
         }
@@ -136,7 +137,7 @@
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
                     throw
                 } else {
-                    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message)"
+                    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
                 }
             }
         }
