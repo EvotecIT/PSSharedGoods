@@ -51,6 +51,8 @@
                 }
             }
         }
+        # Remove additional slashes
+        $Registry = $Registry.Replace("\\", "\")
 
         for ($ComputerSplit = 0; $ComputerSplit -lt $Computers.Count; $ComputerSplit++) {
             if ($Computers[$ComputerSplit].Count -gt 0) {
