@@ -134,7 +134,11 @@
                             $SubKey = $SubKey.CreateSubKey($S)
                         }
                     }
-                    $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
+                    if ($RegistryValue.ValueKind -eq [Microsoft.Win32.RegistryValueKind]::MultiString) {
+                        $SubKey.SetValue($RegistryValue.Key, [string[]] $RegistryValue.Value, $RegistryValue.ValueKind)
+                    } else {
+                        $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
+                    }
                 }
             } catch {
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
@@ -157,7 +161,11 @@
                             $SubKey = $SubKey.CreateSubKey($S)
                         }
                     }
-                    $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
+                    if ($RegistryValue.ValueKind -eq [Microsoft.Win32.RegistryValueKind]::MultiString) {
+                        $SubKey.SetValue($RegistryValue.Key, [string[]] $RegistryValue.Value, $RegistryValue.ValueKind)
+                    } else {
+                        $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
+                    }
                 }
             } catch {
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
