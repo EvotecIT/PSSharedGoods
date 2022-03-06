@@ -7,7 +7,7 @@
     Remove registry keys and folders using .NET methods
 
     .PARAMETER ComputerName
-    The computer to run the command on. Defaults to current computer.
+    The computer to run the command on. Defaults to local computer.
 
     .PARAMETER RegistryPath
     The registry path to remove.
