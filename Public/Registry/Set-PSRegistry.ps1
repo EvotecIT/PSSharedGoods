@@ -130,6 +130,10 @@
                     if (-not $SubKey) {
                         $SubKeysSplit = $RegistryValue.SubKeyName.Split('\')
                         $SubKey = $BaseHive.OpenSubKey($SubKeysSplit[0], $true)
+                        if (-not $SubKey) {
+                            $SubKey = $BaseHive.CreateSubKey($SubKeysSplit[0])
+                        }
+                        $SubKey = $BaseHive.OpenSubKey($SubKeysSplit[0], $true)
                         foreach ($S in $SubKeysSplit | Select-Object -Skip 1) {
                             $SubKey = $SubKey.CreateSubKey($S)
                         }
