@@ -60,7 +60,7 @@
         }
     }
     # Remove additional slashes
-    $RegistryPath = $RegistryPath.Replace("\\", "\")
+    $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\","\")
 
     $HiveDictionary = @{
         'HKEY_CLASSES_ROOT'      = 'ClassesRoot'
