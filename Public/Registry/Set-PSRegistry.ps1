@@ -1,10 +1,10 @@
 ﻿function Set-PSRegistry {
     <#
     .SYNOPSIS
-    Sets/Udpates registry entries locally and remotely using .NET methods.
+    Sets/Updates registry entries locally and remotely using .NET methods.
 
     .DESCRIPTION
-    Sets/Udpates registry entries locally and remotely using .NET methods.
+    Sets/Updates registry entries locally and remotely using .NET methods. If the registry path to key doesn't exists it will be created.
 
     .PARAMETER ComputerName
     The computer to run the command on. Defaults to local computer.
@@ -13,7 +13,7 @@
     Registry Path to Update
 
     .PARAMETER Type
-    Registry type
+    Registry type to use. Options are:  REG_SZ, REG_EXPAND_SZ, REG_BINARY, REG_DWORD, REG_MULTI_SZ, REG_QWORD, string, expandstring, binary, dword, multistring, qword
 
     .PARAMETER Key
     Registry key to set. If the path to registry key doesn't exists it will be created.
@@ -66,7 +66,7 @@
         }
     }
     # Remove additional slashes
-    $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\","\")
+    $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\", "\")
 
     $HiveDictionary = @{
         'HKEY_CLASSES_ROOT'      = 'ClassesRoot'
@@ -85,7 +85,7 @@
         'HKEY_PERFORMANCE_DATA ' = 'PerformanceData '
     }
 
-    $ReverseTypesDictionary = @{
+    $ReverseTypesDictionary = [ordered] @{
         'REG_SZ'        = 'string'
         'REG_EXPAND_SZ' = 'expandstring'
         'REG_BINARY'    = 'binary'
