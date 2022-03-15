@@ -2,10 +2,12 @@
 
 #### 0.0.225
   - Rewritten `Set-PSRegistry` to use .net methods
+  - Rewritten `Get-PSRegistry` to use .net methods, adding more features
   - Added `WhatIf` to `Set-PSRegistry`
   - Added `Test-PSRegistry`
   - Improvement to `Get-PSRegistry`
-  - Added `Remove-PSRegistry`
+  - Added `Remove-PSRegistry` to remove registry keys
+  - Added `New-PSRegistry` to create registry paths
 
 #### 0.0.224 - 2022.03.02
   - Improvement to `Compare-MultipleObjects`
