@@ -1,5 +1,7 @@
 ﻿Import-Module $PSScriptRoot\..\PSsharedGoods.psd1 -Force
 
+Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\\Software\\Policies\\Microsoft\\Windows\\Installer" -Key "EnableUserControl"
+Get-PSRegistry -RegistryPath "HKCU:\\\\Tests" -Key 'LimitBlankPasswordUse'
 Set-PSRegistry -RegistryPath "HKCU:\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -WhatIf
 Set-PSRegistry -RegistryPath "HKCU:\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -WhatIf
 Set-PSRegistry -RegistryPath "HKCU:\\Tests" -Key "LimitBlankPass1wordUse" -Value "0" -Type REG_DWORD -WhatIf
