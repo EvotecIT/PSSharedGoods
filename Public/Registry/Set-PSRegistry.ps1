@@ -100,11 +100,11 @@
         'qword'         = 'qword'
     }
 
-    foreach ($_ in $HiveDictionary.Keys) {
-        if ($RegistryPath.StartsWith($_, [System.StringComparison]::CurrentCultureIgnoreCase)) {
+    foreach ($Hive in $HiveDictionary.Keys) {
+        if ($RegistryPath.StartsWith($Hive, [System.StringComparison]::CurrentCultureIgnoreCase)) {
             $RegistryValue = [ordered] @{
-                HiveKey    = $HiveDictionary[$_]
-                SubKeyName = $RegistryPath.substring($_.Length + 1)
+                HiveKey    = $HiveDictionary[$Hive]
+                SubKeyName = $RegistryPath.substring($Hive.Length + 1)
                 ValueKind  = [Microsoft.Win32.RegistryValueKind]::($ReverseTypesDictionary[$Type])
                 Key        = $Key
                 Value      = $Value
