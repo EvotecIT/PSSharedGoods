@@ -109,13 +109,6 @@
                 Key        = $Key
                 Value      = $Value
             }
-            # if ($Type -in ('REG_SZ', 'REG_EXPAND_SZ', 'REG_MULTI_SZ')) {
-            #     $RegistryValue['Value'] = [string] $Value
-            # } elseif ($Type -in ('REG_DWORD', 'REG_QWORD')) {
-            #     $RegistryValue['Value'] = [uint32] $Value
-            # } elseif ($Type -in ('REG_BINARY')) {
-            #     $RegistryValue['Value'] = [uint8] $Value
-            # }
             break
         }
     }
