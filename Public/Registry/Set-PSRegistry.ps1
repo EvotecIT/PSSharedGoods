@@ -42,18 +42,23 @@
         [Parameter(Mandatory)][string] $RegistryPath,
         [Parameter(Mandatory)][ValidateSet('REG_SZ', 'REG_EXPAND_SZ', 'REG_BINARY', 'REG_DWORD', 'REG_MULTI_SZ', 'REG_QWORD', 'string', 'binary', 'dword', 'qword', 'multistring', 'expandstring')][string] $Type,
         [Parameter(Mandatory)][string] $Key,
-        [Parameter(Mandatory)][object] $Value
+        [Parameter(Mandatory)][object] $Value,
+        [switch] $Suppress
     )
     [Array] $ComputersSplit = Get-ComputerSplit -ComputerName $ComputerName
 
     $Dictionary = @{
-        'HKCR:' = 'HKEY_CLASSES_ROOT'
-        'HKCU:' = 'HKEY_CURRENT_USER'
-        'HKLM:' = 'HKEY_LOCAL_MACHINE'
-        'HKU:'  = 'HKEY_USERS'
-        'HKCC:' = 'HKEY_CURRENT_CONFIG'
-        'HKDD:' = 'HKEY_DYN_DATA'
-        'HKPD:' = 'HKEY_PERFORMANCE_DATA'
+        'HKCR:'  = 'HKEY_CLASSES_ROOT'
+        'HKCU:'  = 'HKEY_CURRENT_USER'
+        'HKLM:'  = 'HKEY_LOCAL_MACHINE'
+        'HKU:'   = 'HKEY_USERS'
+        'HKCC:'  = 'HKEY_CURRENT_CONFIG'
+        'HKDD:'  = 'HKEY_DYN_DATA'
+        'HKPD:'  = 'HKEY_PERFORMANCE_DATA'
+        # Those don't really exists, but we want to allow targetting all users or default users
+        'HKUAD:' = 'HKEY_ALL_USERS_DEFAULT' # All users in HKEY_USERS including .DEFAULT
+        'HKUA:'  = 'HKEY_ALL_USERS' # All users in HKEY_USERS excluding .DEFAULT
+        'HKUD:'  = 'HKEY_DEFAULT_USER' # DEFAULT user in HKEY_USERS
     }
 
     # We need to supporrt a lot of options and clean the registry path a bit
@@ -116,61 +121,11 @@
     if ($RegistryValue.HiveKey) {
         foreach ($Computer in $ComputersSplit[0]) {
             # Local computer
-            try {
-                if ($PSCmdlet.ShouldProcess($Computer, "Setting registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) on $($RegistryValue.Key) to $($RegistryValue.Value) of $($RegistryValue.ValueKind)")) {
-                    $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($RegistryValue.HiveKey, 0 )
-                    $SubKey = $BaseHive.OpenSubKey($RegistryValue.SubKeyName, $true)
-                    if (-not $SubKey) {
-                        $SubKeysSplit = $RegistryValue.SubKeyName.Split('\')
-                        $SubKey = $BaseHive.OpenSubKey($SubKeysSplit[0], $true)
-                        if (-not $SubKey) {
-                            $SubKey = $BaseHive.CreateSubKey($SubKeysSplit[0])
-                        }
-                        $SubKey = $BaseHive.OpenSubKey($SubKeysSplit[0], $true)
-                        foreach ($S in $SubKeysSplit | Select-Object -Skip 1) {
-                            $SubKey = $SubKey.CreateSubKey($S)
-                        }
-                    }
-                    if ($RegistryValue.ValueKind -eq [Microsoft.Win32.RegistryValueKind]::MultiString) {
-                        $SubKey.SetValue($RegistryValue.Key, [string[]] $RegistryValue.Value, $RegistryValue.ValueKind)
-                    } else {
-                        $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
-                    }
-                }
-            } catch {
-                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                    throw
-                } else {
-                    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
-                }
-            }
+            Set-PSSubRegistry -RegistryValue $RegistryValue -Computer $Computer -Suppress:$Suppress.IsPresent
         }
         foreach ($Computer in $ComputersSplit[1]) {
             # Remote computer
-            try {
-                if ($PSCmdlet.ShouldProcess($Computer, "Setting registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) on $($RegistryValue.Key) to $($RegistryValue.Value) of $($RegistryValue.ValueKind)")) {
-                    $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($RegistryValue.HiveKey, $Computer, 0 )
-                    $SubKey = $BaseHive.OpenSubKey($RegistryValue.SubKeyName, $true)
-                    if (-not $SubKey) {
-                        $SubKeysSplit = $RegistryValue.SubKeyName.Split('\')
-                        $SubKey = $BaseHive.OpenSubKey($SubKeysSplit[0], $true)
-                        foreach ($S in $SubKeysSplit | Select-Object -Skip 1) {
-                            $SubKey = $SubKey.CreateSubKey($S)
-                        }
-                    }
-                    if ($RegistryValue.ValueKind -eq [Microsoft.Win32.RegistryValueKind]::MultiString) {
-                        $SubKey.SetValue($RegistryValue.Key, [string[]] $RegistryValue.Value, $RegistryValue.ValueKind)
-                    } else {
-                        $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
-                    }
-                }
-            } catch {
-                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                    throw
-                } else {
-                    Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
-                }
-            }
+            Set-PSSubRegistry -RegistryValue $RegistryValue -Computer $Computer -Remote -Suppress:$Suppress.IsPresent
         }
     } else {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {

@@ -6,6 +6,11 @@
         [switch] $Remote,
         [switch] $Advanced
     )
+    if ($Registry.ComputerName) {
+        if ($Registry.ComputerName -ne $ComputerName) {
+            return
+        }
+    }
     try {
         if ($Remote) {
             $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($R.HiveKey, $ComputerName, 0 )

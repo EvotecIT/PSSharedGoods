@@ -5,11 +5,16 @@
         [string] $ComputerName,
         [switch] $Remote
     )
+    if ($Registry.ComputerName) {
+        if ($Registry.ComputerName -ne $ComputerName) {
+            return
+        }
+    }
     try {
         if ($Remote) {
-            $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($R.HiveKey, $ComputerName, 0 )
+            $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($Registry.HiveKey, $ComputerName, 0 )
         } else {
-            $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($R.HiveKey, 0 )
+            $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($Registry.HiveKey, 0 )
         }
         $PSConnection = $true
         $PSError = $null
@@ -22,7 +27,7 @@
             PSComputerName = $ComputerName
             PSConnection   = $PSConnection
             PSError        = $true
-            PSErrorMessage = $_.Exception.Message
+            PSErrorMessage = $PSError
             PSKey          = $Registry.Key
             PSValue        = $null
             PSType         = $null
