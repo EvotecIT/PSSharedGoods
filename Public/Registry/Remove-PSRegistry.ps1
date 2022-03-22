@@ -18,6 +18,9 @@
     .PARAMETER Recursive
     Forces deletion of registry folder and all keys, including nested folders
 
+    .PARAMETER Suppress
+    Suppresses the output of the command. By default the command outputs PSObject with the results of the operation.
+
     .EXAMPLE
     Remove-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests\Ok\MaybeNot" -Recursive
 
@@ -35,54 +38,28 @@
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [Parameter(Mandatory)][string] $RegistryPath,
         [Parameter()][string] $Key,
-        [switch] $Recursive
+        [switch] $Recursive,
+        [switch] $Suppress
     )
 
     [Array] $ComputersSplit = Get-ComputerSplit -ComputerName $ComputerName
 
-    $Dictionary = @{
-        'HKCR:' = 'HKEY_CLASSES_ROOT'
-        'HKCU:' = 'HKEY_CURRENT_USER'
-        'HKLM:' = 'HKEY_LOCAL_MACHINE'
-        'HKU:'  = 'HKEY_USERS'
-        'HKCC:' = 'HKEY_CURRENT_CONFIG'
-        'HKDD:' = 'HKEY_DYN_DATA'
-        'HKPD:' = 'HKEY_PERFORMANCE_DATA'
-    }
-
     # We need to supporrt a lot of options and clean the registry path a bit
     If ($RegistryPath -like '*:*') {
-        foreach ($DictionaryKey in $Dictionary.Keys) {
+        foreach ($DictionaryKey in $Script:Dictionary.Keys) {
             if ($RegistryPath.StartsWith($DictionaryKey, [System.StringComparison]::CurrentCultureIgnoreCase)) {
-                $RegistryPath = $RegistryPath -replace $DictionaryKey, $Dictionary[$DictionaryKey]
+                $RegistryPath = $RegistryPath -replace $DictionaryKey, $Script:Dictionary[$DictionaryKey]
                 break
             }
         }
     }
     # Remove additional slashes
-    $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\","\")
+    $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\", "\")
 
-    $HiveDictionary = @{
-        'HKEY_CLASSES_ROOT'      = 'ClassesRoot'
-        'HKCR'                   = 'ClassesRoot'
-        'HKCU'                   = 'CurrentUser'
-        'HKEY_CURRENT_USER'      = 'CurrentUser'
-        'HKLM'                   = 'LocalMachine'
-        'HKEY_LOCAL_MACHINE'     = 'LocalMachine'
-        'HKU'                    = 'Users'
-        'HKEY_USERS'             = 'Users'
-        'HKCC'                   = 'CurrentConfig'
-        'HKEY_CURRENT_CONFIG'    = 'CurrentConfig'
-        'HKDD'                   = 'DynData'
-        'HKEY_DYN_DATA'          = 'DynData'
-        'HKPD'                   = 'PerformanceData'
-        'HKEY_PERFORMANCE_DATA ' = 'PerformanceData '
-    }
-
-    foreach ($_ in $HiveDictionary.Keys) {
+    foreach ($_ in $Script:HiveDictionary.Keys) {
         if ($RegistryPath.StartsWith($_, [System.StringComparison]::CurrentCultureIgnoreCase)) {
             $RegistryValue = [ordered] @{
-                HiveKey    = $HiveDictionary[$_]
+                HiveKey    = $Script:HiveDictionary[$_]
                 SubKeyName = $RegistryPath.substring($_.Length + 1)
                 Key        = $Key
             }
@@ -93,71 +70,11 @@
     if ($RegistryValue.HiveKey) {
         foreach ($Computer in $ComputersSplit[0]) {
             # Local computer
-            try {
-                if ($Key) {
-                    if ($PSCmdlet.ShouldProcess($Computer, "Removing registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) key $($RegistryValue.Key)")) {
-                        $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($RegistryValue.HiveKey, 0 )
-                        $SubKey = $BaseHive.OpenSubKey($RegistryValue.SubKeyName, $true)
-                        if ($SubKey) {
-                            # DeleteValue(string name, bool throwOnMissingValue)
-                            $SubKey.DeleteValue($RegistryValue.Key, $true)
-                        }
-                    }
-                } else {
-                    if ($PSCmdlet.ShouldProcess($Computer, "Removing registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) folder)")) {
-                        $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($RegistryValue.HiveKey, 0 )
-                        if ($BaseHive) {
-                            # void DeleteSubKey(string subkey, bool throwOnMissingSubKey)
-                            # void DeleteSubKeyTree(string subkey, bool throwOnMissingSubKey)
-                            if ($Recursive) {
-                                $BaseHive.DeleteSubKeyTree($RegistryValue.SubKeyName, $true)
-                            } else {
-                                $BaseHive.DeleteSubKey($RegistryValue.SubKeyName, $true)
-                            }
-                        }
-                    }
-                }
-            } catch {
-                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                    throw
-                } else {
-                    Write-Warning "Remove-PSRegistry - Setting registry to $RegistryPath on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
-                }
-            }
+            Remove-PrivateRegistry -Key $Key -RegistryValue $RegistryValue -Computer $Computer -Suppress:$Suppress.IsPresent -ErrorAction $ErrorActionPreference -WhatIf:$WhatIfPreference
         }
         foreach ($Computer in $ComputersSplit[1]) {
             # Remote computer
-            try {
-                if ($Key) {
-                    if ($PSCmdlet.ShouldProcess($Computer, "Removing registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) key $($RegistryValue.Key)")) {
-                        $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($RegistryValue.HiveKey, $Computer, 0 )
-                        $SubKey = $BaseHive.OpenSubKey($RegistryValue.SubKeyName, $true)
-                        if ($SubKey) {
-                            # DeleteValue(string name, bool throwOnMissingValue)
-                            $SubKey.DeleteValue($RegistryValue.Key, $true)
-                        }
-                    }
-                } else {
-                    if ($PSCmdlet.ShouldProcess($Computer, "Removing registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) folder)")) {
-                        $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($RegistryValue.HiveKey, $Computer, 0 )
-                        if ($BaseHive) {
-                            # void DeleteSubKey(string subkey, bool throwOnMissingSubKey)
-                            # void DeleteSubKeyTree(string subkey, bool throwOnMissingSubKey)
-                            if ($Recursive) {
-                                $BaseHive.DeleteSubKeyTree($RegistryValue.SubKeyName, $true)
-                            } else {
-                                $BaseHive.DeleteSubKey($RegistryValue.SubKeyName, $true)
-                            }
-                        }
-                    }
-                }
-            } catch {
-                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                    throw
-                } else {
-                    Write-Warning "Remove-PSRegistry - Removing registry $RegistryPath on $Computer have failed (recursive: $($Recursive.IsPresent)). Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
-                }
-            }
+            Remove-PrivateRegistry -Key $Key -RegistryValue $RegistryValue -Computer $Computer -Remote -Suppress:$Suppress.IsPresent -ErrorAction $ErrorActionPreference -WhatIf:$WhatIfPreference
         }
     } else {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {

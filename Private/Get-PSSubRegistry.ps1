@@ -10,17 +10,23 @@
             return
         }
     }
-    try {
-        if ($Remote) {
-            $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($Registry.HiveKey, $ComputerName, 0 )
-        } else {
-            $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($Registry.HiveKey, 0 )
+    if (-not $Registry.Error) {
+        try {
+            if ($Remote) {
+                $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($Registry.HiveKey, $ComputerName, 0 )
+            } else {
+                $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($Registry.HiveKey, 0 )
+            }
+            $PSConnection = $true
+            $PSError = $null
+        } catch {
+            $PSConnection = $false
+            $PSError = $($_.Exception.Message)
         }
-        $PSConnection = $true
-        $PSError = $null
-    } catch {
+    } else {
+        # this should happen if we weren't able to get registry keys in Get-PSConvertSpecialRegistry for HKEY_USERS
         $PSConnection = $false
-        $PSError = $($_.Exception.Message)
+        $PSError = $($Registry.ErrorMessage)
     }
     if ($PSError) {
         [PSCustomObject] @{
@@ -28,6 +34,7 @@
             PSConnection   = $PSConnection
             PSError        = $true
             PSErrorMessage = $PSError
+            PSPath         = $Registry.Registry
             PSKey          = $Registry.Key
             PSValue        = $null
             PSType         = $null
@@ -41,6 +48,7 @@
                     PSConnection   = $PSConnection
                     PSError        = $false
                     PSErrorMessage = $null
+                    PSPath         = $Registry.Registry
                     PSKey          = $Registry.Key
                     PSValue        = $SubKey.GetValue($Registry.Key)
                     PSType         = $SubKey.GetValueKind($Registry.Key)
@@ -51,6 +59,7 @@
                     PSConnection   = $PSConnection
                     PSError        = $true
                     PSErrorMessage = "Registry path $($Registry.Registry) doesn't exists."
+                    PSPath         = $Registry.Registry
                     PSKey          = $Registry.Key
                     PSValue        = $null
                     PSType         = $null
@@ -62,6 +71,7 @@
                 PSConnection   = $PSConnection
                 PSError        = $true
                 PSErrorMessage = $_.Exception.Message
+                PSPath         = $Registry.Registry
                 PSKey          = $Registry.Key
                 PSValue        = $null
                 PSType         = $null

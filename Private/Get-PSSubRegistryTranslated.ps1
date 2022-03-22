@@ -16,17 +16,21 @@
             if ($Registry -is [string] -and $Registry.StartsWith($Hive, [System.StringComparison]::CurrentCultureIgnoreCase)) {
                 if ($Hive.Length -eq $Registry.Length) {
                     [ordered] @{
-                        Registry   = $Registry
-                        HiveKey    = $HiveDictionary[$Hive]
-                        SubKeyName = $null
-                        Key        = if ($Key -eq "") { $null } else { $Key }
+                        Registry     = $Registry
+                        HiveKey      = $HiveDictionary[$Hive]
+                        SubKeyName   = $null
+                        Key          = if ($Key -eq "") { $null } else { $Key }
+                        Error        = $null
+                        ErrorMessage = $null
                     }
                 } else {
                     [ordered] @{
-                        Registry   = $Registry
-                        HiveKey    = $HiveDictionary[$Hive]
-                        SubKeyName = $Registry.substring($Hive.Length + 1)
-                        Key        = if ($Key -eq "") { $null } else { $Key }
+                        Registry     = $Registry
+                        HiveKey      = $HiveDictionary[$Hive]
+                        SubKeyName   = $Registry.substring($Hive.Length + 1)
+                        Key          = if ($Key -eq "") { $null } else { $Key }
+                        Error        = $null
+                        ErrorMessage = $null
                     }
                 }
                 break
@@ -38,6 +42,8 @@
                         HiveKey      = $HiveDictionary[$Hive]
                         SubKeyName   = $null
                         Key          = if ($Key -eq "") { $null } else { $Key }
+                        Error        = $Registry.Error
+                        ErrorMessage = $Registry.ErrorMessage
                     }
                 } else {
                     [ordered] @{
@@ -46,6 +52,8 @@
                         HiveKey      = $HiveDictionary[$Hive]
                         SubKeyName   = $Registry.RegistryPath.substring($Hive.Length + 1)
                         Key          = if ($Key -eq "") { $null } else { $Key }
+                        Error        = $Registry.Error
+                        ErrorMessage = $Registry.ErrorMessage
                     }
                 }
                 break

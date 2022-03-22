@@ -21,6 +21,9 @@
     .PARAMETER Value
     Registry value to set.
 
+    .PARAMETER Suppress
+    Suppresses the output of the command. By default the command outputs PSObject with the results of the operation.
+
     .EXAMPLE
     Set-PSRegistry -RegistryPath 'HKLM\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics' -Type REG_DWORD -Key "16 LDAP Interface Events" -Value 2 -ComputerName AD1
 
@@ -47,25 +50,11 @@
     )
     [Array] $ComputersSplit = Get-ComputerSplit -ComputerName $ComputerName
 
-    $Dictionary = @{
-        'HKCR:'  = 'HKEY_CLASSES_ROOT'
-        'HKCU:'  = 'HKEY_CURRENT_USER'
-        'HKLM:'  = 'HKEY_LOCAL_MACHINE'
-        'HKU:'   = 'HKEY_USERS'
-        'HKCC:'  = 'HKEY_CURRENT_CONFIG'
-        'HKDD:'  = 'HKEY_DYN_DATA'
-        'HKPD:'  = 'HKEY_PERFORMANCE_DATA'
-        # Those don't really exists, but we want to allow targetting all users or default users
-        'HKUAD:' = 'HKEY_ALL_USERS_DEFAULT' # All users in HKEY_USERS including .DEFAULT
-        'HKUA:'  = 'HKEY_ALL_USERS' # All users in HKEY_USERS excluding .DEFAULT
-        'HKUD:'  = 'HKEY_DEFAULT_USER' # DEFAULT user in HKEY_USERS
-    }
-
     # We need to supporrt a lot of options and clean the registry path a bit
     If ($RegistryPath -like '*:*') {
-        foreach ($DictionaryKey in $Dictionary.Keys) {
+        foreach ($DictionaryKey in $Script:Dictionary.Keys) {
             if ($RegistryPath.StartsWith($DictionaryKey, [System.StringComparison]::CurrentCultureIgnoreCase)) {
-                $RegistryPath = $RegistryPath -replace $DictionaryKey, $Dictionary[$DictionaryKey]
+                $RegistryPath = $RegistryPath -replace $DictionaryKey, $Script:Dictionary[$DictionaryKey]
                 break
             }
         }
@@ -73,66 +62,27 @@
     # Remove additional slashes
     $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\", "\")
 
-    $HiveDictionary = @{
-        'HKEY_CLASSES_ROOT'      = 'ClassesRoot'
-        'HKCR'                   = 'ClassesRoot'
-        'HKCU'                   = 'CurrentUser'
-        'HKEY_CURRENT_USER'      = 'CurrentUser'
-        'HKLM'                   = 'LocalMachine'
-        'HKEY_LOCAL_MACHINE'     = 'LocalMachine'
-        'HKU'                    = 'Users'
-        'HKEY_USERS'             = 'Users'
-        'HKCC'                   = 'CurrentConfig'
-        'HKEY_CURRENT_CONFIG'    = 'CurrentConfig'
-        'HKDD'                   = 'DynData'
-        'HKEY_DYN_DATA'          = 'DynData'
-        'HKPD'                   = 'PerformanceData'
-        'HKEY_PERFORMANCE_DATA ' = 'PerformanceData '
-    }
+    [Array] $RegistryTranslated = Get-PSConvertSpecialRegistry -RegistryPath $RegistryPath -Computers $ComputerName -HiveDictionary $Script:HiveDictionary
 
-    $ReverseTypesDictionary = [ordered] @{
-        'REG_SZ'        = 'string'
-        'REG_EXPAND_SZ' = 'expandstring'
-        'REG_BINARY'    = 'binary'
-        'REG_DWORD'     = 'dword'
-        'REG_MULTI_SZ'  = 'multistring'
-        'REG_QWORD'     = 'qword'
-        'string'        = 'string'
-        'expandstring'  = 'expandstring'
-        'binary'        = 'binary'
-        'dword'         = 'dword'
-        'multistring'   = 'multistring'
-        'qword'         = 'qword'
-    }
+    foreach ($Registry in $RegistryTranslated) {
+        $RegistryValue = Get-PrivateRegistryTranslated -RegistryPath $Registry -HiveDictionary $Script:HiveDictionary -Key $Key -Value $Value -Type $Type -ReverseTypesDictionary $Script:ReverseTypesDictionary
 
-    foreach ($Hive in $HiveDictionary.Keys) {
-        if ($RegistryPath.StartsWith($Hive, [System.StringComparison]::CurrentCultureIgnoreCase)) {
-            $RegistryValue = [ordered] @{
-                HiveKey    = $HiveDictionary[$Hive]
-                SubKeyName = $RegistryPath.substring($Hive.Length + 1)
-                ValueKind  = [Microsoft.Win32.RegistryValueKind]::($ReverseTypesDictionary[$Type])
-                Key        = $Key
-                Value      = $Value
+        if ($RegistryValue.HiveKey) {
+            foreach ($Computer in $ComputersSplit[0]) {
+                # Local computer
+                Set-PrivateRegistry -RegistryValue $RegistryValue -Computer $Computer -Suppress:$Suppress.IsPresent -ErrorAction $ErrorActionPreference -WhatIf:$WhatIfPreference
             }
-            break
-        }
-    }
-
-    if ($RegistryValue.HiveKey) {
-        foreach ($Computer in $ComputersSplit[0]) {
-            # Local computer
-            Set-PSSubRegistry -RegistryValue $RegistryValue -Computer $Computer -Suppress:$Suppress.IsPresent
-        }
-        foreach ($Computer in $ComputersSplit[1]) {
-            # Remote computer
-            Set-PSSubRegistry -RegistryValue $RegistryValue -Computer $Computer -Remote -Suppress:$Suppress.IsPresent
-        }
-    } else {
-        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-            throw
+            foreach ($Computer in $ComputersSplit[1]) {
+                # Remote computer
+                Set-PrivateRegistry -RegistryValue $RegistryValue -Computer $Computer -Remote -Suppress:$Suppress.IsPresent -ErrorAction $ErrorActionPreference -WhatIf:$WhatIfPreference
+            }
         } else {
-            # This shouldn't really happen
-            Write-Warning "Set-PSRegistry - Setting registry to $RegistryPath have failed. Couldn't translate HIVE."
+            if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                throw
+            } else {
+                # This shouldn't really happen
+                Write-Warning "Set-PSRegistry - Setting registry to $Registry have failed. Couldn't translate HIVE."
+            }
         }
     }
 }

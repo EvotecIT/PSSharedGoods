@@ -1,4 +1,4 @@
-﻿function Set-PSSubRegistry {
+﻿function Set-PrivateRegistry {
     [cmdletBinding(SupportsShouldProcess)]
     param(
         [System.Collections.IDictionary] $RegistryValue,
@@ -6,6 +6,11 @@
         [switch] $Remote,
         [switch] $Suppress
     )
+    if ($RegistryValue.ComputerName) {
+        if ($RegistryValue.ComputerName -ne $Computer) {
+            return
+        }
+    }
     if ($PSCmdlet.ShouldProcess($Computer, "Setting registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) on $($RegistryValue.Key) to $($RegistryValue.Value) of $($RegistryValue.ValueKind)")) {
         try {
             if ($Remote) {
