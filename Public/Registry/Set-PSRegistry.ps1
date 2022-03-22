@@ -48,6 +48,8 @@
         [Parameter(Mandatory)][object] $Value,
         [switch] $Suppress
     )
+    Get-PSRegistryDictionaries
+
     [Array] $ComputersSplit = Get-ComputerSplit -ComputerName $ComputerName
 
     # We need to supporrt a lot of options and clean the registry path a bit

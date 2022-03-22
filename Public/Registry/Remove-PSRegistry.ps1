@@ -41,6 +41,7 @@
         [switch] $Recursive,
         [switch] $Suppress
     )
+    Get-PSRegistryDictionaries
 
     [Array] $ComputersSplit = Get-ComputerSplit -ComputerName $ComputerName
 

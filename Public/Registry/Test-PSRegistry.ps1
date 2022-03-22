@@ -5,9 +5,6 @@
         [string] $ComputerName = $Env:COMPUTERNAME,
         [string] $Key
     )
-
-    $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\","\")
-
     $Output = Get-PSRegistry -RegistryPath $RegistryPath -ComputerName $ComputerName
     if ($Output.PSConnection -eq $true -and $Output.PSError -eq $false) {
         if ($Key) {

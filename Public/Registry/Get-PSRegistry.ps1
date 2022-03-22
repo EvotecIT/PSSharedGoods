@@ -43,6 +43,7 @@
         [string] $Key,
         [switch] $Advanced
     )
+    Get-PSRegistryDictionaries
 
     $RegistryPath = foreach ($R in $RegistryPath) {
         If ($R -like '*:*') {
