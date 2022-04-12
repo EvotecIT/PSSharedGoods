@@ -4,7 +4,7 @@
         [Array] $RegistryPath,
         [System.Collections.IDictionary] $HiveDictionary,
         [System.Collections.IDictionary] $ReverseTypesDictionary,
-        [Parameter(Mandatory)][ValidateSet('REG_SZ', 'REG_EXPAND_SZ', 'REG_BINARY', 'REG_DWORD', 'REG_MULTI_SZ', 'REG_QWORD', 'string', 'binary', 'dword', 'qword', 'multistring', 'expandstring')][string] $Type,
+        [Parameter(Mandatory)][ValidateSet('REG_SZ', 'REG_NONE', 'None', 'REG_EXPAND_SZ', 'REG_BINARY', 'REG_DWORD', 'REG_MULTI_SZ', 'REG_QWORD', 'string', 'binary', 'dword', 'qword', 'multistring', 'expandstring')][string] $Type,
         [Parameter(Mandatory)][string] $Key,
         [Parameter(Mandatory)][object] $Value
     )

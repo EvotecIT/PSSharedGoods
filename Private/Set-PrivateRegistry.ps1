@@ -59,6 +59,8 @@
                 }
                 if ($RegistryValue.ValueKind -eq [Microsoft.Win32.RegistryValueKind]::MultiString) {
                     $SubKey.SetValue($RegistryValue.Key, [string[]] $RegistryValue.Value, $RegistryValue.ValueKind)
+                } elseif ($RegistryValue.ValueKind -in [Microsoft.Win32.RegistryValueKind]::None, [Microsoft.Win32.RegistryValueKind]::Binary) {
+                    $SubKey.SetValue($RegistryValue.Key, [byte[]] $RegistryValue.Value, $RegistryValue.ValueKind)
                 } else {
                     $SubKey.SetValue($RegistryValue.Key, $RegistryValue.Value, $RegistryValue.ValueKind)
                 }

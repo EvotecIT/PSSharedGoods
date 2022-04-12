@@ -63,6 +63,7 @@
 
     $Script:ReverseTypesDictionary = [ordered] @{
         'REG_SZ'        = 'string'
+        'REG_NONE'      = 'none'
         'REG_EXPAND_SZ' = 'expandstring'
         'REG_BINARY'    = 'binary'
         'REG_DWORD'     = 'dword'
@@ -74,5 +75,6 @@
         'dword'         = 'dword'
         'multistring'   = 'multistring'
         'qword'         = 'qword'
+        'none'          = 'none'
     }
 }
