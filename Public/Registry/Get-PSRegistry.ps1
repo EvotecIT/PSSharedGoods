@@ -33,6 +33,14 @@
     .EXAMPLE
     Get-PSRegistry -RegistryPath "HKLM:\Software\Microsoft\Powershell\1\Shellids\Microsoft.Powershell\"
 
+    .EXAMPLE
+    # Get default key and it's value
+    Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -Key ""
+
+    .EXAMPLE
+    # Get default key and it's value (alternative)
+o   Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
+
     .NOTES
     General notes
     #>
@@ -41,7 +49,8 @@
         [alias('Path')][string[]] $RegistryPath,
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [string] $Key,
-        [switch] $Advanced
+        [switch] $Advanced,
+        [switch] $DefaultKey
     )
     Get-PSRegistryDictionaries
 
@@ -62,7 +71,7 @@
 
     [Array] $RegistryTranslated = Get-PSConvertSpecialRegistry -RegistryPath $RegistryPath -Computers $ComputerName -HiveDictionary $Script:HiveDictionary
 
-    if ($Key) {
+    if ($PSBoundParameters.ContainsKey("Key") -or $DefaultKey) {
         [Array] $RegistryValues = Get-PSSubRegistryTranslated -RegistryPath $RegistryTranslated -HiveDictionary $Script:HiveDictionary -Key $Key
         foreach ($Computer in $Computers[0]) {
             foreach ($R in $RegistryValues) {
