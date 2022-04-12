@@ -61,53 +61,30 @@
     [Array] $Computers = Get-ComputerSplit -ComputerName $ComputerName
 
     [Array] $RegistryTranslated = Get-PSConvertSpecialRegistry -RegistryPath $RegistryPath -Computers $ComputerName -HiveDictionary $Script:HiveDictionary
-    #if ($RegistryTranslated) {
-        if ($Key) {
-            [Array] $RegistryValues = Get-PSSubRegistryTranslated -RegistryPath $RegistryTranslated -HiveDictionary $Script:HiveDictionary -Key $Key
-            foreach ($Computer in $Computers[0]) {
-                foreach ($R in $RegistryValues) {
-                    Get-PSSubRegistry -Registry $R -ComputerName $Computer
-                }
-            }
-            foreach ($Computer in $Computers[1]) {
-                foreach ($R in $RegistryValues) {
-                    Get-PSSubRegistry -Registry $R -ComputerName $Computer -Remote
-                }
-            }
-        } else {
-            [Array] $RegistryValues = Get-PSSubRegistryTranslated -RegistryPath $RegistryTranslated -HiveDictionary $Script:HiveDictionary
-            foreach ($Computer in $Computers[0]) {
-                foreach ($R in $RegistryValues) {
-                    Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Advanced:$Advanced
-                }
-            }
-            foreach ($Computer in $Computers[1]) {
-                foreach ($R in $RegistryValues) {
-                    Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Remote -Advanced:$Advanced
-                }
+
+    if ($Key) {
+        [Array] $RegistryValues = Get-PSSubRegistryTranslated -RegistryPath $RegistryTranslated -HiveDictionary $Script:HiveDictionary -Key $Key
+        foreach ($Computer in $Computers[0]) {
+            foreach ($R in $RegistryValues) {
+                Get-PSSubRegistry -Registry $R -ComputerName $Computer
             }
         }
-    # } else {
-    #     if ($Key) {
-    #         [PSCustomObject] @{
-    #             PSComputerName = $ComputerName
-    #             PSConnection   = $PSConnection
-    #             PSError        = $true
-    #             PSErrorMessage = $_.Exception.Message
-    #             PSPath         = $Registry.Registry
-    #             PSKey          = $Registry.Key
-    #             PSValue        = $null
-    #             PSType         = $null
-    #         }
-    #     } else {
-    #         [PSCustomObject] @{
-    #             PSComputerName = $ComputerName
-    #             PSConnection   = $PSConnection
-    #             PSError        = $true
-    #             PSErrorMessage = $_.Exception.Message
-    #             PSSubKeys      = $null
-    #             PSPath         = $Registry.Registry
-    #         }
-    #     }
-    # }
+        foreach ($Computer in $Computers[1]) {
+            foreach ($R in $RegistryValues) {
+                Get-PSSubRegistry -Registry $R -ComputerName $Computer -Remote
+            }
+        }
+    } else {
+        [Array] $RegistryValues = Get-PSSubRegistryTranslated -RegistryPath $RegistryTranslated -HiveDictionary $Script:HiveDictionary
+        foreach ($Computer in $Computers[0]) {
+            foreach ($R in $RegistryValues) {
+                Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Advanced:$Advanced
+            }
+        }
+        foreach ($Computer in $Computers[1]) {
+            foreach ($R in $RegistryValues) {
+                Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Remote -Advanced:$Advanced
+            }
+        }
+    }
 }
