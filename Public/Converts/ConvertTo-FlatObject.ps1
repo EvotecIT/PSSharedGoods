@@ -81,7 +81,9 @@
     }
     Process {
         foreach ($O in $Objects) {
-            $InputObjects.Add($O)
+            if ($null -ne $O) {
+                $InputObjects.Add($O)
+            }
         }
     }
     End {
