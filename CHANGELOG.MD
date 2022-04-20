@@ -8,6 +8,8 @@
   - Improvement to `Get-PSRegistry`
   - Added `Remove-PSRegistry` to remove registry keys
   - Added `New-PSRegistry` to create registry paths
+  - Improvement to `ConvertTo-FlatObject` to deal with `$null` objects
+  - Improvement to `Compare-MultipleObjects` to deal with `$null` objects and missing properties
 
 #### 0.0.224 - 2022.03.02
   - Improvement to `Compare-MultipleObjects`
