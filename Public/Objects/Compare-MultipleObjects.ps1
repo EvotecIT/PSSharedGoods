@@ -99,8 +99,20 @@
         $ValueSourceName = "Source"
     }
 
+    [Array] $Objects = foreach ($Object in $Objects) {
+        if ($null -eq $Object) {
+            [PSCustomObject] @{}
+        } else {
+            $Object
+        }
+    }
+
     if ($FlattenObject) {
-        $Objects = ConvertTo-FlatObject -Objects $Objects
+        try {
+            [Array] $Objects = ConvertTo-FlatObject -Objects $Objects
+        } catch {
+            Write-Warning "Compare-MultipleObjects - Unable to flatten objects. ($($_.Exception.Message))"
+        }
     }
 
     if ($First -or $Last) {
@@ -232,11 +244,27 @@
             }
 
             [Array] $IsSame = for ($i = 1; $i -lt $Objects.Count; $i++) {
+                $Skip = $false
+
                 if ($ObjectsName[$i]) {
                     $ValueToUse = $ObjectsName[$i]
                 } else {
                     $ValueToUse = $i
                 }
+
+                if ($Objects[$i] -is [System.Collections.IDictionary] -and $Objects[$i].Keys -notcontains $NameProperty) {
+                    $Status = [ordered] @{ Status = $false; Same = @(); Add = @(); Remove = @() }
+                    $Skip = $true
+                } elseif ($Objects[$i].PSObject.Properties.Name -notcontains $NameProperty) {
+                    $Status = [ordered] @{
+                        Status = $false;
+                        Same   = @();
+                        Add    = @()
+                        Remove = @()
+                    }
+                    $Skip = $true
+                }
+
                 if ($FormatOutput) {
                     $EveryOtherElement["$ValueToUse"] = $Objects[$i].$NameProperty -join $Splitter
                 } else {
@@ -250,9 +278,7 @@
                     $Value1 = $Objects[0].$NameProperty
                     $Value2 = $Objects[$i].$NameProperty
                 }
-
                 # This will be used only if we don't use flattening of objects.
-                #
                 if ($Value1 -is [PSCustomObject]) {
                     [ordered] @{ Status = $null; Same = @(); Add = @(); Remove = @() }
                     continue
@@ -263,8 +289,11 @@
                     [ordered] @{ Status = $null; Same = @(); Add = @(); Remove = @() }
                     continue
                 }
-
-                $Status = Compare-TwoArrays -FieldName $NameProperty -Object1 $Value1 -Object2 $Value2 -Replace $Replace
+                if (-not $Skip) {
+                    $Status = Compare-TwoArrays -FieldName $NameProperty -Object1 $Value1 -Object2 $Value2 -Replace $Replace
+                } else {
+                    $Status['Add'] = $Value1
+                }
                 if ($FormatDifferences) {
                     $EveryOtherElement["$ValueToUse-Add"] = $Status['Add'] -join $Splitter
                     $EveryOtherElement["$ValueToUse-Remove"] = $Status['Remove'] -join $Splitter

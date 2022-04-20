@@ -118,7 +118,10 @@
                 }
             } else {
                 $Property = $Path -Join $Separator
-                $OutputObject[$Property] = $Object
+                if ($Property) {
+                    # We only care if property is not empty
+                    $OutputObject[$Property] = $Object
+                }
             }
         } elseif ($InputObjects.Count -gt 0) {
             foreach ($ItemObject in $InputObjects) {
