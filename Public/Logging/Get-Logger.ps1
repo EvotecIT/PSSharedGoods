@@ -1,30 +1,53 @@
-#requires -Module PSWriteColor
-<#
+function Get-Logger {
+    <#
     .SYNOPSIS
     Returns an instance of the logger object.
 
-    .EXAMPLE with full log name
+    .DESCRIPTION
+    Long description
+
+    .PARAMETER LogPath
+    Parameter description
+
+    .PARAMETER LogsDir
+    Parameter description
+
+    .PARAMETER Filename
+    Parameter description
+
+    .PARAMETER ShowTime
+    Parameter description
+
+    .PARAMETER TimeFormat
+    Parameter description
+
+    .EXAMPLE
+    # with full log name
     $Logger = Get-Logger -ShowTime -LogPath 'C:\temp\test.log'
     $Logger.AddErrorRecord("test error")
     $Logger.AddInfoRecord("test info")
     $Logger.AddSuccessRecord("test success")
     $Logger.AddRecord("test record")
 
-    .EXAMPLE with directory name and auto-generated log name
+    .EXAMPLE
+    # with directory name and auto-generated log name
     $Logger = Get-Logger -ShowTime -LogsDir 'C:\temp'
     $Logger.AddErrorRecord("test error")
 
-    .EXAMPLE with directory name and logo name defined separately
+    .EXAMPLE
+    # with directory name and logo name defined separately
     $Logger = Get-Logger -ShowTime -Directory 'C:\temp' -Filename 'test.log'
     $Logger.AddErrorRecord("test error")
 
-    .EXAMPLE without logfile, only console output
+    .EXAMPLE
+    # without logfile, only console output
     $Logger = Get-Logger -ShowTime
     $Logger.AddErrorRecord("test error")
-#>
 
-function Get-Logger {
-    [CmdletBinding(DefaultParameterSetName="All")]
+    .NOTES
+    General notes
+    #>
+    [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         [Parameter(Mandatory = $false, ParameterSetName = 'Logpath')][string] $LogPath,
         [Parameter(Mandatory = $false, ParameterSetName = 'Complexpath')][string] $LogsDir,
