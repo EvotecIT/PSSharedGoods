@@ -1,6 +1,6 @@
 ﻿### Changelog
 
-#### 0.0.225
+#### 0.0.225 - 2022.04.30
   - Rewritten `Set-PSRegistry` to use .net methods
   - Rewritten `Get-PSRegistry` to use .net methods, adding more features
   - Added `WhatIf` to `Set-PSRegistry`
