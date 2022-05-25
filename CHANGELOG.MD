@@ -1,5 +1,13 @@
 ﻿### Changelog
 
+#### 0.0.226
+  - Improved `Set-PSRegistry` - supports automapping of DEFAULT_USER (ntuser.dat), skips using .DEFAULT which is just an alias to SYSTEM account (S-1-5-18)
+  - Improved `Get-PSRegistry` - supports automapping of DEFAULT_USER (ntuser.dat), skips using .DEFAULT which is just an alias to SYSTEM account (S-1-5-18)
+  - Improved `New-PSRegistry` - supports automapping of DEFAULT_USER (ntuser.dat), add supports for virtual keys to Users, skips using .DEFAULT which is just an alias to SYSTEM account (S-1-5-18)
+  - Improved `Remove-PSRegistry` - supports automapping of DEFAULT_USER (ntuser.dat), add supports for virtual keys to Users, skips using .DEFAULT which is just an alias to SYSTEM account (S-1-5-18)
+  - Added `Mount-PSRegistryPath` - allows mapping of file NTUSER.DAT to a specific path in registry
+  - Added `Dismount-PSRegistryPath` - unmounts NTUSER.DAT from registry
+
 #### 0.0.225 - 2022.04.30
   - Rewritten `Set-PSRegistry` to use .net methods
   - Rewritten `Get-PSRegistry` to use .net methods, adding more features
