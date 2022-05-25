@@ -14,9 +14,9 @@
     if (-not $Registry.Error) {
         try {
             if ($Remote) {
-                $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($R.HiveKey, $ComputerName, 0 )
+                $BaseHive = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($Registry.HiveKey, $ComputerName, 0 )
             } else {
-                $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($R.HiveKey, 0 )
+                $BaseHive = [Microsoft.Win32.RegistryKey]::OpenBaseKey($Registry.HiveKey, 0 )
             }
             $PSConnection = $true
             $PSError = $null
@@ -94,5 +94,13 @@
                 PSPath         = $Registry.Registry
             }
         }
+    }
+    if ($null -ne $SubKey) {
+        $SubKey.Close()
+        $SubKey.Dispose()
+    }
+    if ($null -ne $BaseHive) {
+        $BaseHive.Close()
+        $BaseHive.Dispose()
     }
 }

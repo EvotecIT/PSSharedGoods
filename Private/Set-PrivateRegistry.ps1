@@ -23,6 +23,10 @@
         $PSConnection = $false
         $PSError = $($_.Exception.Message)
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+            if ($null -ne $BaseHive) {
+                $BaseHive.Close()
+                $BaseHive.Dispose()
+            }
             throw
         } else {
             Write-Warning "Set-PSRegistry - Setting registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) on $($RegistryValue.Key) to $($RegistryValue.Value) of $($RegistryValue.ValueKind) on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
@@ -78,6 +82,14 @@
                 }
             } catch {
                 if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                    if ($null -ne $SubKey) {
+                        $SubKey.Close()
+                        $SubKey.Dispose()
+                    }
+                    if ($null -ne $BaseHive) {
+                        $BaseHive.Close()
+                        $BaseHive.Dispose()
+                    }
                     throw
                 } else {
                     Write-Warning "Set-PSRegistry - Setting registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) on $($RegistryValue.Key) to $($RegistryValue.Value) of $($RegistryValue.ValueKind) on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
@@ -109,5 +121,13 @@
                 Type           = $RegistryValue.ValueKind
             }
         }
+    }
+    if ($null -ne $SubKey) {
+        $SubKey.Close()
+        $SubKey.Dispose()
+    }
+    if ($null -ne $BaseHive) {
+        $BaseHive.Close()
+        $BaseHive.Dispose()
     }
 }

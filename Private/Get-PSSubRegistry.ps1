@@ -78,4 +78,12 @@
             }
         }
     }
+    if ($null -ne $SubKey) {
+        $SubKey.Close()
+        $SubKey.Dispose()
+    }
+    if ($null -ne $BaseHive) {
+        $BaseHive.Close()
+        $BaseHive.Dispose()
+    }
 }

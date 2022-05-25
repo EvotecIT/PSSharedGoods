@@ -22,6 +22,10 @@
         $PSConnection = $false
         $PSError = $($_.Exception.Message)
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+            if ($null -ne $BaseHive) {
+                $BaseHive.Close()
+                $BaseHive.Dispose()
+            }
             throw
         } else {
             Write-Warning "Remove-PSRegistry - Removing registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) key $($RegistryValue.Key) on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
@@ -76,6 +80,14 @@
             }
         } catch {
             if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                if ($null -ne $SubKey) {
+                    $SubKey.Close()
+                    $SubKey.Dispose()
+                }
+                if ($null -ne $BaseHive) {
+                    $BaseHive.Close()
+                    $BaseHive.Dispose()
+                }
                 throw
             } else {
                 Write-Warning "Remove-PSRegistry - Removing registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) key $($RegistryValue.Key) on $Computer have failed. Error: $($_.Exception.Message.Replace([System.Environment]::NewLine, " "))"
@@ -91,5 +103,13 @@
                 }
             }
         }
+    }
+    if ($null -ne $SubKey) {
+        $SubKey.Close()
+        $SubKey.Dispose()
+    }
+    if ($null -ne $BaseHive) {
+        $BaseHive.Close()
+        $BaseHive.Dispose()
     }
 }

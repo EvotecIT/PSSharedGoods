@@ -92,11 +92,19 @@
             }
         } else {
             if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                if ($Script:DefaultRegistryMounted) {
+                    $null = Dismount-DefaultRegistryPath
+                    $Script:DefaultRegistryMounted = $null
+                }
                 throw
             } else {
                 # This shouldn't really happen
                 Write-Warning "Set-PSRegistry - Setting registry to $Registry have failed. Couldn't translate HIVE."
             }
         }
+    }
+    if ($Script:DefaultRegistryMounted) {
+        $null = Dismount-DefaultRegistryPath
+        $Script:DefaultRegistryMounted = $null
     }
 }

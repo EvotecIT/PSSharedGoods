@@ -1,18 +1,16 @@
 ﻿function Get-PSRegistryDictionaries {
     [cmdletBinding()]
-    param(
-
-    )
+    param()
     if ($Script:Dictionary) {
         return
     }
     $Script:Dictionary = @{
         # Those don't really exists, but we want to allow targetting all users or default users
-        'HKUAD:'  = 'HKEY_ALL_USERS_DEFAULT' # All users in HKEY_USERS including .DEFAULT
-        'HKUA:'   = 'HKEY_ALL_USERS' # All users in HKEY_USERS excluding .DEFAULT
-        'HKUD:'   = 'HKEY_DEFAULT_USER' # DEFAULT user in HKEY_USERS
-        'HKUDUD:' = 'HKEY_ALL_DOMAIN_USERS_DEFAULT'
-        'HKUDU:'  = 'HKEY_ALL_DOMAIN_USERS'
+        'HKUAD:'  = 'HKEY_ALL_USERS_DEFAULT' # All users in HKEY_USERS including .DEFAULT_USER (auto mapped from NTUSER.DAT)
+        'HKUA:'   = 'HKEY_ALL_USERS' # All users in HKEY_USERS excluding .DEFAULT / .DEFAULT_USER (auto mapped from NTUSER.DAT)
+        'HKUD:'   = 'HKEY_DEFAULT_USER' # DEFAULT_USER user in HKEY_USERS (auto mapped from NTUSER.DAT)
+        'HKUDUD:' = 'HKEY_ALL_DOMAIN_USERS_DEFAULT' # All users in HKEY_USERS that are non SPECIAL accounts including .DEFAULT_USER (auto mapped from NTUSER.DAT)
+        'HKUDU:'  = 'HKEY_ALL_DOMAIN_USERS'  # All users in HKEY_USERS that are non SPECIAL accounts excluding .DEFAULT / .DEFAULT_USER (auto mapped from NTUSER.DAT)
         # order matters
         'HKCR:'   = 'HKEY_CLASSES_ROOT'
         'HKCU:'   = 'HKEY_CURRENT_USER'

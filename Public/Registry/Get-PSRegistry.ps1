@@ -96,4 +96,8 @@ o   Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
             }
         }
     }
+    if ($Script:DefaultRegistryMounted) {
+        $null = Dismount-DefaultRegistryPath
+        $Script:DefaultRegistryMounted = $null
+    }
 }

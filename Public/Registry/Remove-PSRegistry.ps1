@@ -57,32 +57,46 @@
     # Remove additional slashes
     $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\", "\")
 
-    foreach ($_ in $Script:HiveDictionary.Keys) {
-        if ($RegistryPath.StartsWith($_, [System.StringComparison]::CurrentCultureIgnoreCase)) {
-            $RegistryValue = [ordered] @{
-                HiveKey    = $Script:HiveDictionary[$_]
-                SubKeyName = $RegistryPath.substring($_.Length + 1)
-                Key        = $Key
+    # foreach ($_ in $Script:HiveDictionary.Keys) {
+    #     if ($RegistryPath.StartsWith($_, [System.StringComparison]::CurrentCultureIgnoreCase)) {
+    #         $RegistryValue = [ordered] @{
+    #             HiveKey    = $Script:HiveDictionary[$_]
+    #             SubKeyName = $RegistryPath.substring($_.Length + 1)
+    #             Key        = $Key
+    #         }
+    #         break
+    #     }
+    # }
+
+    [Array] $RegistryTranslated = Get-PSConvertSpecialRegistry -RegistryPath $RegistryPath -Computers $ComputerName -HiveDictionary $Script:HiveDictionary
+
+    foreach ($Registry in $RegistryTranslated) {
+        $RegistryValue = Get-PrivateRegistryTranslated -RegistryPath $Registry -HiveDictionary $Script:HiveDictionary -Key $Key -ReverseTypesDictionary $Script:ReverseTypesDictionary
+
+        if ($RegistryValue.HiveKey) {
+            foreach ($Computer in $ComputersSplit[0]) {
+                # Local computer
+                Remove-PrivateRegistry -Key $Key -RegistryValue $RegistryValue -Computer $Computer -Suppress:$Suppress.IsPresent -ErrorAction $ErrorActionPreference -WhatIf:$WhatIfPreference
             }
-            break
+            foreach ($Computer in $ComputersSplit[1]) {
+                # Remote computer
+                Remove-PrivateRegistry -Key $Key -RegistryValue $RegistryValue -Computer $Computer -Remote -Suppress:$Suppress.IsPresent -ErrorAction $ErrorActionPreference -WhatIf:$WhatIfPreference
+            }
+        } else {
+            if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                if ($Script:DefaultRegistryMounted) {
+                    $null = Dismount-DefaultRegistryPath
+                    $Script:DefaultRegistryMounted = $null
+                }
+                throw
+            } else {
+                # This shouldn't really happen
+                Write-Warning "Remove-PSRegistry - Removing registry $RegistryPath have failed (recursive: $($Recursive.IsPresent)). Couldn't translate HIVE."
+            }
         }
     }
-
-    if ($RegistryValue.HiveKey) {
-        foreach ($Computer in $ComputersSplit[0]) {
-            # Local computer
-            Remove-PrivateRegistry -Key $Key -RegistryValue $RegistryValue -Computer $Computer -Suppress:$Suppress.IsPresent -ErrorAction $ErrorActionPreference -WhatIf:$WhatIfPreference
-        }
-        foreach ($Computer in $ComputersSplit[1]) {
-            # Remote computer
-            Remove-PrivateRegistry -Key $Key -RegistryValue $RegistryValue -Computer $Computer -Remote -Suppress:$Suppress.IsPresent -ErrorAction $ErrorActionPreference -WhatIf:$WhatIfPreference
-        }
-    } else {
-        if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-            throw
-        } else {
-            # This shouldn't really happen
-            Write-Warning "Remove-PSRegistry - Removingf registry $RegistryPath have failed (recursive: $($Recursive.IsPresent)). Couldn't translate HIVE."
-        }
+    if ($Script:DefaultRegistryMounted) {
+        $null = Dismount-DefaultRegistryPath
+        $Script:DefaultRegistryMounted = $null
     }
 }

@@ -12,7 +12,7 @@
                     foreach ($Computer in $Computers) {
                         $SubKeys = Get-PSRegistry -RegistryPath "HKEY_USERS" -ComputerName $Computer
                         if ($SubKeys.PSSubKeys) {
-                            $RegistryKeys = ConvertTo-HKeyUser -SubKeys ($SubKeys.PSSubKeys | Sort-Object) -HiveDictionary $HiveDictionary -DictionaryKey $DictionaryKey
+                            $RegistryKeys = ConvertTo-HKeyUser -SubKeys ($SubKeys.PSSubKeys | Sort-Object) -HiveDictionary $HiveDictionary -DictionaryKey $DictionaryKey -RegistryPath $R
                             foreach ($S in $RegistryKeys) {
                                 [PSCustomObject] @{
                                     ComputerName = $Computer
