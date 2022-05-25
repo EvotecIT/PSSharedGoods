@@ -1,9 +1,9 @@
 ﻿Clear-Host
 Import-Module "C:\Support\GitHub\PSSharedGoods\PSSharedGoods.psd1" -Force
 
-$Object1 = Get-Content -Raw -LiteralPath "C:\Users\przemyslaw.klys\OneDrive - Evotec\Desktop\Comparison of Intune configuration\Enrollment restrictions\CS_Enrollment_Restrictions.json" | ConvertFrom-Json
-$Object2 = Get-Content -Raw -LiteralPath "C:\Users\przemyslaw.klys\OneDrive - Evotec\Desktop\Comparison of Intune configuration\Enrollment restrictions\CS_Enrollment_Restrictions (1).json" | ConvertFrom-Json
-$Object3 = [PSCustomObject] @{
+#$Object1 = Get-Content -Raw -LiteralPath "C:\Users\przemyslaw.klys\OneDrive - Evotec\Desktop\Comparison of Intune configuration\Enrollment restrictions\CS_Enrollment_Restrictions.json" | ConvertFrom-Json
+#$Object2 = Get-Content -Raw -LiteralPath "C:\Users\przemyslaw.klys\OneDrive - Evotec\Desktop\Comparison of Intune configuration\Enrollment restrictions\CS_Enrollment_Restrictions (1).json" | ConvertFrom-Json
+$Object3 = [ordered] @{
     "Name"    = "Przemyslaw Klys"
     "Age"     = "30"
     "tEST"    = @()
@@ -17,6 +17,9 @@ $Object3 = [PSCustomObject] @{
             "Name" = "Poland"
         }
         List      = @(
+            @{
+                "Name" = "Poland"
+            }
             [PSCustomObject] @{
                 "Name" = "Adam Klys"
                 "Age"  = "32"
@@ -43,7 +46,10 @@ $Object3 = [PSCustomObject] @{
     )
 }
 
-$Object3 | ConvertTo-FlatObject
+ConvertTo-FlatObject -Objects ([PSCustomObject] @{})
+
+@($Object3, $null) | ConvertTo-FlatObject
+ConvertTo-FlatObject -Objects @($Object3, $null)
 
 $OutputTest = $Object1, $Object2, $Object3 | ConvertTo-FlatObject
 $OutputTest | Format-List *
