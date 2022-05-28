@@ -2,7 +2,8 @@
 
 Import-Module $PSScriptRoot\..\PSsharedGoods.psd1 -Force
 
-
+Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -Key ""
+Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
 Get-PSRegistry -RegistryPath "HKEY_USERS" | Format-Table
 Get-PSRegistry -RegistryPath "HKUDU:\Tests" -ComputerName AD1, EVOPOWER | Format-Table
 Get-PSRegistry -RegistryPath "HKUDUD\Tests" -ComputerName AD1, EVOPOWER | Format-Table
