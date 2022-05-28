@@ -1,6 +1,6 @@
 ﻿### Changelog
 
-#### 0.0.226
+#### 0.0.226 - 2022.05.28
   - Improved `Set-PSRegistry` - supports automapping of DEFAULT_USER (ntuser.dat), skips using .DEFAULT which is just an alias to SYSTEM account (S-1-5-18)
   - Improved `Get-PSRegistry` - supports automapping of DEFAULT_USER (ntuser.dat), skips using .DEFAULT which is just an alias to SYSTEM account (S-1-5-18)
   - Improved `New-PSRegistry` - supports automapping of DEFAULT_USER (ntuser.dat), add supports for virtual keys to Users, skips using .DEFAULT which is just an alias to SYSTEM account (S-1-5-18)
