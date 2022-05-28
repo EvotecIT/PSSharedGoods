@@ -48,29 +48,6 @@
     # Cleans up registry path and makes sure it's as required to be processed further
     $RegistryPath = Resolve-PrivateRegistry -RegistryPath $RegistryPath
 
-    # # We need to supporrt a lot of options and clean the registry path a bit
-    # If ($RegistryPath -like '*:*') {
-    #     foreach ($DictionaryKey in $Script:Dictionary.Keys) {
-    #         if ($RegistryPath.StartsWith($DictionaryKey, [System.StringComparison]::CurrentCultureIgnoreCase)) {
-    #             $RegistryPath = $RegistryPath -replace $DictionaryKey, $Script:Dictionary[$DictionaryKey]
-    #             break
-    #         }
-    #     }
-    # }
-    # # Remove additional slashes
-    # $RegistryPath = $RegistryPath.Replace("\\", "\").Replace("\\", "\")
-
-    # foreach ($_ in $Script:HiveDictionary.Keys) {
-    #     if ($RegistryPath.StartsWith($_, [System.StringComparison]::CurrentCultureIgnoreCase)) {
-    #         $RegistryValue = [ordered] @{
-    #             HiveKey    = $Script:HiveDictionary[$_]
-    #             SubKeyName = $RegistryPath.substring($_.Length + 1)
-    #             Key        = $Key
-    #         }
-    #         break
-    #     }
-    # }
-
     [Array] $RegistryTranslated = Get-PSConvertSpecialRegistry -RegistryPath $RegistryPath -Computers $ComputerName -HiveDictionary $Script:HiveDictionary
 
     foreach ($Registry in $RegistryTranslated) {
