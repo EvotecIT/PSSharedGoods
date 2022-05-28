@@ -54,18 +54,8 @@ o   Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
     )
     Get-PSRegistryDictionaries
 
-    $RegistryPath = foreach ($R in $RegistryPath) {
-        If ($R -like '*:*') {
-            foreach ($DictionaryKey in $Script:Dictionary.Keys) {
-                if ($R.StartsWith($DictionaryKey, [System.StringComparison]::CurrentCultureIgnoreCase)) {
-                    $R -replace $DictionaryKey, $Script:Dictionary[$DictionaryKey]
-                    break
-                }
-            }
-        } else {
-            $R
-        }
-    }
+    # Cleans up registry path and makes sure it's as required to be processed further
+    $RegistryPath = Resolve-PrivateRegistry -RegistryPath $RegistryPath
 
     [Array] $Computers = Get-ComputerSplit -ComputerName $ComputerName
 
