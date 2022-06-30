@@ -3,6 +3,12 @@
 #### 0.0.228 - 2022.06.30
   - Improved `ConvertTo-FlatObject` supporting `ExcludeProperty`
   - Improved `Compare-MultipleObjects` supporting `ExcludeProperty`
+  - Removed `Set-WinAzureADUserStatus` - i think only used in PSAutomator which is experimantal and moved to that repo
+  - Removed `Set-WinAzureADUserLicense` - i think only used in PSAutomator which is experimantal and moved to that repo
+  - Removed `Set-WinAzureADUserField` - i think only used in PSAutomator which is experimantal and moved to that repo
+  - Removed `Set-SpecUser` - i have no clue where it was used, but PSSharedGoods is not a good place for it
+  - Removed `New-UserAdd` - i have no clue where it was used, but PSSharedGoods is not a good place for it
+  - Removed `Add-PropertyToList` - i have no clue where it was used, but PSSharedGoods is not a good place for it
 
 #### 0.0.227 - 2022.06.17
   - Improved `Convert-Office365License` - tnx diecknet
