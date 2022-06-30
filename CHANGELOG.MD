@@ -1,5 +1,8 @@
 ﻿### Changelog
 
+#### 0.0.229 - 2022.06.30
+  - Fixes `Compare-MultipleObjects` which would result in bad comparison from time to time
+
 #### 0.0.228 - 2022.06.30
   - Improved `ConvertTo-FlatObject` supporting `ExcludeProperty`
   - Improved `Compare-MultipleObjects` supporting `ExcludeProperty`
