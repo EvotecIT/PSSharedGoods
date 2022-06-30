@@ -109,7 +109,7 @@
 
     if ($FlattenObject) {
         try {
-            [Array] $Objects = ConvertTo-FlatObject -Objects $Objects
+            [Array] $Objects = ConvertTo-FlatObject -Objects $Objects -ExcludeProperty $ExcludeProperty
         } catch {
             Write-Warning "Compare-MultipleObjects - Unable to flatten objects. ($($_.Exception.Message))"
         }
