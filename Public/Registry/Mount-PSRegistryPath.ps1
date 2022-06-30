@@ -23,7 +23,7 @@
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw $Errors
         } else {
-            Write-Warning -Message "Mount-RegistryPath - Couldn't mount $MountPoint. Error: $Errors"
+            Write-Warning -Message "Mount-PSRegistryPath - Couldn't mount $MountPoint. Error: $Errors"
         }
     } else {
         if ($Output -like "*operation completed*") {

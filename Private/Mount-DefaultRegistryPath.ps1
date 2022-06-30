@@ -6,7 +6,7 @@
     $DefaultRegistryPath = Get-PSRegistry -RegistryPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' -Key 'Default'
     if ($PSError -ne $true) {
         $PathToNTUser = [io.path]::Combine($DefaultRegistryPath.PSValue, 'NTUSER.DAT')
-        Mount-RegistryPath -MountPoint $MountPoint -FilePath $PathToNTUser
+        Mount-PSRegistryPath -MountPoint $MountPoint -FilePath $PathToNTUser
     } else {
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw $PSErrorMessage

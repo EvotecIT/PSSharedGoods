@@ -26,7 +26,7 @@
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw $Errors
         } else {
-            Write-Warning -Message "Dismount-RegistryPath - Couldn't unmount $MountPoint. Error: $Errors"
+            Write-Warning -Message "Dismount-PSRegistryPath - Couldn't unmount $MountPoint. Error: $Errors"
         }
     } else {
         if ($Output -like "*operation completed*") {
