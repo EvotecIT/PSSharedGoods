@@ -252,13 +252,20 @@
                     $ValueToUse = $i
                 }
 
-                if ($Objects[$i] -is [System.Collections.IDictionary] -and $Objects[$i].Keys -notcontains $NameProperty) {
-                    $Status = [ordered] @{ Status = $false; Same = @(); Add = @(); Remove = @() }
-                    $Skip = $true
+                if ($Objects[$i] -is [System.Collections.IDictionary]) {
+                    if ($Objects[$i].Keys -notcontains $NameProperty) {
+                        $Status = [ordered] @{
+                            Status = $false
+                            Same   = @()
+                            Add    = @()
+                            Remove = @()
+                        }
+                        $Skip = $true
+                    }
                 } elseif ($Objects[$i].PSObject.Properties.Name -notcontains $NameProperty) {
                     $Status = [ordered] @{
                         Status = $false;
-                        Same   = @();
+                        Same   = @()
                         Add    = @()
                         Remove = @()
                     }
