@@ -1,5 +1,9 @@
 ﻿### Changelog
 
+#### 0.0.228 - 2022.06.30
+  - Improved `ConvertTo-FlatObject` supporting `ExcludeProperty`
+  - Improved `Compare-MultipleObjects` supporting `ExcludeProperty`
+
 #### 0.0.227 - 2022.06.17
   - Improved `Convert-Office365License` - tnx diecknet
 
