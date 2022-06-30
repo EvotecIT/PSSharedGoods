@@ -24,6 +24,9 @@
     .PARAMETER Uncut
     The maximal depth of flattening a recursive property. Any negative value will result in an unlimited depth and could cause a infinitive loop.
 
+    .PARAMETER ExcludeProperty
+    The propertys to be excluded from the output.
+
     .EXAMPLE
     $Object3 = [PSCustomObject] @{
         "Name"    = "Przemyslaw Klys"
@@ -73,6 +76,7 @@
         [String]$Separator = ".",
         [ValidateSet("", 0, 1)]$Base = 1,
         [int]$Depth = 5,
+        [string[]] $ExcludeProperty,
         [Parameter(DontShow)][String[]]$Path,
         [Parameter(DontShow)][System.Collections.IDictionary] $OutputObject
     )
@@ -101,12 +105,28 @@
                 } elseif ($Object -is [Array] -or $Object -is [System.Collections.IEnumerable]) {
                     $i = $Base
                     foreach ($Item in $Object.GetEnumerator()) {
-                        $Iterate["$i"] = $Item
+                        $NewObject = [ordered] @{}
+                        If ($Item -is [System.Collections.IDictionary]) {
+                            foreach ($Key in $Item.Keys) {
+                                if ($Key -notin $ExcludeProperty) {
+                                    $NewObject[$Key] = $Item[$Key]
+                                }
+                            }
+                        } elseif ($Item -isnot [Array] -and $Item -isnot [System.Collections.IEnumerable]) {
+                            foreach ($Prop in $Item.PSObject.Properties) {
+                                if ($Prop.IsGettable -and $Prop.Name -notin $ExcludeProperty) {
+                                    $NewObject["$($Prop.Name)"] = $Item.$($Prop.Name)
+                                }
+                            }
+                        } else {
+                            $NewObject = $Item
+                        }
+                        $Iterate["$i"] = $NewObject
                         $i += 1
                     }
                 } else {
                     foreach ($Prop in $Object.PSObject.Properties) {
-                        if ($Prop.IsGettable) {
+                        if ($Prop.IsGettable -and $Prop.Name -notin $ExcludeProperty) {
                             $Iterate["$($Prop.Name)"] = $Object.$($Prop.Name)
                         }
                     }
@@ -114,19 +134,25 @@
             }
             If ($Iterate.Keys.Count) {
                 foreach ($Key in $Iterate.Keys) {
-                    ConvertTo-FlatObject -Objects @(, $Iterate["$Key"]) -Separator $Separator -Base $Base -Depth $Depth -Path ($Path + $Key) -OutputObject $OutputObject
+                    if ($Key -notin $ExcludeProperty) {
+                        ConvertTo-FlatObject -Objects @(, $Iterate["$Key"]) -Separator $Separator -Base $Base -Depth $Depth -Path ($Path + $Key) -OutputObject $OutputObject -ExcludeProperty $ExcludeProperty
+                    }
                 }
             } else {
                 $Property = $Path -Join $Separator
                 if ($Property) {
                     # We only care if property is not empty
-                    $OutputObject[$Property] = $Object
+                    if ($Object -is [System.Collections.IDictionary] -and $Object.Keys.Count -eq 0) {
+                        $OutputObject[$Property] = $null
+                    } else {
+                        $OutputObject[$Property] = $Object
+                    }
                 }
             }
         } elseif ($InputObjects.Count -gt 0) {
             foreach ($ItemObject in $InputObjects) {
                 $OutputObject = [ordered]@{}
-                ConvertTo-FlatObject -Objects @(, $ItemObject) -Separator $Separator -Base $Base -Depth $Depth -Path $Path -OutputObject $OutputObject
+                ConvertTo-FlatObject -Objects @(, $ItemObject) -Separator $Separator -Base $Base -Depth $Depth -Path $Path -OutputObject $OutputObject -ExcludeProperty $ExcludeProperty
                 [PSCustomObject] $OutputObject
             }
         }
