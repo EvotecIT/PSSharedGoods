@@ -1,5 +1,9 @@
 ﻿### Changelog
 
+#### 0.0.230 - 2022.07.05
+  - Added `Convert-CountryCodeToCountry`
+  - Added `Convert-CountryToCountryCode`
+
 #### 0.0.229 - 2022.06.30
   - Fixes `Compare-MultipleObjects` which would result in bad comparison from time to time
 
