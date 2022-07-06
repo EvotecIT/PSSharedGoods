@@ -1,5 +1,9 @@
 ﻿### Changelog
 
+#### 0.0.231 - 2022.07.06
+  - Fixes `Convert-CountryCodeToCountry` to output just country english name by default
+  - Fixes `Convert-CountryToCountryCode` to output region information rather than culture information.
+
 #### 0.0.230 - 2022.07.05
   - Added `Convert-CountryCodeToCountry`
   - Added `Convert-CountryToCountryCode`
