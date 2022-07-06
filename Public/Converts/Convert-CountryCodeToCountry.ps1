@@ -44,7 +44,7 @@
         if ($All) {
             $QuickSearch[$CountryCode]
         } else {
-            $QuickSearch[$CountryCode].RegionInformation
+            $QuickSearch[$CountryCode].RegionInformation.EnglishName
         }
     } else {
         $QuickSearch

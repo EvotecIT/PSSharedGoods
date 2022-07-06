@@ -20,6 +20,11 @@
 
     .EXAMPLE
     $Test = Convert-CountryToCountryCode
+    $Test['India']['Culture']
+    $Test['India']['RegionInformation']
+
+    .EXAMPLE
+    $Test = Convert-CountryToCountryCode
     $Test['Poland']['Culture']
     $Test['Poland']['RegionInformation']
 
@@ -44,12 +49,9 @@
         if ($All) {
             $QuickSearch[$CountryName]
         } else {
-            $QuickSearch[$CountryName].Culture.TwoLetterIsoLanguageName.ToUpper()
+            $QuickSearch[$CountryName].RegionInformation.TwoLetterISORegionName.ToUpper()
         }
     } else {
         $QuickSearch
     }
 }
-
-
-
