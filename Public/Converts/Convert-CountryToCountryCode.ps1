@@ -40,7 +40,7 @@
     $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
     foreach ($Culture in $AllCultures) {
         $RegionInformation = [System.Globalization.RegionInfo]::new($Culture.LCID)
-        $QuickSearch[$RegionInformation.DisplayName] = @{
+        $QuickSearch[$RegionInformation.EnglishName] = @{
             'Culture'           = $Culture
             'RegionInformation' = $RegionInformation
         }
@@ -49,7 +49,15 @@
         if ($All) {
             $QuickSearch[$CountryName]
         } else {
-            $QuickSearch[$CountryName].RegionInformation.TwoLetterISORegionName.ToUpper()
+            if ($QuickSearch[$CountryName]) {
+                $QuickSearch[$CountryName].RegionInformation.TwoLetterISORegionName.ToUpper()
+            } else {
+                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                    throw "Country $CountryName not found"
+                } else {
+                    Write-Warning -Message "Convert-CountryToCountryCode - Country $CountryName name not found"
+                }
+            }
         }
     } else {
         $QuickSearch
