@@ -1,5 +1,8 @@
 ﻿### Changelog
 
+#### 0.0.233 - 2022.08.06
+- Improves `Get-GitHubLatestRelease` to verify for internet connection.
+
 #### 0.0.232 - 2022.07.16
 - Fixes `Convert-CountryToCountryCode` usind DisplayNames instead of EnglishNames
 #### 0.0.231 - 2022.07.06
