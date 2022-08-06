@@ -1,7 +1,24 @@
-﻿Import-Module $PSScriptRoot\..\PSsharedGoods.psd1 -Force
+﻿Clear-Host
+Import-Module $PSScriptRoot\..\PSsharedGoods.psd1 -Force
 
-Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\\Software\\Policies\\Microsoft\\Windows\\Installer" -Key "EnableUserControl"
-Get-PSRegistry -RegistryPath "HKCU:\\\\Tests" -Key 'LimitBlankPasswordUse'
+#Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\\Software\\Policies\\Microsoft\\Windows\\Installer" -Key "EnableUserControl"
+#Get-PSRegistry -RegistryPath "HKCU:\\\\Tests" -Key 'LimitBlankPasswordUse'
+
+Set-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" -Key 'ForceUnlockLogon' -Value 1 -Type dword -WhatIf
+
+#Set-PSRegistry -RegistryPath "Users\.DEFAULT\Tests" -Key 'LimitBlankPasswordUse' -Value '1' -Type dword
+
+return
+
+Set-PSRegistry -RegistryPath "HKEY_DEFAULT_USER\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -ComputerName EVOPOWER | Format-Table
+Set-PSRegistry -RegistryPath "HKUA:\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -ComputerName EVOPOWER | Format-Table
+Set-PSRegistry -RegistryPath "HKUAD:\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -ComputerName EVOPOWER | Format-Table
+
+#Set-PSRegistry -RegistryPath "HKCU:\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -ComputerName AD1, EVOPower
+#Set-PSRegistry -RegistryPath "HKCU:\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -ComputerName EVOPower #, EVOPower
+
+return
+
 Set-PSRegistry -RegistryPath "HKCU:\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -WhatIf
 Set-PSRegistry -RegistryPath "HKCU:\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -WhatIf
 Set-PSRegistry -RegistryPath "HKCU:\\Tests" -Key "LimitBlankPass1wordUse" -Value "0" -Type REG_DWORD -WhatIf
