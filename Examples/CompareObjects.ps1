@@ -1,4 +1,5 @@
-﻿Import-Module .\PSSharedGoods.psd1 -Force
+﻿Clear-Host
+Import-Module .\PSSharedGoods.psd1 -Force
 
 $Object1 = [PSCustomObject] @{
     "Name"        = "Przemyslaw Klys"
@@ -78,4 +79,20 @@ $Object2 = [PSCustomObject] @{
     )
 }
 
-Compare-MultipleObjects -Objects $Object1, $Object2 -FlattenObject -Summary -ObjectsName 'Object1', 'Object2' | Format-Table *
+#Compare-MultipleObjects -Objects $Object1, $Object2 -FlattenObject -Summary -ObjectsName "test",'test1' | Format-Table *
+Compare-MultipleObjects -Objects $Object1, $null -FlattenObject -Summary -ObjectsName "test",'test1' | Format-Table *
+#Compare-MultipleObjects -Objects $Object1, $null -ObjectsName "test",'test1' | Format-Table *
+
+
+$Object1 = [PSCustomObject] @{
+    Value0 = $true
+    Value3 = "old"
+    Value1 = $null
+}
+$Object2 = [PSCustomObject] @{
+    Value0 = $true
+    Value3 = ''
+    Value2 = $false
+}
+
+Compare-MultipleObjects -Objects $Object1, $Object2 -ObjectsName "test", 'test1' -Summary| Format-Table *
