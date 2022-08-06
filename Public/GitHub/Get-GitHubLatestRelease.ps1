@@ -1,23 +1,53 @@
 ﻿function Get-GitHubLatestRelease {
+    <#
+    .SYNOPSIS
+    Gets one or more releases from GitHub repository
+
+    .DESCRIPTION
+    Gets one or more releases from GitHub repository
+
+    .PARAMETER Url
+    Url to github repository
+
+    .EXAMPLE
+    Get-GitHubLatestRelease -Url "https://api.github.com1/repos/evotecit/Testimo/releases" | Format-Table
+
+    .NOTES
+    General notes
+    #>
     [CmdLetBinding()]
     param(
-        [alias('ReleasesUrl')][uri] $Url
+        [parameter(Mandatory)][alias('ReleasesUrl')][uri] $Url
     )
     $ProgressPreference = 'SilentlyContinue'
-    Try {
-        [Array] $JsonOutput = (Invoke-WebRequest -Uri $Url -ErrorAction Stop | ConvertFrom-Json)
-        foreach ($JsonContent in $JsonOutput) {
+
+    $Responds = Test-Connection -ComputerName $URl.Host -Quiet -Count 1
+    if ($Responds) {
+        Try {
+            [Array] $JsonOutput = (Invoke-WebRequest -Uri $Url -ErrorAction Stop | ConvertFrom-Json)
+            foreach ($JsonContent in $JsonOutput) {
+                [PSCustomObject] @{
+                    PublishDate = [DateTime]  $JsonContent.published_at
+                    CreatedDate = [DateTime] $JsonContent.created_at
+                    PreRelease  = [bool] $JsonContent.prerelease
+                    Version     = [version] ($JsonContent.name -replace 'v', '')
+                    Tag         = $JsonContent.tag_name
+                    Branch      = $JsonContent.target_commitish
+                    Errors      = ''
+                }
+            }
+        } catch {
             [PSCustomObject] @{
-                PublishDate = [DateTime]  $JsonContent.published_at
-                CreatedDate = [DateTime] $JsonContent.created_at
-                PreRelease  = [bool] $JsonContent.prerelease
-                Version     = [version] ($JsonContent.name -replace 'v', '')
-                Tag         = $JsonContent.tag_name
-                Branch      = $JsonContent.target_commitish
-                Errors      = ''
+                PublishDate = $null
+                CreatedDate = $null
+                PreRelease  = $null
+                Version     = $null
+                Tag         = $null
+                Branch      = $null
+                Errors      = $_.Exception.Message
             }
         }
-    } catch {
+    } else {
         [PSCustomObject] @{
             PublishDate = $null
             CreatedDate = $null
@@ -25,7 +55,7 @@
             Version     = $null
             Tag         = $null
             Branch      = $null
-            Errors      = $_.Exception.Message
+            Errors      = "No connection (ping) to $($Url.Host)"
         }
     }
     $ProgressPreference = 'Continue'
