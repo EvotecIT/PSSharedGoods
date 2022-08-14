@@ -1,5 +1,8 @@
 ﻿### Changelog
 
+#### 0.0.236 - 2022.08.14
+- Improved `Convert-Identity` and `ConvertFrom-SID` - faster lookup for `BUILTIN\IIS_IUSRS`
+
 #### 0.0.235 - 2022.08.14
 - Improved `Convert-Identity` and `ConvertFrom-SID` - faster lookup for `NT SERVICE\WdiServiceHost`
 
