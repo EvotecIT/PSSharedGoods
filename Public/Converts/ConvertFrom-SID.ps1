@@ -52,527 +52,534 @@ function ConvertFrom-SID {
         }
     }
     $wellKnownSIDs = @{
-        'S-1-0'        = [PSCustomObject] @{
+        'S-1-0'                                                          = [PSCustomObject] @{
             Name       = 'Null AUTHORITY'
             SID        = 'S-1-0'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-0-0'      = [PSCustomObject] @{
+        'S-1-0-0'                                                        = [PSCustomObject] @{
             Name       = 'NULL SID'
             SID        = 'S-1-0-0'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-1'        = [PSCustomObject] @{
+        'S-1-1'                                                          = [PSCustomObject] @{
             Name       = 'WORLD AUTHORITY'
             SID        = 'S-1-1'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-1-0'      = [PSCustomObject] @{
+        'S-1-1-0'                                                        = [PSCustomObject] @{
             Name       = 'Everyone'
             SID        = 'S-1-1-0'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-2'        = [PSCustomObject] @{
+        'S-1-2'                                                          = [PSCustomObject] @{
             Name       = 'LOCAL AUTHORITY'
             SID        = 'S-1-2'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-2-0'      = [PSCustomObject] @{
+        'S-1-2-0'                                                        = [PSCustomObject] @{
             Name       = 'LOCAL'
             SID        = 'S-1-2-0'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-2-1'      = [PSCustomObject] @{
+        'S-1-2-1'                                                        = [PSCustomObject] @{
             Name       = 'CONSOLE LOGON'
             SID        = 'S-1-2-1'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-3'        = [PSCustomObject] @{
+        'S-1-3'                                                          = [PSCustomObject] @{
             Name       = 'CREATOR AUTHORITY'
             SID        = 'S-1-3'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-3-0'      = [PSCustomObject] @{
+        'S-1-3-0'                                                        = [PSCustomObject] @{
             Name       = 'CREATOR OWNER'
             SID        = 'S-1-3-0'
             DomainName = ''
             Type       = 'WellKnownAdministrative'
             Error      = ''
         }
-        'S-1-3-1'      = [PSCustomObject] @{
+        'S-1-3-1'                                                        = [PSCustomObject] @{
             Name       = 'CREATOR GROUP'
             SID        = 'S-1-3-1'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-3-2'      = [PSCustomObject] @{
+        'S-1-3-2'                                                        = [PSCustomObject] @{
             Name       = 'CREATOR OWNER SERVER'
             SID        = 'S-1-3-2'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-3-3'      = [PSCustomObject] @{
+        'S-1-3-3'                                                        = [PSCustomObject] @{
             Name       = 'CREATOR GROUP SERVER'
             SID        = 'S-1-3-3'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-3-4'      = [PSCustomObject] @{
+        'S-1-3-4'                                                        = [PSCustomObject] @{
             Name       = 'OWNER RIGHTS'
             SID        = 'S-1-3-4'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-80-0'   = [PSCustomObject] @{
+        'S-1-5-80-0'                                                     = [PSCustomObject] @{
             Name       = 'NT SERVICE\ALL SERVICES'
             SID        = 'S-1-5-80-0'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-4'        = [PSCustomObject] @{
+        'S-1-4'                                                          = [PSCustomObject] @{
             Name       = 'Non-unique Authority'
             SID        = 'S-1-4'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5'        = [PSCustomObject] @{
+        'S-1-5'                                                          = [PSCustomObject] @{
             Name       = 'NT AUTHORITY'
             SID        = 'S-1-5'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-1'      = [PSCustomObject] @{
+        'S-1-5-1'                                                        = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\DIALUP'
             SID        = 'S-1-5-1'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-2'      = [PSCustomObject] @{
+        'S-1-5-2'                                                        = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\NETWORK'
             SID        = 'S-1-5-2'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-3'      = [PSCustomObject] @{
+        'S-1-5-3'                                                        = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\BATCH'
             SID        = 'S-1-5-3'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-4'      = [PSCustomObject] @{
+        'S-1-5-4'                                                        = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\INTERACTIVE'
             SID        = 'S-1-5-4'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-6'      = [PSCustomObject] @{
+        'S-1-5-6'                                                        = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\SERVICE'
             SID        = 'S-1-5-6'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-7'      = [PSCustomObject] @{
+        'S-1-5-7'                                                        = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\ANONYMOUS LOGON'
             SID        = 'S-1-5-7'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-8'      = [PSCustomObject] @{
+        'S-1-5-8'                                                        = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\PROXY'
             SID        = 'S-1-5-8'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-9'      = [PSCustomObject] @{
+        'S-1-5-9'                                                        = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\ENTERPRISE DOMAIN CONTROLLERS'
             SID        = 'S-1-5-9'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-10'     = [PSCustomObject] @{
+        'S-1-5-10'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\SELF'
             SID        = 'S-1-5-10'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-11'     = [PSCustomObject] @{
+        'S-1-5-11'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\Authenticated Users'
             SID        = 'S-1-5-11'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-12'     = [PSCustomObject] @{
+        'S-1-5-12'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\RESTRICTED'
             SID        = 'S-1-5-12'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-13'     = [PSCustomObject] @{
+        'S-1-5-13'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\TERMINAL SERVER USER'
             SID        = 'S-1-5-13'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-14'     = [PSCustomObject] @{
+        'S-1-5-14'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\REMOTE INTERACTIVE LOGON'
             SID        = 'S-1-5-14'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-15'     = [PSCustomObject] @{
+        'S-1-5-15'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\This Organization'
             SID        = 'S-1-5-15'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-17'     = [PSCustomObject] @{
+        'S-1-5-17'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\IUSR'
             SID        = 'S-1-5-17'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-18'     = [PSCustomObject] @{
+        'S-1-5-18'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\SYSTEM'
             SID        = 'S-1-5-18'
             DomainName = ''
             Type       = 'WellKnownAdministrative'
             Error      = ''
         }
-        'S-1-5-19'     = [PSCustomObject] @{
+        'S-1-5-19'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\NETWORK SERVICE'
             SID        = 'S-1-5-19'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-20'     = [PSCustomObject] @{
+        'S-1-5-20'                                                       = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\NETWORK SERVICE'
             SID        = 'S-1-5-20'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-544' = [PSCustomObject] @{
+        'S-1-5-32-544'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Administrators'
             SID        = 'S-1-5-32-544'
             DomainName = ''
             Type       = 'WellKnownAdministrative'
             Error      = ''
         }
-        'S-1-5-32-545' = [PSCustomObject] @{
+        'S-1-5-32-545'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Users'
             SID        = 'S-1-5-32-545'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-546' = [PSCustomObject] @{
+        'S-1-5-32-546'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Guests'
             SID        = 'S-1-5-32-546'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-547' = [PSCustomObject] @{
+        'S-1-5-32-547'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Power Users'
             SID        = 'S-1-5-32-547'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-548' = [PSCustomObject] @{
+        'S-1-5-32-548'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Account Operators'
             SID        = 'S-1-5-32-548'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-549' = [PSCustomObject] @{
+        'S-1-5-32-549'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Server Operators'
             SID        = 'S-1-5-32-549'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-550' = [PSCustomObject] @{
+        'S-1-5-32-550'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Print Operators'
             SID        = 'S-1-5-32-550'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-551' = [PSCustomObject] @{
+        'S-1-5-32-551'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Backup Operators'
             SID        = 'S-1-5-32-551'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-552' = [PSCustomObject] @{
+        'S-1-5-32-552'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Replicators'
             SID        = 'S-1-5-32-552'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-64-10'  = [PSCustomObject] @{
+        'S-1-5-64-10'                                                    = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\NTLM Authentication'
             SID        = 'S-1-5-64-10'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-64-14'  = [PSCustomObject] @{
+        'S-1-5-64-14'                                                    = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\SChannel Authentication'
             SID        = 'S-1-5-64-14'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-64-21'  = [PSCustomObject] @{
+        'S-1-5-64-21'                                                    = [PSCustomObject] @{
             Name       = 'NT AUTHORITY\Digest Authentication'
             SID        = 'S-1-5-64-21'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-80'     = [PSCustomObject] @{
+        'S-1-5-80'                                                       = [PSCustomObject] @{
             Name       = 'NT SERVICE'
             SID        = 'S-1-5-80'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-83-0'   = [PSCustomObject] @{
+        'S-1-5-83-0'                                                     = [PSCustomObject] @{
             Name       = 'NT VIRTUAL MACHINE\Virtual Machines'
             SID        = 'S-1-5-83-0'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-16-0'     = [PSCustomObject] @{
+        'S-1-16-0'                                                       = [PSCustomObject] @{
             Name       = 'Untrusted Mandatory Level'
             SID        = 'S-1-16-0'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-16-4096'  = [PSCustomObject] @{
+        'S-1-16-4096'                                                    = [PSCustomObject] @{
             Name       = 'Low Mandatory Level'
             SID        = 'S-1-16-4096'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-16-8192'  = [PSCustomObject] @{
+        'S-1-16-8192'                                                    = [PSCustomObject] @{
             Name       = 'Medium Mandatory Level'
             SID        = 'S-1-16-8192'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-16-8448'  = [PSCustomObject] @{
+        'S-1-16-8448'                                                    = [PSCustomObject] @{
             Name       = 'Medium Plus Mandatory Level'
             SID        = 'S-1-16-8448'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-16-12288' = [PSCustomObject] @{
+        'S-1-16-12288'                                                   = [PSCustomObject] @{
             Name       = 'High Mandatory Level'
             SID        = 'S-1-16-12288'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-16-16384' = [PSCustomObject] @{
+        'S-1-16-16384'                                                   = [PSCustomObject] @{
             Name       = 'System Mandatory Level'
             SID        = 'S-1-16-16384'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-16-20480' = [PSCustomObject] @{
+        'S-1-16-20480'                                                   = [PSCustomObject] @{
             Name       = 'Protected Process Mandatory Level'
             SID        = 'S-1-16-20480'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-16-28672' = [PSCustomObject] @{
+        'S-1-16-28672'                                                   = [PSCustomObject] @{
             Name       = 'Secure Process Mandatory Level'
             SID        = 'S-1-16-28672'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-554' = [PSCustomObject] @{
+        'S-1-5-32-554'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Pre-Windows 2000 Compatible Access'
             SID        = 'S-1-5-32-554'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-555' = [PSCustomObject] @{
+        'S-1-5-32-555'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Remote Desktop Users'
             SID        = 'S-1-5-32-555'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-556' = [PSCustomObject] @{
+        'S-1-5-32-556'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Network Configuration Operators'
             SID        = 'S-1-5-32-556'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-557' = [PSCustomObject] @{
+        'S-1-5-32-557'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Incoming Forest Trust Builders'
             SID        = 'S-1-5-32-557'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-558' = [PSCustomObject] @{
+        'S-1-5-32-558'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Performance Monitor Users'
             SID        = 'S-1-5-32-558'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-559' = [PSCustomObject] @{
+        'S-1-5-32-559'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Performance Log Users'
             SID        = 'S-1-5-32-559'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-560' = [PSCustomObject] @{
+        'S-1-5-32-560'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Windows Authorization Access Group'
             SID        = 'S-1-5-32-560'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-561' = [PSCustomObject] @{
+        'S-1-5-32-561'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Terminal Server License Servers'
             SID        = 'S-1-5-32-561'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-562' = [PSCustomObject] @{
+        'S-1-5-32-562'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Distributed COM Users'
             SID        = 'S-1-5-32-562'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-569' = [PSCustomObject] @{
+        'S-1-5-32-569'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Cryptographic Operators'
             SID        = 'S-1-5-32-569'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-573' = [PSCustomObject] @{
+        'S-1-5-32-573'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Event Log Readers'
             SID        = 'S-1-5-32-573'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-574' = [PSCustomObject] @{
+        'S-1-5-32-574'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Certificate Service DCOM Access'
             SID        = 'S-1-5-32-574'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-575' = [PSCustomObject] @{
+        'S-1-5-32-575'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\RDS Remote Access Servers'
             SID        = 'S-1-5-32-575'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-576' = [PSCustomObject] @{
+        'S-1-5-32-576'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\RDS Endpoint Servers'
             SID        = 'S-1-5-32-576'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-577' = [PSCustomObject] @{
+        'S-1-5-32-577'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\RDS Management Servers'
             SID        = 'S-1-5-32-577'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-578' = [PSCustomObject] @{
+        'S-1-5-32-578'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Hyper-V Administrators'
             SID        = 'S-1-5-32-578'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-579' = [PSCustomObject] @{
+        'S-1-5-32-579'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Access Control Assistance Operators'
             SID        = 'S-1-5-32-579'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-32-580' = [PSCustomObject] @{
+        'S-1-5-32-580'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Remote Management Users'
             SID        = 'S-1-5-32-580'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
         }
-        'S-1-5-90-0'   = [PSCustomObject] @{
+        'S-1-5-90-0'                                                     = [PSCustomObject] @{
             Name       = 'Window Manager\Window Manager Group'
             SID        = 'S-1-5-90-0'
+            DomainName = ''
+            Type       = 'WellKnownGroup'
+            Error      = ''
+        }
+        'S-1-5-80-3139157870-2983391045-3678747466-658725712-1809340420' = [PSCustomObject] @{
+            Name       = 'NT SERVICE\WdiServiceHost'
+            SID        = 'S-1-5-80-3139157870-2983391045-3678747466-658725712-1809340420'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
