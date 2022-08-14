@@ -1,5 +1,8 @@
 ﻿### Changelog
 
+#### 0.0.235 - 2022.08.14
+- Improved `Convert-Identity` and `ConvertFrom-SID` - faster lookup for `NT SERVICE\WdiServiceHost`
+
 #### 0.0.234 - 2022.08.14
 - Improved `Convert-Identity` and `ConvertFrom-SID` - faster local SID lookup and `Window Manager\Window Manager Group`
 
