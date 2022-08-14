@@ -1,5 +1,8 @@
 ﻿### Changelog
 
+#### 0.0.234 - 2022.08.14
+- Improved `Convert-Identity` and `ConvertFrom-SID` - faster local SID lookup and `Window Manager\Window Manager Group`
+
 #### 0.0.233 - 2022.08.06
 - Improves `Get-GitHubLatestRelease` to verify for internet connection.
 
