@@ -584,6 +584,13 @@ function ConvertFrom-SID {
             Type       = 'WellKnownGroup'
             Error      = ''
         }
+        'S-1-5-32-568'                                                   = [PSCustomObject] @{
+            Name       = 'BUILTIN\IIS_IUSRS'
+            SID        = 'S-1-5-90-0'
+            DomainName = ''
+            Type       = 'WellKnownGroup'
+            Error      = ''
+        }
     }
     foreach ($S in $SID) {
         if ($OnlyWellKnownAdministrative) {
