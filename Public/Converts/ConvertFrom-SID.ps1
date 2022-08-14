@@ -570,6 +570,13 @@ function ConvertFrom-SID {
             Type       = 'WellKnownGroup'
             Error      = ''
         }
+        'S-1-5-90-0'   = [PSCustomObject] @{
+            Name       = 'Window Manager\Window Manager Group'
+            SID        = 'S-1-5-90-0'
+            DomainName = ''
+            Type       = 'WellKnownGroup'
+            Error      = ''
+        }
     }
     foreach ($S in $SID) {
         if ($OnlyWellKnownAdministrative) {
@@ -608,6 +615,9 @@ function ConvertFrom-SID {
                         }
                     }
                 } else {
+                    if (-not $Script:LocalComputerSID) {
+                        $Script:LocalComputerSID = Get-LocalComputerSid
+                    }
                     try {
                         if ($S -like "S-1-5-21-*-519" -or $S -like "S-1-5-21-*-512") {
                             $Type = 'Administrative'
@@ -618,7 +628,7 @@ function ConvertFrom-SID {
                         [PSCustomObject] @{
                             Name       = $Name
                             SID        = $S
-                            DomainName = (ConvertFrom-NetbiosName -Identity $Name).DomainName
+                            DomainName = if ($S -like "$Script:LocalComputerSID*") { '' } else { (ConvertFrom-NetbiosName -Identity $Name).DomainName }
                             Type       = $Type
                             Error      = ''
                         }
