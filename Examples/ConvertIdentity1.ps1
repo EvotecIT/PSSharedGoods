@@ -1,6 +1,7 @@
 ﻿
 Import-Module $PSScriptRoot\..\PSSharedGoods.psd1 -Force
 
+Convert-Identity -Identity "NT SERVICE\WdiServiceHost" -Verbose
 Convert-Identity -Identity 'Guest' -Verbose
 Convert-Identity -Identity 'EvoXXX\Guest' -Verbose
 Convert-Identity -Identity 'Everyone' -Verbose
