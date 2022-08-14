@@ -1,6 +1,11 @@
 ﻿
 Import-Module $PSScriptRoot\..\PSSharedGoods.psd1 -Force
 
+Convert-Identity -Identity 'Guest' -Verbose
+Convert-Identity -Identity 'EvoXXX\Guest' -Verbose
+Convert-Identity -Identity 'Everyone' -Verbose
+Convert-Identity -Identity 'Window Manager\Window Manager Group' -Verbose
+
 @(
     Convert-Identity -Identity 'przemyslaw.klys@evotec.pl' -Verbose
     Convert-Identity -Identity 'test2'
