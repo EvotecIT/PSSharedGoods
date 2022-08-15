@@ -591,6 +591,20 @@ function ConvertFrom-SID {
             Type       = 'WellKnownGroup'
             Error      = ''
         }
+        # 'S-1-5-113'                                                      = [PSCustomObject] @{
+        #     Name       = 'NT AUTHORITY\Local account'
+        #     SID        = 'S-1-5-113'
+        #     DomainName = ''
+        #     Type       = 'WellKnownGroup'
+        #     Error      = ''
+        # }
+        # 'S-1-5-114'                                                      = [PSCustomObject] @{
+        #     Name       = 'NT AUTHORITY\Local account and member of Administrators group'
+        #     SID        = 'S-1-5-114'
+        #     DomainName = ''
+        #     Type       = 'WellKnownGroup'
+        #     Error      = ''
+        # }
     }
     foreach ($S in $SID) {
         if ($OnlyWellKnownAdministrative) {
@@ -633,18 +647,30 @@ function ConvertFrom-SID {
                         $Script:LocalComputerSID = Get-LocalComputerSid
                     }
                     try {
-                        if ($S -like "S-1-5-21-*-519" -or $S -like "S-1-5-21-*-512") {
-                            $Type = 'Administrative'
-                        } else {
+                        if ($S.Length -le 18) {
                             $Type = 'NotAdministrative'
-                        }
-                        $Name = (([System.Security.Principal.SecurityIdentifier]::new($S)).Translate([System.Security.Principal.NTAccount])).Value
-                        [PSCustomObject] @{
-                            Name       = $Name
-                            SID        = $S
-                            DomainName = if ($S -like "$Script:LocalComputerSID*") { '' } else { (ConvertFrom-NetbiosName -Identity $Name).DomainName }
-                            Type       = $Type
-                            Error      = ''
+                            $Name = (([System.Security.Principal.SecurityIdentifier]::new($S)).Translate([System.Security.Principal.NTAccount])).Value
+                            [PSCustomObject] @{
+                                Name       = $Name
+                                SID        = $S
+                                DomainName = ''
+                                Type       = $Type
+                                Error      = ''
+                            }
+                        } else {
+                            if ($S -like "S-1-5-21-*-519" -or $S -like "S-1-5-21-*-512") {
+                                $Type = 'Administrative'
+                            } else {
+                                $Type = 'NotAdministrative'
+                            }
+                            $Name = (([System.Security.Principal.SecurityIdentifier]::new($S)).Translate([System.Security.Principal.NTAccount])).Value
+                            [PSCustomObject] @{
+                                Name       = $Name
+                                SID        = $S
+                                DomainName = if ($S -like "$Script:LocalComputerSID*") { '' } else { (ConvertFrom-NetbiosName -Identity $Name).DomainName }
+                                Type       = $Type
+                                Error      = ''
+                            }
                         }
                     } catch {
                         # Return unchanged object
