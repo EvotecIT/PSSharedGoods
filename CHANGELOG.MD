@@ -1,5 +1,8 @@
 ﻿### Changelog
 
+#### 0.0.237 - 2022.08.18
+- Improved `ConvertTo-Json` to handle ArrayJoin feature for nested objects
+
 #### 0.0.236 - 2022.08.14
 - Improved `Convert-Identity` and `ConvertFrom-SID` - faster lookup for SIDs that are less than 19 chars
 
