@@ -3,6 +3,17 @@
     Pear = 30
     Kiwi = 31
 }
+
+$ArrayGeneric = [System.Collections.Generic.List[string]]::new()
+$ArrayGeneric.Add("Apple")
+$ArrayGeneric.Add("Pear")
+$ArrayGeneric.Add("Kiwi")
+
+$ArrayGenericDouble = [System.Collections.Generic.List[double]]::new()
+$ArrayGenericDouble.Add(29.0)
+$ArrayGenericDouble.Add(30.0)
+$ArrayGenericDouble.Add(31.4)
+
 $DateTime = Get-Date
 $PSCustomObject = [PSCustomObject] @{
     Int                    = '1'
@@ -19,6 +30,8 @@ $PSCustomObject = [PSCustomObject] @{
     PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     EmptyArray             = @()
     EmptyList              = [System.Collections.Generic.List[string]]::new()
+    ArrayGeneric       = $ArrayGeneric
+    ArrayGenericDouble = $ArrayGenericDouble
     HashTable              = @{
         NumberAgain       = 2
         OrderedDictionary = [ordered] @{
@@ -33,6 +46,8 @@ $PSCustomObject = [PSCustomObject] @{
             "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
             "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
         )
+        ArrayGeneric       = $ArrayGeneric
+        ArrayGenericDouble = $ArrayGenericDouble
     }
     OrderedDictionary      = [ordered] @{
         NumberAgain       = 2
@@ -48,6 +63,8 @@ $PSCustomObject = [PSCustomObject] @{
             "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
             "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
         )
+        ArrayGeneric       = $ArrayGeneric
+        ArrayGenericDouble = $ArrayGenericDouble
     }
 }
 
@@ -173,6 +190,27 @@ Describe -Name 'Testing ConvertTo-JsonLiteral' {
         $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
         $FromJson.EmptyArray | Should -Be '' # when no depth, no array at all.
         $FromJson.EmptyList | Should -Be ''
+
+    }
+    It 'PSCustomObject Conversion with ArrayJoin' {
+        $Json = ConvertTo-JsonLiteral -Object $PSCustomObject -NumberAsString -BoolAsString -ArrayJoin -ArrayJoinString "," -Depth 5
+        $FromJson = $Json | ConvertFrom-Json
+        $FromJson.Int | Should -Be '1'
+        $FromJson.Bool | Should -Be 'False'
+        $FromJson.Date | Should -Be $DateTime.ToString("yyyy-MM-dd HH:mm:ss")
+        $FromJson.Enum | Should -Be 'Kiwi'
+        $FromJson.String | Should -Be 'This a test, or maybe not;'
+        $FromJson.PathWithTrail | Should -Be 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe\'
+        $FromJson.PathWithoutSpaces | Should -Be 'C:\Users\przemyslaw.klys\AppData\Local\1password\app\7\1Password.exe'
+        $FromJson.PathWithSpaces | Should -Be "C:\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.PathWithNetwork | Should -Be "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.PathWithNetworkAndDots | Should -Be "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
+        $FromJson.EmptyArray | Should -Be '' # when no depth, no array at all.
+        $FromJson.EmptyList | Should -Be ''
+        $FromJson.HashTable.ArrayGeneric | Should -Be "Apple,Pear,Kiwi"
+        $FromJson.HashTable.ArrayGenericDouble | Should -Be "29,30,31.4"
+        $FromJson.ArrayGeneric | Should -Be "Apple,Pear,Kiwi"
+        $FromJson.ArrayGenericDouble | Should -Be "29,30,31.4"
     }
     It 'Ordered Dictionary Conversion' {
         $Json = ConvertTo-JsonLiteral -Object $OrderedObject -NumberAsString -BoolAsString
