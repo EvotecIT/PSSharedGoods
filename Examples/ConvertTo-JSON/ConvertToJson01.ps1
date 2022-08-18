@@ -6,6 +6,17 @@ Enum Fruit{
     Kiwi = 31
 }
 
+$ArrayGeneric = [System.Collections.Generic.List[string]]::new()
+$ArrayGeneric.Add("Apple")
+$ArrayGeneric.Add("Pear")
+$ArrayGeneric.Add("Kiwi")
+
+$ArrayGenericDouble = [System.Collections.Generic.List[double]]::new()
+$ArrayGenericDouble.Add(29.0)
+$ArrayGenericDouble.Add(30.0)
+$ArrayGenericDouble.Add(31.4)
+
+
 $PSCustomObject = [PSCustomObject] @{
     Int                    = '1'
     Bool                   = $false
@@ -21,20 +32,23 @@ $PSCustomObject = [PSCustomObject] @{
     PathWithNetworkAndDots = "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
     EmptyArray             = @()
     HashTable              = @{
-        NumberAgain       = 2
-        OrderedDictionary = [ordered] @{
+        NumberAgain        = 2
+        OrderedDictionary  = [ordered] @{
             String    = 'test'
             HashTable = @{
                 StringAgain = "oops"
             }
         }
-        Array             = @(
+        Array              = @(
             'C:\Users\1Password.exe'
             "C:\Users\Ooops.exe"
             "\\EvoWin\c$\Users\przemyslaw klys\AppData\Local\1password\This is other\7\1Password.exe"
             "\\EvoWin\c$\Users\przemyslaw.klys\AppData\Local\1password\This is other\7\1Password.exe"
         )
+        ArrayGeneric       = $ArrayGeneric
+        ArrayGenericDouble = $ArrayGenericDouble
     }
 }
 
-$PSCustomObject | ConvertTo-JsonLiteral -Depth 5 -NumberAsString | ConvertFrom-Json
+$Output = $PSCustomObject | ConvertTo-JsonLiteral -Depth 5 -NumberAsString -ArrayJoin -ArrayJoinString "," | ConvertFrom-Json
+$Output
