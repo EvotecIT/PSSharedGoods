@@ -1,5 +1,8 @@
 ﻿### Changelog
 
+#### 0.0.239 - 2022.08.31
+- Improved `Convert-CountryToCountryCode` and `Convert-CountryCodeToCountry` by using cache for frequest queries
+
 #### 0.0.238 - 2022.08.31
 - Improved `Convert-CountryToCountryCode` to resolve country names to country codes from NativeName, DisplayName and ThreeLetterISORegionName as an addition to EnglishName
 
