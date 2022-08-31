@@ -28,6 +28,12 @@
     $Test['Poland']['Culture']
     $Test['Poland']['RegionInformation']
 
+    .EXAMPLE
+    Convert-CountryToCountryCode -CountryName 'Polska'
+    Convert-CountryToCountryCode -CountryName 'Poland'
+    Convert-CountryToCountryCode -CountryName 'CZECH REPUBLIC'
+    Convert-CountryToCountryCode -CountryName 'USA'
+
     .NOTES
     General notes
     #>
@@ -41,6 +47,18 @@
     foreach ($Culture in $AllCultures) {
         $RegionInformation = [System.Globalization.RegionInfo]::new($Culture.LCID)
         $QuickSearch[$RegionInformation.EnglishName] = @{
+            'Culture'           = $Culture
+            'RegionInformation' = $RegionInformation
+        }
+        $QuickSearch[$RegionInformation.DisplayName] = @{
+            'Culture'           = $Culture
+            'RegionInformation' = $RegionInformation
+        }
+        $QuickSearch[$RegionInformation.NativeName] = @{
+            'Culture'           = $Culture
+            'RegionInformation' = $RegionInformation
+        }
+        $QuickSearch[$RegionInformation.ThreeLetterISORegionName] = @{
             'Culture'           = $Culture
             'RegionInformation' = $RegionInformation
         }
