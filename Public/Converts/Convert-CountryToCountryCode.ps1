@@ -42,42 +42,62 @@
         [string] $CountryName,
         [switch] $All
     )
-    $QuickSearch = [ordered] @{}
-    $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
-    foreach ($Culture in $AllCultures) {
-        $RegionInformation = [System.Globalization.RegionInfo]::new($Culture.LCID)
-        $QuickSearch[$RegionInformation.EnglishName] = @{
-            'Culture'           = $Culture
-            'RegionInformation' = $RegionInformation
-        }
-        $QuickSearch[$RegionInformation.DisplayName] = @{
-            'Culture'           = $Culture
-            'RegionInformation' = $RegionInformation
-        }
-        $QuickSearch[$RegionInformation.NativeName] = @{
-            'Culture'           = $Culture
-            'RegionInformation' = $RegionInformation
-        }
-        $QuickSearch[$RegionInformation.ThreeLetterISORegionName] = @{
-            'Culture'           = $Culture
-            'RegionInformation' = $RegionInformation
-        }
-    }
-    if ($CountryName) {
-        if ($All) {
-            $QuickSearch[$CountryName]
-        } else {
-            if ($QuickSearch[$CountryName]) {
-                $QuickSearch[$CountryName].RegionInformation.TwoLetterISORegionName.ToUpper()
+    if ($Script:QuickSearchCountries) {
+        if ($CountryName) {
+            if ($All) {
+                $Script:QuickSearchCountries[$CountryName]
             } else {
-                if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                    throw "Country $CountryName not found"
+                if ($Script:QuickSearchCountries[$CountryName]) {
+                    $Script:QuickSearchCountries[$CountryName].RegionInformation.TwoLetterISORegionName.ToUpper()
                 } else {
-                    Write-Warning -Message "Convert-CountryToCountryCode - Country $CountryName name not found"
+                    if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                        throw "Country $CountryName not found"
+                    } else {
+                        Write-Warning -Message "Convert-CountryToCountryCode - Country $CountryName name not found"
+                    }
                 }
             }
+        } else {
+            $Script:QuickSearchCountries
         }
     } else {
-        $QuickSearch
+        $Script:QuickSearchCountries = [ordered] @{}
+        $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
+        foreach ($Culture in $AllCultures) {
+            $RegionInformation = [System.Globalization.RegionInfo]::new($Culture.LCID)
+            $Script:QuickSearchCountries[$RegionInformation.EnglishName] = @{
+                'Culture'           = $Culture
+                'RegionInformation' = $RegionInformation
+            }
+            $Script:QuickSearchCountries[$RegionInformation.DisplayName] = @{
+                'Culture'           = $Culture
+                'RegionInformation' = $RegionInformation
+            }
+            $Script:QuickSearchCountries[$RegionInformation.NativeName] = @{
+                'Culture'           = $Culture
+                'RegionInformation' = $RegionInformation
+            }
+            $Script:QuickSearchCountries[$RegionInformation.ThreeLetterISORegionName] = @{
+                'Culture'           = $Culture
+                'RegionInformation' = $RegionInformation
+            }
+        }
+        if ($CountryName) {
+            if ($All) {
+                $Script:QuickSearchCountries[$CountryName]
+            } else {
+                if ($Script:QuickSearchCountries[$CountryName]) {
+                    $Script:QuickSearchCountries[$CountryName].RegionInformation.TwoLetterISORegionName.ToUpper()
+                } else {
+                    if ($PSBoundParameters.ErrorAction -eq 'Stop') {
+                        throw "Country $CountryName not found"
+                    } else {
+                        Write-Warning -Message "Convert-CountryToCountryCode - Country $CountryName name not found"
+                    }
+                }
+            }
+        } else {
+            $Script:QuickSearchCountries
+        }
     }
 }

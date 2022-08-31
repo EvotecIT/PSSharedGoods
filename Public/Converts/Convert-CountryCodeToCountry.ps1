@@ -31,22 +31,34 @@
         [string] $CountryCode,
         [switch] $All
     )
-    $QuickSearch = [ordered] @{}
-    $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
-    foreach ($Culture in $AllCultures) {
-        $RegionInformation = [System.Globalization.RegionInfo]::new($Culture.LCID)
-        $QuickSearch[$RegionInformation.Name] = @{
-            'Culture'           = $Culture
-            'RegionInformation' = $RegionInformation
-        }
-    }
-    if ($CountryCode) {
-        if ($All) {
-            $QuickSearch[$CountryCode]
+    if ($Script:QuickSearch) {
+        if ($CountryCode) {
+            if ($All) {
+                $Script:QuickSearch[$CountryCode]
+            } else {
+                $Script:QuickSearch[$CountryCode].RegionInformation.EnglishName
+            }
         } else {
-            $QuickSearch[$CountryCode].RegionInformation.EnglishName
+            $Script:QuickSearch
         }
     } else {
-        $QuickSearch
+        $Script:QuickSearch = [ordered] @{}
+        $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
+        foreach ($Culture in $AllCultures) {
+            $RegionInformation = [System.Globalization.RegionInfo]::new($Culture.LCID)
+            $Script:QuickSearch[$RegionInformation.Name] = @{
+                'Culture'           = $Culture
+                'RegionInformation' = $RegionInformation
+            }
+        }
+        if ($CountryCode) {
+            if ($All) {
+                $Script:QuickSearch[$CountryCode]
+            } else {
+                $Script:QuickSearch[$CountryCode].RegionInformation.EnglishName
+            }
+        } else {
+            $Script:QuickSearch
+        }
     }
 }
