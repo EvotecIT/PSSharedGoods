@@ -1,5 +1,8 @@
 ﻿### Changelog
 
+#### 0.0.238 - 2022.08.31
+- Improved `Convert-CountryToCountryCode` to resolve country names to country codes from NativeName, DisplayName and ThreeLetterISORegionName as an addition to EnglishName
+
 #### 0.0.237 - 2022.08.18
 - Improved `ConvertTo-Json` to handle ArrayJoin feature for nested objects
 
