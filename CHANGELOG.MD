@@ -1,6 +1,6 @@
 ﻿### Changelog
 
-#### 0.0.240 - 2022.09.01
+#### 0.0.241 - 2022.09.01
 - Fixes `Convert-CountryToCountryCode` and `Convert-CountryCodeToCountry` for PS7
 - Improved `Convert-CountryCodeToCountry` for 3 letter codes
 
