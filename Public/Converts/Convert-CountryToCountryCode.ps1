@@ -71,7 +71,7 @@
                 'Culture'           = [cultureinfo] 'CZ'
                 'RegionInformation' = [System.Globalization.RegionInfo] 'CZ'
             }
-            'Korea, REPUBLIC' = @{
+            'Korea, REPUBLIC OF' = @{
                 'Culture'           = [cultureinfo] 'KR'
                 'RegionInformation' = [System.Globalization.RegionInfo] 'KR'
             }
