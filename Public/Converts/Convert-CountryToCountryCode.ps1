@@ -61,8 +61,25 @@
             $Script:QuickSearchCountries
         }
     } else {
-        $Script:QuickSearchCountries = [ordered] @{}
+
         $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
+        $Script:QuickSearchCountries = [ordered] @{
+            # This is for custom countries that are not in the list by their english name.
+            # there also seems to be a difference between PS7 and PS5.1
+            # Net framework vs NET Core
+            'Czech Republic'  = @{
+                'Culture'           = [cultureinfo] 'CZ'
+                'RegionInformation' = [System.Globalization.RegionInfo] 'CZ'
+            }
+            'Korea, REPUBLIC' = @{
+                'Culture'           = [cultureinfo] 'KR'
+                'RegionInformation' = [System.Globalization.RegionInfo] 'KR'
+            }
+            'VIET NAM'        = @{
+                'Culture'           = [cultureinfo] 'VN'
+                'RegionInformation' = [System.Globalization.RegionInfo] 'VN'
+            }
+        }
         foreach ($Culture in $AllCultures) {
             $RegionInformation = [System.Globalization.RegionInfo]::new($Culture)
             $Script:QuickSearchCountries[$RegionInformation.EnglishName] = @{
