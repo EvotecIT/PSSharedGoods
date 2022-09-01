@@ -64,7 +64,7 @@
         $Script:QuickSearchCountries = [ordered] @{}
         $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
         foreach ($Culture in $AllCultures) {
-            $RegionInformation = [System.Globalization.RegionInfo]::new($Culture.LCID)
+            $RegionInformation = [System.Globalization.RegionInfo]::new($Culture)
             $Script:QuickSearchCountries[$RegionInformation.EnglishName] = @{
                 'Culture'           = $Culture
                 'RegionInformation' = $RegionInformation

@@ -23,6 +23,10 @@
     $Test['PL']['Culture'] | fl
     $Test['PL']['RegionInformation']
 
+    .EXAMPLE
+    Convert-CountryCodeToCountry -CountryCode 'PL'
+    Convert-CountryCodeToCountry -CountryCode 'POL'
+
     .NOTES
     General notes
     #>
@@ -45,8 +49,13 @@
         $Script:QuickSearch = [ordered] @{}
         $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
         foreach ($Culture in $AllCultures) {
-            $RegionInformation = [System.Globalization.RegionInfo]::new($Culture.LCID)
-            $Script:QuickSearch[$RegionInformation.Name] = @{
+
+            $RegionInformation = [System.Globalization.RegionInfo]::new($Culture)
+            $Script:QuickSearch[$RegionInformation.TwoLetterISORegionName] = @{
+                'Culture'           = $Culture
+                'RegionInformation' = $RegionInformation
+            }
+            $Script:QuickSearch[$RegionInformation.ThreeLetterISORegionName] = @{
                 'Culture'           = $Culture
                 'RegionInformation' = $RegionInformation
             }
