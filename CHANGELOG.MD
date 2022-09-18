@@ -1,5 +1,9 @@
 ﻿### Changelog
 
+#### 0.0.243 - 2022.09.18
+- Added `Convert-ADSchemaToGuid` and `Convert-ADGuidToSchema`
+- Renamed `Get-WinADForestGUIDs` to `Convert-ADGuidToSchema`
+
 #### 0.0.242 - 2022.09.01
 - Adds some countries `Convert-CountryToCountryCode` and `Convert-CountryCodeToCountry` with some haardcoding
 
