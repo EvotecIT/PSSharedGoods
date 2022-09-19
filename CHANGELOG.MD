@@ -1,4 +1,4 @@
-﻿### Changelog
+﻿#### 0.0.244 - 2022.09.19
 - Improved `Split-Array`
 - Removed `Split-ArrayEvery`
 
