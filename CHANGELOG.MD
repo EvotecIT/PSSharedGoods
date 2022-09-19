@@ -1,4 +1,6 @@
 ﻿### Changelog
+- Improved `Split-Array`
+- Removed `Split-ArrayEvery`
 
 #### 0.0.243 - 2022.09.18
 - Added `Convert-ADSchemaToGuid` and `Convert-ADGuidToSchema`

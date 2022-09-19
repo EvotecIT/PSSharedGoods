@@ -15,30 +15,29 @@ function Split-Array {
         .EXAMPLE
         This splits array into 3 parts regardless of amount of elements
 
-
         Split-array -inArray @(1,2,3,4,5,6,7,8,9,10) -size 3
 
         # Link: https://gallery.technet.microsoft.com/scriptcenter/Split-an-array-into-parts-4357dcc1
     #>
     param(
-        [Object] $inArray,
-        [int]$parts,
-        [int]$size
+        [alias('InArray', 'List')][Array] $Objects,
+        [int]$Parts,
+        [int]$Size
     )
-    if ($inArray.Count -eq 1) { return $inArray }
-    if ($parts) {
-        $PartSize = [Math]::Ceiling($inArray.count / $parts)
+    if ($Objects.Count -eq 1) { return $Objects }
+    if ($Parts) {
+        $PartSize = [Math]::Ceiling($inArray.count / $Parts)
     }
-    if ($size) {
-        $PartSize = $size
-        $parts = [Math]::Ceiling($inArray.count / $size)
+    if ($Size) {
+        $PartSize = $Size
+        $Parts = [Math]::Ceiling($Objects.count / $Size)
     }
-    $outArray = New-Object 'System.Collections.Generic.List[psobject]'
-    for ($i = 1; $i -le $parts; $i++) {
+    $outArray = [System.Collections.Generic.List[psobject]]::new()
+    for ($i = 1; $i -le $Parts; $i++) {
         $start = (($i - 1) * $PartSize)
         $end = (($i) * $PartSize) - 1
-        if ($end -ge $inArray.count) {$end = $inArray.count - 1}
-        $outArray.Add(@($inArray[$start..$end]))
+        if ($end -ge $Objects.count) { $end = $Objects.count - 1 }
+        $outArray.Add(@($Objects[$start..$end]))
     }
-    return , $outArray
+    return $outArray
 }
