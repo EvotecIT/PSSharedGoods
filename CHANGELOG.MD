@@ -1,4 +1,6 @@
-﻿#### 0.0.244 - 2022.09.19
+﻿#### 0.0.245 - 2022.09.19
+- Fixes `Split-Array` when there's a single array
+#### 0.0.244 - 2022.09.19
 - Improved `Split-Array`
 - Removed `Split-ArrayEvery`
 

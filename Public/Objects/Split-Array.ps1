@@ -39,5 +39,5 @@ function Split-Array {
         if ($end -ge $Objects.count) { $end = $Objects.count - 1 }
         $outArray.Add(@($Objects[$start..$end]))
     }
-    return $outArray
+    return , $outArray
 }
