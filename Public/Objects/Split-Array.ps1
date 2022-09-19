@@ -32,7 +32,7 @@ function Split-Array {
         $PartSize = $Size
         $Parts = [Math]::Ceiling($Objects.count / $Size)
     }
-    $outArray = [System.Collections.Generic.List[psobject]]::new()
+    $outArray = [System.Collections.Generic.List[Object]]::new()
     for ($i = 1; $i -le $Parts; $i++) {
         $start = (($i - 1) * $PartSize)
         $end = (($i) * $PartSize) - 1
