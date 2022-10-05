@@ -18,8 +18,14 @@
     .PARAMETER RootDSE
     RootDSE to query. By default RootDSE is queried from the domain
 
+    .PARAMETER AsString
+    Return the guid as a string
+
     .EXAMPLE
     Convert-ADSchemaToGuid -SchemaName 'ms-Exch-MSO-Forward-Sync-Cookie'
+
+    .EXAMPLE
+    Convert-ADSchemaToGuid -SchemaName 'ms-Exch-MSO-Forward-Sync-Cookie' -AsString
 
     .NOTES
     General notes
@@ -28,7 +34,8 @@
     param(
         [string] $SchemaName,
         [string] $Domain = $Env:USERDNSDOMAIN,
-        [Microsoft.ActiveDirectory.Management.ADEntity] $RootDSE
+        [Microsoft.ActiveDirectory.Management.ADEntity] $RootDSE,
+        [switch] $AsString
     )
     if ($RootDSE) {
         $Script:RootDSE = $RootDSE
@@ -38,28 +45,41 @@
         $Script:RootDSE = Get-ADRootDSE -Server $Domain
     }
     # Create a hashtable to store the GUID value of each schema class and attribute
-    if (-not $Script:ADGuidMap) {
+    if (-not $Script:ADGuidMap -or -not $Script:ADGuidMapString) {
         $Script:ADGuidMap = [ordered] @{
             'All' = [System.GUID]'00000000-0000-0000-0000-000000000000'
         }
+        $Script:ADGuidMapString = [ordered] @{
+            'All' = '00000000-0000-0000-0000-000000000000'
+        }
         $StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties lDAPDisplayName, schemaIDGUID
         foreach ($Guid in $StandardRights) {
-            $Script:ADGuidMap[$Guid.lDAPDisplayName] = ([System.GUID]$Guid.schemaIDGUID).Guid
-            $Script:ADGuidMap[$Guid.Name] = ([System.GUID]$Guid.schemaIDGUID).Guid
+            $Script:ADGuidMapString[$Guid.lDAPDisplayName] = ([System.GUID]$Guid.schemaIDGUID).Guid
+            $Script:ADGuidMapString[$Guid.Name] = ([System.GUID]$Guid.schemaIDGUID).Guid
+            $Script:ADGuidMap[$Guid.lDAPDisplayName] = ([System.GUID]$Guid.schemaIDGUID)
+            $Script:ADGuidMap[$Guid.Name] = ([System.GUID]$Guid.schemaIDGUID)
         }
 
         #Create a hashtable to store the GUID value of each extended right in the forest
         $ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, rightsGuid
         foreach ($Guid in $ExtendedRightsGuids) {
-            #if ($Guid.Name) {
-            $Script:ADGuidMap[$Guid.Name] = ([System.GUID]$Guid.RightsGuid).Guid
-            #}
-            $Script:ADGuidMap[$Guid.DisplayName] = ([System.GUID]$Guid.RightsGuid).Guid
+            $Script:ADGuidMapString[$Guid.Name] = ([System.GUID]$Guid.RightsGuid).Guid
+            $Script:ADGuidMapString[$Guid.DisplayName] = ([System.GUID]$Guid.RightsGuid).Guid
+            $Script:ADGuidMap[$Guid.Name] = ([System.GUID]$Guid.RightsGuid)
+            $Script:ADGuidMap[$Guid.DisplayName] = ([System.GUID]$Guid.RightsGuid)
         }
     }
     if ($SchemaName) {
-        $Script:ADGuidMap[$SchemaName]
+        if ($AsString) {
+            return $Script:ADGuidMapString[$SchemaName]
+        } else {
+            return $Script:ADGuidMap[$SchemaName]
+        }
     } else {
-        $Script:ADGuidMap
+        if ($AsString) {
+            $Script:ADGuidMapString
+        } else {
+            $Script:ADGuidMap
+        }
     }
 }
