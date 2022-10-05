@@ -1,4 +1,7 @@
-﻿#### 0.0.246 - 2022.09.19
+﻿#### 0.0.247 - 2022.10.05
+- `Convert-ADSchemaToGuid` improved by adding `AsString`. By default returns Guid, but can return string.
+
+#### 0.0.246 - 2022.09.19
 - Fixes `Split-Array` in some rare cases
 
 #### 0.0.245 - 2022.09.19
