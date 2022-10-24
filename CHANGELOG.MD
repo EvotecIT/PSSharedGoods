@@ -1,5 +1,5 @@
-﻿#### 0.0.248
-- Added `ConvertFrom-ObjectToString` to help with converting objects into 
+﻿#### 0.0.248 - 2022.10.24
+- Added `ConvertFrom-ObjectToString` to help with converting objects into
 
 #### 0.0.247 - 2022.10.05
 - `Convert-ADSchemaToGuid` improved by adding `AsString`. By default returns Guid, but can return string.
