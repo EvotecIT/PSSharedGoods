@@ -1,4 +1,12 @@
-﻿#### 0.0.248 - 2022.10.24
+﻿#### 0.0.249 - 2022.11.01
+- Improve `ConvertFrom-DistinguishedName` to allow `ToCanonicalName`
+
+```powershell
+ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
+ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
+```
+
+#### 0.0.248 - 2022.10.24
 - Added `ConvertFrom-ObjectToString` to help with converting objects into
 
 #### 0.0.247 - 2022.10.05

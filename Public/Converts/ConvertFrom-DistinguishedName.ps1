@@ -74,13 +74,15 @@
         [Parameter(ParameterSetName = 'ToDomainCN')]
         [Parameter(ParameterSetName = 'Default')]
         [Parameter(ParameterSetName = 'ToLastName')]
+        [Parameter(ParameterSetName = 'ToCanonicalName')]
         [alias('Identity', 'DN')][Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)][string[]] $DistinguishedName,
         [Parameter(ParameterSetName = 'ToOrganizationalUnit')][switch] $ToOrganizationalUnit,
         [Parameter(ParameterSetName = 'ToMultipleOrganizationalUnit')][alias('ToMultipleOU')][switch] $ToMultipleOrganizationalUnit,
         [Parameter(ParameterSetName = 'ToMultipleOrganizationalUnit')][switch] $IncludeParent,
         [Parameter(ParameterSetName = 'ToDC')][switch] $ToDC,
         [Parameter(ParameterSetName = 'ToDomainCN')][switch] $ToDomainCN,
-        [Parameter(ParameterSetName = 'ToLastName')][switch] $ToLastName
+        [Parameter(ParameterSetName = 'ToLastName')][switch] $ToLastName,
+        [Parameter(ParameterSetName = 'ToCanonicalName')][switch] $ToCanonicalName
     )
     Process {
         foreach ($Distinguished in $DistinguishedName) {
@@ -138,6 +140,17 @@
                 } else {
                     $ChangedDN[0] -replace 'OU=', ''
                 }
+            } elseif ($ToCanonicalName) {
+                $d = $null
+                $p = $null
+                foreach ($O in $Distinguished -split '(?<!\\),') {
+                    if ($O -match '^DC=') {
+                        $d += $O.Substring(3) + '.'
+                    } else {
+                        $p = $O.Substring(3) + '\' + $p
+                    }
+                }
+                $d.Trim('.') + '\' + ($p.TrimEnd('\') -replace '\\,', ',')
             } else {
                 $Regex = '^CN=(?<cn>.+?)(?<!\\),(?<ou>(?:(?:OU|CN).+?(?<!\\),)+(?<dc>DC.+?))$'
                 #$Output = foreach ($_ in $Distinguished) {
@@ -151,6 +164,9 @@
         }
     }
 }
+
+#ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
+#ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
 
 #ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToMultipleOrganizationalUnit -IncludeParent
 #ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
