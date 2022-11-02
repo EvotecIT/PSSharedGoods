@@ -16,7 +16,10 @@
     Converts DistinguishedName to DC
 
     .PARAMETER ToDomainCN
-    Converts DistinguishedName to Domain CN
+    Converts DistinguishedName to Domain Canonical Name (CN)
+
+    .PARAMETER ToCanonicalName
+    Converts DistinguishedName to Canonical Name
 
     .EXAMPLE
     $DistinguishedName = 'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
@@ -62,6 +65,16 @@
     e6d5fd00-385d-4e65-b02d-9da3493ed850
     Domain Controllers
     Microsoft Exchange Security Groups
+
+    .EXAMPLEE
+    ConvertFrom-DistinguishedName -DistinguishedName 'DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
+    ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
+    ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
+
+    Output:
+    ad.evotec.xyz
+    ad.evotec.xyz\Production\Users
+    ad.evotec.xyz\Production\Users\test
 
     .NOTES
     General notes
@@ -141,16 +154,22 @@
                     $ChangedDN[0] -replace 'OU=', ''
                 }
             } elseif ($ToCanonicalName) {
-                $d = $null
-                $p = $null
+                $Domain = $null
+                $Rest = $null
                 foreach ($O in $Distinguished -split '(?<!\\),') {
                     if ($O -match '^DC=') {
-                        $d += $O.Substring(3) + '.'
+                        $Domain += $O.Substring(3) + '.'
                     } else {
-                        $p = $O.Substring(3) + '\' + $p
+                        $Rest = $O.Substring(3) + '\' + $Rest
                     }
                 }
-                $d.Trim('.') + '\' + ($p.TrimEnd('\') -replace '\\,', ',')
+                if ($Domain -and $Rest) {
+                    $Domain.Trim('.') + '\' + ($Rest.TrimEnd('\') -replace '\\,', ',')
+                } elseif ($Domain) {
+                    $Domain.Trim('.')
+                } elseif ($Rest) {
+                    $Rest.TrimEnd('\') -replace '\\,', ','
+                }
             } else {
                 $Regex = '^CN=(?<cn>.+?)(?<!\\),(?<ou>(?:(?:OU|CN).+?(?<!\\),)+(?<dc>DC.+?))$'
                 #$Output = foreach ($_ in $Distinguished) {
@@ -165,9 +184,9 @@
     }
 }
 
+#ConvertFrom-DistinguishedName -DistinguishedName 'DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
 #ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
 #ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
-
 #ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToMultipleOrganizationalUnit -IncludeParent
 #ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
 
