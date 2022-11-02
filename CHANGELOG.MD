@@ -1,4 +1,7 @@
-﻿#### 0.0.249 - 2022.11.01
+﻿#### 0.0.250 - 2022.11.02
+- Fixes `ConvertFrom-DistinguishedName` when using `ToCanonicalName` for domain name
+
+#### 0.0.249 - 2022.11.01
 - Improve `ConvertFrom-DistinguishedName` to allow `ToCanonicalName`
 
 ```powershell
