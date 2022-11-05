@@ -1,4 +1,4 @@
-﻿#### 0.0.250 - 2022.11.02
+﻿#### 0.0.250 - 2022.11.05
 - Fixes `ConvertFrom-DistinguishedName` when using `ToCanonicalName` for domain name
 
 #### 0.0.249 - 2022.11.01
