@@ -1,4 +1,7 @@
-﻿#### 0.0.250 - 2022.11.05
+﻿#### 0.0.251 - 2022.11.07
+- Fixes private function `Get-LocalComputerSid` solving [#34](https://github.com/EvotecIT/GPOZaurr/issues/34)
+
+#### 0.0.250 - 2022.11.05
 - Fixes `ConvertFrom-DistinguishedName` when using `ToCanonicalName` for domain name
 
 #### 0.0.249 - 2022.11.01
