@@ -1,4 +1,8 @@
-﻿#### 0.0.251 - 2022.11.07
+﻿#### 0.0.252 - 2022.11.20
+- Updated `Convert-ExchangeRecipient`
+- Removed `Convert-Convert-ExchangeRecipientDetails` (added as an alias to `Convert-ExchangeRecipient`)
+
+#### 0.0.251 - 2022.11.07
 - Fixes private function `Get-LocalComputerSid` solving [#34](https://github.com/EvotecIT/GPOZaurr/issues/34)
 
 #### 0.0.250 - 2022.11.05
