@@ -16,6 +16,9 @@ function Get-WinADForestControllers {
     Get-WinADDomainControllers
 
     .EXAMPLE
+    Get-WinADDomainControllers -Credential $Credential
+
+    .EXAMPLE
     Get-WinADDomainControllers | Format-Table *
 
     Output:
@@ -33,10 +36,16 @@ function Get-WinADForestControllers {
     param(
         [string[]] $Domain,
         [switch] $TestAvailability,
-        [switch] $SkipEmpty
+        [switch] $SkipEmpty,
+        [pscredential] $Credential
     )
     try {
-        $Forest = Get-ADForest
+        if($Credential){
+            $Forest = Get-ADForest -Credential $Credential
+        }
+        else{
+            $Forest = Get-ADForest
+        }
         if (-not $Domain) {
             $Domain = $Forest.Domains
         }
@@ -48,7 +57,12 @@ function Get-WinADForestControllers {
     $Servers = foreach ($D in $Domain) {
         try {
             $LocalServer = Get-ADDomainController -Discover -DomainName $D -ErrorAction Stop -Writable
-            $DC = Get-ADDomainController -Server $LocalServer.HostName[0] -Filter * -ErrorAction Stop
+            if($Credential){
+                $DC = Get-ADDomainController -Server $LocalServer.HostName[0] -Credential $Credential -Filter * -ErrorAction Stop
+            }
+            else{
+               $DC = Get-ADDomainController -Server $LocalServer.HostName[0] -Filter * -ErrorAction Stop 
+            }
             foreach ($S in $DC) {
                 $Server = [ordered] @{
                     Domain               = $D
