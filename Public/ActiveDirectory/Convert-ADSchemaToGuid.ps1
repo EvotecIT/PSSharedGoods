@@ -40,10 +40,14 @@
     if ($RootDSE) {
         $Script:RootDSE = $RootDSE
     } elseif (-not $Script:RootDSE) {
-        $Script:RootDSE = Get-ADRootDSE -Server $Domain
-    } else {
-        $Script:RootDSE = Get-ADRootDSE -Server $Domain
+        if ($Domain) {
+            $Script:RootDSE = Get-ADRootDSE -Server $Domain
+        } else {
+            $Script:RootDSE = Get-ADRootDSE
+        }
     }
+    $DomainCN = ConvertFrom-DistinguishedName -DistinguishedName $Script:RootDSE.defaultNamingContext -ToDomainCN
+    $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop).Hostname[0]
     # Create a hashtable to store the GUID value of each schema class and attribute
     if (-not $Script:ADGuidMap -or -not $Script:ADGuidMapString) {
         $Script:ADGuidMap = [ordered] @{
@@ -52,7 +56,7 @@
         $Script:ADGuidMapString = [ordered] @{
             'All' = '00000000-0000-0000-0000-000000000000'
         }
-        $StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties lDAPDisplayName, schemaIDGUID
+        $StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties lDAPDisplayName, schemaIDGUID -Server $QueryServer
         foreach ($Guid in $StandardRights) {
             $Script:ADGuidMapString[$Guid.lDAPDisplayName] = ([System.GUID]$Guid.schemaIDGUID).Guid
             $Script:ADGuidMapString[$Guid.Name] = ([System.GUID]$Guid.schemaIDGUID).Guid
@@ -61,7 +65,7 @@
         }
 
         #Create a hashtable to store the GUID value of each extended right in the forest
-        $ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, rightsGuid
+        $ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, rightsGuid -Server $QueryServer
         foreach ($Guid in $ExtendedRightsGuids) {
             $Script:ADGuidMapString[$Guid.Name] = ([System.GUID]$Guid.RightsGuid).Guid
             $Script:ADGuidMapString[$Guid.DisplayName] = ([System.GUID]$Guid.RightsGuid).Guid
