@@ -586,7 +586,7 @@ function ConvertFrom-SID {
         }
         'S-1-5-32-568'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\IIS_IUSRS'
-            SID        = 'S-1-5-90-0'
+            SID        = 'S-1-5-32-568'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
