@@ -30,36 +30,29 @@
     param(
         [string] $Guid,
         [string] $Domain = $Env:USERDNSDOMAIN,
-        [Microsoft.ActiveDirectory.Management.ADEntity] $RootDSE #,
-        #[switch] $DisplayNameKey
+        [Microsoft.ActiveDirectory.Management.ADEntity] $RootDSE
     )
     if ($RootDSE) {
         $Script:RootDSE = $RootDSE
     } elseif (-not $Script:RootDSE) {
-        $Script:RootDSE = Get-ADRootDSE -Server $Domain
-    } else {
-        $Script:RootDSE = Get-ADRootDSE -Server $Domain
+        if ($Domain) {
+            $Script:RootDSE = Get-ADRootDSE -Server $Domain
+        } else {
+            $Script:RootDSE = Get-ADRootDSE
+        }
     }
+    $DomainCN = ConvertFrom-DistinguishedName -DistinguishedName $Script:RootDSE.defaultNamingContext -ToDomainCN
+    $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop).Hostname[0]
     if (-not $Script:ADSchemaMap) {
         $Script:ADSchemaMap = @{ }
         $Script:ADSchemaMap.Add('00000000-0000-0000-0000-000000000000', 'All')
-        $Schema = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter '(schemaIDGUID=*)' -Properties name, schemaIDGUID
+        $Schema = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter '(schemaIDGUID=*)' -Properties name, schemaIDGUID -Server $QueryServer
         foreach ($S in $Schema) {
-            # if ($DisplayNameKey) {
-            #$Script:ADSchemaMap["$($S.name)"] = $(([System.GUID]$S.schemaIDGUID).Guid)
-            # } else {
             $Script:ADSchemaMap["$(([System.GUID]$S.schemaIDGUID).Guid)"] = $S.name
-            # }
         }
-
-
-        $Extended = Get-ADObject -SearchBase "CN=Extended-Rights,$($Script:RootDSE.configurationNamingContext)" -LDAPFilter '(objectClass=controlAccessRight)' -Properties name, displayName, rightsGUID
+        $Extended = Get-ADObject -SearchBase "CN=Extended-Rights,$($Script:RootDSE.configurationNamingContext)" -LDAPFilter '(objectClass=controlAccessRight)' -Properties name, displayName, rightsGUID -Server $QueryServer
         foreach ($S in $Extended) {
-            #if ($DisplayNameKey) {
-            #$Script:ADSchemaMap["$($S.name)"] = $(([System.GUID]$S.rightsGUID).Guid)
-            #} else {
             $Script:ADSchemaMap["$(([System.GUID]$S.rightsGUID).Guid)"] = $S.name
-            #}
         }
     }
     if ($Guid) {
