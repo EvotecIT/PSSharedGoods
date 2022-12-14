@@ -3,6 +3,7 @@
 - Improves `Convert-ADGuidToSchema`
 - Improves `Convert-ADSchemaToGuidd`
 - Improves `Get-WinADForestOptions`
+- Improves `Get-WinADForestControllers` by @ferwe
 
 #### 0.0.252 - 2022.11.20
 - Updated `Convert-ExchangeRecipient`
