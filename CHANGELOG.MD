@@ -1,4 +1,10 @@
-﻿#### 0.0.252 - 2022.11.20
+﻿#### 0.0.253 - 2022.12.14
+- Fixes `ConvertFrom-SID` fixing one SID returning wrong value
+- Improves `Convert-ADGuidToSchema`
+- Improves `Convert-ADSchemaToGuidd`
+- Improves `Get-WinADForestOptions`
+
+#### 0.0.252 - 2022.11.20
 - Updated `Convert-ExchangeRecipient`
 - Removed `Convert-Convert-ExchangeRecipientDetails` (added as an alias to `Convert-ExchangeRecipient`)
 
