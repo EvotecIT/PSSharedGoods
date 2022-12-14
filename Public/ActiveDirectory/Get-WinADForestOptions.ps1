@@ -1,4 +1,4 @@
-Function Get-WinADForestOptions {
+﻿Function Get-WinADForestOptions {
     <#
     .SYNOPSIS
         This Cmdlet gets Active Directory Site Options.
@@ -15,7 +15,9 @@ Function Get-WinADForestOptions {
         Written by Ryan Ries, October 2013. ryanries09@gmail.com.
     #>
     [CmdletBinding()]
-    Param()
+    Param(
+        [string] $Domain = $Env:USERDNSDOMAIN
+    )
     BEGIN {
         # This enum comes from NtDsAPI.h in the Windows SDK.
         # Also thanks to Jason Scott for pointing it out to me. http://serverfault.com/users/23067/jscott
@@ -36,8 +38,18 @@ Function Get-WinADForestOptions {
                                    NTDSSETTINGS_OPT_W2K3_IGNORE_SCHEDULES                = 0x00000800,
                                    NTDSSETTINGS_OPT_W2K3_BRIDGES_REQUIRED                = 0x00001000  }
 "@
-        ForEach ($Site In (Get-ADObject -Filter 'objectClass -eq "site"' -Searchbase (Get-ADRootDSE).ConfigurationNamingContext)) {
-            $SiteSettings = Get-ADObject "CN=NTDS Site Settings,$($Site.DistinguishedName)" -Properties Options
+
+        if ($Domain) {
+            $RootDSE = Get-ADRootDSE -Server $Domain
+        } else {
+            $RootDSE = Get-ADRootDSE
+        }
+        $DomainCN = ConvertFrom-DistinguishedName -DistinguishedName $RootDSE.defaultNamingContext -ToDomainCN
+        $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop).Hostname[0]
+
+        $Sites = Get-ADObject -Filter 'objectClass -eq "site"' -SearchBase ($RootDSE).ConfigurationNamingContext -Server $QueryServer
+        ForEach ($Site In $Sites) {
+            $SiteSettings = Get-ADObject "CN=NTDS Site Settings,$($Site.DistinguishedName)" -Properties Options -Server $QueryServer
             If (!$SiteSettings.PSObject.Properties.Match('Options').Count -OR $SiteSettings.Options -EQ 0) {
                 # I went with '(none)' here to give it a more classic repadmin.exe feel.
                 # You could also go with $Null, or omit the property altogether for a more modern, Powershell feel.
