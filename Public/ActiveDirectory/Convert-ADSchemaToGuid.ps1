@@ -56,16 +56,17 @@
         $Script:ADGuidMapString = [ordered] @{
             'All' = '00000000-0000-0000-0000-000000000000'
         }
-        $StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties lDAPDisplayName, schemaIDGUID -Server $QueryServer
+        Write-Verbose "Convert-ADSchemaToGuid - Querying Schema from $QueryServer"
+        $StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties name, lDAPDisplayName, schemaIDGUID -Server $QueryServer
         foreach ($Guid in $StandardRights) {
             $Script:ADGuidMapString[$Guid.lDAPDisplayName] = ([System.GUID]$Guid.schemaIDGUID).Guid
             $Script:ADGuidMapString[$Guid.Name] = ([System.GUID]$Guid.schemaIDGUID).Guid
             $Script:ADGuidMap[$Guid.lDAPDisplayName] = ([System.GUID]$Guid.schemaIDGUID)
             $Script:ADGuidMap[$Guid.Name] = ([System.GUID]$Guid.schemaIDGUID)
         }
-
+        Write-Verbose "Convert-ADSchemaToGuid - Querying Extended Rights from $QueryServer"
         #Create a hashtable to store the GUID value of each extended right in the forest
-        $ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, rightsGuid -Server $QueryServer
+        $ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, lDAPDisplayName, rightsGuid -Server $QueryServer
         foreach ($Guid in $ExtendedRightsGuids) {
             $Script:ADGuidMapString[$Guid.Name] = ([System.GUID]$Guid.RightsGuid).Guid
             $Script:ADGuidMapString[$Guid.DisplayName] = ([System.GUID]$Guid.RightsGuid).Guid
