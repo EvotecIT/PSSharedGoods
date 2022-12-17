@@ -15,6 +15,9 @@
     .PARAMETER Name
     Allows to pass Name directly, rather then going thru verification process
 
+    .PARAMETER Force
+    Allows to clear cache, useful when you want to force refresh
+
     .EXAMPLE
     $Identity = @(
         'S-1-5-4'
@@ -99,11 +102,12 @@
     param(
         [parameter(ParameterSetName = 'Identity', Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName)][string[]] $Identity,
         [parameter(ParameterSetName = 'SID', Mandatory)][System.Security.Principal.SecurityIdentifier[]] $SID,
-        [parameter(ParameterSetName = 'Name', Mandatory)][string[]] $Name
+        [parameter(ParameterSetName = 'Name', Mandatory)][string[]] $Name,
+        [switch] $Force
     )
     Begin {
         # [System.Security.Principal.WellKnownSidType]::BuiltinAccountOperatorsSid
-        if (-not $Script:GlobalCacheSidConvert) {
+        if (-not $Script:GlobalCacheSidConvert -or $Force) {
             $Script:GlobalCacheSidConvert = @{}
         }
     }
