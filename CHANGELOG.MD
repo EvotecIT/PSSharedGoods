@@ -1,4 +1,7 @@
-﻿#### 0.0.253 - 2022.12.14
+﻿#### 0.0.254
+- Added `Force` to Convert-Identity to clear cache when doing lots of lookups and creatiing new objects
+
+#### 0.0.253 - 2022.12.14
 - Fixes `ConvertFrom-SID` fixing one SID returning wrong value
 - Improves `Convert-ADGuidToSchema`
 - Improves `Convert-ADSchemaToGuidd`
