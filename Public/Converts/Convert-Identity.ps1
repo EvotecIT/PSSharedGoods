@@ -108,7 +108,233 @@
     Begin {
         # [System.Security.Principal.WellKnownSidType]::BuiltinAccountOperatorsSid
         if (-not $Script:GlobalCacheSidConvert -or $Force) {
-            $Script:GlobalCacheSidConvert = @{}
+            $Script:GlobalCacheSidConvert = @{
+                # We probably don't need to build it up because4 we will be able to find it, but sometimes some of them are not available
+                'NT AUTHORITY\SYSTEM'                         = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Administrators'
+                    SID        = 'S-1-5-18'
+                    DomainName = ''
+                    Type       = 'WellKnownAdministrative'
+                    Error      = ''
+                }
+                # 'NT AUTHORITY\NETWORK SERVICE'                = [PSCustomObject] @{
+                #     Name       = 'NT AUTHORITY\NETWORK SERVICE'
+                #     SID        = 'S-1-5-20' # or  'S-1-5-19'
+                #     DomainName = ''
+                #     Type       = 'WellKnownAdministrative'
+                #     Error      = ''
+                #}
+                'BUILTIN\Administrators'                      = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Administrators'
+                    SID        = 'S-1-5-32-544'
+                    DomainName = ''
+                    Type       = 'WellKnownAdministrative'
+                    Error      = ''
+                }
+                'BUILTIN\Users'                               = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Users'
+                    SID        = 'S-1-5-32-545'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Guests'                              = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Guests'
+                    SID        = 'S-1-5-32-546'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Power Users'                         = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Power Users'
+                    SID        = 'S-1-5-32-547'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Account Operators'                   = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Account Operators'
+                    SID        = 'S-1-5-32-548'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Server Operators'                    = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Server Operators'
+                    SID        = 'S-1-5-32-549'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Print Operators'                     = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Print Operators'
+                    SID        = 'S-1-5-32-550'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Backup Operators'                    = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Backup Operators'
+                    SID        = 'S-1-5-32-551'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Replicator'                          = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Replicators'
+                    SID        = 'S-1-5-32-552'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Pre-Windows 2000 Compatible Access'  = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Pre-Windows 2000 Compatible Access'
+                    SID        = 'S-1-5-32-554'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Remote Desktop Users'                = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Remote Desktop Users'
+                    SID        = 'S-1-5-32-555'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Network Configuration Operators'     = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Network Configuration Operators'
+                    SID        = 'S-1-5-32-556'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Incoming Forest Trust Builders'      = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Incoming Forest Trust Builders'
+                    SID        = 'S-1-5-32-557'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Performance Monitor Users'           = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Performance Monitor Users'
+                    SID        = 'S-1-5-32-558'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Performance Log Users'               = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Performance Log Users'
+                    SID        = 'S-1-5-32-559'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Windows Authorization Access Group'  = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Windows Authorization Access Group'
+                    SID        = 'S-1-5-32-560'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Terminal Server License Servers'     = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Terminal Server License Servers'
+                    SID        = 'S-1-5-32-561'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Distributed COM Users'               = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Distributed COM Users'
+                    SID        = 'S-1-5-32-562'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\IIS_IUSRS'                           = [PSCustomObject] @{
+                    Name       = 'BUILTIN\IIS_IUSRS'
+                    SID        = 'S-1-5-32-568'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Cryptographic Operators'             = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Cryptographic Operators'
+                    SID        = 'S-1-5-32-569'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Event Log Readers'                   = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Event Log Readers'
+                    SID        = 'S-1-5-32-573'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Certificate Service DCOM Access'     = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Certificate Service DCOM Access'
+                    SID        = 'S-1-5-32-574'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\RDS Remote Access Servers'           = [PSCustomObject] @{
+                    Name       = 'BUILTIN\RDS Remote Access Servers'
+                    SID        = 'S-1-5-32-575'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\RDS Endpoint Servers'                = [PSCustomObject] @{
+                    Name       = 'BUILTIN\RDS Endpoint Servers'
+                    SID        = 'S-1-5-32-576'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\RDS Management Servers'              = [PSCustomObject] @{
+                    Name       = 'BUILTIN\RDS Management Servers'
+                    SID        = 'S-1-5-32-577'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Hyper-V Administrators'              = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Hyper-V Administrators'
+                    SID        = 'S-1-5-32-578'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Access Control Assistance Operators' = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Access Control Assistance Operators'
+                    SID        = 'S-1-5-32-579'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'BUILTIN\Remote Management Users'             = [PSCustomObject] @{
+                    Name       = 'BUILTIN\Remote Management Users'
+                    SID        = 'S-1-5-32-580'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'Window Manager\Window Manager Group'         = [PSCustomObject] @{
+                    Name       = 'Window Manager\Window Manager Group'
+                    SID        = 'S-1-5-90-0'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'NT SERVICE\WdiServiceHost'                   = [PSCustomObject] @{
+                    Name       = 'NT SERVICE\WdiServiceHost'
+                    SID        = 'S-1-5-80-3139157870-2983391045-3678747466-658725712-1809340420'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+            }
         }
     }
     Process {
