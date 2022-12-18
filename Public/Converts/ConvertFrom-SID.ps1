@@ -507,6 +507,13 @@ function ConvertFrom-SID {
             Type       = 'WellKnownGroup'
             Error      = ''
         }
+        'S-1-5-32-568'                                                   = [PSCustomObject] @{
+            Name       = 'BUILTIN\IIS_IUSRS'
+            SID        = 'S-1-5-32-568'
+            DomainName = ''
+            Type       = 'WellKnownGroup'
+            Error      = ''
+        }
         'S-1-5-32-569'                                                   = [PSCustomObject] @{
             Name       = 'BUILTIN\Cryptographic Operators'
             SID        = 'S-1-5-32-569'
@@ -580,13 +587,6 @@ function ConvertFrom-SID {
         'S-1-5-80-3139157870-2983391045-3678747466-658725712-1809340420' = [PSCustomObject] @{
             Name       = 'NT SERVICE\WdiServiceHost'
             SID        = 'S-1-5-80-3139157870-2983391045-3678747466-658725712-1809340420'
-            DomainName = ''
-            Type       = 'WellKnownGroup'
-            Error      = ''
-        }
-        'S-1-5-32-568'                                                   = [PSCustomObject] @{
-            Name       = 'BUILTIN\IIS_IUSRS'
-            SID        = 'S-1-5-32-568'
             DomainName = ''
             Type       = 'WellKnownGroup'
             Error      = ''
