@@ -1,4 +1,4 @@
-﻿#### 0.0.254 - 2022.12.18
+﻿#### 0.0.254 - 2022.12.20
 - Update Get-WinADForestControllers.ps1 by @ferwe in https://github.com/EvotecIT/PSSharedGoods/pull/32
 - Added `Force` to Convert-Identity to clear cache when doing lots of lookups and creatiing new objects
 - Improves `Convert-ADGuidToSchema`
