@@ -33,23 +33,25 @@
     [CmdletBinding()]
     param(
         [string] $SchemaName,
-        [string] $Domain = $Env:USERDNSDOMAIN,
+        [string] $Domain,
         [Microsoft.ActiveDirectory.Management.ADEntity] $RootDSE,
         [switch] $AsString
     )
-    if ($RootDSE) {
-        $Script:RootDSE = $RootDSE
-    } elseif (-not $Script:RootDSE) {
-        if ($Domain) {
-            $Script:RootDSE = Get-ADRootDSE -Server $Domain
-        } else {
-            $Script:RootDSE = Get-ADRootDSE
-        }
-    }
-    $DomainCN = ConvertFrom-DistinguishedName -DistinguishedName $Script:RootDSE.defaultNamingContext -ToDomainCN
-    $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop).Hostname[0]
-    # Create a hashtable to store the GUID value of each schema class and attribute
     if (-not $Script:ADGuidMap -or -not $Script:ADGuidMapString) {
+
+        if ($RootDSE) {
+            $Script:RootDSE = $RootDSE
+        } elseif (-not $Script:RootDSE) {
+            if ($Domain) {
+                $Script:RootDSE = Get-ADRootDSE -Server $Domain
+            } else {
+                $Script:RootDSE = Get-ADRootDSE
+            }
+        }
+        $DomainCN = ConvertFrom-DistinguishedName -DistinguishedName $Script:RootDSE.defaultNamingContext -ToDomainCN
+        $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop).Hostname[0]
+        # Create a hashtable to store the GUID value of each schema class and attribute
+
         $Script:ADGuidMap = [ordered] @{
             'All' = [System.GUID]'00000000-0000-0000-0000-000000000000'
         }
@@ -57,22 +59,34 @@
             'All' = '00000000-0000-0000-0000-000000000000'
         }
         Write-Verbose "Convert-ADSchemaToGuid - Querying Schema from $QueryServer"
-        $StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties name, lDAPDisplayName, schemaIDGUID -Server $QueryServer
-        foreach ($Guid in $StandardRights) {
+        $Time = [System.Diagnostics.Stopwatch]::StartNew()
+        if (-not $Script:StandardRights) {
+            $Script:StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties name, lDAPDisplayName, schemaIDGUID -Server $QueryServer -ErrorAction Stop | Select-Object name, lDAPDisplayName, schemaIDGUID
+        }
+        foreach ($Guid in $Script:StandardRights) {
             $Script:ADGuidMapString[$Guid.lDAPDisplayName] = ([System.GUID]$Guid.schemaIDGUID).Guid
             $Script:ADGuidMapString[$Guid.Name] = ([System.GUID]$Guid.schemaIDGUID).Guid
             $Script:ADGuidMap[$Guid.lDAPDisplayName] = ([System.GUID]$Guid.schemaIDGUID)
             $Script:ADGuidMap[$Guid.Name] = ([System.GUID]$Guid.schemaIDGUID)
         }
+        $Time.Stop()
+        $TimeToExecute = "$($Time.Elapsed.Days) days, $($Time.Elapsed.Hours) hours, $($Time.Elapsed.Minutes) minutes, $($Time.Elapsed.Seconds) seconds, $($Time.Elapsed.Milliseconds) milliseconds"
+        Write-Verbose "Convert-ADSchemaToGuid - Querying Schema from $QueryServer took $TimeToExecute"
         Write-Verbose "Convert-ADSchemaToGuid - Querying Extended Rights from $QueryServer"
+        $Time = [System.Diagnostics.Stopwatch]::StartNew()
         #Create a hashtable to store the GUID value of each extended right in the forest
-        $ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, lDAPDisplayName, rightsGuid -Server $QueryServer
-        foreach ($Guid in $ExtendedRightsGuids) {
+        if (-not $Script:ExtendedRightsGuids) {
+            $Script:ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, lDAPDisplayName, rightsGuid -Server $QueryServer -ErrorAction Stop | Select-Object name, displayName, lDAPDisplayName, rightsGuid
+        }
+        foreach ($Guid in $Script:ExtendedRightsGuids) {
             $Script:ADGuidMapString[$Guid.Name] = ([System.GUID]$Guid.RightsGuid).Guid
             $Script:ADGuidMapString[$Guid.DisplayName] = ([System.GUID]$Guid.RightsGuid).Guid
             $Script:ADGuidMap[$Guid.Name] = ([System.GUID]$Guid.RightsGuid)
             $Script:ADGuidMap[$Guid.DisplayName] = ([System.GUID]$Guid.RightsGuid)
         }
+        $Time.Stop()
+        $TimeToExecute = "$($Time.Elapsed.Days) days, $($Time.Elapsed.Hours) hours, $($Time.Elapsed.Minutes) minutes, $($Time.Elapsed.Seconds) seconds, $($Time.Elapsed.Milliseconds) milliseconds"
+        Write-Verbose "Convert-ADSchemaToGuid - Querying Extended Rights from $QueryServer took $TimeToExecute"
     }
     if ($SchemaName) {
         if ($AsString) {
