@@ -1,4 +1,26 @@
 ﻿function Get-GitHubVersion {
+    <#
+    .SYNOPSIS
+    Get the latest version of a GitHub repository and compare with local version
+
+    .DESCRIPTION
+    Get the latest version of a GitHub repository and compare with local version
+
+    .PARAMETER Cmdlet
+    Cmdlet to find module for
+
+    .PARAMETER RepositoryOwner
+    Repository owner
+
+    .PARAMETER RepositoryName
+    Repository name
+
+    .EXAMPLE
+    Get-GitHubVersion -Cmdlet 'Start-DelegationModel' -RepositoryOwner 'evotecit' -RepositoryName 'DelegationModel'
+
+    .NOTES
+    General notes
+    #>
     [cmdletBinding()]
     param(
         [Parameter(Mandatory)][string] $Cmdlet,
