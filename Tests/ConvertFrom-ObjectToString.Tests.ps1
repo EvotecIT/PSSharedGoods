@@ -1,15 +1,4 @@
-BeforeDiscovery {
-    if (-Not (Get-Module -Name PSSharedGoods)) {
-        Import-Module $PSScriptRoot/../PSSharedGoods.psd1 -Force
-    }
-}
-BeforeAll {
-    if (-Not (Get-Module -Name PSSharedGoods)) {
-        Import-Module $PSScriptRoot/../PSSharedGoods.psd1 -Force
-    }
-}
-
-Describe "Simple objects" {
+Describe "ConvertFrom-ObjectToString" {
     It "Converts an object to hashtable" {
         $Object = [PSCustomObject]@{
             Nothing = $null
@@ -19,6 +8,7 @@ Describe "Simple objects" {
             Name = 'John'
             Age = 30
             Float = 1.234
+            Now = Get-Date
         }
         $Object | ConvertFrom-ObjectToString -OutputType Hashtable
     }

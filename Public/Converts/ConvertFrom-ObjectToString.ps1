@@ -18,6 +18,15 @@
     .PARAMETER OutputType
     Type of the output object. Options are: Hashtable, Ordered, PSCustomObject. If not specified, the output type is hashtable (string)
 
+    .PARAMETER NumbersAsString
+    If specified, numbers are converted to strings. Default is number are presented in their (unquoted) numerica form
+
+    .PARAMETER QuotePropertyNames
+    If specified, all property names are quoted. Default: property names are quoted only if they contain spaces.
+
+    .PARAMETER DateTimeFormat
+    Format for DateTime values. Default: 'yyyy-MM-dd HH:mm:ss'
+
     .EXAMPLE
     Get-Process -Name "PowerShell" | ConvertFrom-ObjectToString -IncludeProperties 'ProcessName', 'Id', 'Handles'
 
@@ -44,7 +53,8 @@
         [string[]] $ExcludeProperties,
         [ValidateSet('Hashtable', 'Ordered', 'PSCustomObject')][string] $OutputType = 'Hashtable',
         [switch] $NumbersAsString,
-        [switch] $QuotePropertyNames
+        [switch] $QuotePropertyNames,
+        [string] $DateTimeFormat = 'yyyy-MM-dd HH:mm:ss'
     )
     begin {
         if ($OutputType -eq 'Hashtable') {
@@ -93,6 +103,8 @@
                     GetFormattedPair -Key $key -Value $Value[$key]
                 }
                 "$left@{" + ($propertyString -join '; ') + "}"
+            } elseif ($value -is [DateTime]) {
+                "$left'$($Value.ToString($DateTimeFormat))'"
             } elseif (($value | IsNumeric) -and -not $NumbersAsString) {
                 "$left$($Value)"
             } else {
