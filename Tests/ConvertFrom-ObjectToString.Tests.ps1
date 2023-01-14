@@ -1,3 +1,6 @@
+#
+# These tests are made for visual inspection of the output of ConvertFrom-ObjectToString
+# Inside a pipeline they are useful to see that their running
 Describe "ConvertFrom-ObjectToString" {
     It "Converts an object to hashtable" {
         $Object = [PSCustomObject]@{
@@ -30,9 +33,13 @@ Describe "ConvertFrom-ObjectToString" {
             List = @('a', $null, 'c')
             'List 2' = @(1, 2, 3)
             Hash = @{ String = "content"; Int = 1}
-            Name = 'John'
+            Name = [string[]]::new(4)
             Age = 30
         }
+        $object.Name[0] = 'John'
+        $object.Name[1] = 'Paul'
+        $object.Name[2] = 'George'
+        $object.Name[3] = 'Ringo'
         $Object | ConvertFrom-ObjectToString -OutputType Hashtable -NumbersAsString -QuotePropertyNames
     }
 }

@@ -87,7 +87,7 @@
             }
             if ($null -eq $value) {
                 "$left`$null"
-            } elseif ($Value -is [Object[]]) {
+            } elseif ($Value -is [System.Collections.IList]) {
                 $arrayStrings = foreach ($element in $Object.$Key) {
                     GetFormattedPair -Key '' -Value $element
                 }
