@@ -56,10 +56,10 @@
     }
     process {
         foreach ($Object in $Objects) {
-            if ($Object -is [Object]) {
+            if ($Object -is [System.Collections.IDictionary]) {
                 Write-Host
                 Write-Host -Object "$Type@{"
-                foreach ($Key in $Object.PSObject.Properties.Name) {
+                foreach ($Key in $Object.Keys) {
                     if ($IncludeProperties -and $Key -notin $IncludeProperties) {
                         continue
                     }
@@ -69,10 +69,10 @@
                     Write-Host -Object "    '$Key' = '$($Object.$Key)'" -ForegroundColor Cyan
                 }
                 Write-Host -Object "}"
-            } elseif ($Object -is [System.Collections.IDictionary]) {
+            } elseif ($Object -is [Object]) {
                 Write-Host
                 Write-Host -Object "$Type@{"
-                foreach ($Key in $Object.Keys) {
+                foreach ($Key in $Object.PSObject.Properties.Name) {
                     if ($IncludeProperties -and $Key -notin $IncludeProperties) {
                         continue
                     }
@@ -89,3 +89,14 @@
 
     }
 }
+
+
+@{
+    'Handles'     = '543'
+    'Id'          = '8092'
+    'ProcessName' = 'powershell'
+}, @{
+    'Handles'     = '543'
+    'Id'          = '8092'
+    'ProcessName' = 'powershell'
+} | ConvertFrom-ObjectToString -IncludeProperties 'ProcessName', 'Id', 'Handles'
