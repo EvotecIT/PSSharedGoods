@@ -89,14 +89,3 @@
 
     }
 }
-
-
-@{
-    'Handles'     = '543'
-    'Id'          = '8092'
-    'ProcessName' = 'powershell'
-}, @{
-    'Handles'     = '543'
-    'Id'          = '8092'
-    'ProcessName' = 'powershell'
-} | ConvertFrom-ObjectToString -IncludeProperties 'ProcessName', 'Id', 'Handles'
