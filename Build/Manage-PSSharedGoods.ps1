@@ -30,7 +30,6 @@ $Configuration = @{
             ProjectUri           = 'https://github.com/EvotecIT/PSSharedGoods'
             RequiredModules      = @(
                 @{ ModuleName = 'PSWriteColor'; ModuleVersion = 'Latest'; Guid = '0b0ba5c5-ec85-4c2b-a718-874e55a8bc3f' }
-                @{ ModuleName = 'Connectimo'; ModuleVersion = 'Latest'; Guid = 'e4f4f8a6-473e-4ba5-8166-480658c11421' }
             )
         }
     }
