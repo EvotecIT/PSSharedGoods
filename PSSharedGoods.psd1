@@ -21,10 +21,6 @@
             ModuleVersion = '0.87.3'
             ModuleName    = 'PSWriteColor'
             Guid          = '0b0ba5c5-ec85-4c2b-a718-874e55a8bc3f'
-        }, @{
-            ModuleVersion = '0.0.6'
-            ModuleName    = 'Connectimo'
-            Guid          = 'e4f4f8a6-473e-4ba5-8166-480658c11421'
         })
     RootModule           = 'PSSharedGoods.psm1'
 }
