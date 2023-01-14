@@ -42,8 +42,9 @@
         [parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Mandatory)][Array] $Objects,
         [string[]] $IncludeProperties,
         [string[]] $ExcludeProperties,
-        [ValidateSet('Hashtable', 'Ordered', 'PSCustomObject')][string] $OutputType = 'Hashtable'
-
+        [ValidateSet('Hashtable', 'Ordered', 'PSCustomObject')][string] $OutputType = 'Hashtable',
+        [switch] $NumbersAsString,
+        [switch] $QuotePropertyNames
     )
     begin {
         if ($OutputType -eq 'Hashtable') {
@@ -55,6 +56,50 @@
         }
     }
     process {
+        filter IsNumeric() {
+            return $_ -is [byte] -or $_ -is [int16] -or $_ -is [int32] -or $_ -is [int64]  `
+                -or $_ -is [sbyte] -or $_ -is [uint16] -or $_ -is [uint32] -or $_ -is [uint64] `
+                -or $_ -is [float] -or $_ -is [double] -or $_ -is [decimal]
+        }
+        function GetFormattedPair () {
+            # returns 'key' = <valuestring> or just <valuestring> if key is empty
+            # valuestring is either $null, '<string>', or number
+            param (
+                [string] $Key,
+                [object] $Value
+            )
+            if ($key -eq '') {
+                $left = ''
+            } elseif ($key -match '\s' -or $QuotePropertyNames) {
+                $left = "'$Key' = "
+            } else {
+                $left = "$Key = "
+            }
+            if ($null -eq $value) {
+                "$left`$null"
+            } elseif ($Value -is [Object[]]) {
+                $arrayStrings = foreach ($element in $Object.$Key) {
+                    GetFormattedPair -Key '' -Value $element
+                }
+                "$left@(" + ($arrayStrings -join ', ') + ")"
+            } elseif ($Value -is [System.Collections.IDictionary]) {
+                if ($IncludeProperties -and $Key -notin $IncludeProperties) {
+                    return
+                }
+                if ($Key -in $ExcludeProperties) {
+                    return
+                }
+                $propertyString = foreach ($Key in $Value.Keys) {
+                    GetFormattedPair -Key $key -Value $Value[$key]
+                }
+                "$left@{" + ($propertyString -join '; ') + "}"
+            } elseif (($value | IsNumeric) -and -not $NumbersAsString) {
+                "$left$($Value)"
+            } else {
+                "$left'$($Value)'"
+            }
+        }
+
         foreach ($Object in $Objects) {
             if ($Object -is [System.Collections.IDictionary]) {
                 Write-Host
@@ -66,7 +111,7 @@
                     if ($Key -in $ExcludeProperties) {
                         continue
                     }
-                    Write-Host -Object "    '$Key' = '$($Object.$Key)'" -ForegroundColor Cyan
+                    Write-Host -Object "    $(GetFormattedPair -Key $Key -Value $Object.$Key)" -ForegroundColor Cyan
                 }
                 Write-Host -Object "}"
             } elseif ($Object -is [Object]) {
@@ -79,7 +124,7 @@
                     if ($Key -in $ExcludeProperties) {
                         continue
                     }
-                    Write-Host -Object "    '$Key' = '$($Object.$Key)'" -ForegroundColor Cyan
+                    Write-Host -Object "    $(GetFormattedPair -Key $Key -Value $Object.$Key)" -ForegroundColor Cyan
                 }
                 Write-Host -Object "}"
             } else {
