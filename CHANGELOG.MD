@@ -1,4 +1,7 @@
-﻿#### 0.0.256 - 2023.01.14
+﻿#### 0.0.257 - 2023.01.15
+- `ConvertFrom-HTML` removed (well moved to Private until final removal)
+
+#### 0.0.256 - 2023.01.14
 - Added more licenses/service plans `Convert-Office365License`
 - Enhance generated string in `ConvertFrom-ObjectToString` by @danubie
 - Removed dependency on `Connectimo` (moved one function), archived Connectimo repo
