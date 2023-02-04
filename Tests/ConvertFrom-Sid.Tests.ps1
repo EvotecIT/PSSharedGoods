@@ -32,7 +32,7 @@ Describe -Name 'Testing ConvertFrom-SID' {
             Error = ''
         }
         $ExpectedResult1 = [PSCustomObject] @{
-            Name  = 'NT AUTHORITY\NETWORK SERVICE'
+            Name  = 'NT AUTHORITY\LOCAL SERVICE'
             SID   = 'S-1-5-19'
             Type  = 'WellKnownGroup'
             Error = ''
@@ -62,7 +62,7 @@ Describe -Name 'Testing ConvertFrom-SID - return as NotAdministrative' {
             Error = ''
         }
         $ExpectedResult1 = [PSCustomObject] @{
-            Name  = 'NT AUTHORITY\NETWORK SERVICE'
+            Name  = 'NT AUTHORITY\LOCAL SERVICE'
             SID   = 'S-1-5-19'
             Type  = 'WellKnownGroup'
             Error = ''
@@ -104,7 +104,7 @@ Describe -Name 'Testing ConvertFrom-SID' {
             Error = ''
         }
         $ExpectedResult1 = [PSCustomObject] @{
-            Name  = 'NT AUTHORITY\NETWORK SERVICE'
+            Name  = 'NT AUTHORITY\LOCAL SERVICE'
             SID   = 'S-1-5-19'
             Type  = 'WellKnownGroup'
             Error = ''
@@ -147,7 +147,7 @@ Describe -Name 'Testing ConvertFrom-SID' {
             Error = ''
         }
         $ExpectedResult1 = [PSCustomObject] @{
-            Name  = 'NT AUTHORITY\NETWORK SERVICE'
+            Name  = 'NT AUTHORITY\LOCAL SERVICE'
             SID   = 'S-1-5-19'
             Type  = 'WellKnownGroup'
             Error = ''

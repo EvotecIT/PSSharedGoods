@@ -277,7 +277,7 @@ function ConvertFrom-SID {
             Error      = ''
         }
         'S-1-5-19'                                                       = [PSCustomObject] @{
-            Name       = 'NT AUTHORITY\NETWORK SERVICE'
+            Name       = 'NT AUTHORITY\LOCAL SERVICE'
             SID        = 'S-1-5-19'
             DomainName = ''
             Type       = 'WellKnownGroup'
