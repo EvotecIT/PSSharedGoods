@@ -1,4 +1,7 @@
-﻿#### 0.0.257 - 2023.01.15
+﻿#### 0.0.258 - 2023.02.04
+- Fixes `ConvertFrom-SID` value for `NT AUTHORITY\LOCAL SERVICE`
+
+#### 0.0.257 - 2023.01.15
 - `ConvertFrom-HTML` removed (well moved to Private until final removal)
 
 #### 0.0.256 - 2023.01.14
