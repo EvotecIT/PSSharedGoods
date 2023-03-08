@@ -1,4 +1,4 @@
-﻿#### 0.0.259
+﻿#### 0.0.259 - 2023.03.08
 - Improve `Get-ComputerSMBSharePermissions` with `Translated` switch
 - Improve `Get-ComputerSMBShare` with `Translated` switch
 
