@@ -1,4 +1,8 @@
-﻿#### 0.0.258 - 2023.02.04
+﻿#### 0.0.259
+- Improve `Get-ComputerSMBSharePermissions` with `Translated` switch
+- Improve `Get-ComputerSMBShare` with `Translated` switch
+
+#### 0.0.258 - 2023.02.04
 - Fixes `ConvertFrom-SID` value for `NT AUTHORITY\LOCAL SERVICE`
 
 #### 0.0.257 - 2023.01.15
