@@ -7,8 +7,11 @@
     )
     $FixedPath = foreach ($R in $RegistryPath) {
         foreach ($DictionaryKey in $HiveDictionary.Keys) {
-            if ($R.StartsWith($DictionaryKey, [System.StringComparison]::CurrentCultureIgnoreCase)) {
-                if ($HiveDictionary[$DictionaryKey] -in 'All', 'All+Default', 'Default', 'AllDomain+Default', 'AllDomain') {
+            $SplitParts = $R.Split("\")
+            $FirstPart = $SplitParts[0]
+            if ($FirstPart -eq $DictionaryKey) {
+                #if ($R.StartsWith($DictionaryKey, [System.StringComparison]::CurrentCultureIgnoreCase)) {
+                if ($HiveDictionary[$DictionaryKey] -in 'All', 'All+Default', 'Default', 'AllDomain+Default', 'AllDomain', 'AllDomain+Other', 'AllDomain+Other+Default') {
                     foreach ($Computer in $Computers) {
                         $SubKeys = Get-PSRegistry -RegistryPath "HKEY_USERS" -ComputerName $Computer
                         if ($SubKeys.PSSubKeys) {
