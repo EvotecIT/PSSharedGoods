@@ -11,7 +11,7 @@
         if ($PSBoundParameters.ErrorAction -eq 'Stop') {
             throw $PSErrorMessage
         } else {
-            Write-Warning -Message "Import-DefaultRegistryPath - Couldn't execute. Error: $PSErrorMessage"
+            Write-Warning -Message "Mount-DefaultRegistryPath - Couldn't execute. Error: $PSErrorMessage"
         }
     }
 }
