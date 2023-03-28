@@ -11,10 +11,10 @@
     $pinfo.RedirectStandardError = $true
     $pinfo.RedirectStandardOutput = $true
     $pinfo.UseShellExecute = $false
-    $pinfo.Arguments = " load $MountPoint $PathToNTUser"
+    $pinfo.Arguments = " load $MountPoint $FilePath"
     $p = [System.Diagnostics.Process]::new()
     $p.StartInfo = $pinfo
-    $p.Start() | Out-Null
+    $null = $p.Start() #| Out-Null
     $p.WaitForExit()
     $Output = $p.StandardOutput.ReadToEnd()
     $Errors = $p.StandardError.ReadToEnd()
