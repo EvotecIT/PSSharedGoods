@@ -24,14 +24,14 @@
             }
         } elseif ($HiveDictionary[$DictionaryKey] -eq 'Default') {
             if ($Sub -eq '.DEFAULT') {
-                if (-not $Script:DefaultRegistryMounted) {
+                if ($null -eq $Script:DefaultRegistryMounted) {
                     $Script:DefaultRegistryMounted = Mount-DefaultRegistryPath
                 }
                 $RegistryPath.Replace($DictionaryKey, "Users\.DEFAULT_USER")
             }
         } elseif ($HiveDictionary[$DictionaryKey] -eq 'AllDomain+Default') {
             if (($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*") -or $Sub -eq '.DEFAULT') {
-                if (-not $Script:DefaultRegistryMounted) {
+                if ($null -eq $Script:DefaultRegistryMounted) {
                     $Script:DefaultRegistryMounted = Mount-DefaultRegistryPath
                 }
                 if ($Sub -eq '.DEFAULT') {
@@ -42,18 +42,24 @@
             }
         } elseif ($HiveDictionary[$DictionaryKey] -eq 'AllDomain+Other') {
             if (($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*") -or $Sub -like "Offline_*") {
-                if (-not $Script:OfflineRegistryMounted) {
+                if ($null -eq $Script:OfflineRegistryMounted) {
                     $Script:OfflineRegistryMounted = Mount-AllRegistryPath
+                    foreach ($Key in $Script:OfflineRegistryMounted.Keys) {
+                        $RegistryPath.Replace($DictionaryKey, "Users\$Key")
+                    }
                 }
                 $RegistryPath.Replace($DictionaryKey, "Users\$Sub")
             }
         } elseif ($HiveDictionary[$DictionaryKey] -eq 'AllDomain+Other+Default') {
             if (($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*") -or $Sub -eq '.DEFAULT' -or $Sub -like "Offline_*" ) {
-                if (-not $Script:DefaultRegistryMounted) {
+                if ($null -eq $Script:DefaultRegistryMounted) {
                     $Script:DefaultRegistryMounted = Mount-DefaultRegistryPath
                 }
-                if (-not $Script:OfflineRegistryMounted) {
+                if ($null -eq $Script:OfflineRegistryMounted) {
                     $Script:OfflineRegistryMounted = Mount-AllRegistryPath
+                    foreach ($Key in $Script:OfflineRegistryMounted.Keys) {
+                        $RegistryPath.Replace($DictionaryKey, "Users\$Key")
+                    }
                 }
                 if ($Sub -eq '.DEFAULT') {
                     $RegistryPath.Replace($DictionaryKey, "Users\.DEFAULT_USER")
