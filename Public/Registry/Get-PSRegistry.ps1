@@ -39,7 +39,7 @@
 
     .EXAMPLE
     # Get default key and it's value (alternative)
-o   Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
+    Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
 
     .NOTES
     General notes
@@ -52,6 +52,7 @@ o   Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
         [switch] $Advanced,
         [switch] $DefaultKey
     )
+    $Script:CurrentGetCount++
     Get-PSRegistryDictionaries
 
     # Cleans up registry path and makes sure it's as required to be processed further
@@ -77,6 +78,7 @@ o   Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
         [Array] $RegistryValues = Get-PSSubRegistryTranslated -RegistryPath $RegistryTranslated -HiveDictionary $Script:HiveDictionary
         foreach ($Computer in $Computers[0]) {
             foreach ($R in $RegistryValues) {
+                #Write-Verbose -Message "Getting registry value from $Computer : $($R.Registry)"
                 Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Advanced:$Advanced
             }
         }
@@ -86,8 +88,8 @@ o   Get-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests" -DefaultKey
             }
         }
     }
-    if ($Script:DefaultRegistryMounted) {
-        $null = Dismount-DefaultRegistryPath
-        $Script:DefaultRegistryMounted = $null
+    $Script:CurrentGetCount--
+    if ($Script:CurrentGetCount -eq 0) {
+        Unregister-MountedRegistry
     }
 }
