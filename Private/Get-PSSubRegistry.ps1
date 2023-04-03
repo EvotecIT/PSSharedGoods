@@ -50,7 +50,7 @@
                     PSErrorMessage = $null
                     PSPath         = $Registry.Registry
                     PSKey          = $Registry.Key
-                    PSValue        = $SubKey.GetValue($Registry.Key)
+                    PSValue        = $SubKey.GetValue($Registry.Key, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
                     PSType         = $SubKey.GetValueKind($Registry.Key)
                 }
             } else {
