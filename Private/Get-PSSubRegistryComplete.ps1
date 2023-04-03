@@ -56,7 +56,7 @@
                     if ($K -eq "") {
                         if ($Advanced) {
                             $Object['DefaultKey'] = [ordered] @{
-                                Value = $SubKey.GetValue($K)
+                                Value = $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
                                 Type  = $SubKey.GetValueKind($K)
                             }
                         } else {
@@ -65,11 +65,11 @@
                     } else {
                         if ($Advanced) {
                             $Object[$K] = [ordered] @{
-                                Value = $SubKey.GetValue($K)
+                                Value = $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
                                 Type  = $SubKey.GetValueKind($K)
                             }
                         } else {
-                            $Object[$K] = $SubKey.GetValue($K)
+                            $Object[$K] = $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
                         }
                     }
                 }
