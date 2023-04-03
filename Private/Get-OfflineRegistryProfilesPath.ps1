@@ -50,5 +50,3 @@
     }
     $Profiles
 }
-
-#Get-OfflineRegistryProfilesPath
