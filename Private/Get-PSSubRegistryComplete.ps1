@@ -4,7 +4,8 @@
         [System.Collections.IDictionary] $Registry,
         [string] $ComputerName,
         [switch] $Remote,
-        [switch] $Advanced
+        [switch] $Advanced,
+        [switch] $ExpandEnvironmentNames
     )
     if ($Registry.ComputerName) {
         if ($Registry.ComputerName -ne $ComputerName) {
@@ -56,7 +57,11 @@
                     if ($K -eq "") {
                         if ($Advanced) {
                             $Object['DefaultKey'] = [ordered] @{
-                                Value = $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+                                Value = if (-not $ExpandEnvironmentNames) {
+                                    $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+                                } else {
+                                    $SubKey.GetValue($K)
+                                }
                                 Type  = $SubKey.GetValueKind($K)
                             }
                         } else {
@@ -65,11 +70,19 @@
                     } else {
                         if ($Advanced) {
                             $Object[$K] = [ordered] @{
-                                Value = $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+                                Value = if (-not $ExpandEnvironmentNames) {
+                                    $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+                                } else {
+                                    $SubKey.GetValue($K)
+                                }
                                 Type  = $SubKey.GetValueKind($K)
                             }
                         } else {
-                            $Object[$K] = $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+                            $Object[$K] = if (-not $ExpandEnvironmentNames) {
+                                $SubKey.GetValue($K, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+                            } else {
+                                $SubKey.GetValue($K)
+                            }
                         }
                     }
                 }
