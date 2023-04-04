@@ -22,12 +22,11 @@
 
     )
     $Profiles = [ordered] @{}
-    $CurrentMapping = (Get-PSRegistry -RegistryPath 'HKEY_USERS').PSSubKeys
-
-    $UsersInSystem = (Get-PSRegistry -RegistryPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList').PSSubKeys
+    $CurrentMapping = (Get-PSRegistry -RegistryPath 'HKEY_USERS' -ExpandEnvironmentNames).PSSubKeys
+    $UsersInSystem = (Get-PSRegistry -RegistryPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' -ExpandEnvironmentNames).PSSubKeys
     $MissingProfiles = foreach ($Profile in $UsersInSystem) {
         if ($Profile.StartsWith("S-1-5-21") -and $CurrentMapping -notcontains $Profile) {
-            Get-PSRegistry -RegistryPath "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$Profile"
+            Get-PSRegistry -RegistryPath "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$Profile" -ExpandEnvironmentNames
         }
     }
     foreach ($Profile in $MissingProfiles) {
