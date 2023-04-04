@@ -12,6 +12,10 @@
     .PARAMETER ComputerName
     The computer to get the values from. If not specified, the local computer is used.
 
+    .PARAMETER ExpandEnvironmentNames
+    Expand environment names in the registry value.
+    By default it doesn't do that. If you want to expand environment names, use this parameter.
+
     .EXAMPLE
     Get-PSRegistry -RegistryPath 'HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters' -ComputerName AD1
 
@@ -50,7 +54,8 @@
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [string] $Key,
         [switch] $Advanced,
-        [switch] $DefaultKey
+        [switch] $DefaultKey,
+        [switch] $ExpandEnvironmentNames
     )
     $Script:CurrentGetCount++
     Get-PSRegistryDictionaries
@@ -60,18 +65,18 @@
 
     [Array] $Computers = Get-ComputerSplit -ComputerName $ComputerName
 
-    [Array] $RegistryTranslated = Get-PSConvertSpecialRegistry -RegistryPath $RegistryPath -Computers $ComputerName -HiveDictionary $Script:HiveDictionary
+    [Array] $RegistryTranslated = Get-PSConvertSpecialRegistry -RegistryPath $RegistryPath -Computers $ComputerName -HiveDictionary $Script:HiveDictionary -ExpandEnvironmentNames:$ExpandEnvironmentNames.IsPresent
 
     if ($PSBoundParameters.ContainsKey("Key") -or $DefaultKey) {
         [Array] $RegistryValues = Get-PSSubRegistryTranslated -RegistryPath $RegistryTranslated -HiveDictionary $Script:HiveDictionary -Key $Key
         foreach ($Computer in $Computers[0]) {
             foreach ($R in $RegistryValues) {
-                Get-PSSubRegistry -Registry $R -ComputerName $Computer
+                Get-PSSubRegistry -Registry $R -ComputerName $Computer -ExpandEnvironmentNames:$ExpandEnvironmentNames.IsPresent
             }
         }
         foreach ($Computer in $Computers[1]) {
             foreach ($R in $RegistryValues) {
-                Get-PSSubRegistry -Registry $R -ComputerName $Computer -Remote
+                Get-PSSubRegistry -Registry $R -ComputerName $Computer -Remote -ExpandEnvironmentNames:$ExpandEnvironmentNames.IsPresent
             }
         }
     } else {
@@ -79,12 +84,12 @@
         foreach ($Computer in $Computers[0]) {
             foreach ($R in $RegistryValues) {
                 #Write-Verbose -Message "Getting registry value from $Computer : $($R.Registry)"
-                Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Advanced:$Advanced
+                Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Advanced:$Advanced -ExpandEnvironmentNames:$ExpandEnvironmentNames.IsPresent
             }
         }
         foreach ($Computer in $Computers[1]) {
             foreach ($R in $RegistryValues) {
-                Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Remote -Advanced:$Advanced
+                Get-PSSubRegistryComplete -Registry $R -ComputerName $Computer -Remote -Advanced:$Advanced -ExpandEnvironmentNames:$ExpandEnvironmentNames.IsPresent
             }
         }
     }
