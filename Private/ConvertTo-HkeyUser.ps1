@@ -71,6 +71,15 @@
             if ($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*") {
                 $RegistryPath.Replace($DictionaryKey, "Users\$Sub")
             }
+        } elseif ($HiveDictionary[$DictionaryKey] -eq 'Users') {
+            if ($Sub -like "Offline_*") {
+                $Script:OfflineRegistryMounted = Mount-AllRegistryPath -MountUsers $Sub
+                foreach ($Key in $Script:OfflineRegistryMounted.Keys) {
+                    if ($Script:OfflineRegistryMounted[$Key].Status -eq $true) {
+                        $RegistryPath
+                    }
+                }
+            }
         }
     }
     $OutputRegistryKeys | Sort-Object -Unique
