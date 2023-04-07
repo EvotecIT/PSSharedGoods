@@ -6,7 +6,7 @@
         [string] $DictionaryKey,
         [string] $RegistryPath
     )
-    foreach ($Sub in $Subkeys) {
+    $OutputRegistryKeys = foreach ($Sub in $Subkeys) {
         if ($HiveDictionary[$DictionaryKey] -eq 'All') {
             if ($Sub -notlike "*_Classes*" -and $Sub -ne '.DEFAULT') {
                 $RegistryPath.Replace($DictionaryKey, "Users\$Sub")
@@ -24,14 +24,14 @@
             }
         } elseif ($HiveDictionary[$DictionaryKey] -eq 'Default') {
             if ($Sub -eq '.DEFAULT') {
-                if ($null -eq $Script:DefaultRegistryMounted) {
+                if (-not $Script:DefaultRegistryMounted) {
                     $Script:DefaultRegistryMounted = Mount-DefaultRegistryPath
                 }
                 $RegistryPath.Replace($DictionaryKey, "Users\.DEFAULT_USER")
             }
         } elseif ($HiveDictionary[$DictionaryKey] -eq 'AllDomain+Default') {
             if (($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*") -or $Sub -eq '.DEFAULT') {
-                if ($null -eq $Script:DefaultRegistryMounted) {
+                if (-not $Script:DefaultRegistryMounted) {
                     $Script:DefaultRegistryMounted = Mount-DefaultRegistryPath
                 }
                 if ($Sub -eq '.DEFAULT') {
@@ -41,8 +41,8 @@
                 }
             }
         } elseif ($HiveDictionary[$DictionaryKey] -eq 'AllDomain+Other') {
-            if (($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*") -or $Sub -like "Offline_*") {
-                if ($null -eq $Script:OfflineRegistryMounted) {
+            if (($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*")) {
+                if (-not $Script:OfflineRegistryMounted) {
                     $Script:OfflineRegistryMounted = Mount-AllRegistryPath
                     foreach ($Key in $Script:OfflineRegistryMounted.Keys) {
                         $RegistryPath.Replace($DictionaryKey, "Users\$Key")
@@ -51,11 +51,11 @@
                 $RegistryPath.Replace($DictionaryKey, "Users\$Sub")
             }
         } elseif ($HiveDictionary[$DictionaryKey] -eq 'AllDomain+Other+Default') {
-            if (($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*") -or $Sub -eq '.DEFAULT' -or $Sub -like "Offline_*" ) {
-                if ($null -eq $Script:DefaultRegistryMounted) {
+            if (($Sub.StartsWith("S-1-5-21") -and $Sub -notlike "*_Classes*") -or $Sub -eq '.DEFAULT') {
+                if (-not $Script:DefaultRegistryMounted) {
                     $Script:DefaultRegistryMounted = Mount-DefaultRegistryPath
                 }
-                if ($null -eq $Script:OfflineRegistryMounted) {
+                if (-not $Script:OfflineRegistryMounted) {
                     $Script:OfflineRegistryMounted = Mount-AllRegistryPath
                     foreach ($Key in $Script:OfflineRegistryMounted.Keys) {
                         $RegistryPath.Replace($DictionaryKey, "Users\$Key")
@@ -73,4 +73,5 @@
             }
         }
     }
+    $OutputRegistryKeys | Sort-Object -Unique
 }
