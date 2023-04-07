@@ -14,7 +14,7 @@
                 #if ($R.StartsWith($DictionaryKey, [System.StringComparison]::CurrentCultureIgnoreCase)) {
                 if ($HiveDictionary[$DictionaryKey] -in 'All', 'All+Default', 'Default', 'AllDomain+Default', 'AllDomain', 'AllDomain+Other', 'AllDomain+Other+Default') {
                     foreach ($Computer in $Computers) {
-                        $SubKeys = Get-PSRegistry -RegistryPath "HKEY_USERS" -ComputerName $Computer -ExpandEnvironmentNames:$ExpandEnvironmentNames.IsPresent
+                        $SubKeys = Get-PSRegistry -RegistryPath "HKEY_USERS" -ComputerName $Computer -ExpandEnvironmentNames:$ExpandEnvironmentNames.IsPresent -DoNotUnmount
                         if ($SubKeys.PSSubKeys) {
                             $RegistryKeys = ConvertTo-HKeyUser -SubKeys ($SubKeys.PSSubKeys | Sort-Object) -HiveDictionary $HiveDictionary -DictionaryKey $DictionaryKey -RegistryPath $R
                             foreach ($S in $RegistryKeys) {
