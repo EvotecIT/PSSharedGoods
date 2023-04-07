@@ -4,8 +4,8 @@
 
     )
     if ($null -ne $Script:DefaultRegistryMounted) {
-        $null = Dismount-PSRegistryPath -MountPoint "HKEY_USERS\.DEFAULT_USER"
         Write-Verbose -Message "Unregister-MountedRegistry - Dismounting HKEY_USERS\.DEFAULT_USER"
+        $null = Dismount-PSRegistryPath -MountPoint "HKEY_USERS\.DEFAULT_USER"
         $Script:DefaultRegistryMounted = $null
     }
     if ($null -ne $Script:OfflineRegistryMounted) {
