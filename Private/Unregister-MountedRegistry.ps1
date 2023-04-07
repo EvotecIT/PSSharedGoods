@@ -10,8 +10,10 @@
     }
     if ($null -ne $Script:OfflineRegistryMounted) {
         foreach ($Key in $Script:OfflineRegistryMounted.Keys) {
-            Write-Verbose -Message "Unregister-MountedRegistry - Dismounting HKEY_USERS\$Key"
-            $null = Dismount-PSRegistryPath -MountPoint "HKEY_USERS\$Key"
+            if ($Script:OfflineRegistryMounted[$Key].Status -eq $true) {
+                Write-Verbose -Message "Unregister-MountedRegistry - Dismounting HKEY_USERS\$Key"
+                $null = Dismount-PSRegistryPath -MountPoint "HKEY_USERS\$Key"
+            }
         }
         $Script:OfflineRegistryMounted = $null
     }
