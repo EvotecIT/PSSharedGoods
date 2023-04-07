@@ -55,7 +55,8 @@
         [string] $Key,
         [switch] $Advanced,
         [switch] $DefaultKey,
-        [switch] $ExpandEnvironmentNames
+        [switch] $ExpandEnvironmentNames,
+        [Parameter(DontShow)][switch] $DoNotUnmount
     )
     $Script:CurrentGetCount++
     Get-PSRegistryDictionaries
@@ -95,6 +96,8 @@
     }
     $Script:CurrentGetCount--
     if ($Script:CurrentGetCount -eq 0) {
-        Unregister-MountedRegistry
+        if (-not $DoNotUnmount) {
+            Unregister-MountedRegistry
+        }
     }
 }
