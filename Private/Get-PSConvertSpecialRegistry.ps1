@@ -34,6 +34,32 @@
                             }
                         }
                     }
+                } elseif ($FirstPart -in 'Users', 'HKEY_USERS', 'HKU' -and $SplitParts[1] -and $SplitParts[1] -like "Offline_*") {
+                    # this is a special keys to handle for offline users
+                    # 'Users\Offline_Przemek\Software\Policies1\Microsoft\Windows\CloudContent' -Key 'DisableTailoredExperiencesWithDiagnosticData'
+                    # 'HKU\Offline_Przemek\Software\Policies1\Microsoft\Windows\CloudContent' -Key 'DisableWindowsConsumerFeatures'
+                    # 'Users\Offline_test.1\Software\Policies1\Microsoft\Windows\CloudContent' -Key 'DisableTailoredExperiencesWithDiagnosticData'
+                    foreach ($Computer in $Computers) {
+                        $SubKeys = Get-PSRegistry -RegistryPath "HKEY_USERS" -ComputerName $Computer -ExpandEnvironmentNames:$ExpandEnvironmentNames.IsPresent -DoNotUnmount
+                        if ($SubKeys.PSSubKeys) {
+                            $RegistryKeys = ConvertTo-HKeyUser -SubKeys ($SubKeys.PSSubKeys + $SplitParts[1] | Sort-Object) -HiveDictionary $HiveDictionary -DictionaryKey $DictionaryKey -RegistryPath $R
+                            foreach ($S in $RegistryKeys) {
+                                [PSCustomObject] @{
+                                    ComputerName = $Computer
+                                    RegistryPath = $S
+                                    Error        = $null
+                                    ErrorMessage = $null
+                                }
+                            }
+                        } else {
+                            [PSCustomObject] @{
+                                ComputerName = $Computer
+                                RegistryPath = $R
+                                Error        = $true
+                                ErrorMessage = "Couldn't connect to $Computer to list HKEY_USERS"
+                            }
+                        }
+                    }
                 } else {
                     $R
                 }
