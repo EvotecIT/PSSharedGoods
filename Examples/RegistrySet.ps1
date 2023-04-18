@@ -3,11 +3,11 @@ Import-Module $PSScriptRoot\..\PSsharedGoods.psd1 -Force
 
 #Get-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\\Software\\Policies\\Microsoft\\Windows\\Installer" -Key "EnableUserControl"
 #Get-PSRegistry -RegistryPath "HKCU:\\\\Tests" -Key 'LimitBlankPasswordUse'
-
-Set-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" -Key 'ForceUnlockLogon' -Value 1 -Type dword -WhatIf
-
+#Set-PSRegistry -RegistryPath "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" -Key 'ForceUnlockLogon' -Value 1 -Type dword -WhatIf
 #Set-PSRegistry -RegistryPath "Users\.DEFAULT\Tests" -Key 'LimitBlankPasswordUse' -Value '1' -Type dword
 
+Get-PSRegistry -RegistryPath "HKUDUO:\Tests1\CurrentControlSet\Control\Lsa" | Format-Table
+Set-PSRegistry -RegistryPath "HKUDUO:\Tests1\CurrentControlSet\Control\Lsa" -Key 'LimitBlankPasswordUse' -Value '1' -Type dword
 return
 
 Set-PSRegistry -RegistryPath "HKEY_DEFAULT_USER\\Tests\CurrentControlSet\Control\Lsa" -Key "LimitBlankPasswordUse" -Value "0" -Type REG_DWORD -ComputerName EVOPOWER | Format-Table
