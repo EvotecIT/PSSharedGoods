@@ -13,6 +13,7 @@
         [int[]] $Ports = 135,
         [int] $PortsTimeout = 100,
         [int] $PingCount = 1,
+        [switch] $PreferWritable,
         [switch] $Extended,
         [System.Collections.IDictionary] $ExtendedForestInformation
     )
@@ -73,7 +74,7 @@
         # We want to have QueryServers always available for all domains
         [Array] $DomainsActive = foreach ($Domain in $Findings['Forest'].Domains) {
             try {
-                $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop
+                $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop -Writable:$PreferWritable.IsPresent
 
                 $OrderedDC = [ordered] @{
                     Domain      = $DC.Domain
