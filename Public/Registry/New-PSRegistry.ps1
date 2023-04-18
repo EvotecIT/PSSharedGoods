@@ -53,10 +53,7 @@
             }
         } else {
             if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                if ($Script:DefaultRegistryMounted) {
-                    $null = Dismount-DefaultRegistryPath
-                    $Script:DefaultRegistryMounted = $null
-                }
+                Unregister-MountedRegistry
                 throw
             } else {
                 # This shouldn't really happen
@@ -64,9 +61,5 @@
             }
         }
     }
-
-    if ($Script:DefaultRegistryMounted) {
-        $null = Dismount-DefaultRegistryPath
-        $Script:DefaultRegistryMounted = $null
-    }
+    Unregister-MountedRegistry
 }

@@ -3,7 +3,8 @@
     param(
         [System.Collections.IDictionary] $Registry,
         [string] $ComputerName,
-        [switch] $Remote
+        [switch] $Remote,
+        [switch] $ExpandEnvironmentNames
     )
     if ($Registry.ComputerName) {
         if ($Registry.ComputerName -ne $ComputerName) {
@@ -50,7 +51,11 @@
                     PSErrorMessage = $null
                     PSPath         = $Registry.Registry
                     PSKey          = $Registry.Key
-                    PSValue        = $SubKey.GetValue($Registry.Key)
+                    PSValue        = if (-not $ExpandEnvironmentNames) {
+                        $SubKey.GetValue($Registry.Key, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+                    } else {
+                        $SubKey.GetValue($Registry.Key)
+                    }
                     PSType         = $SubKey.GetValueKind($Registry.Key)
                 }
             } else {

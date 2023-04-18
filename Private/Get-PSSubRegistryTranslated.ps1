@@ -9,11 +9,17 @@
         # Remove additional slashes
         if ($Registry -is [string]) {
             $Registry = $Registry.Replace("\\", "\").Replace("\\", "\").TrimStart("\").TrimEnd("\")
+            $FirstPartSplit = $Registry -split "\\"
+            $FirstPart = $FirstPartSplit[0]
         } else {
             $Registry.RegistryPath = $Registry.RegistryPath.Replace("\\", "\").Replace("\\", "\").TrimStart("\").TrimEnd("\")
+            $FirstPartSplit = $Registry.RegistryPath -split "\\"
+            $FirstPart = $FirstPartSplit[0]
         }
+
         foreach ($Hive in $HiveDictionary.Keys) {
-            if ($Registry -is [string] -and $Registry.StartsWith($Hive, [System.StringComparison]::CurrentCultureIgnoreCase)) {
+            if ($Registry -is [string] -and $FirstPart -eq $Hive) {
+                # if ($Registry -is [string] -and $Registry.StartsWith($Hive, [System.StringComparison]::CurrentCultureIgnoreCase)) {
                 if ($Hive.Length -eq $Registry.Length) {
                     [ordered] @{
                         Registry     = $Registry
@@ -34,7 +40,8 @@
                     }
                 }
                 break
-            } elseif ($Registry -isnot [string] -and $Registry.RegistryPath.StartsWith($Hive, [System.StringComparison]::CurrentCultureIgnoreCase)) {
+            } elseif ($Registry -isnot [string] -and $FirstPart -eq $Hive) {
+                #} elseif ($Registry -isnot [string] -and $Registry.RegistryPath.StartsWith($Hive, [System.StringComparison]::CurrentCultureIgnoreCase)) {
                 if ($Hive.Length -eq $Registry.RegistryPath.Length) {
                     [ordered] @{
                         ComputerName = $Registry.ComputerName

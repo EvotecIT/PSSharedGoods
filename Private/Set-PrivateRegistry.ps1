@@ -6,6 +6,7 @@
         [switch] $Remote,
         [switch] $Suppress
     )
+    Write-Verbose -Message "Set-PSRegistry - Setting registry $($RegistryValue.HiveKey)\$($RegistryValue.SubKeyName) on $($RegistryValue.Key) to $($RegistryValue.Value) of $($RegistryValue.ValueKind) on $Computer"
     if ($RegistryValue.ComputerName) {
         if ($RegistryValue.ComputerName -ne $Computer) {
             return

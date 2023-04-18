@@ -60,6 +60,8 @@
         [Parameter(Mandatory)][object] $Value,
         [switch] $Suppress
     )
+    Unregister-MountedRegistry
+
     Get-PSRegistryDictionaries
 
     [Array] $ComputersSplit = Get-ComputerSplit -ComputerName $ComputerName
@@ -71,7 +73,6 @@
 
     foreach ($Registry in $RegistryTranslated) {
         $RegistryValue = Get-PrivateRegistryTranslated -RegistryPath $Registry -HiveDictionary $Script:HiveDictionary -Key $Key -Value $Value -Type $Type -ReverseTypesDictionary $Script:ReverseTypesDictionary
-
         if ($RegistryValue.HiveKey) {
             foreach ($Computer in $ComputersSplit[0]) {
                 # Local computer
@@ -83,10 +84,7 @@
             }
         } else {
             if ($PSBoundParameters.ErrorAction -eq 'Stop') {
-                if ($Script:DefaultRegistryMounted) {
-                    $null = Dismount-DefaultRegistryPath
-                    $Script:DefaultRegistryMounted = $null
-                }
+                Unregister-MountedRegistry
                 throw
             } else {
                 # This shouldn't really happen
@@ -94,8 +92,5 @@
             }
         }
     }
-    if ($Script:DefaultRegistryMounted) {
-        $null = Dismount-DefaultRegistryPath
-        $Script:DefaultRegistryMounted = $null
-    }
+    Unregister-MountedRegistry
 }

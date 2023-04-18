@@ -2,3 +2,6 @@
 
 Remove-PSRegistry -RegistryPath "HKEY_CURRENT_USER\Tests\Ok\MaybeNot" -Key "LimitBlankPass1wordUse" -WhatIf
 Remove-PSRegistry -RegistryPath "HKCU:\Tests\Ok" -WhatIf
+
+Remove-PSRegistry -RegistryPath "HKUDUO:\\Tests1\CurrentControlSet\Control\Lsa" -WhatIf | Format-Table
+Get-PSRegistry -RegistryPath "HKUDUO:\Tests1\CurrentControlSet\Control\Lsa" | Format-Table
