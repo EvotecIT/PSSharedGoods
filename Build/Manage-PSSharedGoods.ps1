@@ -38,7 +38,7 @@ $Configuration = @{
             Sort           = 'None'
             FormatCodePSM1 = @{
                 Enabled           = $true
-                RemoveComments    = $true
+                RemoveComments    = $false
                 FormatterSettings = @{
                     IncludeRules = @(
                         'PSPlaceOpenBrace',
@@ -122,6 +122,9 @@ $Configuration = @{
         Documentation     = @{
             Path       = 'Docs'
             PathReadme = 'Docs\Readme.md'
+        }
+        Signing           = @{
+            CertificateThumbprint = '36A8A2D0E227D81A2D3B60DCE0CFCF23BEFC343B'
         }
     }
     Steps       = @{
