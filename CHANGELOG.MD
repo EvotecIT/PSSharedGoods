@@ -1,7 +1,8 @@
-﻿#### 0.0.260
+﻿#### 0.0.260 - 2023.04.18
 - Adds support for `HKUDUO` and `HKUDUDO` for `Get-PSRegistry`, `Set-PSRegistry`, `Remove-PSRegistry`, `New-PSRegistry` and `Test-PSRegistry`
   - `HKUDUO` - All users in HKEY_USERS that are non SPECIAL accounts excluding .DEFAULT / .DEFAULT_USER (auto mapped from NTUSER.DAT). But also including non-loaded users (not logged in) (auto mapped from NTUSER.DAT)
   - `HKUDUDO` - All users in HKEY_USERS that are non SPECIAL accounts including .DEFAULT_USER (auto mapped from NTUSER.DAT). But also including non-loaded users (not logged in) (auto mapped from NTUSER.DAT)
+  - Improve `Get-WinADForestDetails` by adding switch `PreferWritable` which would use writable DCs for quering
 
 #### 0.0.259 - 2023.03.08
 - Improve `Get-ComputerSMBSharePermissions` with `Translated` switch
