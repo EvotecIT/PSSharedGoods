@@ -36,7 +36,7 @@
         [switch] $All
     )
     if ($Script:QuickSearch) {
-        if ($CountryCode) {
+        if ($PSBoundParameters.ContainsKey('CountryCode')) {
             if ($All) {
                 $Script:QuickSearch[$CountryCode]
             } else {
@@ -60,7 +60,7 @@
                 'RegionInformation' = $RegionInformation
             }
         }
-        if ($CountryCode) {
+        if ($PSBoundParameters.ContainsKey('CountryCode')) {
             if ($All) {
                 $Script:QuickSearch[$CountryCode]
             } else {
