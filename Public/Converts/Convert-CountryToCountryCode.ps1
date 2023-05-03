@@ -61,7 +61,6 @@
             $Script:QuickSearchCountries
         }
     } else {
-
         $AllCultures = [cultureinfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures)
         $Script:QuickSearchCountries = [ordered] @{
             # This is for custom countries that are not in the list by their english name.
