@@ -8,16 +8,13 @@
     If the country is not found (for example empty), it will return "Unknown"
 
     .PARAMETER Country
-    Country to convert
-
-    .PARAMETER ReturnHashTable
-    Return hashtable of countries and their corresponding continent
+    Country to convert. If country is not given it will return a hashtable of countries and their corresponding continent.
 
     .EXAMPLE
     Convert-CountryToContinent -Country "Poland"
 
     .EXAMPLE
-    Convert-CountryToContinent -ReturnHashTable
+    Convert-CountryToContinent
 
     .NOTES
     General notes
@@ -225,13 +222,13 @@
         "Zambia"                            = "Africa"
         "Zimbabwe"                          = "Africa"
     }
-    if ($ReturnHashTable) {
-        $CountryToContinent
-    } else {
+    if ($PSBoundParameters.ContainsKey('Country')) {
         if ($CountryToContinent[$Country]) {
             $CountryToContinent[$Country]
         } else {
             "Unknown"
         }
+    } else {
+        $CountryToContinent
     }
 }
