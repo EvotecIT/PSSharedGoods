@@ -1,4 +1,8 @@
-﻿#### 0.0.261 - 2023.04.23
+﻿#### 0.0.262 - 2023.05.03
+- Improves handling of null in `Convert-CountryCodeToCountry`
+- Remove `ReturnHashtable`  in `Convert-CountryToContinent` changing the behavior to always return hashtable of continents if country is not given
+
+#### 0.0.261 - 2023.04.23
 - Adds `Convert-CountryToContinent`
 
 #### 0.0.260 - 2023.04.18
