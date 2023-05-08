@@ -1,4 +1,7 @@
-﻿#### 0.0.262 - 2023.05.03
+﻿#### 0.0.263 - 2023.05.08
+- Improve Select-Properties null handling
+
+#### 0.0.262 - 2023.05.03
 - Improves handling of null in `Convert-CountryCodeToCountry`
 - Remove `ReturnHashtable`  in `Convert-CountryToContinent` changing the behavior to always return hashtable of continents if country is not given
 
