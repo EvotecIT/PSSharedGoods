@@ -72,8 +72,12 @@
             param(
                 [System.Collections.IList] $Object
             )
-            #$Test = 'one', 'Two', 'One', 'Three'
-            $New = $Object.ToLower() | Select-Object -Unique
+            [Array] $CleanedList = foreach ($O in $Object) {
+                if ($null -ne $O) {
+                    $O
+                }
+            }
+            $New = $CleanedList.ToLower() | Select-Object -Unique
             $Selected = foreach ($_ in $New) {
                 $Index = $Object.ToLower().IndexOf($_)
                 if ($Index -ne -1) {
@@ -144,7 +148,10 @@
             }
             if ($AllProperties) {
                 [Array] $All = foreach ($_ in $ObjectsList) {
-                    $_.PSObject.Properties.Name
+                    $ListProperties = $_.PSObject.Properties.Name
+                    if ($null -ne $ListProperties) {
+                        $ListProperties
+                    }
                 }
                 #$FirstObjectProperties = $All | Select-Object -Unique
                 $FirstObjectProperties = Select-Unique -Object $All
