@@ -36,7 +36,10 @@
     if ($OperatingSystem -like 'Windows 10*' -or $OperatingSystem -like 'Windows 11*') {
         $Systems = @{
             # This is how it's written in AD
+            '10.0 (22621)' = 'Windows 11 22H2'
             '10.0 (22000)' = 'Windows 11 21H2'
+            '10.0 (19045)' = 'Windows 10 22H2'
+            '10.0 (19044)' = 'Windows 10 21H2'
             '10.0 (19043)' = 'Windows 10 21H1'
             '10.0 (19042)' = 'Windows 10 20H2'
             '10.0 (19041)' = 'Windows 10 2004'
@@ -52,7 +55,10 @@
             '10.0 (10240)' = "Windows 10 1507"
 
             # This is how WMI/CIM stores it
+            '10.0.22621'   = 'Windows 11 22H2'
             '10.0.22000'   = 'Windows 11 21H2'
+            '10.0.19045'   = 'Windows 10 22H2'
+            '10.0.19044'   = 'Windows 10 21H2'
             '10.0.19043'   = 'Windows 10 21H1'
             '10.0.19042'   = 'Windows 10 20H2'
             '10.0.19041'   = 'Windows 10 2004'
@@ -68,7 +74,10 @@
             '10.0.10240'   = "Windows 10 1507"
 
             # This is how it's written in registry
+            '22621'        = 'Windows 11 22H2'
             '22000'        = 'Windows 11 21H2'
+            '19045'        = 'Windows 10 22H2'
+            '19044'        = 'Windows 10 21H2'
             '19043'        = 'Windows 10 21H1'
             '19042'        = 'Windows 10 20H2'
             '19041'        = 'Windows 10 2004'
@@ -85,7 +94,7 @@
         }
         $System = $Systems[$OperatingSystemVersion]
         if (-not $System) {
-            $System = $OperatingSystem
+            $System = $OperatingSystemVersion
         }
     } elseif ($OperatingSystem -like 'Windows Server*') {
         # May need updates https://docs.microsoft.com/en-us/windows-server/get-started/windows-server-release-info
@@ -133,7 +142,7 @@
         }
         $System = $Systems[$OperatingSystemVersion]
         if (-not $System) {
-            $System = $OperatingSystem
+            $System = $OperatingSystemVersion
         }
     } else {
         $System = $OperatingSystem
