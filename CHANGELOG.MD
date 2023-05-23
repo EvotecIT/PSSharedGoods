@@ -1,5 +1,8 @@
-﻿#### 0.0.263 - 2023.05.08
-- Improve Select-Properties null handling
+﻿#### 0.0.264 - 2023.05.23
+- Improve `ConvertTo-OperatingSystem`
+
+#### 0.0.263 - 2023.05.08
+- Improve `Select-Properties` null handling
 
 #### 0.0.262 - 2023.05.03
 - Improves handling of null in `Convert-CountryCodeToCountry`
