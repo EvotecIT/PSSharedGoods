@@ -2,10 +2,10 @@ function Find-ExchangeServer {
     <#
     .SYNOPSIS
     Find Exchange Servers in Active Directory
-    
+
     .DESCRIPTION
     Find Exchange Servers in Active Directory
-    
+
     .EXAMPLE
     Find-ExchangeServer
 
@@ -16,7 +16,7 @@ function Find-ExchangeServer {
     param(
 
     )
-    $ExchangeServers = Get-ADGroup -Identity "Exchange Servers" | Get-ADGroupMember | Where-Object { $_.objectClass -eq 'computer' }
+    $ExchangeServers = Get-ADGroup -Identity "Exchange Servers"  
     foreach ($Server in $ExchangeServers) {
         $Data = Get-ADComputer -Identity $Server.SamAccountName -Properties Name, DNSHostName, OperatingSystem, DistinguishedName, ServicePrincipalName
         [PSCustomObject] @{
