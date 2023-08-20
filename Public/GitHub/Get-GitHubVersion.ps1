@@ -42,5 +42,7 @@
         } else {
             "Current: $($App.Version)"
         }
+    } else {
+        "Current: Unknown"
     }
 }

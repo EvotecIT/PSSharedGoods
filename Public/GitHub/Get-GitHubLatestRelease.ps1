@@ -10,7 +10,7 @@
     Url to github repository
 
     .EXAMPLE
-    Get-GitHubLatestRelease -Url "https://api.github.com1/repos/evotecit/Testimo/releases" | Format-Table
+    Get-GitHubLatestRelease -Url "https://api.github.com/repos/evotecit/Testimo/releases" | Format-Table
 
     .NOTES
     General notes
