@@ -2,7 +2,7 @@
 - Update `Copy-Dictionary` to support PS7.4 which disables BinaryFormatter by default
 - Update `Get-GitHubLatestRelease` fixes a typo
 - Update `Get-GitHubVersion` to return unknown value
-- Added `Format-Dictionary`
+- Added `Format-Dictionary` to sort hashtable by key or by value
 
 #### 0.0.264 - 2023.05.23
 - Improve `ConvertTo-OperatingSystem`
