@@ -1,4 +1,10 @@
-﻿#### 0.0.264 - 2023.05.23
+﻿#### 0.0.265
+- Update `Copy-Dictionary` to support PS7.4 which disables BinaryFormatter by default
+- Update `Get-GitHubLatestRelease` fixes a typo
+- Update `Get-GitHubVersion` to return unknown value
+- Added `Format-Dictionary`
+
+#### 0.0.264 - 2023.05.23
 - Improve `ConvertTo-OperatingSystem`
 
 #### 0.0.263 - 2023.05.08
