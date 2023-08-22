@@ -4,7 +4,7 @@
         [System.Collections.IDictionary] $Dictionary
     )
 
-    $clone = @{}
+    $clone = [ordered] @{}
     foreach ($Key in $Dictionary.Keys) {
         $value = $Dictionary.$Key
 
