@@ -1,4 +1,4 @@
-@{
+﻿@{
     AliasesToExport      = @('Add-ADUserGroups', 'Get-WinADDomainGUIDs', 'Get-WinADForestGUIDs', 'Find-ADSyncServer', 'Get-WinADDomainControllers', 'Get-ADUserSnapshot', 'Remove-ADUserGroups', 'Set-ADUserName', 'Set-ADUserSettingGAL', 'Set-ADUserStatus', 'Get-ComputerApplications', 'Get-ComputerNetworkCard', 'Get-RDPSecurity', 'Get-ServerRoles', 'Get-ComputerServices', 'Get-ComputerTasks', 'Get-MyIP', 'Convert-ExchangeRecipientDetails', 'Convert-FromColor', 'Set-EmailBodyTableReplacement', 'Get-PSPermissions', 'Get-FilePermissions', 'Copy-Hashtable', 'Copy-OrderedHashtable', 'Sort-Dictionary', 'FS', 'Format-TableStream', 'Format-ListStream', 'FV', 'Format-Verbose', 'Format-Debug', 'Format-Warning', 'Join-Url', 'Join-UrlQuery', 'Remove-EmptyValues', 'Remove-StringLatinCharacters', 'Test-IsDN', 'Dismount-RegistryPath', 'Mount-RegistryPath', 'Set-Recovery', 'Get-TimeSynchronization')
     Author               = 'Przemyslaw Klys'
     CmdletsToExport      = @()
