@@ -83,7 +83,7 @@ Describe "ConvertFrom-ObjectToString" {
 
     }
     It "Converts a hashtable number as string, quote all property names" {
-        $Object = @{
+        $Object = [ordered] @{
             Nothing  = $null
             List     = @('a', $null, 'c')
             'List 2' = @(1, 2, 3)
@@ -109,11 +109,11 @@ Describe "ConvertFrom-ObjectToString" {
 
 @{
     'Nothing' = $null
-    'Hash' = @{'String' = 'content'; 'Int' = '1'}
-    'Age' = '30'
-    'Name' = @('John', 'Paul', 'George', 'Ringo')
     'List' = @('a', $null, 'c')
     'List 2' = @('1', '2', '3')
+    'Hash' = @{'String' = 'content'; 'Int' = '1'}
+    'Name' = @('John', 'Paul', 'George', 'Ringo')
+    'Age' = '30'
 }
 '@
         $Expectation = $Expectation -split "`r`n"
