@@ -1,4 +1,7 @@
-﻿#### 0.0.265 - 2023.08.22
+﻿#### 0.0.266 - 2023.09.16
+- Update `Convert-Office365License` to support new licenses based on the website from Microsoft, rather than manual input
+
+#### 0.0.265 - 2023.08.22
 - Update `Copy-Dictionary` to support PS7.4 which disables BinaryFormatter by default (breaking change - the output may be different a bit)
 - Update `Get-GitHubLatestRelease` fixes a typo
 - Update `Get-GitHubVersion` to return unknown value
