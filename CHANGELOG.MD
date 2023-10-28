@@ -1,4 +1,7 @@
-﻿#### 0.0.266 - 2023.09.16
+﻿#### 0.0.267 - 2023.10.28
+- Added `Get-IPAddressRangeInformation`
+
+#### 0.0.266 - 2023.09.16
 - Update `Convert-Office365License` to support new licenses based on the website from Microsoft, rather than manual input
 
 #### 0.0.265 - 2023.08.22
