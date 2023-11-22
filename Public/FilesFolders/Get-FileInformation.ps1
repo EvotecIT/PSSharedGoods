@@ -1,10 +1,32 @@
 function Get-FileInformation {
+    <#
+    .SYNOPSIS
+    Get information about file such as Name, FullName and Size
+
+    .DESCRIPTION
+    Get information about file such as Name, FullName and Size
+
+    .PARAMETER File
+    File to get information about
+
+    .EXAMPLE
+    Get-FileInformation -File 'C:\Support\GitHub\PSSharedGoods\Public\FilesFolders\Get-FileInformation.ps1'
+
+    .NOTES
+    General notes
+    #>
     [CmdletBinding()]
     param(
-        [string] $File
+        [alias('LiteralPath', 'Path')][string] $File
     )
-    if (Test-Path $File) {
-        return Get-Item $File  | Select-Object Name, FullName, @{N = 'Size'; E = { Get-FileSize -Bytes $_.Length } }, IsReadOnly, LastWriteTime
+    if (Test-Path -LiteralPath $File) {
+        $Item = Get-Item -LiteralPath $File
+        [PSCustomObject] @{
+            Name          = $Item.Name
+            FullName      = $Item.FullName
+            Size          = Get-FileSize -Bytes $Item.Length
+            IsReadOnly    = $Item.IsReadOnly
+            LastWriteTime = $Item.LastWriteTime
+        }
     }
-    return
 }
