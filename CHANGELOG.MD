@@ -1,4 +1,8 @@
-﻿#### 0.0.268 - 2023.11.22
+﻿#### 0.0.269 - 2023.11.22
+- Small fixes to `ConvertTo-PrettyObject`
+- Added tests for `ConvertTo-PrettyObject`
+
+#### 0.0.268 - 2023.11.22
 - Improved `Get-FileInformation` - added docs, and converted to PSCustomObject
 - Added `ConvertTo-PrettyObject` as an alternative to `ConvertTo-JsonLiteral` for use in PSWriteHTML
 
