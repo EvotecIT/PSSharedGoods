@@ -1,4 +1,8 @@
-﻿#### 0.0.267 - 2023.10.28
+﻿#### 0.0.268 - 2023.11.22
+- Improved `Get-FileInformation` - added docs, and converted to PSCustomObject
+- Added `ConvertTo-PrettyObject` as an alternative to `ConvertTo-JsonLiteral` for use in PSWriteHTML
+
+#### 0.0.267 - 2023.10.28
 - Added `Get-IPAddressRangeInformation`
 
 #### 0.0.266 - 2023.09.16
