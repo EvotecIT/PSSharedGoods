@@ -122,7 +122,7 @@
                 # Push to TEXT the same as [PSCustomObject]
                 for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
                     $Property = ([string[]]$Object[$a].Keys)[$i]
-                    $DisplayProperty = $Property.Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                    $DisplayProperty = $Property.Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $Value = $Object[$a].$Property
                     # the same code for PSCustomObject
                     if ($null -eq $Value) {
@@ -146,11 +146,11 @@
                     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
                         if ($ArrayJoin) {
                             $Value = $Value -join $ArrayJoinString
-                            $Value = "$Value".Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         } else {
                             # We force it to max depth 0
-                            $Value = "$Value".Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         }
                     } elseif ($Value -is [System.Enum]) {
@@ -166,7 +166,7 @@
                         # We force it to max depth 0
                         $NewObject[$DisplayProperty] = "$Value"
                     } else {
-                        $Value = $Value.ToString().Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                        $Value = $Value.ToString().Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                         $NewObject[$DisplayProperty] = "$Value"
                     }
                 }
@@ -184,7 +184,7 @@
                     $PropertyName = $Object[$a].PSObject.Properties.Name
                 }
                 foreach ($Property in $PropertyName) {
-                    $DisplayProperty = $Property.Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                    $DisplayProperty = $Property.Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $Value = $Object[$a].$Property
                     if ($null -eq $Value) {
                         $NewObject[$DisplayProperty] = ""
@@ -207,11 +207,11 @@
                     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
                         if ($ArrayJoin) {
                             $Value = $Value -join $ArrayJoinString
-                            $Value = "$Value".Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         } else {
                             # We force it to max depth 0
-                            $Value = "$Value".Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         }
                     } elseif ($Value -is [System.Enum]) {
@@ -227,7 +227,7 @@
                         # We force it to max depth 0
                         $NewObject[$DisplayProperty] = "$Value"
                     } else {
-                        $Value = $Value.ToString().Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                        $Value = $Value.ToString().Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                         $NewObject[$DisplayProperty] = "$Value"
                     }
                 }
@@ -236,3 +236,30 @@
         }
     }
 }
+
+<#
+$DataTable3 = @(
+    [PSCustomObject] @{
+        'Test6'        = @"
+        Test1
+        Test2
+        Test3
+
+        Test4
+"@
+        'Test7'        = 'Test' + "`n`n" + "Oops \n\n"
+        'Test8"Oopps"' = 'MyTest "Ofcourse"'
+        "Test9'Ooops'" = "MyTest 'Ofcourse'"
+    }
+)
+
+$Output1 = $DataTable3 | ConvertTo-PrettyObject | ConvertTo-Json | ConvertFrom-Json
+$Output2 = $DataTable3 | ConvertTo-Json | ConvertFrom-Json
+#$Output1.'Test8"Oopps"'
+#$Output1."Test9'Ooops'"
+#$Output2.'Test8"Oopps"'
+#$Output2."Test9'Ooops'"
+
+$Output1 | Format-Table *
+$Output2 | Format-Table *
+#>
