@@ -1,4 +1,7 @@
-﻿#### 0.0.270 - 2023.12.12
+﻿#### 0.0.271 - 2023.12.12
+- Fixes `Get-WinADForestDetails` returning empty element for ForestDomainControllers in some cases
+
+#### 0.0.270 - 2023.12.12
 - Improve `Join-UriQuery`
 
 #### 0.0.269 - 2023.11.22
