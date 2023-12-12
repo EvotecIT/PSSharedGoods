@@ -212,7 +212,9 @@
                 #$Findings[$Domain] = $AllDC
             }
             # Building all DCs for whole Forest
-            [Array] $Findings['DomainDomainControllers'][$Domain]
+            if ($null -ne $Findings['DomainDomainControllers'][$Domain]) {
+                [Array] $Findings['DomainDomainControllers'][$Domain]
+            }
         }
         if ($Extended) {
             $Findings['DomainsExtended'] = @{ }
@@ -349,18 +351,3 @@
         $Findings
     }
 }
-
-#$F = Get-WinADForestDetails -Forest 'test.evotec.pl'
-#$F
-
-#$F.DomainDomainControllers['ad.evotec.xyz'] | Format-Table -AutoSize
-#$F
-
-<#
-$F = Get-WinADForestDetails -SkipRODC -ExcludeDomainControllers 'AD1.ad.evotec.xyz' #-TestAvailability #-IncludeDomains 'ad.evotec.xyz'
-$F | Format-Table -AutoSize
-
-$F.'ad.evotec.xyz' | Format-Table -AutoSize *
-$F.'ad.evotec.pl' | Format-Table -AutoSize *
-
-#>
