@@ -1,4 +1,7 @@
-﻿#### 0.0.269 - 2023.11.22
+﻿#### 0.0.270 - 2023.12.12
+- Improve `Join-UriQuery`
+
+#### 0.0.269 - 2023.11.22
 - Small fixes to `ConvertTo-PrettyObject`
 - Added tests for `ConvertTo-PrettyObject`
 
