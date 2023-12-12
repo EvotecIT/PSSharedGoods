@@ -42,26 +42,30 @@
         [parameter(Mandatory = $false)][uri] $RelativeOrAbsoluteUri,
         [Parameter()][System.Collections.IDictionary] $QueryParameter
     )
-    # Join primary url with additional path if needed
-    if ($BaseUri -and $RelativeOrAbsoluteUri) {
-        $Url = Join-Uri -BaseUri $BaseUri -RelativeOrAbsoluteUri $RelativeOrAbsoluteUri
-    } else {
-        $Url = $BaseUri
+    Begin {
+        Add-Type -AssemblyName System.Web
     }
-
-    # Create a http name value collection from an empty string
-    if ($QueryParameter) {
-        $Collection = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
-        foreach ($key in $QueryParameter.Keys) {
-            $Collection.Add($key, $QueryParameter.$key)
+    Process {
+        # Join primary url with additional path if needed
+        if ($BaseUri -and $RelativeOrAbsoluteUri) {
+            $Url = Join-Uri -BaseUri $BaseUri -RelativeOrAbsoluteUri $RelativeOrAbsoluteUri
+        } else {
+            $Url = $BaseUri
         }
-    }
 
-    # Build the uri
-    $uriRequest = [System.UriBuilder] $Url
-    if ($Collection) {
-        $uriRequest.Query = $Collection.ToString()
+        # Create a http name value collection from an empty string
+        if ($QueryParameter) {
+            $Collection = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
+            foreach ($key in $QueryParameter.Keys) {
+                $Collection.Add($key, $QueryParameter.$key)
+            }
+        }
+
+        # Build the uri
+        $uriRequest = [System.UriBuilder] $Url
+        if ($Collection) {
+            $uriRequest.Query = $Collection.ToString()
+        }
+        $uriRequest.Uri.AbsoluteUri
     }
-    #return $uriRequest.Uri.OriginalUri
-    return $uriRequest.Uri.AbsoluteUri
 }
