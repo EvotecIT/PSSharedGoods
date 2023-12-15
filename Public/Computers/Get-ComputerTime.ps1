@@ -1,10 +1,10 @@
 ﻿function Get-ComputerTime {
     <#
     .SYNOPSIS
-    #
+    Gets time difference between computers and time source including boot time
 
     .DESCRIPTION
-    Long description
+    Gets time difference between computers and time source including boot time
 
     .PARAMETER TimeSource
     Parameter description
@@ -13,17 +13,18 @@
     Parameter description
 
     .PARAMETER TimeTarget
-    Parameter description
+    Specifies computer on which you want to run the CIM operation. You can specify a fully qualified domain name (FQDN), a NetBIOS name, or an IP address. If you do not specify this parameter, the cmdlet performs the operation on the local computer using Component Object Model (COM).
+
+    .PARAMETER Credential
+    Specifies a user account that has permission to perform this action. The default is the current user.
 
     .PARAMETER ForceCIM
 
     .PARAMETER ToLocal
 
     .EXAMPLE
-
     Get-ComputerTime -TimeTarget AD2, AD3, EVOWin | Format-Table -AutoSize
-    Get-ComputerTime -TimeSource AD1 -TimeTarget AD2, AD3, EVOWin | Format-Table -AutoSize
-    Get-ComputerTime -TimeSource 'pool.ntp.org' -TimeTarget AD2, AD3, EVOWin | Format-Table -AutoSize
+
 
     Output
 
@@ -32,6 +33,12 @@
     AD2    13.08.2019 23:40:26 13.08.2019 23:40:26 30.05.2018 18:30:48 09.08.2019 18:40:31  8,33333333333333E-05                 0,005                          5 AD1.ad.evotec.xyz
     AD3    13.08.2019 23:40:26 13.08.2019 17:40:26 26.05.2019 17:30:17 09.08.2019 18:40:30  0,000266666666666667                 0,016                         16 AD1.ad.evotec.xyz
     EVOWin 13.08.2019 23:40:26 13.08.2019 23:40:26 24.05.2019 22:46:45 09.08.2019 18:40:06  6,66666666666667E-05                 0,004                          4 AD1.ad.evotec.xyz
+
+    .EXAMPLE
+    Get-ComputerTime -TimeSource AD1 -TimeTarget AD2, AD3, EVOWin | Format-Table -AutoSize
+
+    .EXAMPLE
+    Get-ComputerTime -TimeSource 'pool.ntp.org' -TimeTarget AD2, AD3, EVOWin | Format-Table -AutoSize
 
     .NOTES
     General notes
@@ -42,6 +49,7 @@
         [string] $TimeSource,
         [string] $Domain = $Env:USERDNSDOMAIN,
         [alias('ComputerName')][string[]] $TimeTarget = $ENV:COMPUTERNAME,
+        [pscredential] $Credential,
         [switch] $ForceCIM
     )
     if (-not $TimeSource) {
@@ -49,7 +57,7 @@
     }
 
     if ($ForceCIM) {
-        $TimeSourceInformation = Get-CimData -ComputerName $TimeSource -Class 'win32_operatingsystem'
+        $TimeSourceInformation = Get-CimData -ComputerName $TimeSource -Class 'win32_operatingsystem' -Credential $Credential
         if ($TimeSourceInformation.LocalDateTime) {
             $TimeSourceInformation = $TimeSourceInformation.LocalDateTime
         } else {
@@ -60,12 +68,12 @@
     }
 
     $TimeTargetInformationCache = @{ }
-    $TimeTargetInformation = Get-CimData -ComputerName $TimeTarget -Class 'win32_operatingsystem'
+    $TimeTargetInformation = Get-CimData -ComputerName $TimeTarget -Class 'win32_operatingsystem' -Credential $Credential
     foreach ($_ in $TimeTargetInformation) {
         $TimeTargetInformationCache[$_.PSComputerName] = $_
     }
     $TimeLocalCache = @{ }
-    $TimeLocal = Get-CimData -ComputerName $TimeTarget -Class 'Win32_LocalTime'
+    $TimeLocal = Get-CimData -ComputerName $TimeTarget -Class 'Win32_LocalTime' -Credential $Credential
     foreach ($_ in $TimeLocal) {
         $TimeLocalCache[$_.PSComputerName] = $_
     }
@@ -82,12 +90,15 @@
 
         if ($WMIComputerTarget.LocalDateTime -and $TimeSourceInformation) {
             $Result = New-TimeSpan -Start $TimeSourceInformation -End $WMIComputerTarget.LocalDateTime
+            $ResultFromBoot = New-TimeSpan -Start $WMIComputerTarget.LastBootUpTime -End $WMIComputerTarget.LocalDateTime
+
             [PSCustomObject] @{
                 Name                       = $Computer
                 LocalDateTime              = $WMIComputerTarget.LocalDateTime
                 RemoteDateTime             = $RemoteDateTime
                 InstallTime                = $WMIComputerTarget.InstallDate
                 LastBootUpTime             = $WMIComputerTarget.LastBootUpTime
+                LastBootUpTimeInDays       = [math]::Round($ResultFromBoot.TotalDays, 2)
                 TimeDifferenceMinutes      = if ($Result.TotalMinutes -lt 0) { ($Result.TotalMinutes * -1) } else { $Result.TotalMinutes }
                 TimeDifferenceSeconds      = if ($Result.TotalSeconds -lt 0) { ($Result.TotalSeconds * -1) } else { $Result.TotalSeconds }
                 TimeDifferenceMilliseconds = if ($Result.TotalMilliseconds -lt 0) { ($Result.TotalMilliseconds * -1) } else { $Result.TotalMilliseconds }
@@ -95,12 +106,18 @@
                 Status                     = ''
             }
         } else {
+            if ($WMIComputerTarget.LastBootUpTime) {
+                $ResultFromBoot = New-TimeSpan -Start $WMIComputerTarget.LastBootUpTime -End $WMIComputerTarget.LocalDateTime
+            } else {
+                $ResultFromBoot = ''
+            }
             [PSCustomObject] @{
                 Name                       = $Computer
                 LocalDateTime              = $WMIComputerTarget.LocalDateTime
                 RemoteDateTime             = $RemoteDateTime
                 InstallTime                = $WMIComputerTarget.InstallDate
                 LastBootUpTime             = $WMIComputerTarget.LastBootUpTime
+                LastBootUpTimeInDays       = [math]::Round($ResultFromBoot.TotalDays, 2)
                 TimeDifferenceMinutes      = $null
                 TimeDifferenceSeconds      = $null
                 TimeDifferenceMilliseconds = $null
