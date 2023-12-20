@@ -1,4 +1,7 @@
-﻿#### 0.0.271 - 2023.12.12
+﻿#### 0.0.273 - 2023.12.20
+- Added `Get-ComputerSMBShareList` to get list of SMB Shares (`net view /all` replacement)
+
+#### 0.0.271 - 2023.12.12
 - Fixes `Get-WinADForestDetails` returning empty element for ForestDomainControllers in some cases
 
 #### 0.0.270 - 2023.12.12
