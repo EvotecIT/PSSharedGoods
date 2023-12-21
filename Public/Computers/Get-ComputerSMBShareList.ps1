@@ -58,7 +58,9 @@ function Get-ComputerSMBShareList {
         [string] $InputObject,
         [Parameter(ParameterSetName = 'ComputerName', Position = 1)]
         [Parameter(ParameterSetName = 'Pipeline')]
-        [SupportsWildcards()][Alias('ShareName')][string[]] $Name
+        [SupportsWildcards()][Alias('ShareName')][string[]] $Name,
+
+        [switch] $SkipDiskSpace
     )
 
     begin {

@@ -2,7 +2,8 @@
     [cmdletbinding()]
     param(
         [string] $ComputerName,
-        [string[]] $Name #,
+        [string[]] $Name,
+        [switch] $SkipDiskSpace #,
         # [System.Management.Automation.PSCmdlet]$PSC
     )
     $buffer = [IntPtr]::Zero
@@ -58,56 +59,65 @@
             $shTyp = $shareInfo.shi1_type
             # API below requires an ending backslash
             $shrPath = "\\$ComputerName\$netNm\"
-            $freeBytesAvailableToCaller = 0
-            [System.Nullable[UInt64]]$freeBytesAvailableToCallerNull = $null
-            $totalNumberOfBytes = 0
-            [System.Nullable[UInt64]]$totalNumberOfBytesNull = $null
-            $totalNumberOfFreeBytes = 0
-            [System.Nullable[UInt64]]$totalNumberOfFreeBytesNull = $null
-            $lastWin32Error = 0
+            if (-not $SkipDiskSpace) {
+                $freeBytesAvailableToCaller = 0
+                [System.Nullable[UInt64]]$freeBytesAvailableToCallerNull = $null
+                $totalNumberOfBytes = 0
+                [System.Nullable[UInt64]]$totalNumberOfBytesNull = $null
+                $totalNumberOfFreeBytes = 0
+                [System.Nullable[UInt64]]$totalNumberOfFreeBytesNull = $null
+                $lastWin32Error = 0
 
-
-            if (($shTyp -bor [Win32Share.ShareType]::Disk) -eq [Win32Share.ShareType]::Disk) {
-                $dskRes = [Win32Share.NativeMethods]::GetDiskFreeSpaceEx(
-                    $shrPath,
-                    [ref]$freeBytesAvailableToCaller,
-                    [ref]$totalNumberOfBytes,
-                    [ref]$totalNumberOfFreeBytes
-                )
-                if ($dskRes) {
-                    $freeBytesAvailableToCallerNull = $freeBytesAvailableToCaller
-                    $totalNumberOfBytesNull = $totalNumberOfBytes
-                    $totalNumberOfFreeBytesNull = $totalNumberOfFreeBytes
-                } else {
-                    # https://stackoverflow.com/questions/17918266/winapi-getlasterror-vs-marshal-getlastwin32error
-                    $lastWin32Error = [System.Runtime.InteropServices.Marshal]::GetLastWin32Error()
-                    $exp = [System.ComponentModel.Win32Exception]$lastWin32Error
-                    $er = [System.Management.Automation.ErrorRecord]::new(
-                        $exp,
-                        'Win32Share.NativeMethods.GetSmbInf.ShareException',
-                        [System.Management.Automation.ErrorCategory]::NotSpecified,
-                        $shrPath
+                if (($shTyp -bor [Win32Share.ShareType]::Disk) -eq [Win32Share.ShareType]::Disk) {
+                    $dskRes = [Win32Share.NativeMethods]::GetDiskFreeSpaceEx(
+                        $shrPath,
+                        [ref]$freeBytesAvailableToCaller,
+                        [ref]$totalNumberOfBytes,
+                        [ref]$totalNumberOfFreeBytes
                     )
-                    $er.ErrorDetails = "Failed to get disk space on '$shrPath' for '$ComputerName': $($exp.Message)"
-                    #$PSC.WriteError( $er )
-                    if ($ErrorActionPreference -eq 'Stop') {
-                        Write-Error -ErrorRecord $er
+                    if ($dskRes) {
+                        $freeBytesAvailableToCallerNull = $freeBytesAvailableToCaller
+                        $totalNumberOfBytesNull = $totalNumberOfBytes
+                        $totalNumberOfFreeBytesNull = $totalNumberOfFreeBytes
                     } else {
-                        Write-Warning -Message "Get-ComputerSMBShareList - Failed to get disk space on '$shrPath' for '$ComputerName': $($exp.Message)"
+                        # https://stackoverflow.com/questions/17918266/winapi-getlasterror-vs-marshal-getlastwin32error
+                        $lastWin32Error = [System.Runtime.InteropServices.Marshal]::GetLastWin32Error()
+                        $exp = [System.ComponentModel.Win32Exception]$lastWin32Error
+                        $er = [System.Management.Automation.ErrorRecord]::new(
+                            $exp,
+                            'Win32Share.NativeMethods.GetSmbInf.ShareException',
+                            [System.Management.Automation.ErrorCategory]::NotSpecified,
+                            $shrPath
+                        )
+                        $er.ErrorDetails = "Failed to get disk space on '$shrPath' for '$ComputerName': $($exp.Message)"
+                        #$PSC.WriteError( $er )
+                        if ($ErrorActionPreference -eq 'Stop') {
+                            Write-Error -ErrorRecord $er
+                        } else {
+                            Write-Warning -Message "Get-ComputerSMBShareList - Failed to get disk space on '$shrPath' for '$ComputerName': $($exp.Message)"
+                        }
                     }
                 }
-            }
-
-            [PSCustomObject]@{
-                PSTypeName               = 'Win32Share.NativeMethods' # Used in Formatter
-                ComputerName             = $ComputerName
-                Path                     = $shrPath
-                Name                     = $netNm
-                Type                     = $shTyp
-                Remark                   = $shareInfo.shi1_remark
-                TotalBytes               = $totalNumberOfBytesNull
-                TotalFreeBytes           = $totalNumberOfFreeBytesNull
-                FreeBytesAvailableToUser = $freeBytesAvailableToCallerNull
+                [PSCustomObject]@{
+                    PSTypeName               = 'Win32Share.NativeMethods' # Used in Formatter
+                    ComputerName             = $ComputerName
+                    Path                     = $shrPath
+                    Name                     = $netNm
+                    Type                     = $shTyp
+                    Remark                   = $shareInfo.shi1_remark
+                    TotalBytes               = $totalNumberOfBytesNull
+                    TotalFreeBytes           = $totalNumberOfFreeBytesNull
+                    FreeBytesAvailableToUser = $freeBytesAvailableToCallerNull
+                }
+            } else {
+                [PSCustomObject]@{
+                    PSTypeName   = 'Win32Share.NativeMethods' # Used in Formatter
+                    ComputerName = $ComputerName
+                    Path         = $shrPath
+                    Name         = $netNm
+                    Type         = $shTyp
+                    Remark       = $shareInfo.shi1_remark
+                }
             }
 
             $entryPtr = [IntPtr]::Add($entryPtr, [System.Runtime.InteropServices.Marshal]::SizeOf($shareInfo))
