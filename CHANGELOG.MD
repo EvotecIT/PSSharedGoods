@@ -1,4 +1,7 @@
-﻿#### 0.0.273 - 2023.12.20
+﻿#### 0.0.274 - 2023.12.21
+- Improved `Get-ComputerSMBShareList` with ability to SkipDiskSpace
+
+#### 0.0.273 - 2023.12.20
 - Added `Get-ComputerSMBShareList` to get list of SMB Shares (`net view /all` replacement)
 
 #### 0.0.271 - 2023.12.12
