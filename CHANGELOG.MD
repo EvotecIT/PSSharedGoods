@@ -1,4 +1,8 @@
-﻿#### 0.0.274 - 2023.12.21
+﻿#### 0.0.275 - 2024.01.04
+- Improved `Join-UriQuery`
+- Improved `Get-ComputerSMBShareList`
+
+#### 0.0.274 - 2023.12.21
 - Improved `Get-ComputerSMBShareList` with ability to SkipDiskSpace
 
 #### 0.0.273 - 2023.12.20

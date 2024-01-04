@@ -118,16 +118,18 @@ namespace Win32Share
         }
         # $PSBoundParameters['PSC'] = $PSCmdlet
 
-        foreach ($compNm in $ComputerName) {
-            $PSBoundParameters['ComputerName'] = $compNm
-            Get-ComputerSMBInfo @PSBoundParameters
-        }
+
     }
 
     process {
-        if ($InputObject) {
-            $PSBoundParameters['ComputerName'] = $InputObject
-            $null = $PSBoundParameters.Remove( 'InputObject')
+        # if ($InputObject) {
+        #     $PSBoundParameters['ComputerName'] = $InputObject
+        #     $null = $PSBoundParameters.Remove( 'InputObject')
+        #     Get-ComputerSMBInfo @PSBoundParameters
+        # }
+        foreach ($compNm in $ComputerName) {
+            Write-Verbose -Message "Get-ComputerSMBShareList - Enumerating shares on '$compNm'"
+            $PSBoundParameters['ComputerName'] = $compNm
             Get-ComputerSMBInfo @PSBoundParameters
         }
     }
