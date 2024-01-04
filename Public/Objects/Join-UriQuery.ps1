@@ -15,6 +15,9 @@
     .PARAMETER QueryParameter
     Parameters and their values in form of hashtable
 
+    .PARAMETER EscapeUriString
+    If set, will escape the url string
+
     .EXAMPLE
     Join-UriQuery -BaseUri 'https://evotec.xyz/' -RelativeOrAbsoluteUri '/wp-json/wp/v2/posts' -QueryParameter @{
         page     = 1
@@ -40,7 +43,8 @@
     param (
         [parameter(Mandatory)][uri] $BaseUri,
         [parameter(Mandatory = $false)][uri] $RelativeOrAbsoluteUri,
-        [Parameter()][System.Collections.IDictionary] $QueryParameter
+        [Parameter()][System.Collections.IDictionary] $QueryParameter,
+        [alias('EscapeUrlString')][switch] $EscapeUriString
     )
     Begin {
         Add-Type -AssemblyName System.Web
@@ -66,6 +70,10 @@
         if ($Collection) {
             $uriRequest.Query = $Collection.ToString()
         }
-        $uriRequest.Uri.AbsoluteUri
+        if (-not $EscapeUriString) {
+            $uriRequest.Uri.AbsoluteUri
+        } else {
+            [System.Uri]::EscapeUriString($uriRequest.Uri.AbsoluteUri)
+        }
     }
 }
