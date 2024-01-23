@@ -1,4 +1,7 @@
-﻿#### 0.0.275 - 2024.01.04
+﻿#### 0.0.276 - 2024.01.23
+- Added `WindowsSecureTimeSeeding` to `Get-TimeSettings`
+
+#### 0.0.275 - 2024.01.04
 - Improved `Join-UriQuery`
 - Improved `Get-ComputerSMBShareList`
 
