@@ -83,13 +83,12 @@ function Get-TimeSettings {
     }
 
     [flags()]
-    enum NtpServerFlags
-    {
-        None              = 0
-        SpecialInterval   = 0x1 # flag indicate sync time with external server in special interval configured in “SpecialPollInterval” registry value.
+    enum NtpServerFlags {
+        None = 0
+        SpecialInterval = 0x1 # flag indicate sync time with external server in special interval configured in “SpecialPollInterval” registry value.
         UseAsFallbackOnly = 0x2 # use this as UseAsFallbackOnly time source – if primary is not available then sync to this server.
-        SymmetricActive   = 0x4 # For more information about this mode, see Windows Time Server: 3.3 Modes of Operation.
-        Client            = 0x8 # use client mode association while sync time to external time source.
+        SymmetricActive = 0x4 # For more information about this mode, see Windows Time Server: 3.3 Modes of Operation.
+        Client = 0x8 # use client mode association while sync time to external time source.
     }
 
     $CrossSiteSyncFlags = @{
@@ -132,7 +131,7 @@ function Get-TimeSettings {
         }
         $TimeNTPServer = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NTPServer"
         #$TimeSecureLimits = Get-PSRegistry -ComputerName $_ -RegistryPath "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\SecureTimeLimits"
-        $TimeVMProvider = Get-PSRegistry -ComputerName $ComputerName -RegistryPath "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\VMICTimeProvider"
+        $TimeVMProvider = Get-PSRegistry -ComputerName $_ -RegistryPath "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\VMICTimeProvider"
         #Get-PSRegistry -ComputerName $ComputerName -RegistryPath "HKLM\SYSTEM\CurrentControlSet"
 
         $NtpServers = $TimeParameters.NtpServer -split ' '
@@ -145,7 +144,7 @@ function Get-TimeSettings {
                 if ($flagVal = $SplitNTP[1] -as [int]) {
                     # make sure it's within the bounds of our supported flags
                     if ($flags = $flagVal -as [NtpServerFlags]) {
-                        $Intervals = $flags.ToString().Replace(', ','+')
+                        $Intervals = $flags.ToString().Replace(', ', '+')
                     } else {
                         Write-Warning -Message "Get-TimeSettings - NtpServer flag value `"$flagVal`" could not be converted to NtpServerFlags enum"
                         $Intervals = 'Incorrect'
@@ -176,6 +175,8 @@ function Get-TimeSettings {
             NtpTypeComment              = $Types["$($TimeParameters.Type)"]
             AppliedGPO                  = $AppliedGPO
             VMTimeProvider              = [bool] $TimeVMProvider.Enabled
+            # Windows Secure Time Seeding (UtilizeSslTimeData)
+            WindowsSecureTimeSeeding    = if ($null -eq $TimeConfig.UtilizeSslTimeData) { $true } elseif ($TimeConfig.UtilizeSslTimeData -eq 0) { $false } else { $true }
             AnnounceFlags               = $TimeConfig.AnnounceFlags
             AnnounceFlagsComment        = $AnnounceFlags["$($TimeConfig.AnnounceFlags)"]
             NtpServerEnabled            = [bool]$TimeNTPServer.Enabled
@@ -198,8 +199,7 @@ function Get-TimeSettings {
     }
 }
 
-#Get-TimeSetttings -ComputerName DC1 | ft -AutoSize *
-#Get-TimeSetttings -ComputerName AD1.ad.evotec.xyz | ft -AutoSize *
+#Get-TimeSettings -ComputerName DC1, AD1 | Format-List *WindowsSecureTimeSeeding*
 
 #Get-PSRegistry -ComputerName AD1 -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Parameters"
 #Get-PSRegistry -ComputerName AD1 -RegistryPath "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32time\Parameters"
