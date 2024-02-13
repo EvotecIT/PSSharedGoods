@@ -47,7 +47,7 @@ Invoke-ModuleBuild -ModuleName 'PSSharedGoods' {
         'ActiveDirectory'
         'CimCmdlets'
         'DnsClient'
-    ) -IgnoreFunctionName 'Select-Unique', 'Compare-TwoArrays', 'Invoke-DbaQuery', 'Get-RequiredModule' # those functions are internal within private function
+    ) -IgnoreFunctionName 'Select-Unique', 'Compare-TwoArrays', 'Invoke-DbaQuery', 'Get-RequiredModule', 'IsOfType', 'GetFormattedPair', 'IsNumeric' # those functions are internal within private function
 
     $ConfigurationFormat = [ordered] @{
         RemoveComments                              = $true
