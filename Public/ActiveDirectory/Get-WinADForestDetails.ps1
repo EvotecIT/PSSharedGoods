@@ -1,4 +1,65 @@
 ﻿function Get-WinADForestDetails {
+    <#
+    .SYNOPSIS
+    Get details about Active Directory Forest, Domains and Domain Controllers in a single query
+
+    .DESCRIPTION
+    Get details about Active Directory Forest, Domains and Domain Controllers in a single query
+
+    .PARAMETER Forest
+    Target different Forest, by default current forest is used
+
+    .PARAMETER ExcludeDomains
+    Exclude domain from search, by default whole forest is scanned
+
+    .PARAMETER IncludeDomains
+    Include only specific domains, by default whole forest is scanned
+
+    .PARAMETER ExcludeDomainControllers
+    Exclude specific domain controllers, by default there are no exclusions, as long as VerifyDomainControllers switch is enabled. Otherwise this parameter is ignored.
+
+    .PARAMETER IncludeDomainControllers
+    Include only specific domain controllers, by default all domain controllers are included, as long as VerifyDomainControllers switch is enabled. Otherwise this parameter is ignored.
+
+    .PARAMETER SkipRODC
+    Skip Read-Only Domain Controllers. By default all domain controllers are included.
+
+    .PARAMETER ExtendedForestInformation
+    Ability to provide Forest Information from another command to speed up processing
+
+    .PARAMETER Filter
+    Filter for Get-ADDomainController
+
+    .PARAMETER TestAvailability
+    Check if Domain Controllers are available
+
+    .PARAMETER Test
+    Pick what to check for availability. Options are: All, Ping, WinRM, PortOpen, Ping+WinRM, Ping+PortOpen, WinRM+PortOpen. Default is All
+
+    .PARAMETER Ports
+    Ports to check for availability. Default is 135
+
+    .PARAMETER PortsTimeout
+    Ports timeout for availability check. Default is 100
+
+    .PARAMETER PingCount
+    How many pings to send. Default is 1
+
+    .PARAMETER PreferWritable
+    Prefer writable domain controllers over read-only ones when returning Query Servers
+
+    .PARAMETER Extended
+    Return extended information about domains with NETBIOS names
+
+    .EXAMPLE
+    Get-WinADForestDetails | Format-Table
+
+    .EXAMPLE
+    Get-WinADForestDetails -Forest 'ad.evotec.xyz' | Format-Table
+
+    .NOTES
+    General notes
+    #>
     [CmdletBinding()]
     param(
         [alias('ForestName')][string] $Forest,
@@ -140,6 +201,9 @@
                             }
                         }
                     }
+                    # We need to get DSA GUID from NTDSSettingsObjectDN
+                    # this is useful for some other operations such as repadmin
+                    $DSAGuid = (Get-ADObject -Identity $S.NTDSSettingsObjectDN -Server $QueryServer).ObjectGUID
                     $Server = [ordered] @{
                         Domain                 = $Domain
                         HostName               = $S.HostName
@@ -161,6 +225,9 @@
                         LdapPort               = $S.LdapPort
                         SslPort                = $S.SslPort
                         DistinguishedName      = $S.ComputerObjectDN
+                        NTDSSettingsObjectDN   = $S.NTDSSettingsObjectDN
+                        DsaGuid                = $DSAGuid
+                        DsaGuidName            = "$DSAGuid._msdcs.$($ForestInformation.RootDomain)"
                         Pingable               = $null
                         WinRM                  = $null
                         PortOpen               = $null
@@ -198,6 +265,9 @@
                     LdapPort                 = ''
                     SslPort                  = ''
                     DistinguishedName        = ''
+                    NTDSSettingsObjectDN     = ''
+                    DsaGuid                  = ''
+                    DsaGuidName              = ''
                     Pingable                 = $null
                     WinRM                    = $null
                     PortOpen                 = $null
