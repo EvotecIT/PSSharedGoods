@@ -1,4 +1,8 @@
-﻿#### 0.0.276 - 2024.01.23
+﻿#### 0.0.277 - 2024.02.13
+- Added `Get-WinADDSAGuid` to get list of Domain Controllers and their DSA GUIDs/DSA Names
+- Improved `Get-WinADForestDetails` to include `DSAGUID` and `DSANAME` for each DC
+
+#### 0.0.276 - 2024.01.23
 - Added `WindowsSecureTimeSeeding` to `Get-TimeSettings`
 
 #### 0.0.275 - 2024.01.04
