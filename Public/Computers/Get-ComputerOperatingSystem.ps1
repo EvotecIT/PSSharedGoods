@@ -15,26 +15,24 @@ function Get-ComputerOperatingSystem {
     if ($All) {
         $Information
     } else {
-        foreach ($Info in $Information) {
-            foreach ($Data in $Info) {
-                # # Remember to expand if changing properties above
-                [PSCustomObject] @{
-                    ComputerName           = if ($Data.PSComputerName) { $Data.PSComputerName } else { $Env:COMPUTERNAME }
-                    OperatingSystem        = $Data.Caption
-                    OperatingSystemVersion = ConvertTo-OperatingSystem -OperatingSystem $Data.Caption -OperatingSystemVersion $Data.Version
-                    OperatingSystemBuild   = $Data.Version
-                    Manufacturer           = $Data.Manufacturer
-                    OSArchitecture         = $Data.OSArchitecture
-                    OSLanguage             = ConvertFrom-LanguageCode -LanguageCode $Data.OSLanguage
-                    OSProductSuite         = [Microsoft.PowerShell.Commands.OSProductSuite] $($Data.OSProductSuite)
-                    InstallDate            = $Data.InstallDate
-                    LastBootUpTime         = $Data.LastBootUpTime
-                    LocalDateTime          = $Data.LocalDateTime
-                    SerialNumber           = $Data.SerialNumber
-                    BootDevice             = $Data.BootDevice
-                    WindowsDirectory       = $Data.WindowsDirectory
-                    CountryCode            = $Data.CountryCode
-                }
+        foreach ($Data in $Information) {
+            # # Remember to expand if changing properties above
+            [PSCustomObject] @{
+                ComputerName           = if ($Data.PSComputerName) { $Data.PSComputerName } else { $Env:COMPUTERNAME }
+                OperatingSystem        = $Data.Caption
+                OperatingSystemVersion = ConvertTo-OperatingSystem -OperatingSystem $Data.Caption -OperatingSystemVersion $Data.Version
+                OperatingSystemBuild   = $Data.Version
+                Manufacturer           = $Data.Manufacturer
+                OSArchitecture         = $Data.OSArchitecture
+                OSLanguage             = ConvertFrom-LanguageCode -LanguageCode $Data.OSLanguage
+                OSProductSuite         = [Microsoft.PowerShell.Commands.OSProductSuite] $($Data.OSProductSuite)
+                InstallDate            = $Data.InstallDate
+                LastBootUpTime         = $Data.LastBootUpTime
+                LocalDateTime          = $Data.LocalDateTime
+                SerialNumber           = $Data.SerialNumber
+                BootDevice             = $Data.BootDevice
+                WindowsDirectory       = $Data.WindowsDirectory
+                CountryCode            = $Data.CountryCode
             }
         }
     }
