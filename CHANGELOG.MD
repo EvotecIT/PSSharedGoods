@@ -1,4 +1,8 @@
-﻿#### 0.0.277 - 2024.02.13
+﻿#### 0.0.288 - 2024.02.29
+- Added `Get-ComputerMemory`
+- Improved `Get-ComputerOperatingSystem`
+
+#### 0.0.277 - 2024.02.13
 - Added `Get-WinADDSAGuid` to get list of Domain Controllers and their DSA GUIDs/DSA Names
 - Improved `Get-WinADForestDetails` to include `DSAGUID` and `DSANAME` for each DC
 
