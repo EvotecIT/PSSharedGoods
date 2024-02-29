@@ -1,4 +1,4 @@
-﻿#### 0.0.288 - 2024.02.29
+﻿#### 0.0.278 - 2024.02.29
 - Added `Get-ComputerMemory`
 - Improved `Get-ComputerOperatingSystem`
 
