@@ -334,6 +334,13 @@
                     Type       = 'WellKnownGroup'
                     Error      = ''
                 }
+                'NT SERVICE\MSSQLSERVER'                   = [PSCustomObject] @{
+                    Name       = 'NT SERVICE\MSSQLSERVER'
+                    SID        = 'S-1-5-80-3880718306-3832830129-1677859214-2598158968-1052248003'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
             }
         }
     }
