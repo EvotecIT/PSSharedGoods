@@ -334,9 +334,38 @@
                     Type       = 'WellKnownGroup'
                     Error      = ''
                 }
-                'NT SERVICE\MSSQLSERVER'                   = [PSCustomObject] @{
+                'NT SERVICE\MSSQLSERVER'                      = [PSCustomObject] @{
                     Name       = 'NT SERVICE\MSSQLSERVER'
                     SID        = 'S-1-5-80-3880718306-3832830129-1677859214-2598158968-1052248003'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'NT SERVICE\SQLSERVERAGENT'                   = [PSCustomObject] @{
+                    Name       = 'NT SERVICE\SQLSERVERAGENT'
+                    SID        = 'S-1-5-80-344959196-2060754871-2302487193-2804545603-1466107430'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'NT SERVICE\SQLTELEMETRY'                     = [PSCustomObject] @{
+                    Name       = 'NT SERVICE\SQLTELEMETRY'
+                    SID        = 'S-1-5-80-2652535364-2169709536-2857650723-2622804123-1107741775'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                'NT SERVICE\ADSync'                           = [PSCustomObject] @{
+                    Name       = 'NT SERVICE\ADSync'
+                    SID        = 'S-1-5-80-3245704983-3664226991-764670653-2504430226-901976451'
+                    DomainName = ''
+                    Type       = 'WellKnownGroup'
+                    Error      = ''
+                }
+                # Azure Hybrid Instance Metadata Service
+                'NT Service\himds'                            = [PSCustomObject] @{
+                    Name       = 'NT Service\himds'
+                    SID        = 'S-1-5-80-4215458991-2034252225-2287069555-1155419622-2701885083'
                     DomainName = ''
                     Type       = 'WellKnownGroup'
                     Error      = ''

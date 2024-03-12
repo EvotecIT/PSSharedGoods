@@ -1,4 +1,8 @@
-﻿#### 0.0.279 - 2024.03.12
+﻿#### 0.0.280 - 2024.03.12
+- Improve `Convert-Identity`
+- Improve `ConvertFrom-SID`
+
+#### 0.0.279 - 2024.03.12
 - Improve `Convert-Identity`
 - Improve `ConvertFrom-SID`
 

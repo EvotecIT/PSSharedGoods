@@ -598,16 +598,45 @@ function ConvertFrom-SID {
             Type       = 'WellKnownGroup'
             Error      = ''
         }
+        'S-1-5-80-344959196-2060754871-2302487193-2804545603-1466107430'  = [PSCustomObject] @{
+            Name       = 'NT SERVICE\SQLSERVERAGENT'
+            SID        = 'S-1-5-80-344959196-2060754871-2302487193-2804545603-1466107430'
+            DomainName = ''
+            Type       = 'WellKnownGroup'
+            Error      = ''
+        }
+        'S-1-5-80-2652535364-2169709536-2857650723-2622804123-1107741775' = [PSCustomObject] @{
+            Name       = 'NT SERVICE\SQLTELEMETRY'
+            SID        = 'S-1-5-80-2652535364-2169709536-2857650723-2622804123-1107741775'
+            DomainName = ''
+            Type       = 'WellKnownGroup'
+            Error      = ''
+        }
+        'S-1-5-80-3245704983-3664226991-764670653-2504430226-901976451'   = [PSCustomObject] @{
+            Name       = 'NT SERVICE\ADSync'
+            SID        = 'S-1-5-80-3245704983-3664226991-764670653-2504430226-901976451'
+            DomainName = ''
+            Type       = 'WellKnownGroup'
+            Error      = ''
+        }
+        'S-1-5-80-4215458991-2034252225-2287069555-1155419622-2701885083' = [PSCustomObject] @{
+            Name       = 'NT Service\himds'
+            SID        = 'S-1-5-80-4215458991-2034252225-2287069555-1155419622-2701885083'
+            DomainName = ''
+            Type       = 'WellKnownGroup'
+            Error      = ''
+        }
+
         # 'S-1-5-113'                                                      = [PSCustomObject] @{
         #     Name       = 'NT AUTHORITY\Local account'
-        #     SID        = 'S-1-5-113'
+        #     SID        = 'S - 1 - 5 - 113'
         #     DomainName = ''
         #     Type       = 'WellKnownGroup'
         #     Error      = ''
         # }
         # 'S-1-5-114'                                                      = [PSCustomObject] @{
         #     Name       = 'NT AUTHORITY\Local account and member of Administrators group'
-        #     SID        = 'S-1-5-114'
+        #     SID        = 'S - 1 - 5 - 114'
         #     DomainName = ''
         #     Type       = 'WellKnownGroup'
         #     Error      = ''
