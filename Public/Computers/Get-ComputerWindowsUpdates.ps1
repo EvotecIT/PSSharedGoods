@@ -1,16 +1,42 @@
 function Get-ComputerWindowsUpdates {
+    <#
+    .SYNOPSIS
+    Short description
+
+    .DESCRIPTION
+    Long description
+
+    .PARAMETER ComputerName
+    Parameter description
+
+    .EXAMPLE
+    $Hotfix = Get-ComputerWindowsUpdates -ComputerName EVOWIN, AD1
+    $Hotfix | ft -a *
+    $Hotfix[0] | fl *
+
+    .NOTES
+    General notes
+    #>
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME
     )
-
-    # Get-CimInstance -Class win32_quickfixengineering | Where-Object { $_.InstalledOn -gt (Get-Date).AddMonths(-3) }
-    $Data = Get-HotFix -ComputerName $ComputerName | Select-Object Description , HotFixId , InstallDate, InstalledBy, InstalledOn, Caption, PSComputerName, Status, FixComments, ServicePackInEffect, Name, Site, Containerr
-    return $Data
+    foreach ($Computer in $ComputerName) {
+        try {
+            $Data = Get-HotFix -ComputerName $Computer
+            $Output = foreach ($Update in $Data) {
+                [PSCustomObject] @{
+                    ComputerName = $Computer
+                    InstalledOn  = $Update.InstalledOn
+                    Description  = $Update.Description
+                    KB           = $Update.HotFixId
+                    InstalledBy  = $Update.InstalledBy
+                    Caption      = $Update.Caption
+                }
+            }
+            $Output | Sort-Object -Descending InstalledOn
+        } catch {
+            Write-Warning -Message "Get-ComputerWindowsUpdates - No data for computer $($Computer). Failed with errror: $($_.Exception.Message)"
+        }
+    }
 }
-
-#$Hotfix = Get-ComputerWindowsUpdates -ComputerName EVOWIN, AD1 #| ft -a *
-#$Hotfix | ft -a *
-#$Hotfix[0] | fl *
-
-#Get-CimData -Class 'Win32_QuickFixEngineering' -ComputerName EVOWIN,AD1 | ft -AutoSize *
