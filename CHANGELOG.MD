@@ -1,4 +1,8 @@
-﻿#### 0.0.280 - 2024.03.12
+﻿#### 0.0.281 - 2024.03.25
+- Improve `Get-ComputerWindowsUpdates`
+- Added `Get-ComputerInstalledUpdates`
+
+#### 0.0.280 - 2024.03.12
 - Improve `Convert-Identity`
 - Improve `ConvertFrom-SID`
 
