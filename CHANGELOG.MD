@@ -1,4 +1,7 @@
-﻿#### 0.0.281 - 2024.03.25
+﻿#### 0.0.282 - 2024.03.28
+- Added `Convert-IpAddressToPtr` to convert IP Address to PTR record
+
+#### 0.0.281 - 2024.03.25
 - Improve `Get-ComputerWindowsUpdates`
 - Added `Get-ComputerInstalledUpdates`
 
