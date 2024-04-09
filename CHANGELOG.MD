@@ -1,4 +1,7 @@
-﻿#### 0.0.283 - 2024.04.09
+﻿#### 0.0.284 - 2024.04.09
+- Improved `Get-ComputerInstalledUpdates` to support Credential parameter
+
+#### 0.0.283 - 2024.04.09
 - Added `Get-FileEncoding` to get file encoding
 
 #### 0.0.282 - 2024.03.28
