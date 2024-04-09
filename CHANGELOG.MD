@@ -1,4 +1,7 @@
-﻿#### 0.0.282 - 2024.03.28
+﻿#### 0.0.283 - 2024.04.09
+- Added `Get-FileEncoding` to get file encoding
+
+#### 0.0.282 - 2024.03.28
 - Added `Convert-IpAddressToPtr` to convert IP Address to PTR record
 
 #### 0.0.281 - 2024.03.25
