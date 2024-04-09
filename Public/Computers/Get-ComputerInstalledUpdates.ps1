@@ -16,7 +16,8 @@
             'Servicing Stack Update',
             'Other'
         )][string[]] $ExcludeType,
-        [string] $SearchKB
+        [string] $SearchKB,
+        [pscredential] $Credential
     )
     # https://learn.microsoft.com/en-us/windows/win32/api/wuapi/
     <#
@@ -121,14 +122,29 @@
     $Data = if ($Computers.Count -gt 0) {
         foreach ($Computer in $Computers) {
             try {
-                Invoke-Command -ComputerName $Computer -ScriptBlock $ScriptBlock -ErrorAction Stop | Select-Object -Property $Properties
+                $invokeCommandSplat = @{
+                    ComputerName = $Computer
+                    ScriptBlock  = $ScriptBlock
+                    ErrorAction  = 'Stop'
+                }
+                if ($Credential) {
+                    $invokeCommandSplat.Credential = $Credential
+                }
+                Invoke-Command @invokeCommandSplat | Select-Object -Property $Properties
             } catch {
                 Write-Warning -Message "Get-ComputerInstalledUpdates - No data for computer $Computer. Failed with error: $($_.Exception.Message)"
             }
         }
     } else {
         try {
-            Invoke-Command -ScriptBlock $ScriptBlock -ErrorAction Stop
+            $invokeCommandSplat = @{
+                ScriptBlock  = $ScriptBlock
+                ErrorAction  = 'Stop'
+            }
+            if ($Credential) {
+                $invokeCommandSplat.Credential = $Credential
+            }
+            Invoke-Command @invokeCommandSplat
         } catch {
             Write-Warning -Message "Get-ComputerInstalledUpdates - No data for computer $($Env:COMPUTERNAME). Failed with error: $($_.Exception.Message)"
         }
