@@ -28,7 +28,11 @@
         Write-Warning -Message "Get-FileEncoding - File not found: $Path"
         return
     }
-    $byte = [System.IO.File]::ReadAllBytes($Path)
+    $fileStream = [System.IO.FileStream]::new($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read)
+    $byte = [byte[]]::new(4)
+    $null = $fileStream.Read($byte, 0, 4)
+    $fileStream.Close()
+
     if ($byte[0] -eq 0xef -and $byte[1] -eq 0xbb -and $byte[2] -eq 0xbf) {
         return 'UTF8BOM'
     } elseif ($byte[0] -eq 0xff -and $byte[1] -eq 0xfe) {
@@ -39,11 +43,15 @@
         return 'UTF7'
     } else {
         # Check if the file contains any non-ASCII characters
-        for ($i = 0; $i -lt $byte.Length; $i++) {
-            if ($byte[$i] -gt 0x7F) {
+        $fileStream = New-Object System.IO.FileStream($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read)
+        $byte = [byte[]]::new(1)
+        while ($fileStream.Read($byte, 0, 1) -gt 0) {
+            if ($byte[0] -gt 0x7F) {
+                $fileStream.Close()
                 return 'UTF8'
             }
         }
+        $fileStream.Close()
         return 'ASCII'
     }
 }
