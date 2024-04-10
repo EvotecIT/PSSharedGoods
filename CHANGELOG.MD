@@ -1,4 +1,8 @@
-﻿#### 0.0.284 - 2024.04.09
+﻿#### 0.0.285 - 2024.04.10
+- Improve performance `Get-FileEncoding` by using filestream
+- Add documentation for `Get-ComputerInstalledUpdates`
+
+#### 0.0.284 - 2024.04.09
 - Improved `Get-ComputerInstalledUpdates` to support Credential parameter
 
 #### 0.0.283 - 2024.04.09
