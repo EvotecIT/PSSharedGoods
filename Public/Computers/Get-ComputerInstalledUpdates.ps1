@@ -1,19 +1,60 @@
 ﻿function Get-ComputerInstalledUpdates {
+    <#
+    .SYNOPSIS
+    This function retrieves the history of updates installed on a computer or multiple computers.
+
+    .DESCRIPTION
+    The `Get-ComputerInstalledUpdates` function uses the Windows Update Agent API to query the history of updates installed on a computer. It returns a list of updates with details such as the KB number, installation date, update type, version, and more.
+
+    .PARAMETER ComputerName
+    An array of computer names. The default value is the name of the current computer.
+
+    .PARAMETER IncludeType
+    An array of update types to include in the results. Valid values are 'Antivirus', 'CumulativeUpdate', 'WindowsUpdate', 'ServicingStackUpdate', and 'Other'.
+
+    .PARAMETER ExcludeType
+    An array of update types to exclude from the results. Valid values are the same as for `IncludeType`.
+
+    .PARAMETER SearchKB
+    A string to search for in the KB numbers of the updates.
+
+    .PARAMETER Credential
+    A PSCredential object to use when connecting to the computers.
+
+    .EXAMPLE
+    # Get all updates installed on the current computer
+    Get-ComputerInstalledUpdates
+
+    .EXAMPLE
+    # Get all 'Windows Update' type updates installed on the computer 'Computer1'
+    Get-ComputerInstalledUpdates -ComputerName 'Computer1' -IncludeType 'WindowsUpdate'
+
+    .EXAMPLE
+    # Get all updates except 'Antivirus' type updates installed on the computers 'Computer1' and 'Computer2'
+    Get-ComputerInstalledUpdates -ComputerName 'Computer1', 'Computer2' -ExcludeType 'Antivirus'
+
+    .EXAMPLE
+    # Search for a specific KB number on the current computer
+    Get-ComputerInstalledUpdates -SearchKB 'KB123456'
+
+    .NOTES
+    This function uses the COM interface of the Windows Update Agent API, which requires administrative privileges. If you run this function without administrative privileges, it may not return all updates.
+    #>
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet(
             'Antivirus',
-            'Cumulative Update',
-            'Windows Update',
-            'Servicing Stack Update',
+            'CumulativeUpdate',
+            'WindowsUpdate',
+            'ServicingStackUpdate',
             'Other'
         )][string[]] $IncludeType,
         [ValidateSet(
             'Antivirus',
-            'Cumulative Update',
-            'Windows Update',
-            'Servicing Stack Update',
+            'CumulativeUpdate',
+            'WindowsUpdate',
+            'ServicingStackUpdate',
             'Other'
         )][string[]] $ExcludeType,
         [string] $SearchKB,
@@ -82,11 +123,11 @@
             if ($_.Title -like "*Security Intelligence Update*" -or $_.Title -like "*Antivirus*" -or $_.Title -like "*Malicious Software*") {
                 $Type = "Antivirus"
             } elseif ($_.Title -like "*Cumulative Update*") {
-                $Type = "Cumulative Update"
+                $Type = "CumulativeUpdate"
             } elseif ($_.Title -like "*Update for Windows*" -or $_.Title -like "*Security Update*" -or $_.Title -like "*Update for Microsoft*" -or $_.Title -like "*Update for Internet Explorer*") {
-                $Type = "Windows Update"
+                $Type = "WindowsUpdate"
             } elseif ($_.Title -like "*Servicing Stack Update*") {
-                $Type = "Servicing Stack Update"
+                $Type = "ServicingStackUpdate"
             } else {
                 $Type = "Other"
             }
@@ -138,8 +179,8 @@
     } else {
         try {
             $invokeCommandSplat = @{
-                ScriptBlock  = $ScriptBlock
-                ErrorAction  = 'Stop'
+                ScriptBlock = $ScriptBlock
+                ErrorAction = 'Stop'
             }
             if ($Credential) {
                 $invokeCommandSplat.Credential = $Credential
