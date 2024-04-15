@@ -1,4 +1,7 @@
-﻿#### 0.0.285 - 2024.04.10
+﻿#### 0.0.286 - 2024.04.15
+- Improve `Get-ComputerTime` when computer can't be connected
+
+#### 0.0.285 - 2024.04.10
 - Improve performance `Get-FileEncoding` by using filestream
 - Add documentation for `Get-ComputerInstalledUpdates`
 
