@@ -98,7 +98,7 @@
                 RemoteDateTime             = $RemoteDateTime
                 InstallTime                = $WMIComputerTarget.InstallDate
                 LastBootUpTime             = $WMIComputerTarget.LastBootUpTime
-                LastBootUpTimeInDays       = [math]::Round($ResultFromBoot.TotalDays, 2)
+                LastBootUpTimeInDays       = if ($null -ne $ResultFromBoot.TotalDays) { [math]::Round($ResultFromBoot.TotalDays, 2) } else { $null }
                 TimeDifferenceMinutes      = if ($Result.TotalMinutes -lt 0) { ($Result.TotalMinutes * -1) } else { $Result.TotalMinutes }
                 TimeDifferenceSeconds      = if ($Result.TotalSeconds -lt 0) { ($Result.TotalSeconds * -1) } else { $Result.TotalSeconds }
                 TimeDifferenceMilliseconds = if ($Result.TotalMilliseconds -lt 0) { ($Result.TotalMilliseconds * -1) } else { $Result.TotalMilliseconds }
@@ -109,7 +109,7 @@
             if ($WMIComputerTarget.LastBootUpTime) {
                 $ResultFromBoot = New-TimeSpan -Start $WMIComputerTarget.LastBootUpTime -End $WMIComputerTarget.LocalDateTime
             } else {
-                $ResultFromBoot = ''
+                $ResultFromBoot = $null
             }
             [PSCustomObject] @{
                 Name                       = $Computer
@@ -117,7 +117,7 @@
                 RemoteDateTime             = $RemoteDateTime
                 InstallTime                = $WMIComputerTarget.InstallDate
                 LastBootUpTime             = $WMIComputerTarget.LastBootUpTime
-                LastBootUpTimeInDays       = [math]::Round($ResultFromBoot.TotalDays, 2)
+                LastBootUpTimeInDays       = if ($ResultFromBoot) { [math]::Round($ResultFromBoot.TotalDays, 2) } else { $null }
                 TimeDifferenceMinutes      = $null
                 TimeDifferenceSeconds      = $null
                 TimeDifferenceMilliseconds = $null
