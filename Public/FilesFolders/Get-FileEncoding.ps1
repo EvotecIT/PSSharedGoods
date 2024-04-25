@@ -43,7 +43,7 @@
         return 'UTF7'
     } else {
         # Check if the file contains any non-ASCII characters
-        $fileStream = New-Object System.IO.FileStream($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read)
+        $fileStream = [System.IO.FileStream]::new($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read)
         $byte = [byte[]]::new(1)
         while ($fileStream.Read($byte, 0, 1) -gt 0) {
             if ($byte[0] -gt 0x7F) {
