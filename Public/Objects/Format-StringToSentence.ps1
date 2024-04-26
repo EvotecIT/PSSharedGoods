@@ -23,6 +23,12 @@ function Format-StringToSentence {
     .PARAMETER RemoveDoubleSpaces
     If this switch is present, the function will remove any double spaces from the string.
 
+    .PARAMETER MakeWordsUpperCase
+    An array of words that should be converted to uppercase after the formatting is applied.
+
+    .PARAMETER DisableAddingSpace
+    If this switch is present, the function will not add spaces before uppercase letters, digits, and non-word characters.
+
     .EXAMPLE
     $test = @(
         'OnceUponATime',
@@ -77,7 +83,8 @@ function Format-StringToSentence {
         [string[]] $RemoveCharsAfter,
         [switch] $ToLowerCase,
         [switch] $RemoveDoubleSpaces,
-        [string[]] $MakeWordsUpperCase
+        [string[]] $MakeWordsUpperCase,
+        [switch] $DisableAddingSpace
     )
     Process {
         foreach ($T in $Text) {
@@ -86,7 +93,9 @@ function Format-StringToSentence {
                     $T = $T -ireplace [regex]::Escape($R), ""
                 }
             }
-            $T = $T -creplace '([A-Z]|[^a-zA-Z0-9_.\s]|_|\d+)(?<![a-z])', ' $&'
+            if (-not $DisableAddingSpace) {
+                $T = $T -creplace '([A-Z]|[^a-zA-Z0-9_.\s]|_|\d+)(?<![a-z])', ' $&'
+            }
             if ($ToLowerCase) {
                 $T = $T.ToLower()
             }

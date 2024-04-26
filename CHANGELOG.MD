@@ -1,4 +1,7 @@
-﻿#### 0.0.287
+﻿#### 0.0.288 - 2024.04.26
+- Improve `Format-StringToSentence`
+
+#### 0.0.287 - 2024.04.26
 - Small update to `Get-FileEncoding`
 - Renamed `Format-AddSpaceToSentence` to `Format-StringToSentence` (alias left in place)
 - Improve `Format-StringToSentence` with more features
