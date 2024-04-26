@@ -1,4 +1,7 @@
-﻿#### 0.0.288 - 2024.04.26
+﻿#### 0.0.289 - 2024.04.26
+- Improve `Get-TimeSettings` with additional information about Windows Secure Time Seeding
+
+#### 0.0.288 - 2024.04.26
 - Improve `Format-StringToSentence`
 
 #### 0.0.287 - 2024.04.26

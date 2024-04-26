@@ -100,7 +100,6 @@ function Get-TimeSettings {
         # This value is ignored if the NT5DS value is not set. The default value for domain members is 2. The default value for stand-alone clients and servers is 2.
     }
 
-
     $AnnounceFlags = @{
         '0'  = 'Not a time server'
         '1'  = 'Always time server'
@@ -110,11 +109,9 @@ function Get-TimeSettings {
         '10' = 'The default value for domain members is 10. The default value for stand-alone clients and servers is 10.'
     }
 
-    # if ($Domain) {
-    #    $DomainInformation = Get-ADDomain -Server $Domain
-    #    $PDCName = $DomainInformation.PDCEmulator
-    #  }
-
+    if ($null -eq $ComputerName) {
+        $ComputerName = $env:COMPUTERNAME
+    }
     foreach ($_ in $ComputerName) {
         [bool] $AppliedGPO = $false
         $TimeParameters = Get-PSRegistry -ComputerName $_ -RegistryPath "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\W32time\Parameters"
@@ -133,6 +130,8 @@ function Get-TimeSettings {
         #$TimeSecureLimits = Get-PSRegistry -ComputerName $_ -RegistryPath "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\SecureTimeLimits"
         $TimeVMProvider = Get-PSRegistry -ComputerName $_ -RegistryPath "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\VMICTimeProvider"
         #Get-PSRegistry -ComputerName $ComputerName -RegistryPath "HKLM\SYSTEM\CurrentControlSet"
+
+        $SecureTimeSeeding = Get-PSRegistry -ComputerName $_ -RegistryPath "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Config" -Key 'UtilizeSslTimeData'
 
         $NtpServers = $TimeParameters.NtpServer -split ' '
         $Ntp = foreach ($NtpServer in $NtpServers) {
@@ -166,35 +165,59 @@ function Get-TimeSettings {
 
         #$FullName = Resolve-DnsName -Name $_ -ErrorAction SilentlyContinue
 
+        if ($null -eq $TimeConfig.UtilizeSslTimeData) {
+            $WSTSType = $true
+        } elseif ($TimeConfig.UtilizeSslTimeData -eq 0) {
+            $WSTSType = $false
+        } else {
+            $WSTSType = $true
+        }
+
+        if ($null -eq $SecureTimeSeeding.PSType) {
+            $WSTSStatus = $false # Windows Secure Time Seeding is enabl;ed (bad)
+            $WSTSType = $true
+        } elseif ($SecureTimeSeeding.PSType -eq 'DWord' -and $SecureTimeSeeding.PSValue -eq 0) {
+            $WSTSStatus = $false # Windows Secure Time Seeding is disabled
+            $WSTSType = $true
+        } elseif ($SecureTimeSeeding.PSType -eq 'DWord' -and $SecureTimeSeeding.PSValue -eq 1) {
+            $WSTSStatus = $true # Windows Secure Time Seeding is disabled
+            $WSTSType = $true
+        } else {
+            $WSTSStatus = $true # Windows Secure Time Seeding is enabled
+            $WSTSType = $false
+        }
+
+
         [PSCustomObject] @{
-            ComputerName                = $_
+            ComputerName                        = $_
             #IsPDC                       = ($PDCName -eq $FullName.Name)
-            NtpServer                   = if ($Splitter) { $Ntp.NtpServer -join $Splitter } else { $Ntp.NtpServer }
-            NtpServerIntervals          = if ($Splitter) { $Ntp.Intervals -join $Splitter } else { $Ntp.Intervals }
-            NtpType                     = $TimeParameters.Type
-            NtpTypeComment              = $Types["$($TimeParameters.Type)"]
-            AppliedGPO                  = $AppliedGPO
-            VMTimeProvider              = [bool] $TimeVMProvider.Enabled
+            NtpServer                           = if ($Splitter) { $Ntp.NtpServer -join $Splitter } else { $Ntp.NtpServer }
+            NtpServerIntervals                  = if ($Splitter) { $Ntp.Intervals -join $Splitter } else { $Ntp.Intervals }
+            NtpType                             = $TimeParameters.Type
+            NtpTypeComment                      = $Types["$($TimeParameters.Type)"]
+            AppliedGPO                          = $AppliedGPO
+            VMTimeProvider                      = [bool] $TimeVMProvider.Enabled
             # Windows Secure Time Seeding (UtilizeSslTimeData)
-            WindowsSecureTimeSeeding    = if ($null -eq $TimeConfig.UtilizeSslTimeData) { $true } elseif ($TimeConfig.UtilizeSslTimeData -eq 0) { $false } else { $true }
-            AnnounceFlags               = $TimeConfig.AnnounceFlags
-            AnnounceFlagsComment        = $AnnounceFlags["$($TimeConfig.AnnounceFlags)"]
-            NtpServerEnabled            = [bool]$TimeNTPServer.Enabled
-            NtpServerInputProvider      = [bool]$TimeNTPServer.InputProvider
-            MaxPosPhaseCorrection       = $TimeConfig.MaxPosPhaseCorrection
-            MaxnegPhaseCorrection       = $TimeConfig.MaxnegPhaseCorrection
-            MaxAllowedPhaseOffset       = $TimeConfig.MaxAllowedPhaseOffset
-            MaxPollInterval             = $TimeConfig.MaxPollInterval
-            MinPollInterval             = $TimeConfig.MinPollInterval
-            UpdateInterval              = $TimeConfig.UpdateInterval
-            ResolvePeerBackoffMinutes   = $TimeNTPClient.ResolvePeerBackoffMinutes
-            ResolvePeerBackoffMaxTimes  = $TimeNTPClient.ResolvePeerBackoffMaxTimes
-            SpecialPollInterval         = $TimeNTPClient.SpecialPollInterval
-            EventLogFlags               = $TimeConfig.EventLogFlags
-            NtpClientEnabled            = [bool] $TimeNTPClient.Enabled
-            NtpClientCrossSiteSyncFlags = $CrossSiteSyncFlags["$($TimeNTPClient.CrossSiteSyncFlags)"]
-            NtpClientInputProvider      = [bool] $TimeNTPClient.InputProvider
-            TimeNTPClient               = $TimeNTPClient.SpecialPollInterval
+            WindowsSecureTimeSeeding            = $WSTSStatus
+            WindowsSecureTimeSeedingTypeCorrect = $WSTSType
+            AnnounceFlags                       = $TimeConfig.AnnounceFlags
+            AnnounceFlagsComment                = $AnnounceFlags["$($TimeConfig.AnnounceFlags)"]
+            NtpServerEnabled                    = [bool]$TimeNTPServer.Enabled
+            NtpServerInputProvider              = [bool]$TimeNTPServer.InputProvider
+            MaxPosPhaseCorrection               = $TimeConfig.MaxPosPhaseCorrection
+            MaxnegPhaseCorrection               = $TimeConfig.MaxnegPhaseCorrection
+            MaxAllowedPhaseOffset               = $TimeConfig.MaxAllowedPhaseOffset
+            MaxPollInterval                     = $TimeConfig.MaxPollInterval
+            MinPollInterval                     = $TimeConfig.MinPollInterval
+            UpdateInterval                      = $TimeConfig.UpdateInterval
+            ResolvePeerBackoffMinutes           = $TimeNTPClient.ResolvePeerBackoffMinutes
+            ResolvePeerBackoffMaxTimes          = $TimeNTPClient.ResolvePeerBackoffMaxTimes
+            SpecialPollInterval                 = $TimeNTPClient.SpecialPollInterval
+            EventLogFlags                       = $TimeConfig.EventLogFlags
+            NtpClientEnabled                    = [bool] $TimeNTPClient.Enabled
+            NtpClientCrossSiteSyncFlags         = $CrossSiteSyncFlags["$($TimeNTPClient.CrossSiteSyncFlags)"]
+            NtpClientInputProvider              = [bool] $TimeNTPClient.InputProvider
+            TimeNTPClient                       = $TimeNTPClient.SpecialPollInterval
         }
     }
 }
