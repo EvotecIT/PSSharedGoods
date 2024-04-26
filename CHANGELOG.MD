@@ -1,5 +1,7 @@
 ﻿#### 0.0.287
-- Smasll update to `Get-FileEncoding`
+- Small update to `Get-FileEncoding`
+- Renamed `Format-AddSpaceToSentence` to `Format-StringToSentence` (alias left in place)
+- Improve `Format-StringToSentence` with more features
 
 #### 0.0.286 - 2024.04.15
 - Improve `Get-ComputerTime` when computer can't be connected
