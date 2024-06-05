@@ -1,4 +1,7 @@
-﻿#### 0.0.289 - 2024.04.26
+﻿#### 0.0.290 - 2024.06.06
+- Added `ConvertTo-NormalizedString` to replace special characters with normal ones
+
+#### 0.0.289 - 2024.04.26
 - Improve `Get-TimeSettings` with additional information about Windows Secure Time Seeding
 
 #### 0.0.288 - 2024.04.26
