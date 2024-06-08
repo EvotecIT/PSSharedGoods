@@ -1,4 +1,7 @@
-﻿#### 0.0.290 - 2024.06.06
+﻿#### 0.0.291 - 2024.06.08
+- Fixes `ConvertTo-PrettyObject` handling new lines properly for strings
+
+#### 0.0.290 - 2024.06.06
 - Added `ConvertTo-NormalizedString` to replace special characters with normal ones
 
 #### 0.0.289 - 2024.04.26
