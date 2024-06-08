@@ -131,7 +131,7 @@
                         foreach ($Key in $AdvancedReplace.Keys) {
                             $Value = $Value.Replace($Key, $AdvancedReplace[$Key])
                         }
-                        $NewObject[$DisplayProperty] = $Value
+                        $NewObject[$DisplayProperty] = $Value.Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                     } elseif ($Value -is [DateTime]) {
                         $NewObject[$DisplayProperty] = $Object[$a].$Property.ToString($DateTimeFormat)
                     } elseif ($Value -is [bool]) {
@@ -146,11 +146,11 @@
                     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
                         if ($ArrayJoin) {
                             $Value = $Value -join $ArrayJoinString
-                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         } else {
                             # We force it to max depth 0
-                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         }
                     } elseif ($Value -is [System.Enum]) {
@@ -166,7 +166,7 @@
                         # We force it to max depth 0
                         $NewObject[$DisplayProperty] = "$Value"
                     } else {
-                        $Value = $Value.ToString().Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                        $Value = $Value.ToString().Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                         $NewObject[$DisplayProperty] = "$Value"
                     }
                 }
@@ -192,7 +192,7 @@
                         foreach ($Key in $AdvancedReplace.Keys) {
                             $Value = $Value.Replace($Key, $AdvancedReplace[$Key])
                         }
-                        $NewObject[$DisplayProperty] = $Value
+                        $NewObject[$DisplayProperty] = $Value.Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                     } elseif ($Value -is [DateTime]) {
                         $NewObject[$DisplayProperty] = $Object[$a].$Property.ToString($DateTimeFormat)
                     } elseif ($Value -is [bool]) {
@@ -207,11 +207,11 @@
                     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
                         if ($ArrayJoin) {
                             $Value = $Value -join $ArrayJoinString
-                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         } else {
                             # We force it to max depth 0
-                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                            $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         }
                     } elseif ($Value -is [System.Enum]) {
@@ -227,7 +227,7 @@
                         # We force it to max depth 0
                         $NewObject[$DisplayProperty] = "$Value"
                     } else {
-                        $Value = $Value.ToString().Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
+                        $Value = $Value.ToString().Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                         $NewObject[$DisplayProperty] = "$Value"
                     }
                 }
@@ -263,3 +263,30 @@ $Output2 = $DataTable3 | ConvertTo-Json | ConvertFrom-Json
 $Output1 | Format-Table *
 $Output2 | Format-Table *
 #>
+
+# $DataTable3 = [PSCustomObject] @{
+#     'Test1'        = 'Test' + [System.Environment]::NewLine + 'test3';
+#     'Test2'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`n test"
+#     'Test3'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`r`n test"
+#     'Test4'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`r test"
+#     'Test5'        = 'Test' + "`r`n" + 'test3' + "test"
+#     'Test6'        = @"
+#     Test1
+#     Test2
+#     Test3
+
+#     Test4
+# "@
+#     'Test7'        = 'Test' + "`n`n" + "Oops"
+#     'Test9'        = 'Test' + "<Br>" + "Oops"
+#     'Test8"Oopps"' = 'MyTest "Ofcourse"'
+#     "Test9'Ooops'" = "MyTest 'Ofcourse'"
+
+# }
+
+# $Output1 = $DataTable3 | ConvertTo-PrettyObject -NewLineFormatProperty @{
+#     NewLineCarriage = '<br>'
+#     NewLine         = "\n"
+#     Carriage        = "\r"
+# }
+# $Output1 | ConvertTo-Json
