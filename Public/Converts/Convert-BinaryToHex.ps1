@@ -12,5 +12,5 @@ function Convert-BinaryToHex {
         $Binary = @($input)
     }
     $Return = -join ($Binary |  ForEach-Object { "{0:X2}" -f $_ })
-    Write-Output $Return
+    $Return
 }

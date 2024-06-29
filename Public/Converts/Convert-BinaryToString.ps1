@@ -5,6 +5,6 @@ function Convert-BinaryToString {
         [Byte[]]$Binary
     )
     if ($null -ne $Binary) {
-        return [System.Text.Encoding]::Unicode.GetString($Binary)
+        [System.Text.Encoding]::Unicode.GetString($Binary)
     }
 }
