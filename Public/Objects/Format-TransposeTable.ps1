@@ -76,7 +76,10 @@ function Format-TransposeTable {
         [switch] $Legacy,
 
         [Parameter(ParameterSetName = 'Pivot')]
-        [string] $Property
+        [string] $Property,
+
+        [Parameter(ParameterSetName = 'Pivot')]
+        [string] $Name = "Object "
     )
     begin {
         $Object = [System.Collections.Generic.List[object]]::new()
@@ -98,7 +101,7 @@ function Format-TransposeTable {
                     }
                 } else {
                     for ($i = 0; $i -lt $Object.Count; $i++) {
-                        $ListHeader.Add("Object $i")
+                        $ListHeader.Add("$($Name)$i")
                     }
                 }
                 $CountOfProperties = $Object[0].GetEnumerator().Name.Count
@@ -130,7 +133,7 @@ function Format-TransposeTable {
                     }
                 } else {
                     for ($i = 0; $i -lt $Object.Count; $i++) {
-                        $ListHeader.Add("Object $i")
+                        $ListHeader.Add("$($Name)$i")
                     }
                 }
                 $CountOfProperties = $Object[0].PSObject.Properties.Name.Count
