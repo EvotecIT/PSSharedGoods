@@ -1,4 +1,7 @@
-﻿#### 0.0.292 - 2024.06.29
+﻿#### 0.0.293 - 2024.06.29
+- Improve `Format-TransposeTable`
+
+#### 0.0.292 - 2024.06.29
 - Rewritten `Format-TransposeTable` to new approach. Old approach still usable with `Legacy` switch
 
 #### 0.0.291 - 2024.06.08
