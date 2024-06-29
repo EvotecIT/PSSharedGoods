@@ -89,6 +89,7 @@ function Format-TransposeTable {
     end {
         if (-not $Legacy) {
             if ($Object[0] -is [System.Collections.IDictionary]) {
+                # Handling of dictionaries
                 $ListHeader = [System.Collections.Generic.List[string]]::new()
                 $ListHeader.Add('Name')
                 if ($Property) {
@@ -114,11 +115,13 @@ function Format-TransposeTable {
                 }
                 for ($i = 0; $i -lt $ObjectsList.Count; $i++) {
                     for ($j = 0; $j -lt $Object.Count; $j++) {
-                        $ObjectsList[$i][$j + 1] = $Object[$j][$ObjectsList[$i]['Name']]
+                        $NameOfProperty = $ObjectsList[$i].Name
+                        $ObjectsList[$i][$j + 1] = $Object[$j].$NameOfProperty
                     }
                     [PSCustomObject] $ObjectsList[$i]
                 }
             } else {
+                # PSCustomObject/Class handling
                 $ListHeader = [System.Collections.Generic.List[string]]::new()
                 $ListHeader.Add('Name')
                 if ($Property) {
@@ -144,7 +147,8 @@ function Format-TransposeTable {
                 }
                 for ($i = 0; $i -lt $ObjectsList.Count; $i++) {
                     for ($j = 0; $j -lt $Object.Count; $j++) {
-                        $ObjectsList[$i][$j + 1] = $Object[$j].PSObject.Properties.Value[$i]
+                        $NameOfProperty = $ObjectsList[$i].Name
+                        $ObjectsList[$i][$j + 1] = $Object[$j].$NameOfProperty
                     }
                     [PSCustomObject] $ObjectsList[$i]
                 }
