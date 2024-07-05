@@ -1,23 +1,23 @@
 ﻿function Get-ADEncryptionTypes {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves the supported encryption types based on the specified value.
 
     .DESCRIPTION
-    Long description
+    This function returns the list of encryption types supported by Active Directory based on the provided value. Each encryption type is represented by a string.
 
     .PARAMETER Value
-    Parameter description
+    Specifies the integer value representing the encryption types to retrieve.
 
     .EXAMPLE
     Get-ADEncryptionTypes -Value 24
 
-    Output:
-    AES128-CTS-HMAC-SHA1-96
-    AES256-CTS-HMAC-SHA1-96
+    Retrieves the following encryption types:
+    - AES128-CTS-HMAC-SHA1-96
+    - AES256-CTS-HMAC-SHA1-96
 
     .NOTES
-    General notes
+    This function is designed to provide information about encryption types supported by Active Directory.
     #>
     [cmdletbinding()]
     Param(

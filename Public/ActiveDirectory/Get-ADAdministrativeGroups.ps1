@@ -1,25 +1,25 @@
 ﻿function Get-ADADministrativeGroups {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves administrative groups information from Active Directory.
 
     .DESCRIPTION
-    Long description
+    This function retrieves information about administrative groups in Active Directory based on the specified parameters.
 
     .PARAMETER Type
-    Parameter description
+    Specifies the type of administrative groups to retrieve. Valid values are 'DomainAdmins' and 'EnterpriseAdmins'.
 
     .PARAMETER Forest
-    Parameter description
+    Specifies the name of the forest to query for administrative groups.
 
     .PARAMETER ExcludeDomains
-    Parameter description
+    Specifies an array of domains to exclude from the query.
 
     .PARAMETER IncludeDomains
-    Parameter description
+    Specifies an array of domains to include in the query.
 
     .PARAMETER ExtendedForestInformation
-    Parameter description
+    Specifies additional information about the forest to include in the query.
 
     .EXAMPLE
     Get-ADADministrativeGroups -Type DomainAdmins, EnterpriseAdmins
@@ -32,7 +32,7 @@
     ad.evotec.pl                   {DomainAdmins}
 
     .NOTES
-    General notes
+    This function requires Active Directory module to be installed on the system.
     #>
     [cmdletBinding()]
     param(

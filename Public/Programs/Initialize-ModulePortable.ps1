@@ -1,4 +1,32 @@
 ﻿function Initialize-ModulePortable {
+    <#
+    .SYNOPSIS
+    Initializes a portable module by downloading or importing it along with its required modules.
+
+    .DESCRIPTION
+    This function initializes a portable module by either downloading it from the PowerShell Gallery or importing it from a specified path. It also recursively loads any required modules for the primary module.
+
+    .PARAMETER Name
+    Specifies the name of the module to initialize.
+
+    .PARAMETER Path
+    Specifies the path where the module will be downloaded or imported. Defaults to the current script root.
+
+    .PARAMETER Download
+    Switch to indicate whether to download the module from the PowerShell Gallery.
+
+    .PARAMETER Import
+    Switch to indicate whether to import the module from the specified path.
+
+    .EXAMPLE
+    Initialize-ModulePortable -Name "MyModule" -Download
+    Downloads the module named "MyModule" from the PowerShell Gallery.
+
+    .EXAMPLE
+    Initialize-ModulePortable -Name "MyModule" -Path "C:\Modules" -Import
+    Imports the module named "MyModule" from the specified path "C:\Modules".
+
+    #>
     [CmdletBinding()]
     param(
         [alias('ModuleName')][string] $Name,

@@ -15,7 +15,6 @@
     .EXAMPLE
     Get-ChildItem -Path $Env:USERPROFILE\Desktop -Force | Where-Object { $_.Attributes -like '*Hidden*' } | Get-FileMetaData | Out-HtmlView -ScrollX -Filtering -AllProperties
 
-    .NOTES
     #>
     [CmdletBinding()]
     param (

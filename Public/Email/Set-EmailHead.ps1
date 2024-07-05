@@ -1,4 +1,25 @@
 function Set-EmailHead {
+    <#
+    .SYNOPSIS
+    Sets the HTML head section for an email with specified formatting options.
+
+    .DESCRIPTION
+    The Set-EmailHead function generates the HTML head section for an email with customizable formatting options. It includes meta tags for content type, viewport settings, and description. Additionally, it defines styles for the body, tables, headings, lists, and more.
+
+    .PARAMETER FormattingOptions
+    Specifies the formatting options to be applied to the email content.
+
+    .EXAMPLE
+    $formatting = @{
+        FontFamily = 'Arial';
+        FontSize = '12px';
+        FontTableDataFamily = 'Arial';
+        FontTableDataSize = '10px';
+        FontTableHeadingFamily = 'Arial';
+        FontTableHeadingSize = '12px';
+    }
+    Set-EmailHead -FormattingOptions $formatting
+    #>
     [cmdletBinding()]
     param(
         [System.Collections.IDictionary] $FormattingOptions

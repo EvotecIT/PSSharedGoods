@@ -1,22 +1,21 @@
 ﻿function Get-ComputerNetwork {
-    [alias('Get-ComputerNetworkCard')]
     <#
     .SYNOPSIS
+    Retrieves network information for specified computers.
 
     .DESCRIPTION
-    Long description
+    This function retrieves network information for the specified computers, including details about network cards, firewall profiles, and connectivity status.
 
     .PARAMETER ComputerName
-    Parameter description
+    Specifies the name of the computer(s) for which to retrieve network information.
 
     .PARAMETER NetworkFirewallOnly
-    Parameter description
+    Indicates whether to retrieve only firewall information for the specified computers.
 
     .PARAMETER NetworkFirewallSummaryOnly
-    Parameter description
+    Indicates whether to retrieve a summary of firewall information for the specified computers.
 
     .EXAMPLE
-
     Get-ComputerNetworkCard -ComputerName AD1, AD2, AD3
 
     Output
@@ -31,7 +30,6 @@
     Network 2     Ethernet 4                                12             Private          False     LocalNetwork        NoTraffic                                        NotConfigured         NotConfigured     NotConfigured           NotConfigured        NotConfigured NotConfigured  NotConfigured                   NotConfigured          False             NotConfigured %systemroot%\system32\LogFiles\Firewall\pfirewall.log                4096      False  False
 
     .EXAMPLE
-
     Get-ComputerNetworkCard -ComputerName EVOWIN -NetworkFirewallOnly
 
     PSComputerName Profile Enabled DefaultInboundAction DefaultOutboundAction AllowInboundRules AllowLocalFirewallRules AllowLocalIPsecRules AllowUserApps AllowUserPorts AllowUnicastResponseToMulticast NotifyOnListen EnableStealthModeForIPsec LogMaxSizeKilobytes LogAllowed LogBlocked    LogIgnored Caption Description ElementName InstanceID                      DisabledInterfaceAliases LogFileName                                           Name    CimClass
@@ -43,6 +41,7 @@
     .NOTES
     General notes
     #>
+    [alias('Get-ComputerNetworkCard')]
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,

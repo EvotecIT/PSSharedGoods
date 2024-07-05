@@ -1,20 +1,17 @@
 function Get-WinADOrganizationalUnitData {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves detailed information about Active Directory Organizational Units.
 
     .DESCRIPTION
-    Long description
+    This function retrieves detailed information about the specified Active Directory Organizational Units, including properties like CanonicalName, City, Country, Description, and more.
 
     .PARAMETER OrganizationalUnit
-    Parameter description
+    Specifies the Organizational Units to retrieve information for.
 
     .EXAMPLE
-    An example
-
     Get-WinADOrganizationalUnitData -OrganizationalUnit 'OU=Users-O365,OU=Production,DC=ad,DC=evotec,DC=xyz'
-
-
+    Retrieves information for the specified Organizational Unit 'Users-O365' under 'Production' in the Active Directory domain 'ad.evotec.xyz'.
 
     .NOTES
     Output of function:

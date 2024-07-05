@@ -1,4 +1,23 @@
 function Send-SqlInsert {
+    <#
+    .SYNOPSIS
+    Send data to a SQL table with optional table creation and alteration capabilities.
+
+    .DESCRIPTION
+    This function sends data to a specified SQL table. It provides options for table creation and alteration based on the provided settings.
+
+    .PARAMETER Object
+    Array of objects to be inserted into the SQL table.
+
+    .PARAMETER SqlSettings
+    Dictionary containing SQL server, database, and table information along with optional settings for table operations.
+
+    .EXAMPLE
+    Send-SqlInsert -Object $DataArray -SqlSettings $SqlConfig
+
+    .NOTES
+    General notes
+    #>
     [CmdletBinding()]
     param(
         [Array] $Object,

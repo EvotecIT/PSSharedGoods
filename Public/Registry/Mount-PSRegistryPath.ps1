@@ -1,22 +1,23 @@
 ﻿function Mount-PSRegistryPath {
     <#
     .SYNOPSIS
-    Short description
+    Mounts a registry path to a specified location.
 
     .DESCRIPTION
-    Long description
+    This function mounts a registry path to a specified location using the reg.exe utility.
 
     .PARAMETER MountPoint
-    Parameter description
+    Specifies the registry mount point where the registry path will be mounted.
 
     .PARAMETER FilePath
-    Parameter description
+    Specifies the file path of the registry hive to be mounted.
 
     .EXAMPLE
     Mount-PSRegistryPath -MountPoint 'HKEY_USERS\.DEFAULT_USER111' -FilePath 'C:\Users\Default\NTUSER.DAT'
+    Mounts the registry hive located at 'C:\Users\Default\NTUSER.DAT' to the registry key 'HKEY_USERS\.DEFAULT_USER111'.
 
     .NOTES
-    General notes
+    This function requires administrative privileges to mount registry paths.
     #>
     [alias('Mount-RegistryPath')]
     [cmdletbinding()]

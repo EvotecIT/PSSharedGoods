@@ -1,4 +1,40 @@
 function Set-FilePermission {
+    <#
+    .SYNOPSIS
+    Sets file permissions for a specified user or group on a given path.
+
+    .DESCRIPTION
+    This function sets file permissions for a specified user or group on a given path. It allows you to define the type of access control, inheritance flags, and propagation flags.
+
+    .PARAMETER Path
+    The path to the file or directory for which permissions need to be set.
+
+    .PARAMETER Principal
+    Specifies the user or group for which permissions are being set. Use the format 'domain\username'.
+
+    .PARAMETER InheritedFolderPermissions
+    Specifies the inheritance flags for folder permissions. Default values are ContainerInherit and ObjectInherit.
+
+    .PARAMETER AccessControlType
+    Specifies the type of access control to be allowed or denied. Default is Allow.
+
+    .PARAMETER PropagationFlags
+    Specifies how the access control entries are propagated to child objects. Default is None.
+
+    .PARAMETER AclRightsToAssign
+    Specifies the file system rights to assign to the user or group.
+
+    .EXAMPLE
+    Set-FilePermission -Path "C:\Example\File.txt" -Principal "domain\username" -AclRightsToAssign "Modify"
+    Sets Modify permissions for the user 'domain\username' on the file "File.txt" located at "C:\Example".
+
+    .EXAMPLE
+    Set-FilePermission -Path "D:\Data" -Principal "domain\group" -AclRightsToAssign "FullControl" -InheritedFolderPermissions @("ContainerInherit")
+    Sets FullControl permissions for the group 'domain\group' on the directory "Data" located at "D:\" with inheritance only for subfolders.
+
+    .NOTES
+    File permissions are set using the Set-Acl cmdlet from the System.Security.AccessControl module.
+    #>
     [cmdletBinding()]
     param (
         [string] $Path,

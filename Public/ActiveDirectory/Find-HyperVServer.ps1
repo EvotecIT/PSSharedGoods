@@ -1,4 +1,16 @@
-function Find-HyperVServer {            
+function Find-HyperVServer {
+    <#
+    .SYNOPSIS
+    Finds Hyper-V servers in Active Directory.
+
+    .DESCRIPTION
+    This function retrieves information about Hyper-V servers from Active Directory service connection points.
+
+    .EXAMPLE
+    Find-HyperVServer
+    Retrieves information about all Hyper-V servers in Active Directory.
+
+    #>          
     [cmdletbinding()]            
     param()            
     try {            

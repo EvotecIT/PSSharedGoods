@@ -1,4 +1,29 @@
 function ConvertFrom-Color {
+    <#
+    .SYNOPSIS
+    Converts color names or hex codes to different formats.
+
+    .DESCRIPTION
+    ConvertFrom-Color function converts color names or hex codes to different formats such as decimal values or System.Drawing.Color objects.
+
+    .PARAMETER Color
+    Specifies the color names or hex codes to convert.
+
+    .PARAMETER AsDecimal
+    Indicates whether to convert the color to a decimal value.
+
+    .PARAMETER AsDrawingColor
+    Indicates whether to convert the color to a System.Drawing.Color object.
+
+    .EXAMPLE
+    ConvertFrom-Color -Color Red, Blue -AsDecimal
+    Converts the colors Red and Blue to decimal values.
+
+    .EXAMPLE
+    ConvertFrom-Color -Color "#FFA500" -AsDrawingColor
+    Converts the color with hex code #FFA500 to a System.Drawing.Color object.
+
+    #>
     [alias('Convert-FromColor')]
     [CmdletBinding()]
     param (

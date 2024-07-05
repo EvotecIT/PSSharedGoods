@@ -1,4 +1,42 @@
 ﻿function Set-EmailFormatting {
+    <#
+    .SYNOPSIS
+    Sets the formatting for an email template.
+
+    .DESCRIPTION
+    This function sets the formatting for an email template by applying specified styles and parameters.
+
+    .PARAMETER Template
+    The email template to be formatted.
+
+    .PARAMETER FormattingParameters
+    A dictionary containing the styles to be applied to the template.
+
+    .PARAMETER ConfigurationParameters
+    A dictionary containing configuration parameters for formatting.
+
+    .PARAMETER Logger
+    An object used for logging information.
+
+    .PARAMETER SkipNewLines
+    Switch to skip adding new lines to the template.
+
+    .PARAMETER AddAfterOpening
+    An array of strings to add after the opening of the template.
+
+    .PARAMETER AddBeforeClosing
+    An array of strings to add before the closing of the template.
+
+    .PARAMETER Image
+    An optional image to be included in the template.
+
+    .EXAMPLE
+    Set-EmailFormatting -Template "Hello, <<Name>>!" -FormattingParameters @{ Styles = @{ Name = "b" } } -ConfigurationParameters @{ DisplayConsole = $true } -Logger $logger -Image "logo.png"
+
+    Description:
+    Sets the formatting for an email template with a bold style applied to the name placeholder and includes a logo image.
+
+    #>
     [CmdletBinding()]
     param (
         $Template,

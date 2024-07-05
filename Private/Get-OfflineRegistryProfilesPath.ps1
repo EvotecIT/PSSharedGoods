@@ -1,16 +1,16 @@
 ﻿function Get-OfflineRegistryProfilesPath {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves the paths of offline user profiles in the Windows registry.
 
     .DESCRIPTION
-    Long description
+    This function retrieves the paths of offline user profiles in the Windows registry by comparing the profiles listed in 'HKEY_USERS' with those in 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList'. It then checks for the existence of the 'NTUSER.DAT' file for each profile and returns the paths of offline profiles found.
 
     .EXAMPLE
     Get-OfflineRegistryProfilesPath
+    Retrieves the paths of offline user profiles in the Windows registry and returns a hashtable containing the profile paths.
 
     .NOTES
-
     Name                           Value
     ----                           -----
     Przemek                        {[FilePath, C:\Users\Przemek\NTUSER.DAT], [Status, ]}

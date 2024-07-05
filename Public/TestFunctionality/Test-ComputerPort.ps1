@@ -1,4 +1,31 @@
 function Test-ComputerPort {
+    <#
+    .SYNOPSIS
+    Tests the connectivity of a computer on specified TCP and UDP ports.
+
+    .DESCRIPTION
+    The Test-ComputerPort function tests the connectivity of a computer on specified TCP and UDP ports. It checks if the specified ports are open and reachable on the target computer.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer to test the port connectivity.
+
+    .PARAMETER PortTCP
+    Specifies an array of TCP ports to test connectivity.
+
+    .PARAMETER PortUDP
+    Specifies an array of UDP ports to test connectivity.
+
+    .PARAMETER Timeout
+    Specifies the timeout value in milliseconds for the connection test. Default is 5000 milliseconds.
+
+    .EXAMPLE
+    Test-ComputerPort -ComputerName "Server01" -PortTCP 80,443 -PortUDP 53 -Timeout 3000
+    Tests the connectivity of Server01 on TCP ports 80 and 443, UDP port 53 with a timeout of 3000 milliseconds.
+
+    .EXAMPLE
+    Test-ComputerPort -ComputerName "Server02" -PortTCP 3389 -PortUDP 123
+    Tests the connectivity of Server02 on TCP port 3389, UDP port 123 with the default timeout of 5000 milliseconds.
+    #>
     [CmdletBinding()]
     param (
         [alias('Server')][string[]] $ComputerName,

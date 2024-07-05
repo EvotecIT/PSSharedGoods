@@ -1,4 +1,38 @@
 ﻿function Remove-PrivateRegistry {
+    <#
+    .SYNOPSIS
+    Removes a private registry key on a local or remote computer.
+
+    .DESCRIPTION
+    The Remove-PrivateRegistry function removes a registry key on a specified computer. It can be used to delete registry keys for a specific hive key, subkey, and key value.
+
+    .PARAMETER Computer
+    Specifies the name of the computer where the registry key will be removed.
+
+    .PARAMETER Key
+    Specifies the key value to be removed.
+
+    .PARAMETER RegistryValue
+    Specifies the registry key information to be removed. This should be an IDictionary object containing the hive key, subkey, and key value.
+
+    .PARAMETER Remote
+    Indicates whether the registry operation should be performed on a remote computer.
+
+    .PARAMETER Suppress
+    Suppresses the error message if set to true.
+
+    .EXAMPLE
+    Remove-PrivateRegistry -Computer 'Server01' -Key 'Version' -RegistryValue @{ HiveKey = 'LocalMachine'; SubKeyName = 'Software\MyApp' }
+
+    Description:
+    Removes the registry key 'Version' under 'LocalMachine\Software\MyApp' on the local computer 'Server01'.
+
+    .EXAMPLE
+    Remove-PrivateRegistry -Computer 'Workstation01' -Key 'Wallpaper' -RegistryValue @{ HiveKey = 'CurrentUser'; SubKeyName = 'Control Panel\Desktop' } -Remote
+
+    Description:
+    Removes the registry key 'Wallpaper' under 'CurrentUser\Control Panel\Desktop' on the remote computer 'Workstation01'.
+    #>
     [cmdletBinding(SupportsShouldProcess)]
     param(
         [string] $Computer,

@@ -1,4 +1,18 @@
 ﻿function Get-PSRegistryDictionaries {
+    <#
+    .SYNOPSIS
+    Retrieves a set of registry dictionaries for common registry hives and keys.
+
+    .DESCRIPTION
+    This function retrieves a set of registry dictionaries that provide mappings for common registry hives and keys. These dictionaries can be used to easily reference different registry locations in PowerShell scripts.
+
+    .EXAMPLE
+    Get-PSRegistryDictionaries
+
+    Description:
+    Retrieves all the registry dictionaries.
+
+    #>
     [cmdletBinding()]
     param()
     if ($Script:Dictionary) {

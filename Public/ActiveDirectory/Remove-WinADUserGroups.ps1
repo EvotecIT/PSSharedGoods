@@ -1,4 +1,37 @@
 function Remove-WinADUserGroups {
+    <#
+    .SYNOPSIS
+    Removes specified Active Directory groups from a user.
+
+    .DESCRIPTION
+    This function removes specified Active Directory groups from a user account. It provides options to remove groups based on category, scope, or all groups.
+
+    .PARAMETER User
+    The user object from which groups will be removed.
+
+    .PARAMETER GroupCategory
+    Specifies the category of groups to remove. Valid values are "Distribution" and "Security".
+
+    .PARAMETER GroupScope
+    Specifies the scope of groups to remove. Valid values are "DomainLocal", "Global", and "Universal".
+
+    .PARAMETER Groups
+    An array of specific group names to remove.
+
+    .PARAMETER All
+    If specified, removes all groups from the user.
+
+    .PARAMETER WhatIf
+    Shows what would happen if the command runs without actually running it.
+
+    .EXAMPLE
+    Remove-WinADUserGroups -User $User -All
+    Removes all groups from the specified user account.
+
+    .EXAMPLE
+    Remove-WinADUserGroups -User $User -GroupCategory "Security" -GroupScope "Global"
+    Removes all security groups with a global scope from the specified user account.
+    #>
     [CmdletBinding()]
     [alias("Remove-ADUserGroups")]
     param(

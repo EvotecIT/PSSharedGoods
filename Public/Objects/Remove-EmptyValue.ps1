@@ -1,4 +1,49 @@
 ﻿function Remove-EmptyValue {
+    <#
+    .SYNOPSIS
+    Removes empty values from a hashtable recursively.
+
+    .DESCRIPTION
+    This function removes empty values from a given hashtable. It can be used to clean up a hashtable by removing keys with null, empty string, empty array, or empty dictionary values. The function supports recursive removal of empty values.
+
+    .PARAMETER Hashtable
+    The hashtable from which empty values will be removed.
+
+    .PARAMETER ExcludeParameter
+    An array of keys to exclude from the removal process.
+
+    .PARAMETER Recursive
+    Indicates whether to recursively remove empty values from nested hashtables.
+
+    .PARAMETER Rerun
+    Specifies the number of times to rerun the removal process recursively.
+
+    .PARAMETER DoNotRemoveNull
+    If specified, null values will not be removed.
+
+    .PARAMETER DoNotRemoveEmpty
+    If specified, empty string values will not be removed.
+
+    .PARAMETER DoNotRemoveEmptyArray
+    If specified, empty array values will not be removed.
+
+    .PARAMETER DoNotRemoveEmptyDictionary
+    If specified, empty dictionary values will not be removed.
+
+    .EXAMPLE
+    $hashtable = @{
+        'Key1' = '';
+        'Key2' = $null;
+        'Key3' = @();
+        'Key4' = @{}
+    }
+    Remove-EmptyValue -Hashtable $hashtable -Recursive
+
+    Description
+    -----------
+    This example removes empty values from the $hashtable recursively.
+
+    #>
     [alias('Remove-EmptyValues')]
     [CmdletBinding()]
     param(

@@ -1,37 +1,34 @@
 function Get-FileName {
     <#
     .SYNOPSIS
-    Short description
+    Generates a temporary file name with the specified extension.
 
     .DESCRIPTION
-    Long description
+    This function generates a temporary file name based on the provided extension. It can generate a temporary file name in the system's temporary folder or just the file name itself.
 
     .PARAMETER Extension
-    Parameter description
+    Specifies the extension for the temporary file name. Default is 'tmp'.
 
     .PARAMETER Temporary
-    Parameter description
+    Indicates whether to generate a temporary file name in the system's temporary folder.
 
     .PARAMETER TemporaryFileOnly
-    Parameter description
+    Indicates whether to generate only the temporary file name without the path.
 
     .EXAMPLE
     Get-FileName -Temporary
-    Output: 3ymsxvav.tmp
+    Generates a temporary file name in the system's temporary folder. Example output: 3ymsxvav.tmp
 
     .EXAMPLE
-
     Get-FileName -Temporary
-    Output: C:\Users\pklys\AppData\Local\Temp\tmpD74C.tmp
+    Generates a temporary file name without the path. Example output: tmpD74C.tmp
 
     .EXAMPLE
-
     Get-FileName -Temporary -Extension 'xlsx'
-    Output: C:\Users\pklys\AppData\Local\Temp\tmp45B6.xlsx
-
+    Generates a temporary file name with the specified extension in the system's temporary folder. Example output: tmp45B6.xlsx
 
     .NOTES
-    General notes
+    These examples demonstrate how to use the Get-FileName function to generate temporary file names.
     #>
     [CmdletBinding()]
     param(

@@ -1,22 +1,21 @@
 function Get-IPAddressInformation {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves detailed information about an IP address using the ip-api.com service.
     
     .DESCRIPTION
-    Long description
+    This function retrieves detailed information about the specified IP address using the ip-api.com service. It provides details such as country, region, city, ISP, and more.
     
     .PARAMETER IP
-    Parameter description
+    Specifies the IP address for which information needs to be retrieved.
     
     .EXAMPLE
-    Get-IpAddressInformation -IP 1.1.1.1
-
+    Get-IpAddressInformation -IP "8.8.8.8"
+    Retrieves information about the IP address "8.8.8.8" using the ip-api.com service.
     
     .NOTES
-    General notes
+    This function requires an active internet connection to retrieve IP address information from the ip-api.com service.
     #>
-    
     [cmdletbinding()]
     param(
         [string] $IP

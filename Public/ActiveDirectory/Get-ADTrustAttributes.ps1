@@ -1,4 +1,25 @@
 ﻿function Get-ADTrustAttributes {
+    <#
+    .SYNOPSIS
+    Retrieves and interprets Active Directory trust attributes based on the provided value.
+
+    .DESCRIPTION
+    This function retrieves and interprets Active Directory trust attributes based on the provided value. It decodes the binary value into human-readable trust attributes.
+
+    .PARAMETER Value
+    Specifies the integer value representing the trust attributes.
+
+    .EXAMPLE
+    Get-ADTrustAttributes -Value 1
+    Retrieves and interprets the trust attributes for the value 1.
+
+    .EXAMPLE
+    1, 2, 4 | Get-ADTrustAttributes
+    Retrieves and interprets the trust attributes for the values 1, 2, and 4.
+
+    .NOTES
+    This function provides a convenient way to decode Active Directory trust attributes.
+    #>
     [cmdletbinding()]
     Param(
         [parameter(Mandatory = $false, ValueFromPipeline = $True)][int32]$Value

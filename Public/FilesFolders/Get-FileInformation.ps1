@@ -12,8 +12,6 @@ function Get-FileInformation {
     .EXAMPLE
     Get-FileInformation -File 'C:\Support\GitHub\PSSharedGoods\Public\FilesFolders\Get-FileInformation.ps1'
 
-    .NOTES
-    General notes
     #>
     [CmdletBinding()]
     param(

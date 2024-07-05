@@ -1,4 +1,18 @@
 ﻿function Unregister-MountedRegistry {
+    <#
+    .SYNOPSIS
+    Unregisters mounted registry paths.
+
+    .DESCRIPTION
+    This function unregisters mounted registry paths that were previously mounted using Mount-PSRegistryPath.
+
+    .EXAMPLE
+    Unregister-MountedRegistry
+
+    Description:
+    Unregisters all mounted registry paths.
+
+    #>
     [CmdletBinding()]
     param(
 

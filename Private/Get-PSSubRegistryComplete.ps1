@@ -1,4 +1,34 @@
 ﻿function Get-PSSubRegistryComplete {
+    <#
+    .SYNOPSIS
+    Retrieves sub-registry information from a specified registry key.
+
+    .DESCRIPTION
+    This function retrieves sub-registry information from a specified registry key on a local or remote computer.
+
+    .PARAMETER Registry
+    Specifies the registry key information to retrieve.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer from which to retrieve the registry information.
+
+    .PARAMETER Remote
+    Indicates whether the registry key is located on a remote computer.
+
+    .PARAMETER Advanced
+    Indicates whether to retrieve advanced registry information.
+
+    .PARAMETER ExpandEnvironmentNames
+    Indicates whether to expand environment variable names in the registry.
+
+    .EXAMPLE
+    Get-PSSubRegistryComplete -Registry $Registry -ComputerName "Computer01" -Remote -Advanced
+    Retrieves advanced sub-registry information from the specified registry key on a remote computer named "Computer01".
+
+    .EXAMPLE
+    Get-PSSubRegistryComplete -Registry $Registry -ComputerName "Computer02"
+    Retrieves sub-registry information from the specified registry key on a local computer named "Computer02".
+    #>
     [cmdletBinding()]
     param(
         [System.Collections.IDictionary] $Registry,

@@ -1,4 +1,29 @@
 function Get-ComputerStartup {
+    <#
+    .SYNOPSIS
+    Retrieves information about startup programs on a remote computer.
+
+    .DESCRIPTION
+    The Get-ComputerStartup function retrieves information about startup programs on a specified computer using CIM/WMI.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer to retrieve startup information from. Defaults to the local computer.
+
+    .PARAMETER Protocol
+    Specifies the protocol to use for the connection. Valid values are 'Default', 'Dcom', or 'Wsman'. Default is 'Default'.
+
+    .PARAMETER All
+    Indicates whether to retrieve all properties of the startup programs.
+
+    .EXAMPLE
+    Get-ComputerStartup -ComputerName "RemoteComputer" -Protocol Wsman
+    Retrieves startup program information from a remote computer using the Wsman protocol.
+
+    .EXAMPLE
+    Get-ComputerStartup -All
+    Retrieves all startup program information from the local computer.
+
+    #>
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,

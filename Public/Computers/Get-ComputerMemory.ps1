@@ -1,4 +1,29 @@
 ﻿function Get-ComputerMemory {
+    <#
+    .SYNOPSIS
+    Retrieves memory information from specified computers.
+
+    .DESCRIPTION
+    This function retrieves memory information from specified computers, including details about physical memory usage, virtual memory usage, and memory percentages.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer(s) to retrieve memory information from. Defaults to the local computer.
+
+    .PARAMETER Protocol
+    Specifies the protocol to use for retrieving memory information. Valid values are 'Default', 'Dcom', and 'Wsman'. Defaults to 'Default'.
+
+    .PARAMETER All
+    Switch parameter to retrieve all available memory properties.
+
+    .EXAMPLE
+    Get-ComputerMemory -ComputerName "Server01"
+    Retrieves memory information from a remote computer named Server01.
+
+    .EXAMPLE
+    Get-ComputerMemory -ComputerName "WorkstationA", "WorkstationB" -Protocol Wsman -All
+    Retrieves all available memory properties from multiple remote computers using the Wsman protocol.
+
+    #>
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,

@@ -1,24 +1,24 @@
 function Format-FirstXChars {
     <#
     .SYNOPSIS
-    Short description
+    This function returns the first X characters of a given text string.
 
     .DESCRIPTION
-    Long description
+    The Format-FirstXChars function takes a text string and a number of characters as input and returns the first X characters of the text string.
 
     .PARAMETER Text
-    Parameter description
+    The input text string from which the first X characters will be extracted.
 
     .PARAMETER NumberChars
-    Parameter description
+    The number of characters to extract from the beginning of the input text string.
 
     .EXAMPLE
-    Format-FirstChars -Text "VERBOSE: Loading module from path 'C:\Users\pklys\.vscode\extensions\ms-vs" -NumberChars 15
+    Format-FirstXChars -Text "VERBOSE: Loading module from path 'C:\Users\pklys\.vscode\extensions\ms-vs" -NumberChars 15
+    # Returns: VERBOSE: Loading
 
     .NOTES
-    General notes
+    This function is useful for truncating long text strings to a specific length.
     #>
-
     param(
         [string] $Text,
         [int] $NumberChars

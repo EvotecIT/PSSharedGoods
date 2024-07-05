@@ -1,4 +1,22 @@
 ﻿function Get-ComputerRDP {
+    <#
+    .SYNOPSIS
+    Retrieves Remote Desktop Protocol (RDP) settings for a specified computer.
+
+    .DESCRIPTION
+    This function retrieves RDP settings for a specified computer using the Win32_TSGeneralSetting class.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer to retrieve RDP settings for.
+
+    .EXAMPLE
+    Get-ComputerRDP -ComputerName "Computer01"
+    Retrieves RDP settings for a computer named "Computer01".
+
+    .EXAMPLE
+    Get-ComputerRDP -ComputerName "Computer02", "Computer03"
+    Retrieves RDP settings for multiple computers named "Computer02" and "Computer03".
+    #>
     [alias('Get-RDPSecurity')]
     [cmdletbinding()]
     param(

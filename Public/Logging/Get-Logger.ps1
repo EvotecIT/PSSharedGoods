@@ -4,25 +4,25 @@ function Get-Logger {
     Returns an instance of the logger object.
 
     .DESCRIPTION
-    Long description
+    This function creates a logger object that can be used to log messages to a file or console. It allows customization of log file path, log directory, log filename, time display, and time format.
 
     .PARAMETER LogPath
-    Parameter description
+    Specifies the full path of the log file.
 
     .PARAMETER LogsDir
-    Parameter description
+    Specifies the directory where the log file will be stored.
 
     .PARAMETER Filename
-    Parameter description
+    Specifies the name of the log file.
 
     .PARAMETER ShowTime
-    Parameter description
+    Indicates whether to display timestamps in the log messages.
 
     .PARAMETER TimeFormat
-    Parameter description
+    Specifies the format of the timestamp to be displayed in the log messages.
 
     .EXAMPLE
-    # with full log name
+    Creates a logger with a full log name:
     $Logger = Get-Logger -ShowTime -LogPath 'C:\temp\test.log'
     $Logger.AddErrorRecord("test error")
     $Logger.AddInfoRecord("test info")
@@ -30,17 +30,17 @@ function Get-Logger {
     $Logger.AddRecord("test record")
 
     .EXAMPLE
-    # with directory name and auto-generated log name
+    Creates a logger with a directory name and auto-generated log name:
     $Logger = Get-Logger -ShowTime -LogsDir 'C:\temp'
     $Logger.AddErrorRecord("test error")
 
     .EXAMPLE
-    # with directory name and logo name defined separately
-    $Logger = Get-Logger -ShowTime -Directory 'C:\temp' -Filename 'test.log'
+    Creates a logger with a directory name and a separately defined log filename:
+    $Logger = Get-Logger -ShowTime -LogsDir 'C:\temp' -Filename 'test.log'
     $Logger.AddErrorRecord("test error")
 
     .EXAMPLE
-    # without logfile, only console output
+    Creates a logger without a log file, only for console output:
     $Logger = Get-Logger -ShowTime
     $Logger.AddErrorRecord("test error")
 
