@@ -1,4 +1,22 @@
 ﻿function ConvertFrom-LanguageCode {
+    <#
+    .SYNOPSIS
+    Converts a language code to its corresponding language name.
+
+    .DESCRIPTION
+    This function takes a language code as input and returns the corresponding language name.
+
+    .PARAMETER LanguageCode
+    The language code to convert to a language name.
+
+    .EXAMPLE
+    ConvertFrom-LanguageCode -LanguageCode 1033
+    Returns: "English (United States)"
+
+    .EXAMPLE
+    ConvertFrom-LanguageCode -LanguageCode 1041
+    Returns: "Japanese"
+    #>
     [cmdletBinding()]
     param(
         [string] $LanguageCode

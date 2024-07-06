@@ -1,4 +1,26 @@
 function Set-EmailReportBranding {
+    <#
+    .SYNOPSIS
+    Sets the branding for the email report.
+
+    .DESCRIPTION
+    This function sets the branding for the email report by customizing the company logo and link.
+
+    .PARAMETER FormattingParameters
+    Specifies the formatting options for the email report branding.
+
+    .EXAMPLE
+    $brandingParams = @{
+        CompanyBranding = @{
+            Link = "https://www.example.com"
+            Inline = $true
+            Logo = "C:\CompanyLogo.png"
+            Width = "200px"
+            Height = "100px"
+        }
+    }
+    Set-EmailReportBranding -FormattingParameters $brandingParams
+    #>
     [cmdletBinding()]
     param(
         [alias('FormattingOptions')] $FormattingParameters

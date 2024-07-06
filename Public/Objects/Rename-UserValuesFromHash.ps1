@@ -1,4 +1,33 @@
 function Rename-UserValuesFromHash {
+    <#
+    .SYNOPSIS
+    This function renames user values based on a hash table of match data.
+
+    .DESCRIPTION
+    The Rename-UserValuesFromHash function takes a list of users, a hash table of match data, and an array of field types. It then renames specific values in the user objects based on the match data provided.
+
+    .PARAMETER Users
+    The list of user objects to be processed.
+
+    .PARAMETER MatchData
+    A hash table containing the match data used for renaming values.
+
+    .PARAMETER FieldTypes
+    An array of field types to be considered for renaming.
+
+    .EXAMPLE
+    $users = @(
+        [PSCustomObject]@{ UserPrincipalName = 'user1@test.com'; License = 'test:license'; ProxyAddress = 'proxy@test.com' }
+        [PSCustomObject]@{ UserPrincipalName = 'user2@test.com'; License = 'test:license'; ProxyAddress = 'proxy@test.com' }
+    )
+    $matchData = @{
+        'test.com' = 'newdomain.com'
+        'test:' = 'newdomain:'
+    }
+    $fieldTypes = @('UserPrincipalName', 'License')
+    Rename-UserValuesFromHash -Users $users -MatchData $matchData -FieldTypes $fieldTypes
+
+    #>
     [CmdletBinding()]
     param(
         $Users,

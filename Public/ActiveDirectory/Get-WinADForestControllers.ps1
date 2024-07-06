@@ -1,28 +1,31 @@
 function Get-WinADForestControllers {
-    [alias('Get-WinADDomainControllers')]
     <#
     .SYNOPSIS
+    Retrieves information about domain controllers in the specified domain(s).
 
     .DESCRIPTION
-    Long description
+    This function retrieves detailed information about domain controllers in the specified domain(s), including hostname, IP addresses, roles, and other relevant details.
 
     .PARAMETER TestAvailability
-    Parameter description
+    Specifies whether to test the availability of domain controllers.
 
     .EXAMPLE
-    Get-WinADForestControllers -TestAvailability | Format-Table
+    Get-WinADForestControllers -TestAvailability
+    Tests the availability of domain controllers in the forest.
 
     .EXAMPLE
     Get-WinADDomainControllers
+    Retrieves information about all domain controllers in the forest.
 
     .EXAMPLE
     Get-WinADDomainControllers -Credential $Credential
+    Retrieves information about all domain controllers in the forest using specified credentials.
 
     .EXAMPLE
     Get-WinADDomainControllers | Format-Table *
+    Displays detailed information about all domain controllers in a tabular format.
 
     Output:
-
     Domain        HostName          Forest        IPV4Address     IsGlobalCatalog IsReadOnly SchemaMaster DomainNamingMasterMaster PDCEmulator RIDMaster InfrastructureMaster Comment
     ------        --------          ------        -----------     --------------- ---------- ------------ ------------------------ ----------- --------- -------------------- -------
     ad.evotec.xyz AD1.ad.evotec.xyz ad.evotec.xyz 192.168.240.189            True      False         True                     True        True      True                 True
@@ -30,8 +33,9 @@ function Get-WinADForestControllers {
     ad.evotec.pl                    ad.evotec.xyz                                                   False                    False       False     False                False Unable to contact the server. This may be becau...
 
     .NOTES
-    General notes
+    This function provides essential information about domain controllers in the forest.
     #>
+    [alias('Get-WinADDomainControllers')]
     [CmdletBinding()]
     param(
         [string[]] $Domain,

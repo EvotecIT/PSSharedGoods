@@ -1,4 +1,36 @@
 ﻿function Get-ComputerSMBInfo {
+    <#
+    .SYNOPSIS
+    Retrieves information about SMB shares on a remote computer.
+
+    .DESCRIPTION
+    This function retrieves information about SMB shares on a remote computer using the NetShareEnum method.
+
+    .PARAMETER ComputerName
+    Specifies the name of the remote computer to retrieve SMB share information from.
+
+    .PARAMETER Name
+    Specifies an array of share names to filter the results. If not specified, all shares will be retrieved.
+
+    .PARAMETER SkipDiskSpace
+    Indicates whether to skip retrieving disk space information for each share.
+
+    .EXAMPLE
+    Get-ComputerSMBInfo -ComputerName "Server01"
+
+    Description:
+    Retrieves all SMB share information from the remote computer "Server01".
+
+    .EXAMPLE
+    Get-ComputerSMBInfo -ComputerName "Server01" -Name "Data"
+
+    Description:
+    Retrieves SMB share information for the share named "Data" on the remote computer "Server01".
+
+    .NOTES
+    File Name      : Get-ComputerSMBInfo.ps1
+    Prerequisite   : This function requires administrative privileges on the remote computer.
+    #>
     [cmdletbinding()]
     param(
         [string] $ComputerName,

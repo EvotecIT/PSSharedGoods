@@ -1,19 +1,19 @@
 function Get-ComputerDisk {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves disk information from remote computers.
 
     .DESCRIPTION
-    Long description
+    This function retrieves disk information from remote computers specified by the ComputerName parameter. It provides details such as Index, Model, Caption, SerialNumber, Description, MediaType, FirmwareRevision, Partitions, SizeGB, and PNPDeviceID.
 
     .PARAMETER ComputerName
-    Parameter description
+    Specifies the names of the remote computers from which to retrieve disk information.
 
     .PARAMETER Protocol
-    Parameter description
+    Specifies the protocol to be used for retrieving disk information. Valid values are 'Default', 'Dcom', and 'Wsman'.
 
     .PARAMETER All
-    Parameter description
+    Indicates whether to retrieve all available disk information.
 
     .EXAMPLE
     Get-ComputerDisk -ComputerName AD1, AD2, EVO1, AD2019 | Format-Table -AutoSize *
@@ -30,9 +30,8 @@ function Get-ComputerDisk {
     EVO1             1 Samsung SSD 860 EVO 500GB Samsung SSD 860 EVO 500GB S3Z2NB0K176976A      Disk drive  Fixed hard disk media RVT01B6Q                  1    466 SCSI\DISK&VEN_SAMSUNG&PROD_SSD\4&191557A4&0&000100
 
     .NOTES
-    General notes
+    This function uses the Get-CimData cmdlet to retrieve disk information from remote computers.
     #>
-
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,

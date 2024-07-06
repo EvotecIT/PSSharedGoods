@@ -1,4 +1,29 @@
 function Set-WinADUserStatus {
+    <#
+    .SYNOPSIS
+    Enables or disables a user account in Active Directory.
+
+    .DESCRIPTION
+    The Set-WinADUserStatus function enables or disables a specified user account in Active Directory based on the provided option. It also provides an option to simulate the action using the WhatIf switch.
+
+    .PARAMETER User
+    Specifies the user account to enable or disable.
+
+    .PARAMETER Option
+    Specifies whether to enable or disable the user account. Valid values are "Enable" or "Disable".
+
+    .PARAMETER WhatIf
+    Indicates that the cmdlet should display what would happen if it were to run, without actually performing any action.
+
+    .EXAMPLE
+    Set-WinADUserStatus -User $user -Option "Enable"
+    Enables the user account specified by $user in Active Directory.
+
+    .EXAMPLE
+    Set-WinADUserStatus -User $user -Option "Disable" -WhatIf
+    Displays what would happen if the user account specified by $user were to be disabled in Active Directory, without actually disabling it.
+
+    #>
     [CmdletBinding()]
     [alias("Set-ADUserStatus")]
     param (

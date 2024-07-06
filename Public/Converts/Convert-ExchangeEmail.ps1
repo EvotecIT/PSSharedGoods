@@ -1,24 +1,27 @@
 function Convert-ExchangeEmail {
     <#
     .SYNOPSIS
-    Function that helps converting Exchange email address list into readable, exportable format.
+    Converts a list of Exchange email addresses into a readable and exportable format.
     
     .DESCRIPTION
-        Function that helps converting Exchange email address list into readable, exportable format.
+    This function takes a list of Exchange email addresses and processes them to make them more readable and suitable for export.
     
     .PARAMETER Emails
-    List of emails as available in Exchange or Exchange Online, otherwise known as proxy addresses list
+    List of email addresses in Exchange or Exchange Online format, also known as proxy addresses.
     
     .PARAMETER Separator
+    The separator to use between each processed email address. Default is ', '.
     
     .PARAMETER RemoveDuplicates
+    Switch to remove duplicate email addresses from the list.
     
     .PARAMETER RemovePrefix
+    Switch to remove any prefixes like 'SMTP:', 'SIP:', 'spo:', etc. from the email addresses.
     
     .PARAMETER AddSeparator
+    Switch to join the processed email addresses using the specified separator.
     
     .EXAMPLE
-    
     $Emails = @()
     $Emails += 'SIP:test@email.com'
     $Emails += 'SMTP:elo@maiu.com'
@@ -27,9 +30,7 @@ function Convert-ExchangeEmail {
     $Emails += 'SPO:myothertest@sco.com'
 
     Convert-ExchangeEmail -Emails $Emails -RemovePrefix -RemoveDuplicates -AddSeparator
-    
-    .NOTES
-    General notes
+    #>
     #>
     
     [CmdletBinding()]

@@ -1,4 +1,45 @@
 function Invoke-CommandCustom {
+    <#
+    .SYNOPSIS
+    Invokes a script block with optional parameters and arguments.
+
+    .DESCRIPTION
+    The Invoke-CommandCustom function executes a script block with the ability to pass parameters and arguments. It provides options to return verbose output, errors, and warnings.
+
+    .PARAMETER ScriptBlock
+    Specifies the script block to execute.
+
+    .PARAMETER Parameter
+    Specifies a dictionary of parameters to pass to the script block.
+
+    .PARAMETER Argument
+    Specifies an array of arguments to pass to the script block.
+
+    .PARAMETER ReturnVerbose
+    Indicates whether to return verbose output.
+
+    .PARAMETER ReturnError
+    Indicates whether to return errors.
+
+    .PARAMETER ReturnWarning
+    Indicates whether to return warnings.
+
+    .PARAMETER AddParameter
+    Indicates whether to add parameters to the script block.
+
+    .EXAMPLE
+    Invoke-CommandCustom -ScriptBlock { Get-Process } -ReturnVerbose
+
+    Description:
+    Invokes the Get-Process cmdlet and returns verbose output.
+
+    .EXAMPLE
+    Invoke-CommandCustom -ScriptBlock { Get-Service } -Parameter @{Name="Spooler"} -ReturnError
+
+    Description:
+    Invokes the Get-Service cmdlet with the "Spooler" parameter and returns any errors encountered.
+
+    #>
     [cmdletBinding()]
     param(
         [scriptblock] $ScriptBlock,

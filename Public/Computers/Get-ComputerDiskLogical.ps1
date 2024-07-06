@@ -1,26 +1,25 @@
 function Get-ComputerDiskLogical {
     <#
     .SYNOPSIS
-    Getting drive space
+    Retrieves logical disk information for specified computers.
 
     .DESCRIPTION
-    Long description
+    This function retrieves logical disk information for the specified computers. It provides details such as DeviceID, DriveType, ProviderName, FreeSpace, UsedSpace, TotalSpace, FreePercent, UsedPercent, and VolumeName.
 
     .PARAMETER ComputerName
-    Parameter description
+    Specifies the names of the computers for which to retrieve disk information.
 
     .PARAMETER Protocol
-    Parameter description
-
-    .PARAMETER RoundingPlaceRoundingPlace
+    Specifies the protocol to use for retrieving disk information. Valid values are 'Default', 'Dcom', and 'Wsman'.
 
     .PARAMETER RoundingPlace
+    Specifies the number of decimal places to round the disk space values to.
 
     .PARAMETER OnlyLocalDisk
-    Parameter description
+    Indicates that only local disks should be included in the output.
 
     .PARAMETER All
-    Parameter description
+    Indicates that information for all disks should be retrieved.
 
     .EXAMPLE
     Get-ComputerDiskLogical -ComputerName AD1, AD2, EVOWIN -OnlyLocalDisk | ft -AutoSize
@@ -36,7 +35,7 @@ function Get-ComputerDiskLogical {
     EVOWIN       E:       Local Disk                  66,05     399,7     465,75       14,18       85,82 Testing Environment
 
     .NOTES
-    General notes
+    Additional notes about the function.
     #>
 
     [CmdletBinding()]

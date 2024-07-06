@@ -1,4 +1,29 @@
 ﻿function Get-PSConvertSpecialRegistry {
+    <#
+    .SYNOPSIS
+    Converts special registry paths for specified computers.
+
+    .DESCRIPTION
+    This function converts special registry paths for the specified computers using the provided HiveDictionary.
+
+    .PARAMETER RegistryPath
+    Specifies the array of registry paths to convert.
+
+    .PARAMETER Computers
+    Specifies the array of computers to convert registry paths for.
+
+    .PARAMETER HiveDictionary
+    Specifies the dictionary containing hive keys and their corresponding values.
+
+    .PARAMETER ExpandEnvironmentNames
+    Indicates whether to expand environment names in the registry paths.
+
+    .EXAMPLE
+    Get-PSConvertSpecialRegistry -RegistryPath "Users\Offline_Przemek\Software\Policies1\Microsoft\Windows\CloudContent" -Computers "Computer1", "Computer2" -HiveDictionary $HiveDictionary -ExpandEnvironmentNames
+
+    Converts the specified registry path for the specified computers using the provided HiveDictionary.
+
+    #>
     [cmdletbinding()]
     param(
         [Array] $RegistryPath,

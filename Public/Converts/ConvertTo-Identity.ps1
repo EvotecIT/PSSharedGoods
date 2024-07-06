@@ -1,4 +1,37 @@
 ﻿function ConvertTo-Identity {
+    <#
+    .SYNOPSIS
+    Converts an identity to its corresponding information.
+
+    .DESCRIPTION
+    This function converts an identity to its corresponding information, such as Name, SID, Type, and Class. It retrieves information from Active Directory based on the provided identity.
+
+    .PARAMETER Identity
+    Specifies the identity to convert.
+
+    .PARAMETER ADAdministrativeGroups
+    Specifies the Active Directory administrative groups.
+
+    .PARAMETER Forest
+    Specifies the forest name.
+
+    .PARAMETER ExcludeDomains
+    Specifies the domains to exclude.
+
+    .PARAMETER IncludeDomains
+    Specifies the domains to include.
+
+    .PARAMETER ExtendedForestInformation
+    Specifies additional information about the forest.
+
+    .EXAMPLE
+    ConvertTo-Identity -Identity "JohnDoe" -Forest "example.com" -IncludeDomains "domain1", "domain2" -ExcludeDomains "domain3" -ADAdministrativeGroups $ADGroups -ExtendedForestInformation $ExtendedInfo
+    Converts the identity "JohnDoe" in the forest "example.com", including domains "domain1" and "domain2" while excluding "domain3", using the specified administrative groups and extended forest information.
+
+    .NOTES
+    File Name      : ConvertTo-Identity.ps1
+    Prerequisite   : This function requires Active Directory PowerShell module.
+    #>
     [cmdletBinding()]
     param(
         [string] $Identity,

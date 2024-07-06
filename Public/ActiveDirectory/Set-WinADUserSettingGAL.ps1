@@ -1,4 +1,30 @@
 Function Set-WinADUserSettingGAL {
+    <#
+    .SYNOPSIS
+    Sets the Exchange Global Address List (GAL) visibility for a specified user.
+
+    .DESCRIPTION
+    This function allows you to hide or show a user in the Global Address List (GAL) of Exchange. 
+    It updates the msExchHideFromAddressLists attribute of the user object in Active Directory.
+
+    .PARAMETER User
+    Specifies the user object for which the GAL visibility needs to be set.
+
+    .PARAMETER Option
+    Specifies whether to 'Hide' or 'Show' the user in the GAL.
+
+    .PARAMETER WhatIf
+    Displays what would happen if the command runs without actually running the command.
+
+    .EXAMPLE
+    Set-WinADUserSettingGAL -User "JohnDoe" -Option "Hide"
+    Hides the user "JohnDoe" from the Global Address List.
+
+    .EXAMPLE
+    Set-WinADUserSettingGAL -User "JaneSmith" -Option "Show"
+    Shows the user "JaneSmith" in the Global Address List.
+
+    #>
     [CmdletBinding()]
     [alias("Set-ADUserSettingGAL")]
     param (

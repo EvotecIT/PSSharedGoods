@@ -1,4 +1,56 @@
 function Format-Stream {
+    <#
+    .SYNOPSIS
+    Formats input objects for display in a stream-oriented manner.
+
+    .DESCRIPTION
+    The Format-Stream function formats input objects for display in a stream-oriented manner. It provides flexibility in displaying data in various streams such as Output, Host, Warning, Verbose, Debug, and Information.
+
+    .PARAMETER InputObject
+    Specifies the input objects to be formatted.
+
+    .PARAMETER Property
+    Specifies the properties of the input objects to include in the output.
+
+    .PARAMETER ExcludeProperty
+    Specifies the properties of the input objects to exclude from the output.
+
+    .PARAMETER HideTableHeaders
+    Indicates whether to hide the table headers in the output.
+
+    .PARAMETER ColumnHeaderSize
+    Specifies the size of the column headers in the output.
+
+    .PARAMETER AlignRight
+    Indicates whether to align the output data to the right.
+
+    .PARAMETER Stream
+    Specifies the stream to display the formatted data. Valid values are 'Output', 'Host', 'Warning', 'Verbose', 'Debug', and 'Information'.
+
+    .PARAMETER List
+    Indicates whether to display the output as a list.
+
+    .PARAMETER Transpose
+    Indicates whether to transpose the columns and rows of the output.
+
+    .PARAMETER TransposeSort
+    Specifies the sorting order when transposing the data. Valid values are 'ASC', 'DESC', and 'NONE'.
+
+    .PARAMETER ForegroundColor
+    Specifies the foreground color of the output.
+
+    .PARAMETER ForegroundColorRow
+    Specifies the foreground color of specific rows in the output.
+
+    .EXAMPLE
+    Get-Process | Format-Stream -Property Name, Id -Stream Host
+    Displays the Name and Id properties of the processes in the Host stream.
+
+    .EXAMPLE
+    Get-Service | Format-Stream -ExcludeProperty Status -List
+    Displays all service properties except Status as a list.
+
+    #>
     [alias('FS', 'Format-TableStream', 'Format-ListStream')]
     ##[alias('ftv','ftd','fto','fth','fti','flv','fld','flo','flh','fli','Format-TableVerbose', 'Format-TableDebug', 'Format-TableInformation', 'Format-TableWarning')]
     [CmdletBinding(DefaultParameterSetName = 'All')]

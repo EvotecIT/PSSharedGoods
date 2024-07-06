@@ -1,4 +1,26 @@
 ﻿function Convert-UserAccountControl {
+    <#
+    .SYNOPSIS
+    Converts the UserAccountControl flags to their corresponding names.
+
+    .DESCRIPTION
+    This function takes a UserAccountControl value and converts it into a human-readable format by matching the flags to their corresponding names.
+
+    .PARAMETER UserAccountControl
+    Specifies the UserAccountControl value to be converted.
+
+    .PARAMETER Separator
+    Specifies the separator to use when joining the converted flags. If not provided, the flags will be returned as a list.
+
+    .EXAMPLE
+    Convert-UserAccountControl -UserAccountControl 66048
+    Outputs: "DONT_EXPIRE_PASSWORD, PASSWORD_EXPIRED"
+
+    .EXAMPLE
+    Convert-UserAccountControl -UserAccountControl 512 -Separator ', '
+    Outputs: "NORMAL_ACCOUNT"
+
+    #>
     [cmdletBinding()]
     param(
         [alias('UAC')][int] $UserAccountControl,

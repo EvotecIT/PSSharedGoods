@@ -1,4 +1,29 @@
 ﻿function Get-FilePermission {
+    <#
+    .SYNOPSIS
+    Retrieves and displays file permissions for the specified file or folder.
+
+    .DESCRIPTION
+    This function retrieves and displays the file permissions for the specified file or folder. It provides options to filter permissions based on inheritance, resolve access control types, and include extended information.
+
+    .EXAMPLE
+    Get-FilePermission -Path "C:\Example\File.txt"
+    Description:
+    Retrieves and displays the permissions for the "File.txt" file.
+
+    .EXAMPLE
+    Get-FilePermission -Path "D:\Folder" -Inherited
+    Description:
+    Retrieves and displays only the inherited permissions for the "Folder" directory.
+
+    .EXAMPLE
+    Get-FilePermission -Path "E:\Document.docx" -ResolveTypes -Extended
+    Description:
+    Retrieves and displays the resolved access control types and extended information for the "Document.docx" file.
+
+    .NOTES
+    This function supports various options to customize the output and handle different permission scenarios.
+    #>
     [alias('Get-PSPermissions', 'Get-FilePermissions')]
     [cmdletBinding()]
     param(

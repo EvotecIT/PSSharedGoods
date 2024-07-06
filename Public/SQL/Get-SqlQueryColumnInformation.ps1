@@ -1,4 +1,25 @@
 function Get-SqlQueryColumnInformation {
+    <#
+    .SYNOPSIS
+    Retrieves column information for a specified table in a SQL database.
+
+    .DESCRIPTION
+    This function retrieves column information for a specified table in a SQL database using the INFORMATION_SCHEMA.COLUMNS view.
+
+    .PARAMETER SqlServer
+    The SQL Server instance where the database is located.
+
+    .PARAMETER SqlDatabase
+    The name of the SQL database.
+
+    .PARAMETER Table
+    The name of the table for which column information is to be retrieved.
+
+    .EXAMPLE
+    Get-SqlQueryColumnInformation -SqlServer "localhost" -SqlDatabase "MyDatabase" -Table "MyTable"
+    Retrieves column information for the table "MyTable" in the database "MyDatabase" on the SQL Server instance "localhost".
+
+    #>
     [CmdletBinding()]
     param (
         [string] $SqlServer,

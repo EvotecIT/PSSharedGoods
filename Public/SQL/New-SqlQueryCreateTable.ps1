@@ -1,4 +1,26 @@
 function New-SqlQueryCreateTable {
+    <#
+    .SYNOPSIS
+    Creates SQL query to generate a new table based on provided table mapping.
+
+    .DESCRIPTION
+    This function generates a SQL query to create a new table in a database based on the table mapping provided. The table mapping should be a hashtable where the keys represent the column names and the values represent the column data types and constraints.
+
+    .PARAMETER SqlSettings
+    An object containing SQL connection settings.
+
+    .PARAMETER TableMapping
+    A hashtable containing the mapping of column names to data types and constraints.
+
+    .EXAMPLE
+    $sqlSettings = @{ SqlTable = "MyTable" }
+    $tableMapping = @{
+        Column1 = "int",
+        Column2 = "nvarchar(50) NULL",
+        Column3 = "datetime NOT NULL"
+    }
+    New-SqlQueryCreateTable -SqlSettings $sqlSettings -TableMapping $tableMapping
+    #>
     [CmdletBinding()]
     param (
         [Object]$SqlSettings,

@@ -7,6 +7,37 @@ Set-WinADGroupSynchronization -GroupFrom $Group1 -GroupTo $Group2 -Type 'All' -R
 #>
 
 function Set-WinADGroupSynchronization {
+    <#
+    .SYNOPSIS
+    Sets up synchronization between two Active Directory groups.
+
+    .DESCRIPTION
+    This function sets up synchronization between two Active Directory groups by copying members from one group to another based on specified criteria.
+
+    .PARAMETER GroupFrom
+    The name of the source Active Directory group from which members will be synchronized.
+
+    .PARAMETER GroupTo
+    The name of the target Active Directory group to which members will be synchronized.
+
+    .PARAMETER Type
+    Specifies the type of members to synchronize. Valid values are 'User', 'Group', or 'All'. Default is 'User'.
+
+    .PARAMETER Recursive
+    Specifies the type of synchronization to perform. Valid values are 'None', 'RecursiveFrom', 'RecursiveBoth', or 'RecursiveTo'. Default is 'None'.
+
+    .PARAMETER WhatIf
+    Shows what would happen if the synchronization is performed without actually performing it.
+
+    .EXAMPLE
+    Set-WinADGroupSynchronization -GroupFrom 'GDS-TestGroup1' -GroupTo 'GDS-TestGroup2' -Type 'All' -Recursive None
+    Synchronizes all members from 'GDS-TestGroup1' to 'GDS-TestGroup2' without recursion.
+
+    .EXAMPLE
+    Set-WinADGroupSynchronization -GroupFrom 'GDS-TestGroup1' -GroupTo 'GDS-TestGroup2' -Type 'User' -Recursive RecursiveBoth
+    Synchronizes only user members from 'GDS-TestGroup1' to 'GDS-TestGroup2' with recursion in both groups.
+
+    #>
     [CmdletBinding()]
     param(
         [parameter(Mandatory = $true)][string] $GroupFrom,

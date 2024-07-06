@@ -1,4 +1,39 @@
 ﻿function Set-FileOwner {
+    <#
+    .SYNOPSIS
+    Sets the owner of a file or folder.
+
+    .DESCRIPTION
+    This function sets the owner of a specified file or folder to the provided owner.
+
+    .PARAMETER Path
+    Specifies the path to the file or folder.
+
+    .PARAMETER Recursive
+    Indicates whether to process the items in the specified path recursively.
+
+    .PARAMETER Owner
+    Specifies the new owner for the file or folder.
+
+    .PARAMETER Exclude
+    Specifies an array of owners to exclude from ownership change.
+
+    .PARAMETER JustPath
+    Indicates whether to only change the owner of the specified path without recursing into subfolders.
+
+    .EXAMPLE
+    Set-FileOwner -Path "C:\Example\File.txt" -Owner "DOMAIN\User1"
+
+    Description:
+    Sets the owner of the file "File.txt" to "DOMAIN\User1".
+
+    .EXAMPLE
+    Set-FileOwner -Path "C:\Example\Folder" -Owner "DOMAIN\User2" -Recursive
+
+    Description:
+    Sets the owner of the folder "Folder" and all its contents to "DOMAIN\User2" recursively.
+
+    #>
     [cmdletBinding(SupportsShouldProcess)]
     param(
         [Array] $Path,

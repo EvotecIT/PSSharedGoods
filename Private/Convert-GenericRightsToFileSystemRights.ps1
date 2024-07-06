@@ -1,22 +1,23 @@
 ﻿function Convert-GenericRightsToFileSystemRights {
     <#
     .SYNOPSIS
-    Short description
-
+    Converts generic rights to file system rights for a given set of original rights.
+    
     .DESCRIPTION
-    Long description
-
+    This function maps generic rights to corresponding file system rights based on the provided original rights.
+    
     .PARAMETER OriginalRights
-    Parameter description
-
+    Specifies the original generic rights to be converted to file system rights.
+    
     .EXAMPLE
-    An example
-
+    Convert-GenericRightsToFileSystemRights -OriginalRights GENERIC_READ
+    Converts the generic read rights to file system rights.
+    
     .NOTES
-
+    This function is based on the mapping provided in the blog post: https://blog.cjwdev.co.uk/2011/06/28/permissions-not-included-in-net-accessrule-filesystemrights-enum/
+    
     .LINK
-    Improved https://blog.cjwdev.co.uk/2011/06/28/permissions-not-included-in-net-accessrule-filesystemrights-enum/
-
+    https://blog.cjwdev.co.uk/2011/06/28/permissions-not-included-in-net-accessrule-filesystemrights-enum/
     #>
     [cmdletBinding()]
     param(

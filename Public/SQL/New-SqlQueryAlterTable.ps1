@@ -1,4 +1,32 @@
 function New-SqlQueryAlterTable {
+    <#
+    .SYNOPSIS
+    Creates SQL queries to add new columns to an existing table.
+
+    .DESCRIPTION
+    This function generates SQL queries to add new columns to an existing SQL table based on the provided TableMapping and ExistingColumns.
+
+    .PARAMETER SqlSettings
+    An object containing SQL connection settings.
+
+    .PARAMETER TableMapping
+    An object representing the mapping of new columns to be added. Keys are column names, values are column definitions.
+
+    .PARAMETER ExistingColumns
+    An array of existing column names in the table.
+
+    .EXAMPLE
+    $sqlSettings = Get-SqlSettings
+    $tableMapping = @{
+        "NewColumn1" = "Column1Name, nvarchar(50)"
+        "NewColumn2" = "Column2Name, int"
+    }
+    $existingColumns = @("Column1Name", "Column3Name")
+
+    New-SqlQueryAlterTable -SqlSettings $sqlSettings -TableMapping $tableMapping -ExistingColumns $existingColumns
+    # Generates SQL queries to add "NewColumn1" and "NewColumn2" to the table.
+
+    #>
     [CmdletBinding()]
     param (
         [Object]$SqlSettings,

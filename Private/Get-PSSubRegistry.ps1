@@ -1,4 +1,32 @@
 ﻿function Get-PSSubRegistry {
+    <#
+    .SYNOPSIS
+    Retrieves a subkey from the Windows Registry on a local or remote computer.
+
+    .DESCRIPTION
+    The Get-PSSubRegistry function retrieves a subkey from the Windows Registry on a local or remote computer. It can be used to access specific registry keys and their values.
+
+    .PARAMETER Registry
+    Specifies the registry key to retrieve. This parameter should be an IDictionary object containing information about the registry key.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer from which to retrieve the registry key. This parameter is optional and defaults to the local computer.
+
+    .PARAMETER Remote
+    Indicates that the registry key should be retrieved from a remote computer.
+
+    .PARAMETER ExpandEnvironmentNames
+    Indicates whether environment variable names in the registry key should be expanded.
+
+    .EXAMPLE
+    Get-PSSubRegistry -Registry $Registry -ComputerName "RemoteComputer" -Remote
+    Retrieves a subkey from the Windows Registry on a remote computer named "RemoteComputer".
+
+    .EXAMPLE
+    Get-PSSubRegistry -Registry $Registry -ExpandEnvironmentNames
+    Retrieves a subkey from the Windows Registry on the local computer with expanded environment variable names.
+
+    #>
     [cmdletBinding()]
     param(
         [System.Collections.IDictionary] $Registry,

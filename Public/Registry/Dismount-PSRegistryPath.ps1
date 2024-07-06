@@ -1,4 +1,26 @@
 ﻿function Dismount-PSRegistryPath {
+    <#
+    .SYNOPSIS
+    Dismounts a registry path.
+
+    .DESCRIPTION
+    This function dismounts a registry path specified by the MountPoint parameter. It unloads the registry path using reg.exe command.
+
+    .PARAMETER MountPoint
+    Specifies the registry path to be dismounted.
+
+    .PARAMETER Suppress
+    Suppresses the output if set to $true.
+
+    .EXAMPLE
+    Dismount-PSRegistryPath -MountPoint "HKLM:\Software\MyApp" -Suppress
+    Dismounts the registry path "HKLM:\Software\MyApp" without displaying any output.
+
+    .EXAMPLE
+    Dismount-PSRegistryPath -MountPoint "HKCU:\Software\Settings"
+    Dismounts the registry path "HKCU:\Software\Settings" and displays output if successful.
+
+    #>
     [alias('Dismount-RegistryPath')]
     [cmdletbinding()]
     param(

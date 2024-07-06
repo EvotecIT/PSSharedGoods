@@ -1,21 +1,21 @@
 ﻿function Get-ComputerSMB {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves SMB server configuration details for a specified computer.
 
     .DESCRIPTION
-    Long description
+    This function retrieves the SMB server configuration details for a specified computer.
 
     .PARAMETER ComputerName
-    Parameter description
+    Specifies the name of the computer for which to retrieve SMB server configuration details.
 
     .EXAMPLE
-    Get-ComputerSMB -ComputerName $ENV:COMPUTERNAME
+    Get-ComputerSMB -ComputerName "Server01"
+    Retrieves the SMB server configuration details for the computer named "Server01".
 
     .NOTES
-    General notes
+    This function requires administrative privileges to retrieve SMB server configuration details.
     #>
-
     [CmdletBinding()]
     param(
         [string[]] $ComputerName

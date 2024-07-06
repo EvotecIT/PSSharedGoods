@@ -1,4 +1,40 @@
 ﻿function Set-PrivateRegistry {
+    <#
+    .SYNOPSIS
+    Sets a registry value on a local or remote computer.
+
+    .DESCRIPTION
+    The Set-PrivateRegistry function sets a registry value on a specified computer. It can be used to create new registry keys and values, update existing ones, or delete them.
+
+    .PARAMETER RegistryValue
+    Specifies the registry value to be set. This parameter should be an IDictionary object containing the following properties:
+        - HiveKey: The registry hive key (e.g., 'LocalMachine', 'CurrentUser').
+        - SubKeyName: The subkey path where the value will be set.
+        - Key: The name of the registry value.
+        - Value: The data to be stored in the registry value.
+        - ValueKind: The type of data being stored (e.g., String, DWord, MultiString).
+
+    .PARAMETER Computer
+    Specifies the name of the computer where the registry value will be set.
+
+    .PARAMETER Remote
+    Indicates that the registry value should be set on a remote computer.
+
+    .PARAMETER Suppress
+    Suppresses error messages and warnings.
+
+    .EXAMPLE
+    Set-PrivateRegistry -RegistryValue @{HiveKey='LocalMachine'; SubKeyName='SOFTWARE\MyApp'; Key='Version'; Value='1.0'; ValueKind='String'} -Computer 'Server01'
+    Sets the registry value 'Version' under 'HKEY_LOCAL_MACHINE\SOFTWARE\MyApp' to '1.0' on the local computer 'Server01'.
+
+    .EXAMPLE
+    Set-PrivateRegistry -RegistryValue @{HiveKey='CurrentUser'; SubKeyName='Environment'; Key='Path'; Value='C:\MyApp'; ValueKind='String'} -Computer 'Server02' -Remote
+    Sets the registry value 'Path' under 'HKEY_CURRENT_USER\Environment' to 'C:\MyApp' on the remote computer 'Server02'.
+
+    .NOTES
+    File Name      : Set-PrivateRegistry.ps1
+    Prerequisite   : This function requires administrative privileges to modify the registry.
+    #>
     [cmdletBinding(SupportsShouldProcess)]
     param(
         [System.Collections.IDictionary] $RegistryValue,

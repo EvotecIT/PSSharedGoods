@@ -1,4 +1,20 @@
 function Get-TemporaryDirectory {
+    <#
+    .SYNOPSIS
+    Creates a temporary directory and returns its path.
+
+    .DESCRIPTION
+    This function generates a temporary directory with a unique name and returns the full path to the directory.
+
+    .EXAMPLE
+    $tempDir = Get-TemporaryDirectory
+    $tempDir
+    Output:
+    C:\Users\Username\AppData\Local\Temp\abcde12345
+
+    .NOTES
+    The temporary directory is created using a random string name with specified characteristics.
+    #>
     param(
 
     )

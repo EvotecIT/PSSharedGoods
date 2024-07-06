@@ -1,4 +1,29 @@
 ﻿function Get-ComputerSMBSharePermissions {
+    <#
+    .SYNOPSIS
+    Retrieves SMB share permissions for specified computers and shares.
+
+    .DESCRIPTION
+    This function retrieves SMB share permissions for the specified computers and shares. It provides the option to translate the permissions into a more readable format.
+
+    .PARAMETER ComputerName
+    Specifies the names of the computers to retrieve SMB share permissions from.
+
+    .PARAMETER ShareName
+    Specifies the names of the shares to retrieve permissions for.
+
+    .PARAMETER Translated
+    Indicates whether to translate the permissions into a more readable format.
+
+    .EXAMPLE
+    Get-ComputerSMBSharePermissions -ComputerName "Server1" -ShareName "Share1" -Translated
+    Retrieves SMB share permissions for Server1 and Share1 in a translated format.
+
+    .EXAMPLE
+    Get-ComputerSMBSharePermissions -ComputerName "Server1", "Server2" -ShareName "Share1", "Share2"
+    Retrieves SMB share permissions for multiple servers and shares.
+
+    #>
     [CmdletBinding()]
     param(
         [string[]] $ComputerName,

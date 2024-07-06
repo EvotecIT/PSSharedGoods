@@ -1,4 +1,29 @@
 ﻿function Get-Computer {
+    <#
+    .SYNOPSIS
+    Retrieves various information about a computer or server based on specified types.
+
+    .DESCRIPTION
+    This function retrieves information about a computer or server based on the specified types. It can gather details about applications, BIOS, CPU, RAM, Disk, Logical Disk, Network, Network Firewall, Operating System, Services, System, Startup, Time, and Windows Updates.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer or server to retrieve information from. Defaults to the local computer.
+
+    .PARAMETER Type
+    Specifies the types of information to retrieve. Valid values include 'Application', 'BIOS', 'CPU', 'RAM', 'Disk', 'DiskLogical', 'Network', 'NetworkFirewall', 'OperatingSystem', 'Services', 'System', 'Startup', 'Time', and 'WindowsUpdates'. If not specified, retrieves all available types.
+
+    .PARAMETER AsHashtable
+    Indicates whether to return the output as a hashtable.
+
+    .EXAMPLE
+    Get-Computer -ComputerName "Server01" -Type "CPU", "RAM"
+    Retrieves CPU and RAM information from a remote server named Server01.
+
+    .EXAMPLE
+    Get-Computer -ComputerName "Workstation01" -Type "Application" -AsHashtable
+    Retrieves application information from a workstation named Workstation01 and returns the output as a hashtable.
+
+    #>
     [cmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
