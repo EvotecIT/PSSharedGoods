@@ -1,4 +1,23 @@
 ﻿function Resolve-PrivateRegistry {
+    <#
+    .SYNOPSIS
+    Resolves and standardizes registry paths for consistency and compatibility.
+
+    .DESCRIPTION
+    The Resolve-PrivateRegistry function resolves and standardizes registry paths to ensure uniformity and compatibility across different systems. It cleans up the paths, converts short hive names to full names, and handles special cases like DEFAULT USER mappings.
+
+    .PARAMETER RegistryPath
+    Specifies an array of registry paths to be resolved and standardized.
+
+    .EXAMPLE
+    Resolve-PrivateRegistry -RegistryPath 'Users\.DEFAULT_USER\Software\MyApp'
+    Resolves the registry path 'Users\.DEFAULT_USER\Software\MyApp' to 'HKUD\Software\MyApp' for consistent usage.
+
+    .EXAMPLE
+    Resolve-PrivateRegistry -RegistryPath 'HKCU\Software\MyApp'
+    Resolves the registry path 'HKCU\Software\MyApp' to 'HKEY_CURRENT_USER\Software\MyApp' for compatibility with standard naming conventions.
+
+    #>
     [CmdletBinding()]
     param(
         [alias('Path')][string[]] $RegistryPath

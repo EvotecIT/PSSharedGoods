@@ -1,21 +1,20 @@
 function Get-ComputerWindowsUpdates {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves information about Windows updates installed on specified computers.
 
     .DESCRIPTION
-    Long description
+    This function retrieves details about Windows updates installed on one or more computers specified by the ComputerName parameter.
 
     .PARAMETER ComputerName
-    Parameter description
+    Specifies the name of the computer(s) to retrieve Windows update information for.
 
     .EXAMPLE
-    $Hotfix = Get-ComputerWindowsUpdates -ComputerName EVOWIN, AD1
-    $Hotfix | ft -a *
-    $Hotfix[0] | fl *
+    Get-ComputerWindowsUpdates -ComputerName "EVOWIN", "AD1"
+    Retrieves Windows update information for computers named "EVOWIN" and "AD1".
 
     .NOTES
-    General notes
+    This function uses the Get-HotFix cmdlet to gather information about Windows updates.
     #>
     [CmdletBinding()]
     param(

@@ -1,22 +1,22 @@
 function Get-WinADOrganizationalUnitFromDN {
     <#
     .SYNOPSIS
-
+    This function extracts the Organizational Unit (OU) from a given Distinguished Name (DN).
 
     .DESCRIPTION
-    Long description
+    This function takes a Distinguished Name (DN) as input and returns the Organizational Unit (OU) part of it.
 
     .PARAMETER DistinguishedName
-    Parameter description
+    Specifies the Distinguished Name (DN) from which to extract the Organizational Unit (OU).
 
     .EXAMPLE
-    An example
-
+    Extract the Organizational Unit (OU) from a Distinguished Name.
+    
     $DistinguishedName = 'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
     Get-WinADOrganizationalUnitFromDN -DistinguishedName $DistinguishedName
 
     .NOTES
-    General notes
+    This function uses regular expressions to extract the Organizational Unit (OU) from the given Distinguished Name (DN).
     #>
     [CmdletBinding()]
     param(

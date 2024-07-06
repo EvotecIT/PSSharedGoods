@@ -1,4 +1,34 @@
 function New-SqlTableMapping {
+    <#
+    .SYNOPSIS
+    Creates a new SQL table mapping based on the provided parameters.
+
+    .DESCRIPTION
+    This function creates a new SQL table mapping based on the provided parameters. It generates a mapping for each property in the object based on its data type.
+
+    .PARAMETER SqlTableMapping
+    The existing SQL table mapping to update.
+
+    .PARAMETER Object
+    The object for which the SQL table mapping is being created.
+
+    .PARAMETER Properties
+    The properties of the object for which the SQL table mapping is being created.
+
+    .PARAMETER BasedOnSqlTable
+    Indicates whether the mapping should be based on an existing SQL table.
+
+    .EXAMPLE
+    $sqlTableMapping = New-SqlTableMapping -Object $myObject -Properties $myProperties
+
+    Creates a new SQL table mapping for the object $myObject using the properties $myProperties.
+
+    .EXAMPLE
+    $sqlTableMapping = New-SqlTableMapping -SqlTableMapping $existingMapping -Object $myObject -Properties $myProperties -BasedOnSqlTable
+
+    Updates the existing SQL table mapping $existingMapping based on the object $myObject and its properties $myProperties.
+
+    #>
     [CmdletBinding()]
     param(
         [Object] $SqlTableMapping,

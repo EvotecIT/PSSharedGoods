@@ -1,4 +1,41 @@
 ﻿function Request-Credentials {
+    <#
+    .SYNOPSIS
+    Requests credentials for authentication purposes.
+
+    .DESCRIPTION
+    The Request-Credentials function is used to prompt the user for credentials. It provides options to input the username and password directly, read the password from a file, convert the password to a secure string, and handle various error scenarios.
+
+    .PARAMETER UserName
+    Specifies the username for authentication.
+
+    .PARAMETER Password
+    Specifies the password for authentication.
+
+    .PARAMETER AsSecure
+    Indicates whether the password should be converted to a secure string.
+
+    .PARAMETER FromFile
+    Specifies whether the password should be read from a file.
+
+    .PARAMETER Output
+    Indicates whether the function should return output in case of errors.
+
+    .PARAMETER NetworkCredentials
+    Specifies if network credentials are being requested.
+
+    .PARAMETER Service
+    Specifies the service for which credentials are being requested.
+
+    .EXAMPLE
+    Request-Credentials -UserName 'JohnDoe' -Password 'P@ssw0rd' -AsSecure
+    Requests credentials for the user 'JohnDoe' with the password 'P@ssw0rd' in a secure format.
+
+    .EXAMPLE
+    Request-Credentials -FromFile -Password 'C:\Credentials.txt' -Output -Service 'FTP'
+    Reads the password from the file 'C:\Credentials.txt' and returns an error message if the file is unreadable for the FTP service.
+
+    #>
     [CmdletBinding()]
     param(
         [string] $UserName,

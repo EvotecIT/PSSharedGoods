@@ -1,4 +1,23 @@
 function Test-WinRM {
+    <#
+    .SYNOPSIS
+    Tests the WinRM connectivity on the specified computers.
+
+    .DESCRIPTION
+    The Test-WinRM function tests the WinRM connectivity on the specified computers and returns the status of the connection.
+
+    .PARAMETER ComputerName
+    Specifies the names of the computers to test WinRM connectivity on.
+
+    .EXAMPLE
+    Test-WinRM -ComputerName "Server01", "Server02"
+    Tests the WinRM connectivity on Server01 and Server02.
+
+    .EXAMPLE
+    Test-WinRM -ComputerName "Server03"
+    Tests the WinRM connectivity on Server03.
+
+    #>
     [CmdletBinding()]
     param (
         [alias('Server')][string[]] $ComputerName

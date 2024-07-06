@@ -1,4 +1,69 @@
 ﻿function Compare-MultipleObjects {
+    <#
+    .SYNOPSIS
+    Compares multiple objects based on specified properties and displays differences.
+
+    .DESCRIPTION
+    The Compare-MultipleObjects function compares multiple objects based on specified properties and displays differences in a structured format. It provides options to customize the comparison output and handle various scenarios.
+
+    .PARAMETER Objects
+    Specifies the list of objects to compare.
+
+    .PARAMETER ObjectsName
+    Specifies an array of names for the objects being compared.
+
+    .PARAMETER CompareSorted
+    Indicates whether to compare objects in a sorted manner.
+
+    .PARAMETER FormatOutput
+    Indicates whether to format the output for better readability.
+
+    .PARAMETER FormatDifferences
+    Indicates whether to format and highlight the differences in the output.
+
+    .PARAMETER Summary
+    Indicates whether to display a summary of the comparison results.
+
+    .PARAMETER Splitter
+    Specifies the delimiter to use when joining property values.
+
+    .PARAMETER Property
+    Specifies the properties to compare across objects.
+
+    .PARAMETER ExcludeProperty
+    Specifies properties to exclude from the comparison.
+
+    .PARAMETER AllProperties
+    Indicates whether to compare all properties of the objects.
+
+    .PARAMETER SkipProperties
+    Indicates whether to skip comparing properties.
+
+    .PARAMETER First
+    Specifies the number of first objects to consider for comparison.
+
+    .PARAMETER Last
+    Specifies the number of last objects to consider for comparison.
+
+    .PARAMETER Replace
+    Specifies replacement values for specific properties.
+
+    .PARAMETER FlattenObject
+    Indicates whether to flatten the object structure for comparison.
+
+    .EXAMPLE
+    Compare-MultipleObjects -Objects $objects -Property 'Name', 'Age' -FormatOutput
+
+    Description:
+    Compares the objects in the $objects array based on the 'Name' and 'Age' properties and formats the output for better readability.
+
+    .EXAMPLE
+    Compare-MultipleObjects -Objects $objects -Property 'Status' -FormatDifferences
+
+    Description:
+    Compares the objects in the $objects array based on the 'Status' property and highlights the differences in the output.
+
+    #>
     [CmdLetBinding()]
     param(
         [System.Collections.IList] $Objects,

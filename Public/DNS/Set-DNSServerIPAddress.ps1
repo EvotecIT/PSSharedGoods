@@ -1,25 +1,26 @@
 function Set-DnsServerIpAddress {
     <#
     .SYNOPSIS
-    Short description
+    Sets the DNS server IP addresses on a specified computer for a given network interface.
 
     .DESCRIPTION
-    Long description
+    This function allows you to set the DNS server IP addresses on a specified computer for a given network interface. It checks if the computer is online before attempting to set the DNS server addresses.
 
     .PARAMETER ComputerName
-    ComputerName/ServerName where to Set DNS Server
+    Specifies the name of the computer where the DNS server IP addresses will be set.
 
     .PARAMETER NicName
-    Service is the name of the Network Card (takes wildcard)
+    Specifies the name of the network interface (NIC) where the DNS server IP addresses will be set. Supports wildcard characters.
 
     .PARAMETER IpAddresses
-    IpAddresses can be one or more values
+    Specifies one or more IP addresses of the DNS servers to be set on the specified network interface.
 
     .EXAMPLE
-    Set-DnsServerIpAddress -ComputerName $ServerName -NicName "Service*" -IpAddresses '8.8.8.8','8.8.4.4','8.8.8.1'
+    Set-DnsServerIpAddress -ComputerName "Server01" -NicName "Ethernet*" -IpAddresses '8.8.8.8','8.8.4.4','8.8.8.1'
+    Sets the DNS server IP addresses '8.8.8.8', '8.8.4.4', and '8.8.8.1' on the network interface starting with "Ethernet" on the computer "Server01".
 
     .NOTES
-    Probably needs a rewrite
+    This function may require further enhancements for specific use cases.
     #>
     [CmdletBinding()]
     param(

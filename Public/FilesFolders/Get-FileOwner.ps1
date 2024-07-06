@@ -1,4 +1,43 @@
 ﻿function Get-FileOwner {
+    <#
+    .SYNOPSIS
+    Retrieves the owner of the specified file or folder.
+
+    .DESCRIPTION
+    This function retrieves the owner of the specified file or folder. It provides options to resolve the owner's identity and output the results as a hashtable or custom object.
+
+    .PARAMETER Path
+    Specifies the path to the file or folder.
+
+    .PARAMETER Recursive
+    Indicates whether to search for files recursively in subdirectories.
+
+    .PARAMETER JustPath
+    Specifies if only the path information should be returned.
+
+    .PARAMETER Resolve
+    Indicates whether to resolve the owner's identity.
+
+    .PARAMETER AsHashTable
+    Specifies if the output should be in hashtable format.
+
+    .EXAMPLE
+    Get-FileOwner -Path "C:\Example\File.txt"
+    Retrieves the owner of the specified file "File.txt".
+
+    .EXAMPLE
+    Get-FileOwner -Path "C:\Example" -Recursive
+    Retrieves the owners of all files in the "Example" directory and its subdirectories.
+
+    .EXAMPLE
+    Get-FileOwner -Path "C:\Example\File.txt" -Resolve
+    Retrieves the owner of the specified file "File.txt" and resolves the owner's identity.
+
+    .EXAMPLE
+    Get-FileOwner -Path "C:\Example\File.txt" -AsHashTable
+    Retrieves the owner of the specified file "File.txt" and outputs the result as a hashtable.
+
+    #>
     [cmdletBinding()]
     param(
         [Array] $Path,

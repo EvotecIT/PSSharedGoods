@@ -1,4 +1,36 @@
 ﻿function ConvertTo-HkeyUser {
+    <#
+    .SYNOPSIS
+    Converts registry paths based on specified criteria.
+
+    .DESCRIPTION
+    This function converts registry paths based on the provided HiveDictionary, SubKeys, DictionaryKey, and RegistryPath parameters.
+
+    .PARAMETER HiveDictionary
+    Specifies the dictionary containing the criteria for converting registry paths.
+
+    .PARAMETER SubKeys
+    Specifies an array of subkeys to process.
+
+    .PARAMETER DictionaryKey
+    Specifies the key in the RegistryPath to be replaced.
+
+    .PARAMETER RegistryPath
+    Specifies the original registry path to be converted.
+
+    .EXAMPLE
+    ConvertTo-HkeyUser -HiveDictionary @{ 'Key1' = 'AllDomain'; 'Key2' = 'All+Default' } -SubKeys @('S-1-5-21-123456789-123456789-123456789-1001', '.DEFAULT') -DictionaryKey 'Key1' -RegistryPath 'HKLM:\Software\Key1\SubKey'
+
+    Description:
+    Converts the RegistryPath based on the specified criteria in the HiveDictionary for the provided SubKeys.
+
+    .EXAMPLE
+    ConvertTo-HkeyUser -HiveDictionary @{ 'Key1' = 'Users'; 'Key2' = 'AllDomain+Other' } -SubKeys @('S-1-5-21-123456789-123456789-123456789-1001', 'Offline_User1') -DictionaryKey 'Key2' -RegistryPath 'HKLM:\Software\Key2\SubKey'
+
+    Description:
+    Converts the RegistryPath based on the specified criteria in the HiveDictionary for the provided SubKeys.
+
+    #>
     [CmdletBinding()]
     param(
         [System.Collections.IDictionary] $HiveDictionary,

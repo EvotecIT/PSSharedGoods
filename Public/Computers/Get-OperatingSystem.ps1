@@ -1,4 +1,23 @@
 ﻿function Get-OperatingSystem {
+    <#
+    .SYNOPSIS
+    Retrieves information about Windows operating systems.
+
+    .DESCRIPTION
+    This function returns details about various versions of Windows operating systems, including their names, version numbers, code names, marketing names, build numbers, release dates, and support end dates.
+
+    .PARAMETER Version
+    Specifies the version number of the Windows operating system to retrieve information for.
+
+    .EXAMPLE
+    Get-OperatingSystem -Version '10.0 (19042)'
+    Retrieves information about Windows 10 20H2.
+
+    .EXAMPLE
+    Get-OperatingSystem
+    Retrieves information about all available Windows operating systems.
+
+    #>
     [cmdletbinding()]
     param(
         [string] $Version

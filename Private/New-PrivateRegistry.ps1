@@ -1,4 +1,33 @@
 ﻿function New-PrivateRegistry {
+    <#
+    .SYNOPSIS
+    Creates or updates a private registry key on a local or remote computer.
+
+    .DESCRIPTION
+    The New-PrivateRegistry function creates or updates a registry key on a specified computer. It can be used to set registry values for a specific hive key, subkey, value name, value data, and value kind.
+
+    .PARAMETER RegistryValue
+    Specifies the registry value to be set. This should be an IDictionary object containing the hive key, subkey, value name, value data, and value kind.
+
+    .PARAMETER Computer
+    Specifies the name of the computer where the registry key will be created or updated.
+
+    .PARAMETER Remote
+    Indicates whether the registry operation should be performed on a remote computer.
+
+    .EXAMPLE
+    New-PrivateRegistry -RegistryValue @{ HiveKey = 'LocalMachine'; SubKeyName = 'Software\MyApp'; Value = 'Version'; ValueData = '1.0'; ValueKind = 'String' } -Computer 'Server01'
+
+    Description:
+    Creates a registry key 'Version' with value '1.0' under 'LocalMachine\Software\MyApp' on the local computer 'Server01'.
+
+    .EXAMPLE
+    New-PrivateRegistry -RegistryValue @{ HiveKey = 'CurrentUser'; SubKeyName = 'Control Panel\Desktop'; Value = 'Wallpaper'; ValueData = 'C:\Wallpapers\image.jpg'; ValueKind = 'String' } -Computer 'Workstation01' -Remote
+
+    Description:
+    Creates a registry key 'Wallpaper' with value 'C:\Wallpapers\image.jpg' under 'CurrentUser\Control Panel\Desktop' on the remote computer 'Workstation01'.
+
+    #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [System.Collections.IDictionary] $RegistryValue,

@@ -1,4 +1,23 @@
 ﻿function Convert-IPToBinary {
+    <#
+    .SYNOPSIS
+    Converts an IPv4 address to binary format.
+
+    .DESCRIPTION
+    This function takes an IPv4 address as input and converts it to binary format.
+
+    .PARAMETER IP
+    Specifies the IPv4 address to convert to binary format.
+
+    .EXAMPLE
+    Convert-IPToBinary -IP "192.168.1.1"
+    Converts the IPv4 address "192.168.1.1" to binary format.
+
+    .EXAMPLE
+    Convert-IPToBinary -IP "10.0.0.1"
+    Converts the IPv4 address "10.0.0.1" to binary format.
+
+    #>
     [cmdletBinding()]
     param(
         [string] $IP

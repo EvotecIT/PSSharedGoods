@@ -1,4 +1,41 @@
 function Format-View {
+    <#
+    .SYNOPSIS
+    Formats and displays objects in a customizable view.
+
+    .DESCRIPTION
+    The Format-View function formats and displays objects in a customizable view. It allows you to specify properties to include or exclude, control output streams, and customize the display format.
+
+    .PARAMETER InputObject
+    Specifies the object to format.
+
+    .PARAMETER Property
+    Specifies the properties of the object to include in the output.
+
+    .PARAMETER ExcludeProperty
+    Specifies the properties of the object to exclude from the output.
+
+    .PARAMETER HideTableHeaders
+    Indicates whether to hide table headers in the output.
+
+    .PARAMETER Stream
+    Specifies the output stream for the formatted object. Valid values are 'Output', 'Host', 'Warning', 'Verbose', 'Debug', and 'Information'.
+
+    .PARAMETER List
+    Indicates whether to display the object as a list.
+
+    .PARAMETER Autosize
+    Indicates whether to automatically adjust the column width based on the content.
+
+    .EXAMPLE
+    Format-View -InputObject $object -Property Name, Age -Stream Verbose
+    Formats the object with only the 'Name' and 'Age' properties and outputs to the verbose stream.
+
+    .EXAMPLE
+    Get-Process | Format-View -Property Name, CPU -Stream Host
+    Formats the process objects with only the 'Name' and 'CPU' properties and outputs to the host.
+
+    #>
     [alias('FV', 'Format-Verbose', 'Format-Debug', 'Format-Warning')]
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param(

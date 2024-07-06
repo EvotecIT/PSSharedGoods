@@ -1,4 +1,44 @@
 function New-SqlQuery {
+    <#
+    .SYNOPSIS
+    Creates and executes SQL queries based on provided parameters.
+
+    .DESCRIPTION
+    The New-SqlQuery function generates SQL queries for inserting data into a specified table. It adds additional fields for tracking when the data was added and by whom. The function utilizes a mapping table to map object properties to table columns.
+
+    .PARAMETER SqlSettings
+    The SQL connection settings.
+
+    .PARAMETER Object
+    The object containing data to be inserted into the SQL table.
+
+    .PARAMETER TableMapping
+    A hashtable mapping object properties to table columns.
+
+    .EXAMPLE
+    $sqlSettings = Get-SqlSettings
+    $object = [PSCustomObject]@{
+        DomainController = 'AD1.ad.evotec.xyz'
+        Action = 'Event log automatic backup'
+        BackupPath = 'C:\Windows\System32\Winevt\Logs\Archive-Security-2018-09-25-14-12-52-658.evtx'
+        LogType = 'Security'
+        Who = 'Automatic Backup'
+        When = '2018-09-25 16:12:53'
+        EventID = '1105'
+        RecordID = '2434391'
+    }
+    $tableMapping = @{
+        DomainController = 'DomainController'
+        Action = 'Action'
+        BackupPath = 'BackupPath'
+        LogType = 'LogType'
+        Who = 'Who'
+        When = 'When'
+        EventID = 'EventID'
+        RecordID = 'RecordID'
+    }
+    New-SqlQuery -SqlSettings $sqlSettings -Object $object -TableMapping $tableMapping
+    #>
     [CmdletBinding()]
     param (
         [Object] $SqlSettings,

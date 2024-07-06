@@ -1,4 +1,32 @@
 ﻿function Get-ComputerDevice {
+    <#
+    .SYNOPSIS
+    Retrieves information about computer devices.
+
+    .DESCRIPTION
+    This function retrieves information about computer devices using WMI.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer to query. Defaults to the local computer.
+
+    .PARAMETER Protocol
+    Specifies the protocol to use for the query. Valid values are 'Default', 'Dcom', or 'Wsman'. Default is 'Default'.
+
+    .PARAMETER All
+    Retrieves all properties of the computer devices.
+
+    .PARAMETER Extended
+    Retrieves extended properties of the computer devices.
+
+    .EXAMPLE
+    Get-ComputerDevice -ComputerName "Computer01" -Protocol "Wsman" -All
+    Retrieves all properties of computer devices from a remote computer using Wsman protocol.
+
+    .EXAMPLE
+    Get-ComputerDevice -ComputerName "Computer02" -Extended
+    Retrieves extended properties of computer devices from a remote computer.
+
+    #>
     [CmdletBinding()]
     param(
         [string] $ComputerName = $Env:COMPUTERNAME,

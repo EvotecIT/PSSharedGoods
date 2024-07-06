@@ -1,4 +1,57 @@
 function Compare-ObjectsAdvanced {
+    <#
+    .SYNOPSIS
+    Compares two sets of objects based on a specified property.
+
+    .DESCRIPTION
+    This function compares two sets of objects based on a specified property. It can be used to identify differences between the objects and perform actions accordingly.
+
+    .PARAMETER Object1
+    The first set of objects to compare.
+
+    .PARAMETER Object2
+    The second set of objects to compare.
+
+    .PARAMETER CommonProperty
+    Specifies the common property to compare between the objects. Default is 'DistinguishedName'.
+
+    .PARAMETER AddObjectArrayName
+    An array of names for additional properties to add to Object1.
+
+    .PARAMETER AddObjectArray
+    An array of values for additional properties to add to Object1.
+
+    .PARAMETER Object1Property
+    Specifies a property from Object1 to compare.
+
+    .PARAMETER Object2Property
+    Specifies a property from Object2 to compare.
+
+    .PARAMETER ObjectPropertySubstitute
+    Specifies a substitute property name for comparison. Default is 'SpecialValueToCompare'.
+
+    .PARAMETER RemoveSideIndicator
+    Indicates whether to remove side indicators in the comparison results.
+
+    .PARAMETER KeepTemporaryProperty
+    Indicates whether to keep temporary properties added during comparison.
+
+    .PARAMETER Side
+    Specifies which side to compare ('Left' or 'Right'). Default is 'Left'.
+
+    .EXAMPLE
+    Compare-ObjectsAdvanced -Object1 $ObjectSet1 -Object2 $ObjectSet2 -CommonProperty 'Name' -Object1Property 'Size' -Object2Property 'Size'
+
+    Description:
+    Compares two sets of objects based on the 'Name' property and the 'Size' property from each set.
+
+    .EXAMPLE
+    Compare-ObjectsAdvanced -Object1 $Users -Object2 $Groups -CommonProperty 'DistinguishedName' -AddObjectArrayName @('Type', 'Status') -AddObjectArray @('User', 'Active') -Side 'Right'
+
+    Description:
+    Compares two sets of objects based on the 'DistinguishedName' property, adding 'Type' and 'Status' properties to Object1, and compares from the 'Right' side.
+
+    #>
     param(
         [object] $Object1,
         [object] $Object2,

@@ -1,4 +1,25 @@
 Function Compare-ObjectProperties {
+    <#
+    .SYNOPSIS
+    Compares the properties of two objects and returns the differences.
+
+    .DESCRIPTION
+    This function compares the properties of two objects and returns the differences found between them. It compares each property of the reference object with the corresponding property of the difference object.
+
+    .PARAMETER ReferenceObject
+    The reference object to compare properties against.
+
+    .PARAMETER DifferenceObject
+    The object whose properties are compared against the reference object.
+
+    .PARAMETER CaseSensitive
+    Indicates whether the comparison should be case-sensitive. Default is false.
+
+    .EXAMPLE
+    $ad1 = Get-ADUser amelia.mitchell -Properties *
+    $ad2 = Get-ADUser carolyn.quinn -Properties *
+    Compare-ObjectProperties $ad1 $ad2
+    #>
     Param(
         [PSObject]$ReferenceObject,
         [PSObject]$DifferenceObject,

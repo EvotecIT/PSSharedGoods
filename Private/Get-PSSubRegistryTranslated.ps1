@@ -1,4 +1,29 @@
 ﻿function Get-PSSubRegistryTranslated {
+    <#
+    .SYNOPSIS
+    Retrieves the translated sub-registry information based on the provided RegistryPath, HiveDictionary, and Key.
+
+    .DESCRIPTION
+    This function retrieves the translated sub-registry information by matching the RegistryPath with the HiveDictionary. It returns an ordered hashtable with details such as Registry, HiveKey, SubKeyName, Key, Error, and ErrorMessage.
+
+    .PARAMETER RegistryPath
+    Specifies an array of registry paths to be translated.
+
+    .PARAMETER HiveDictionary
+    Specifies a dictionary containing mappings of hive names to their corresponding keys.
+
+    .PARAMETER Key
+    Specifies a string key to be included in the output.
+
+    .EXAMPLE
+    Get-PSSubRegistryTranslated -RegistryPath "HKLM\Software\Microsoft" -HiveDictionary @{ "HKLM" = "HKEY_LOCAL_MACHINE" } -Key "Version"
+    Retrieves the translated sub-registry information for the specified registry path under HKEY_LOCAL_MACHINE hive with the key "Version".
+
+    .EXAMPLE
+    Get-PSSubRegistryTranslated -RegistryPath "HKCU\Software\Microsoft" -HiveDictionary @{ "HKCU" = "HKEY_CURRENT_USER" }
+    Retrieves the translated sub-registry information for the specified registry path under HKEY_CURRENT_USER hive without specifying a key.
+
+    #>
     [cmdletBinding()]
     param(
         [Array] $RegistryPath,

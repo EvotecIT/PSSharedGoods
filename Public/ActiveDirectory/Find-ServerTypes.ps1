@@ -1,5 +1,23 @@
 
 function Find-ServerTypes {
+    <#
+    .SYNOPSIS
+    Finds different types of servers in the Active Directory forest.
+
+    .DESCRIPTION
+    This function retrieves information about different types of servers in the Active Directory forest based on the specified server types.
+
+    .PARAMETER Type
+    Specifies the type of servers to retrieve. Valid values are 'All', 'ADConnect', 'DomainController', 'Exchange', 'Hyper-V', 'RDSLicense', 'SQL', and 'VirtualMachine'.
+
+    .EXAMPLE
+    Find-ServerTypes -Type Exchange
+    Retrieves information about Exchange servers in the Active Directory forest.
+
+    .EXAMPLE
+    Find-ServerTypes -Type DomainController
+    Retrieves information about Domain Controller servers in the Active Directory forest.
+    #>
     [cmdletbinding()]
     param(
         [string[]][ValidateSet('All', 'ADConnect', 'DomainController', 'Exchange', 'Hyper-V', 'RDSLicense', 'SQL', 'VirtualMachine')] $Type = 'All'

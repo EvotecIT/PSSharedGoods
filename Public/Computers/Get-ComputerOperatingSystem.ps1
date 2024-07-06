@@ -1,4 +1,29 @@
 function Get-ComputerOperatingSystem {
+    <#
+    .SYNOPSIS
+    Retrieves operating system information from remote computers.
+
+    .DESCRIPTION
+    This function retrieves operating system information from remote computers using CIM/WMI queries. It provides details such as the operating system name, version, manufacturer, architecture, language, product suite, installation date, last boot-up time, and more.
+
+    .PARAMETER ComputerName
+    Specifies the name of the remote computer(s) to retrieve the operating system information from. Defaults to the local computer.
+
+    .PARAMETER Protocol
+    Specifies the protocol to use for the connection (Default, Dcom, or Wsman). Default is 'Default'.
+
+    .PARAMETER All
+    Switch parameter to retrieve all available properties of the operating system.
+
+    .EXAMPLE
+    Get-ComputerOperatingSystem -ComputerName "Server01" -Protocol Wsman
+    Retrieves operating system information from a single remote computer named "Server01" using the Wsman protocol.
+
+    .EXAMPLE
+    Get-ComputerOperatingSystem -ComputerName "Server01", "Server02" -All
+    Retrieves all available operating system properties from multiple remote computers named "Server01" and "Server02".
+
+    #>
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,

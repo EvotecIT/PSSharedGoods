@@ -1,4 +1,28 @@
 function Stop-Runspace {
+    <#
+    .SYNOPSIS
+    Stops and cleans up the specified runspaces.
+
+    .DESCRIPTION
+    This function stops and cleans up the specified runspaces by checking their status and handling any errors, warnings, and verbose messages. It also provides an option for extended output.
+
+    .PARAMETER Runspaces
+    Specifies the array of runspaces to stop.
+
+    .PARAMETER FunctionName
+    Specifies the name of the function associated with the runspaces.
+
+    .PARAMETER RunspacePool
+    Specifies the runspace pool to close and dispose of.
+
+    .PARAMETER ExtendedOutput
+    Indicates whether to include extended output in the result.
+
+    .EXAMPLE
+    Stop-Runspace -Runspaces $runspaceArray -FunctionName "MyFunction" -RunspacePool $pool -ExtendedOutput
+    Stops the specified runspaces in the $runspaceArray associated with the function "MyFunction" using the runspace pool $pool and includes extended output.
+
+    #>
     [cmdletbinding()]
     param(
         [Array] $Runspaces,

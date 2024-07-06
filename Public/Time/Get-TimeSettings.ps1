@@ -64,6 +64,31 @@ $w32tm
 
 
 function Get-TimeSettings {
+    <#
+    .SYNOPSIS
+    Retrieves and displays time synchronization settings for the specified computer(s).
+
+    .DESCRIPTION
+    The Get-TimeSettings function retrieves and displays time synchronization settings for the specified computer(s). It provides information on the type of time synchronization mechanism being used, NTP server flags, cross-site synchronization flags, and announce flags.
+
+    .PARAMETER ComputerName
+    Specifies the computer(s) for which time synchronization settings are to be retrieved. If not specified, the local computer name is used.
+
+    .PARAMETER Formatted
+    Switch parameter to format the output in a structured manner.
+
+    .PARAMETER Splitter
+    Specifies the character used to split the output if Formatted parameter is used.
+
+    .EXAMPLE
+    Get-TimeSettings -ComputerName 'Server01'
+    Retrieves time synchronization settings for a single computer named 'Server01'.
+
+    .EXAMPLE
+    Get-TimeSettings -ComputerName 'Server01','Server02' -Formatted -Splitter ','
+    Retrieves time synchronization settings for multiple computers named 'Server01' and 'Server02' in a formatted output separated by commas.
+
+    #>
     [alias('Get-TimeSynchronization')]
     param(
         [string[]] $ComputerName,

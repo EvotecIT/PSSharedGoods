@@ -1,4 +1,32 @@
 ﻿function Get-ComputerRAM {
+    <#
+    .SYNOPSIS
+    Retrieves information about the RAM of a specified computer.
+
+    .DESCRIPTION
+    This function retrieves detailed information about the RAM of a specified computer. It provides various properties such as Manufacturer, Model, Capacity, Speed, and more.
+
+    .PARAMETER ComputerName
+    Specifies the name of the computer to retrieve RAM information from. Defaults to the local computer.
+
+    .PARAMETER Protocol
+    Specifies the protocol to use for retrieving RAM information. Valid values are 'Default', 'Dcom', and 'Wsman'. Defaults to 'Default'.
+
+    .PARAMETER All
+    Indicates whether to retrieve all available properties of the RAM. If specified, all properties will be retrieved.
+
+    .PARAMETER Extended
+    Indicates whether to retrieve extended properties of the RAM. If specified, additional properties will be retrieved.
+
+    .EXAMPLE
+    Get-ComputerRAM -ComputerName "Server01" -Protocol Wsman
+    Retrieves RAM information from a remote computer named Server01 using the Wsman protocol.
+
+    .EXAMPLE
+    Get-ComputerRAM -ComputerName "WorkstationA" -All
+    Retrieves all available RAM properties from a computer named WorkstationA.
+
+    #>
     [CmdletBinding()]
     param(
         [string] $ComputerName = $Env:COMPUTERNAME,

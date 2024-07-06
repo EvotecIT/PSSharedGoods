@@ -1,4 +1,48 @@
 function Send-Email {
+    <#
+    .SYNOPSIS
+    Sends an email with specified parameters.
+
+    .DESCRIPTION
+    This function sends an email using the provided parameters. It supports sending emails with attachments and inline attachments.
+
+    .PARAMETER Email
+    Specifies the email parameters including sender, recipients, server settings, and encoding.
+
+    .PARAMETER Body
+    Specifies the body of the email.
+
+    .PARAMETER Attachment
+    Specifies an array of file paths to be attached to the email.
+
+    .PARAMETER InlineAttachments
+    Specifies a dictionary of inline attachments to be included in the email.
+
+    .PARAMETER Subject
+    Specifies the subject of the email.
+
+    .PARAMETER To
+    Specifies an array of email addresses to send the email to.
+
+    .PARAMETER Logger
+    Specifies a custom object for logging purposes.
+
+    .EXAMPLE
+    Send-Email -Email $EmailParams -Body "Hello, this is a test email" -Attachment "C:\Files\attachment.txt" -Subject "Test Email" -To "recipient@example.com" -Logger $Logger
+
+    .EXAMPLE
+    $EmailParams = @{
+        From = "sender@example.com"
+        To = "recipient@example.com"
+        Subject = "Test Email"
+        Body = "Hello, this is a test email"
+        Server = "smtp.example.com"
+        Port = 587
+        Password = "password"
+        Encoding = "UTF8"
+    }
+    Send-Email -Email $EmailParams -Attachment "C:\Files\attachment.txt" -To "recipient@example.com" -Logger $Logger
+    #>
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [alias('EmailParameters')][System.Collections.IDictionary] $Email,

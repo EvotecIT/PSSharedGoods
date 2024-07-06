@@ -1,16 +1,16 @@
 function Remove-DuplicateObjects {
     <#
     .SYNOPSIS
-    Short description
+    Removes duplicate objects from a list based on specified properties.
 
     .DESCRIPTION
-    Long description
+    This function removes duplicate objects from the input list based on the specified properties. It retains only unique objects in the list.
 
     .PARAMETER Object
-    Parameter description
+    The list of objects to remove duplicates from.
 
     .PARAMETER Property
-    Parameter description
+    The properties to consider when identifying duplicates.
 
     .EXAMPLE
     $Array = @()
@@ -27,9 +27,8 @@ function Remove-DuplicateObjects {
     $Array | Format-Table -AutoSize
 
     .NOTES
-    General notes
+    This function removes duplicate objects from a list based on specified properties.
     #>
-
     [CmdletBinding()]
     param(
         [System.Collections.IList] $Object,

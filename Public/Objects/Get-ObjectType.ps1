@@ -1,4 +1,29 @@
 function Get-ObjectType {
+    <#
+    .SYNOPSIS
+    Retrieves information about the type of the given object.
+
+    .DESCRIPTION
+    This function retrieves information about the type of the specified object, including its name, base type, and system type.
+
+    .PARAMETER Object
+    The object for which type information is to be retrieved.
+
+    .PARAMETER ObjectName
+    The name of the object. Default is 'Random Object Name'.
+
+    .PARAMETER VerboseOnly
+    Indicates whether to output verbose information only.
+
+    .EXAMPLE
+    Get-ObjectType -Object $myObject
+    Retrieves type information for the object stored in $myObject.
+
+    .EXAMPLE
+    Get-ObjectType -Object $myObject -ObjectName "My Custom Object"
+    Retrieves type information for the object stored in $myObject with a custom name.
+
+    #>
     [CmdletBinding()]
     param(
         [Object] $Object,
@@ -8,7 +33,7 @@ function Get-ObjectType {
     $ReturnData = [ordered] @{}
     $ReturnData.ObjectName = $ObjectName
 
-    if ($Object -ne $null) {
+    if ($null -ne $Object) {
         try {
             $TypeInformation = $Object.GetType()
             $ReturnData.ObjectTypeName = $TypeInformation.Name
