@@ -1,4 +1,10 @@
-﻿#### 0.0.293 - 2024.06.29
+﻿#### 0.0.294 - 2024.07.06
+* Added help where needed and did minor legibility improvements. by @neztach in https://github.com/EvotecIT/PSSharedGoods/pull/40
+
+##### New Contributors
+* @neztach made their first contribution in https://github.com/EvotecIT/PSSharedGoods/pull/40
+
+#### 0.0.293 - 2024.06.29
 - Improve `Format-TransposeTable`
 
 #### 0.0.292 - 2024.06.29
