@@ -48,6 +48,20 @@ function Get-ComputerDiskLogical {
         [switch] $OnlyLocalDisk,
         [switch] $All
     )
+
+    if (-Not ('Pinvoke.Win32Utils' -as [type])) {
+        Add-Type -TypeDefinition @'
+        using System.Runtime.InteropServices;
+        using System.Text;
+        namespace pinvoke {
+            public static class Win32Utils {
+                [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+                public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
+            }
+        }
+'@
+    }
+
     [string] $Class = 'win32_logicalDisk'
     if ($All) {
         [string] $Properties = '*'
@@ -73,26 +87,34 @@ function Get-ComputerDiskLogical {
     } else {
         $Output = foreach ($Info in $Information) {
             foreach ($Data in $Info) {
+                if ($Info.ComputerName -eq $Env:COMPUTERNAME) {
+                    $DiskPartitionName = [System.Text.StringBuilder]::new(1024)
+                    if ($Data.DeviceID) {
+                        [void][PInvoke.Win32Utils]::QueryDosDevice(($Data.DeviceID), $DiskPartitionName, $DiskPartitionName.Capacity)
+                    }
+                    $DiskPartitionNumber = $DiskPartitionName.ToString()
+                } else {
+                    $DiskPartitionNumber = ''
+                }
                 # # Remember to expand if changing properties above
                 [PSCustomObject] @{
-                    ComputerName = if ($Data.PSComputerName) { $Data.PSComputerName } else { $Env:COMPUTERNAME }
-                    DeviceID     = $Data.DeviceID
-                    DriveType    = $DriveType["$($Data.DriveType)"]
-                    ProviderName = $Data.ProviderName
+                    ComputerName  = if ($Data.PSComputerName) { $Data.PSComputerName } else { $Env:COMPUTERNAME }
+                    DeviceID      = $Data.DeviceID
+                    DriveType     = $DriveType["$($Data.DriveType)"]
+                    ProviderName  = $Data.ProviderName
                     #SerialNumber     = if ($Data.SerialNumber) { $Data.SerialNumber.Trim() } else { '' }
-                    FreeSpace    = [Math]::Round($Data.FreeSpace / $Divider, $RoundingPlace)
-                    UsedSpace    = [Math]::Round(($Data.Size - $Data.FreeSpace) / $Divider, $RoundingPlace)
-                    TotalSpace   = [Math]::Round($Data.Size / $Divider, $RoundingPlace)
+                    FreeSpace     = [Math]::Round($Data.FreeSpace / $Divider, $RoundingPlace)
+                    UsedSpace     = [Math]::Round(($Data.Size - $Data.FreeSpace) / $Divider, $RoundingPlace)
+                    TotalSpace    = [Math]::Round($Data.Size / $Divider, $RoundingPlace)
 
-                    FreePercent  = if ($Data.Size -gt 0 ) { [Math]::round(($Data.FreeSpace / $Data.Size) * 100, $RoundingPlacePercent) } else { '0' }
-                    UsedPercent  = if ($Data.Size -gt 0 ) { [Math]::round((($Data.Size - $Data.FreeSpace) / $Data.Size) * 100, $RoundingPlacePercent) } else { '0' }
-                    VolumeName   = $Data.VolumeName
+                    FreePercent   = if ($Data.Size -gt 0 ) { [Math]::round(($Data.FreeSpace / $Data.Size) * 100, $RoundingPlacePercent) } else { '0' }
+                    UsedPercent   = if ($Data.Size -gt 0 ) { [Math]::round((($Data.Size - $Data.FreeSpace) / $Data.Size) * 100, $RoundingPlacePercent) } else { '0' }
+                    VolumeName    = $Data.VolumeName
+                    DiskPartition = $DiskPartitionNumber
                     # Partitions       = $Data.Partitions
                     # SizeGB           = $Data.Size / 1Gb -as [int]
                     # PNPDeviceID      = $Data.PNPDeviceID
                     # UsedSpace(in GB)    FreeSpace(in GB)    TotalSpace(in GB)
-
-
                 }
 
             }
