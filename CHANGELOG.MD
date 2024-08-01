@@ -1,4 +1,8 @@
-﻿#### 0.0.294 - 2024.07.06
+﻿#### 0.0.295 - 2024.08.01
+- Improved `Get-ComputerDiskLogical`
+- Added `Get-ComputerNetFramework`
+
+#### 0.0.294 - 2024.07.06
 * Added help where needed and did minor legibility improvements. by @neztach in https://github.com/EvotecIT/PSSharedGoods/pull/40
 
 ##### New Contributors
