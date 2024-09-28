@@ -44,10 +44,15 @@
                     $O | Add-Member -Name 'PSComputerName' -Value $Env:COMPUTERNAME -MemberType NoteProperty -Force
                     $O
                 } else {
+                    $Identity = Convert-Identity -Identity $O.AccountName
                     [PSCustomObject] @{
                         Name              = $O.Name              #: NETLOGON
                         ScopeName         = $O.ScopeName         #: *
-                        AccountName       = $O.AccountName.ToString()       #: Everyone
+                        AccountName       = $Identity.Name
+                        AccountDomain     = $Identity.Domain
+                        AccountSID        = $Identity.SID
+                        AccountType       = $Identity.Type
+                        AccountError      = $Identity.Error
                         AccessControlType = $O.AccessControlType.ToString() #: Allow
                         AccessRight       = $O.AccessRight.ToString()       #: Read
                         ComputerName      = $Env:COMPUTERNAME    #: AD2.AD.EVOTEC.XYZ
@@ -68,10 +73,15 @@
                 if (-not $Translated) {
                     $O
                 } else {
+                    $Identity = Convert-Identity -Identity $O.AccountName
                     [PSCustomObject] @{
                         Name              = $O.Name              #: NETLOGON
                         ScopeName         = $O.ScopeName         #: *
-                        AccountName       = $O.AccountName.ToString()       #: Everyone
+                        AccountName       = $Identity.Name
+                        AccountDomain     = $Identity.Domain
+                        AccountSID        = $Identity.SID
+                        AccountType       = $Identity.Type
+                        AccountError      = $Identity.Error
                         AccessControlType = $O.AccessControlType.ToString() #: Allow
                         AccessRight       = $O.AccessRight.ToString()       #: Read
                         ComputerName      = $O.PSComputerName    #: AD2.AD.EVOTEC.XYZ
