@@ -1,4 +1,7 @@
-﻿#### 0.0.295 - 2024.08.01
+﻿#### 0.0.296 - 2024.09.28
+- Improve `Get-ComputerSMBSharePermissions` with `Translated` switch by adding SID value
+
+#### 0.0.295 - 2024.08.01
 - Improved `Get-ComputerDiskLogical`
 - Added `Get-ComputerNetFramework`
 
