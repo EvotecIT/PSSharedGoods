@@ -1,5 +1,6 @@
 ﻿#### 0.0.297
 - Added `Get-ComputerFirewall`
+- Improved `ConvertFrom-SID` and `Convert-Identity` to mark `Schema Admins` as Administrative
 
 #### 0.0.296 - 2024.09.28
 - Improve `Get-ComputerSMBSharePermissions` with `Translated` switch by adding SID value
