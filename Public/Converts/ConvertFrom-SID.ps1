@@ -659,8 +659,8 @@ function ConvertFrom-SID {
                 $wellKnownSIDs[$S]
             } else {
                 if ($DoNotResolve) {
-                    if ($S -like "S-1-5-21-*-519" -or $S -like "S-1-5-21-*-512") {
-                        # Domain Admins / Enterprise Admins
+                    if ($S -like "S-1-5-21-*-519" -or $S -like "S-1-5-21-*-512" -or $S -like "S-1-5-21-*-518") {
+                        # Domain Admins / Enterprise Admins / Schema Admins
                         [PSCustomObject] @{
                             Name       = $S
                             SID        = $S
@@ -694,7 +694,7 @@ function ConvertFrom-SID {
                                 Error      = ''
                             }
                         } else {
-                            if ($S -like "S-1-5-21-*-519" -or $S -like "S-1-5-21-*-512") {
+                            if ($S -like "S-1-5-21-*-519" -or $S -like "S-1-5-21-*-512" -or $S -like "S-1-5-21-*-518") {
                                 $Type = 'Administrative'
                             } else {
                                 $Type = 'NotAdministrative'
