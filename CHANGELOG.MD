@@ -1,4 +1,4 @@
-﻿#### 0.0.297
+﻿#### 0.0.297 - 2024.10.26
 - Added `Get-ComputerFirewall`
 - Improved `ConvertFrom-SID` and `Convert-Identity` to mark `Schema Admins` as Administrative
 
