@@ -67,7 +67,6 @@
 
     foreach ($Rule in $RulesCache.Values) {
         [PSCustomObject]@{
-
             Name                          = $Rule.Name                          # : NETDIS-UPnPHost-Out-TCP
             ID                            = $Rule.ID                            # : NETDIS-UPnPHost-Out-TCP
             DisplayName                   = $Rule.DisplayName                   # : Network Discovery (UPnP-Out)
