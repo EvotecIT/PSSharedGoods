@@ -1,37 +1,50 @@
 ﻿function Get-ComputerPorts {
     <#
     .SYNOPSIS
-    Short description
+    Retrieves TCP connection information from a specified computer.
 
     .DESCRIPTION
-    Long description
+    The Get-ComputerPorts function retrieves information about TCP connections on a specified computer.
+    It can filter connections based on state, local address, remote address, applied setting, local port, and remote port.
 
     .PARAMETER ComputerName
-    Parameter description
+    The name of the computer from which to retrieve TCP connection information. If not specified, the local computer is used.
 
     .PARAMETER State
-    Parameter description
+    The state of the TCP connections to retrieve. Valid states include Bound, Closed, CloseWait, Closing, DeleteTCB, Established, FinWait1, FinWait2, LastAck, Listen, SynReceived, SynSent, and TimeWait.
 
     .PARAMETER LocalAddress
-    Parameter description
+    The local addresses of the TCP connections to retrieve.
 
     .PARAMETER RemoteAddress
-    Parameter description
+    The remote addresses of the TCP connections to retrieve.
 
     .PARAMETER AppliedSetting
-    Parameter description
+    The applied settings of the TCP connections to retrieve. Valid settings include Compat, Datacenter, DatacenterCustom, Internet, and InternetCustom.
 
     .PARAMETER LocalPort
-    Parameter description
+    The local ports of the TCP connections to retrieve.
 
     .PARAMETER RemotePort
-    Parameter description
+    The remote ports of the TCP connections to retrieve.
 
     .EXAMPLE
-    An example
+    Get-ComputerPorts -ComputerName 'AD1' -LocalPort 389, 636, 88, 53, 3268, 3269, 445, 135 | Sort-Object RemotePort | Format-Table -AutoSize *
+
+    Retrieves and displays TCP connection information from the computer 'AD1' for the specified local ports.
+
+    .EXAMPLE
+    Get-ComputerPorts -ComputerName 'AD1' -State 'Established' | Sort-Object RemotePort | Format-Table -AutoSize *
+
+    Retrieves and displays TCP connection information from the computer 'AD1' for connections in the 'Established' state.
+
+    .EXAMPLE
+    Get-ComputerPorts -ComputerName 'AD1' | ft -AutoSize
+
+    Retrieves and displays all TCP connection information from the computer 'AD1'.
 
     .NOTES
-    General notes
+    This function requires administrative privileges to retrieve process information.
     #>
     [CmdletBinding()]
     param(
@@ -103,6 +116,3 @@
         }
     }
 }
-
-#Get-ComputerPorts -ComputerName 'AD1' | Sort-Object RemotePort | Format-Table -AutoSize *
-Get-ComputerPorts -ComputerName 'AD1' -LocalPort 389, 636, 88, 53, 3268, 3269, 445, 135 | Sort-Object RemotePort | Format-Table -AutoSize *
