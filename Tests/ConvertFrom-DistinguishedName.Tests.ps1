@@ -4,12 +4,22 @@
             'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'CN=Test My\, User,OU=US,OU=ITR01,DC=ad,DC=evotec,DC=xyz'
+            'CN=Weird Name\, with $\,.,OU=SE2,OU=SE,OU=ITR01,DC=ad,DC=evotec,DC=xyz'
+            'CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl'
+            'CN=Builtin,DC=ad,DC=evotec,DC=pl'
+            'CN=Certificate Service DCOM Access,CN=Builtin,DC=ad,DC=evotec,DC=pl'
         )
         $Output = ConvertFrom-DistinguishedName -ToOrganizationalUnit -DistinguishedName $DistinguishedName
         $Output | Should -Be @(
             'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=US,OU=ITR01,DC=ad,DC=evotec,DC=xyz'
+            'OU=SE2,OU=SE,OU=ITR01,DC=ad,DC=evotec,DC=xyz'
+            'CN=Users,DC=ad,DC=evotec,DC=pl'
+            'DC=ad,DC=evotec,DC=pl'
+            'CN=Builtin,DC=ad,DC=evotec,DC=pl'
         )
     }
     It 'ToOrganizationalUnit Conversion - Pipeline' {

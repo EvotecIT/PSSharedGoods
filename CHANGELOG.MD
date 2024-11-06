@@ -1,4 +1,7 @@
-﻿#### 0.0.298 - 2024.10.27
+﻿#### 0.0.299 - 2024.11.06
+- Improved `ConvertFrom-DistinguishedName` switches `ToMultipleOrganizationalUnit`, `ToOrganizationalUnit` should handle properly using containers such as `CN=Users,DC=ad,DC=evotec,DC=xyz`
+
+#### 0.0.298 - 2024.10.27
 - Added `Get-ComputerPorts`
 
 #### 0.0.297 - 2024.10.26

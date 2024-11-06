@@ -106,21 +106,57 @@
                     $CN
                 }
             } elseif ($ToOrganizationalUnit) {
-                $Value = [Regex]::Match($Distinguished, '(?=OU=)(.*\n?)(?<=.)').Value
-                if ($Value) {
-                    $Value
+                # $Value = [Regex]::Match($Distinguished, '(?=OU=)(.*\n?)(?<=.)').Value
+                # if ($Value) {
+                #     $Value
+                # }
+
+                # Match everything after first CN= until the end, excluding the first CN if it exists
+                # $Value = $UseMe -replace '^CN=[^,]+,', ''
+                # if ($Value -match '^(CN=.*|OU=.*)') {
+                #     $Value
+                # }
+
+                if ($Distinguished -match '^CN=[^,\\]+(?:\\,[^,\\]+)*,(.+)$') {
+                    # $matches[1] contains everything after first CN= including escaped chars
+                    $matches[1]
+                } elseif ($Distinguished -match '^(OU=|CN=)') {
+                    # Return full string if it starts with OU= or doesn't have leading CN=
+                    $Distinguished
                 }
             } elseif ($ToMultipleOrganizationalUnit) {
+                # if ($IncludeParent) {
+                #     $Distinguished
+                # }
+                # while ($true) {
+                #     #$dn = $dn -replace '^.+?,(?=CN|OU|DC)'
+                #     $Distinguished = $Distinguished -replace '^.+?,(?=..=)'
+                #     if ($Distinguished -match '^DC=') {
+                #         break
+                #     }
+                #     $Distinguished
+                # }
+
+                $Parts = $Distinguished -split '(?<!\\),'
+                $Results = [System.Collections.ArrayList]::new()
+
+                # Start with full path if IncludeParent is specified
                 if ($IncludeParent) {
-                    $Distinguished
+                    $null = $Results.Add($Distinguished)
                 }
-                while ($true) {
-                    #$dn = $dn -replace '^.+?,(?=CN|OU|DC)'
-                    $Distinguished = $Distinguished -replace '^.+?,(?=..=)'
-                    if ($Distinguished -match '^DC=') {
-                        break
+
+                # Build paths from right to left, excluding DC parts
+                for ($i = 1; $i -lt $Parts.Count; $i++) {
+                    $CurrentPath = $Parts[$i..($Parts.Count - 1)] -join ','
+                    if ($CurrentPath -match '^(OU=|CN=)' -and $CurrentPath -notmatch '^DC=') {
+                        $null = $Results.Add($CurrentPath)
                     }
-                    $Distinguished
+                }
+                # Return results
+                foreach ($R in $Results) {
+                    if ($R -match '^(OU=|CN=)') {
+                        $R
+                    }
                 }
             } elseif ($ToDC) {
                 #return [Regex]::Match($DistinguishedName, '(?=DC=)(.*\n?)(?<=.)').Value
@@ -184,20 +220,41 @@
     }
 }
 
+# $OU = @(
+#     'CN=Certificate Service DCOM Access,CN=Builtin,DC=ad,DC=evotec,DC=pl'
+#     'CN=Builtin,DC=ad,DC=evotec,DC=pl'
+#     'CN=Test My\, User,OU=US,OU=ITR01,DC=ad,DC=evotec,DC=xyz'
+#     'CN=Weird Name\, with $\,.,OU=SE2,OU=SE,OU=ITR01,DC=ad,DC=evotec,DC=xyz'
+#     'CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl'
+# )
+
+# ConvertFrom-DistinguishedName -DistinguishedName $OU -ToOrganizationalUnit
+
+# ConvertFrom-DistinguishedName -DistinguishedName "CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl"
+# ConvertFrom-DistinguishedName -DistinguishedName "CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl" -ToOrganizationalUnit
+# ConvertFrom-DistinguishedName -DistinguishedName "CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl" -ToDC
+# ConvertFrom-DistinguishedName -DistinguishedName "CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl" -ToDomainCN
+# ConvertFrom-DistinguishedName -DistinguishedName "CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl" -ToCanonicalName
+# ConvertFrom-DistinguishedName -DistinguishedName "CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl" -ToMultipleOrganizationalUnit -IncludeParent
+
+#ConvertFrom-DistinguishedName -DistinguishedName "CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl" -ToMultipleOrganizationalUnit -IncludeParent
+#ConvertFrom-DistinguishedName -DistinguishedName 'CN=Weird Name\, with $\,.,OU=SE2,OU=SE,OU=ITR01,DC=ad,DC=evotec,DC=xyz' -ToMultipleOrganizationalUnit -IncludeParent
+
 #ConvertFrom-DistinguishedName -DistinguishedName 'DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
 #ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
 #ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
+
+
 #ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToMultipleOrganizationalUnit -IncludeParent
 #ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
 
-<#
-$DistinguishedName = @(
-    'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
-    'CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
-    'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
-)
-ConvertFrom-DistinguishedName -ToOrganizationalUnit -DistinguishedName $DistinguishedName
-#>
+
+# $DistinguishedName = @(
+#     'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
+#     'CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
+#     'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+# )
+# ConvertFrom-DistinguishedName -ToOrganizationalUnit -DistinguishedName $DistinguishedName
 
 
 <#
