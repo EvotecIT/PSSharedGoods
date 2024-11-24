@@ -67,7 +67,7 @@ function Format-TransposeTable {
         [Parameter(ParameterSetName = 'Legacy')]
         [Parameter(ParameterSetName = 'Pivot')]
         [Alias("Object")]
-        [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName)][System.Collections.ICollection] $AllObjects,
+        [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName)][Array] $AllObjects,
 
         [Parameter(ParameterSetName = 'Legacy')]
         [ValidateSet("ASC", "DESC", "NONE")][String] $Sort = 'NONE',
@@ -132,8 +132,12 @@ function Format-TransposeTable {
                         $ListHeader.Add($myObject.$Property)
                     }
                 } else {
-                    for ($i = 0; $i -lt $Object.Count; $i++) {
-                        $ListHeader.Add("$($Name)$i")
+                    if ($AllObjects.Count -eq 1) {
+                        $ListHeader.Add("$($Name)")
+                    } else {
+                        for ($i = 0; $i -lt $Object.Count; $i++) {
+                            $ListHeader.Add("$($Name)$i")
+                        }
                     }
                 }
                 $CountOfProperties = $Object[0].PSObject.Properties.Name.Count
