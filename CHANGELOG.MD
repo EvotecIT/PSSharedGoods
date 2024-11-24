@@ -1,5 +1,6 @@
 ﻿#### 0.0.300 - 2024.11.24
 - Improved `Format-TransposeTable`
+- Improved `ConvertFrom-DistinguishedName`
 
 #### 0.0.299 - 2024.11.06
 - Improved `ConvertFrom-DistinguishedName` switches `ToMultipleOrganizationalUnit`, `ToOrganizationalUnit` should handle properly using containers such as `CN=Users,DC=ad,DC=evotec,DC=xyz`
