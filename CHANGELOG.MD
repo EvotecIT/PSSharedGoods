@@ -1,4 +1,7 @@
-﻿#### 0.0.300 - 2024.11.24
+﻿#### 0.0.301 - 2024.12.02
+- Improved `Get-FileName`
+
+#### 0.0.300 - 2024.11.24
 - Improved `Format-TransposeTable`
 - Improved `ConvertFrom-DistinguishedName`
 
