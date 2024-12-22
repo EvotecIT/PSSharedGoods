@@ -21,6 +21,10 @@
     .PARAMETER ToCanonicalName
     Converts DistinguishedName to Canonical Name
 
+    .PARAMETER ToFQDN
+    Converts DistinguishedName to Fully Qualified Domain Name (FQDN)
+    This will only work for very specific cases, and will not really convert all Distinguished Names to FQDN
+
     .EXAMPLE
     $DistinguishedName = 'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
     ConvertFrom-DistinguishedName -DistinguishedName $DistinguishedName -ToOrganizationalUnit
@@ -88,6 +92,7 @@
         [Parameter(ParameterSetName = 'Default')]
         [Parameter(ParameterSetName = 'ToLastName')]
         [Parameter(ParameterSetName = 'ToCanonicalName')]
+        [Parameter(ParameterSetName = 'ToFQDN')]
         [alias('Identity', 'DN')][Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)][string[]] $DistinguishedName,
         [Parameter(ParameterSetName = 'ToOrganizationalUnit')][switch] $ToOrganizationalUnit,
         [Parameter(ParameterSetName = 'ToMultipleOrganizationalUnit')][alias('ToMultipleOU')][switch] $ToMultipleOrganizationalUnit,
@@ -95,7 +100,8 @@
         [Parameter(ParameterSetName = 'ToDC')][switch] $ToDC,
         [Parameter(ParameterSetName = 'ToDomainCN')][switch] $ToDomainCN,
         [Parameter(ParameterSetName = 'ToLastName')][switch] $ToLastName,
-        [Parameter(ParameterSetName = 'ToCanonicalName')][switch] $ToCanonicalName
+        [Parameter(ParameterSetName = 'ToCanonicalName')][switch] $ToCanonicalName,
+        [Parameter(ParameterSetName = 'ToFQDN')][switch] $ToFQDN
     )
     Process {
         foreach ($Distinguished in $DistinguishedName) {
@@ -206,6 +212,19 @@
                 } elseif ($Rest) {
                     $Rest.TrimEnd('\') -replace '\\,', ','
                 }
+            } elseif ($ToFQDN) {
+                # Convert for example: "CN=adcs,DC=ad,DC=evotec,DC=xyz" to "adcs.ad.evotec.xyz"
+                # This will only work for very specific cases, where CN is the first element in the DN
+                # Split into CN and DC parts
+                if ($Distinguished -match '^CN=(.+?),(?:(?:OU|CN).+,)*((?:DC=.+,?)+)$') {
+                    $cnPart = $matches[1] -replace '\\,', ',' # Unescape commas in CN
+                    $dcPart = $matches[2] -replace 'DC=', '' -replace ',', '.'
+                    "$cnPart.$dcPart"
+                } elseif ($Distinguished -match '^CN=(.+?),((?:DC=.+,?)+)$') {
+                    $cnPart = $matches[1] -replace '\\,', ',' # Unescape commas in CN
+                    $dcPart = $matches[2] -replace 'DC=', '' -replace ',', '.'
+                    "$cnPart.$dcPart"
+                }
             } else {
                 $Regex = '^CN=(?<cn>.+?)(?<!\\),(?<ou>(?:(?:OU|CN).+?(?<!\\),)+(?<dc>DC.+?))$'
                 #$Output = foreach ($_ in $Distinguished) {
@@ -219,6 +238,8 @@
         }
     }
 }
+
+# ConvertFrom-DistinguishedName -ToFQDN -DistinguishedName "CN=adcs,DC=ad,DC=evotec,DC=xyz"
 
 # $OU = @(
 #     'CN=Certificate Service DCOM Access,CN=Builtin,DC=ad,DC=evotec,DC=pl'
