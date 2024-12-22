@@ -1,4 +1,5 @@
 ﻿#### 0.0.302
+- Refactor `Format-TransposeTable` parameters to be more consistent
 - Added `Set-ReportingCapabilities` to manage report files in multiple PowerShell modules
 - Added `Set-LoggingCapabilities` to manage log files in multiple PowerShell modules
 - Improved `ConvertFrom-DistinguishedName` with `ToFQDN` switch
