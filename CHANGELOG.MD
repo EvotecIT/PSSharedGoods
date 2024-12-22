@@ -1,4 +1,4 @@
-﻿#### 0.0.302
+﻿#### 0.0.302 - 2024.12.22
 - Refactor `Format-TransposeTable` parameters to be more consistent
 - Added `Set-ReportingCapabilities` to manage report files in multiple PowerShell modules
 - Added `Set-LoggingCapabilities` to manage log files in multiple PowerShell modules
