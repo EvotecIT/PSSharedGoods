@@ -64,10 +64,10 @@ function Format-TransposeTable {
     #>
     [CmdletBinding(DefaultParameterSetName = 'Pivot')]
     param (
-        [Parameter(ParameterSetName = 'Legacy')]
-        [Parameter(ParameterSetName = 'Pivot')]
         [Alias("Object")]
-        [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName)][Array] $AllObjects,
+        [Parameter(ParameterSetName = 'Legacy', Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [Parameter(ParameterSetName = 'Pivot', Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [Array] $AllObjects,
 
         [Parameter(ParameterSetName = 'Legacy')]
         [ValidateSet("ASC", "DESC", "NONE")][String] $Sort = 'NONE',
