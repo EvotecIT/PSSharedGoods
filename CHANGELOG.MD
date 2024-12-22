@@ -2,6 +2,71 @@
 - Added `Set-ReportingCapabilities` to manage report files in multiple PowerShell modules
 - Added `Set-LoggingCapabilities` to manage log files in multiple PowerShell modules
 - Improved `ConvertFrom-DistinguishedName` with `ToFQDN` switch
+- Removed `Get-HTML`
+- Removed `Send-Email`
+- Removed `Set-EmailBody`
+- Removed `Set-EmailBodyPreparedTable`
+- Removed `Set-EmailBodyReplacement`
+- Removed `Set-EmailBodyTableReplacement`
+- Removed `Set-EmailFormatting`
+- Removed `Set-EmailHead`
+- Removed `Set-EmailReportBranding`
+- Removed `Set-EmailWordReplacements`
+- Removed `Set-EmailWordReplacementsHash`
+- Removed `Add-ToArray`
+- Removed `Add-ToArrayAdvanced`
+- Removed `Find-DatesCurrentDayMinusDayX`
+- Removed `Find-DatesCurrentDayMinuxDaysX`
+- Removed `Find-DatesCurrentHour`
+- Removed `Find-DatesDayPrevious`
+- Removed `Find-DatesDayToday`
+- Removed `Find-DatesMonthCurrent`
+- Removed `Find-DatesMonthPast`
+- Removed `Find-DatesPastHour`
+- Removed `Find-DatesPastWeek`
+- Removed `Find-DatesQuarterCurrent`
+- Removed `Find-DatesQuarterLast`
+- Removed `New-SqlQuery`
+- Removed `New-SqlQueryAlterTable`
+- Removed `New-SqlQueryCreateTable`
+- Removed `New-SqlTableMapping`
+- Removed `Send-SqlInsert`
+- Removed `Get-SqlQueryColumnInformation`
+- Removed `Get-ObjectCount`
+- Removed `Get-ObjectData`
+- Removed `Get-ObjectEnumValues`
+- Removed `Get-ObjectKeys`
+- Removed `Get-ObjectProperties`
+- Removed `Get-ObjectPropertiesAdvanced`
+- Removed `Get-ObjectTitles`
+- Removed `Get-ObjectType`
+- Removed `New-ArrayList`
+- Removed `New-GenericList`
+- Removed `Remove-FromArray`
+- Removed `Get-HashMaxValue`
+- Removed `Get-Logger`
+- Removed `Add-WinADUserGroups`
+- Removed `Find-ADConnectServer`
+- Removed `Find-ExchangeServer`
+- Removed `Find-HyperVServer`
+- Removed `Find-UserProxyAddressesStatus`
+- Removed `Get-ADAdministrativeGroups`
+- Removed `Get-WinADOrganizationalUnitiData`
+- Removed `Get-WinADOrganizationalUnitFromDN`
+- Removed `Get-WinADUsersByDN`
+- Removed `Get-WinADUsersByOU`
+- Removed `Get-WinADUserSnapshot`
+- Removed `Remove-WinADUserGroups`
+- Removed `Set-WinADGroupSynchornization`
+- Removed `Set-WinADUserFields`
+- Removed `Set-WinADUserSettingGAL`
+- Removed `Set-WinADUserStatus`
+
+Those functions are moved to `Private` just in case they are still in use, but will be removed later on, as they are legacy.
+Those functions were mostly used by PSWinReporting, PSAutomator or maybe PSWinDocumentation.
+With the PSWriteHTML/Mailozaurr/ADEssentials they don't really need to exists.
+Additionally some of those are really slow and should not be used in production as funtions as it moots the point of using them as functions.
+They should be used directly to benefit the speed.
 
 #### 0.0.301 - 2024.12.02
 - Improved `Get-FileName`
