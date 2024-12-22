@@ -1,4 +1,9 @@
-﻿#### 0.0.301 - 2024.12.02
+﻿#### 0.0.302
+- Added `Set-ReportingCapabilities` to manage report files in multiple PowerShell modules
+- Added `Set-LoggingCapabilities` to manage log files in multiple PowerShell modules
+- Improved `ConvertFrom-DistinguishedName` with `ToFQDN` switch
+
+#### 0.0.301 - 2024.12.02
 - Improved `Get-FileName`
 
 #### 0.0.300 - 2024.11.24
