@@ -63,6 +63,7 @@
     Removes both the folder (and everything in it) and the file, then returns details on each removal attempt.
 
     #>
+    [Alias('Remove-ItemAlternative')]
     [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'Include')]
     param(
         [Parameter(Mandatory, ValueFromPipeline, Position = 0)][Alias('LiteralPath', 'Path')][string[]] $Paths,
