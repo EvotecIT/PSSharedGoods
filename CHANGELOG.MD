@@ -1,5 +1,6 @@
 ﻿#### 0.0.303
 - Added `Remove-FileItem` to remove files and folders including moving to recycle bin
+- Improved `Set-LoggingCapabilities`
 
 #### 0.0.302 - 2024.12.22
 - Refactor `Format-TransposeTable` parameters to be more consistent
