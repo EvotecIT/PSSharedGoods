@@ -21,6 +21,15 @@
     .PARAMETER TimeFormat
     The format of the timestamps in the log entries.
 
+    .PARAMETER ParameterPSDefaultParameterValues
+    The hashtable of default parameter values for the Write-Color function.
+    If this parameter is not provided, the function will create a new hashtable.
+    This will only work properly if the function is nested as private function in another module.
+    It's advised to provide the hashtable from the parent function for this to work always.
+
+    .EXAMPLE
+    Set-LoggingCapabilities -LogPath "C:\Logs\log.log" -ScriptPath "C:\Scripts\script.ps1" -LogMaximum 10 -ShowTime -TimeFormat "yyyy-MM-dd HH:mm:ss" -ParameterPSDefaultParameterValues $Script:PSDefaultParameterValues
+
     .EXAMPLE
     Set-LoggingCapabilities -LogPath "C:\Logs\log.log" -ScriptPath "C:\Scripts\script.ps1" -LogMaximum 10 -ShowTime -TimeFormat "yyyy-MM-dd HH:mm:ss"
 
@@ -38,13 +47,19 @@
         [string] $ScriptPath,
         [Alias('Maximum')][int] $LogMaximum,
         [switch] $ShowTime,
-        [string] $TimeFormat
+        [string] $TimeFormat,
+        [System.Collections.IDictionary] $ParameterPSDefaultParameterValues
     )
-
-    $Script:PSDefaultParameterValues = @{
-        "Write-Color:LogFile"    = $LogPath
-        "Write-Color:ShowTime"   = if ($PSBoundParameters.ContainsKey('ShowTime')) { $ShowTime.IsPresent } else { $null }
-        "Write-Color:TimeFormat" = $TimeFormat
+    if (-not $ParameterPSDefaultParameterValues) {
+        $Script:PSDefaultParameterValues = @{
+            "Write-Color:LogFile"    = $LogPath
+            "Write-Color:ShowTime"   = if ($PSBoundParameters.ContainsKey('ShowTime')) { $ShowTime.IsPresent } else { $null }
+            "Write-Color:TimeFormat" = $TimeFormat
+        }
+    } else {
+        $ParameterPSDefaultParameterValues["Write-Color:LogFile"] = $LogPath
+        $ParameterPSDefaultParameterValues["Write-Color:ShowTime"] = if ($PSBoundParameters.ContainsKey('ShowTime')) { $ShowTime.IsPresent } else { $null }
+        $ParameterPSDefaultParameterValues["Write-Color:TimeFormat"] = $TimeFormat
     }
     if ($LogPath) {
         try {
