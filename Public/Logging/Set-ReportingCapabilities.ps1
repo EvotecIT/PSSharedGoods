@@ -30,7 +30,7 @@
     param(
         [alias('Path', 'LiteralPath', 'FilePath')][string] $ReportPath,
         [string] $ScriptPath,
-        [int] $ReportMaximum
+        [Alias('Maximum', 'Count')][int] $ReportMaximum
     )
     if ($ReportPath) {
         try {
