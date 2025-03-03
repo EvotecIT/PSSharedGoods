@@ -1,4 +1,7 @@
-﻿#### 0.0.303
+﻿#### 0.0.304 - 2025.03.03
+- Improve `Set-ReportingCapabilities`
+
+#### 0.0.303
 - Added `Remove-FileItem` to remove files and folders including moving to recycle bin
 - Improved `Set-LoggingCapabilities`
 
