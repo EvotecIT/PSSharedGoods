@@ -1,4 +1,7 @@
-﻿#### 0.0.304 - 2025.03.03
+﻿#### 0.0.305 - 2025.03.17
+- Improve `Remove-EmptyValue` to respect parameters for recursive call
+
+#### 0.0.304 - 2025.03.03
 - Improve `Set-ReportingCapabilities`
 
 #### 0.0.303
