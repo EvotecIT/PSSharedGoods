@@ -43,6 +43,21 @@
     -----------
     This example removes empty values from the $hashtable recursively.
 
+    .EXAMPLE
+    $SplatDictionary = [ordered] @{
+        Test  = $NotExistingParameter
+        Test1 = 'Existing Entry'
+        Test2 = $null
+        Test3 = ''
+        Test5 = 0
+        Test6 = 6
+        Test7 = @{}
+    }
+
+    Remove-EmptyValue -Splat $SplatDictionary -Recursive -ExcludeParameter 'Test7'
+
+    $SplatDictionary
+
     #>
     [alias('Remove-EmptyValues')]
     [CmdletBinding()]
@@ -65,7 +80,7 @@
                             $Hashtable.Remove($Key)
                         }
                     } else {
-                        Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
+                        Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive -ExcludeParameter $ExcludeParameter -DoNotRemoveNull:$DoNotRemoveNull -DoNotRemoveEmpty:$DoNotRemoveEmpty -DoNotRemoveEmptyArray:$DoNotRemoveEmptyArray -DoNotRemoveEmptyDictionary:$DoNotRemoveEmptyDictionary
                     }
                 } else {
                     if (-not $DoNotRemoveNull -and $null -eq $Hashtable[$Key]) {
@@ -89,24 +104,7 @@
     }
     if ($Rerun) {
         for ($i = 0; $i -lt $Rerun; $i++) {
-            Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive
+            Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive -ExcludeParameter $ExcludeParameter -DoNotRemoveNull:$DoNotRemoveNull -DoNotRemoveEmpty:$DoNotRemoveEmpty -DoNotRemoveEmptyArray:$DoNotRemoveEmptyArray -DoNotRemoveEmptyDictionary:$DoNotRemoveEmptyDictionary
         }
     }
 }
-
-
-<#
-$SplatDictionary = [ordered] @{
-    Test  = $NotExistingParameter
-    Test1 = 'Existing Entry'
-    Test2 = $null
-    Test3 = ''
-    Test5 = 0
-    Test6 = 6
-    Test7 = @{}
-}
-
-Remove-EmptySplatProperty -Splat $SplatDictionary -Recursive -ExcludeParameter 'Test7'
-
-$SplatDictionary
-#>
