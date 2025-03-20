@@ -214,17 +214,13 @@
                             $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         }
-                    } elseif ($Value -is [System.Enum]) {
+                    } elseif ($Value -is [System.Enum] -or $Value.PSTypeNames -contains 'Deserialized.System.Enum') {
                         $NewObject[$DisplayProperty] = ($Value).ToString()
                     } elseif (($Value | IsNumeric) -eq $true) {
                         if ($NumberAsString) {
                             $NewObject[$DisplayProperty] = ($Value).ToString()
                         } else {
-                            if ($Value.PSTypeNames -contains 'Deserialized.System.Enum') {
-                                $NewObject[$DisplayProperty] = $Value.ToString()
-                            } else {
-                                $NewObject[$DisplayProperty] = $Value
-                            }
+                            $NewObject[$DisplayProperty] = $Value            
                         }
                     } elseif ($Value -is [PSObject]) {
                         # We force it to max depth 0
