@@ -1,4 +1,8 @@
-﻿#### 0.0.305 - 2025.03.17
+﻿#### 0.0.306 - 2025.03.20
+- Improve `ConvertTo-PrettyObject` to handle `deserialized` objects better
+- Improve `ConvertTo-JsonLiteral` to handle `deserialized` objects better
+
+#### 0.0.305 - 2025.03.17
 - Improve `Remove-EmptyValue` to respect parameters for recursive call
 
 #### 0.0.304 - 2025.03.03
