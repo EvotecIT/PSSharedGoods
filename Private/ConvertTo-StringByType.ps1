@@ -67,7 +67,7 @@
         [string] $ArrayJoinString,
         [switch] $Force
     )
-    Process {
+    process {
         if ($null -eq $Value) {
             "`"`""
         } elseif ($Value -is [string]) {
@@ -133,7 +133,7 @@
                     $null = $TextBuilder.Append("]")
                 }
             }
-        } elseif ($Value -is [System.Enum]) {
+        } elseif ($Value -is [System.Enum] -or $Value.PSTypeNames -contains 'Deserialized.System.Enum') {
             "`"$($($Value).ToString())`""
         } elseif (($Value | IsNumeric) -eq $true) {
             $Value = $($Value).ToString().Replace(',', '.')
