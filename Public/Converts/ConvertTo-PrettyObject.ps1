@@ -101,7 +101,7 @@
         [string[]]$PropertyName,
         [switch] $Force
     )
-    Begin {
+    begin {
         filter IsNumeric() {
             return $_ -is [byte] -or $_ -is [int16] -or $_ -is [int32] -or $_ -is [int64]  `
                 -or $_ -is [sbyte] -or $_ -is [uint16] -or $_ -is [uint32] -or $_ -is [uint64] `
@@ -115,7 +115,7 @@
                 -or $_ -is [float] -or $_ -is [double] -or $_ -is [decimal]
         }
     }
-    Process {
+    process {
         for ($a = 0; $a -lt $Object.Count; $a++) {
             $NewObject = [ordered] @{}
             if ($Object[$a] -is [System.Collections.IDictionary]) {
@@ -217,11 +217,14 @@
                     } elseif ($Value -is [System.Enum]) {
                         $NewObject[$DisplayProperty] = ($Value).ToString()
                     } elseif (($Value | IsNumeric) -eq $true) {
-                        #$Value = $($Value).ToString().Replace(',', '.')
                         if ($NumberAsString) {
-                            $NewObject[$DisplayProperty] = "$Value"
+                            $NewObject[$DisplayProperty] = ($Value).ToString()
                         } else {
-                            $NewObject[$DisplayProperty] = $Value
+                            if ($Value.PSTypeNames -contains 'Deserialized.System.Enum') {
+                                $NewObject[$DisplayProperty] = $Value.ToString()
+                            } else {
+                                $NewObject[$DisplayProperty] = $Value
+                            }
                         }
                     } elseif ($Value -is [PSObject]) {
                         # We force it to max depth 0
