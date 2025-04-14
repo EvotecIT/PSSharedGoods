@@ -9,6 +9,7 @@
             'CN=Administrator,CN=Users,DC=ad,DC=evotec,DC=pl'
             'CN=Builtin,DC=ad,DC=evotec,DC=pl'
             'CN=Certificate Service DCOM Access,CN=Builtin,DC=ad,DC=evotec,DC=pl'
+            "CN=Four-PRINT-CLAY-SHIP-0004,CN=Four-PRINT,OU=FourServers,DC=FourAnyway,DC=com"
         )
         $Output = ConvertFrom-DistinguishedName -ToOrganizationalUnit -DistinguishedName $DistinguishedName
         $Output | Should -Be @(
@@ -20,6 +21,7 @@
             'CN=Users,DC=ad,DC=evotec,DC=pl'
             'DC=ad,DC=evotec,DC=pl'
             'CN=Builtin,DC=ad,DC=evotec,DC=pl'
+            "OU=FourServers,DC=FourAnyway,DC=com"
         )
     }
     It 'ToOrganizationalUnit Conversion - Pipeline' {
@@ -27,12 +29,14 @@
             'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            "CN=Four-PRINT-CLAY-SHIP-0004,CN=Four-PRINT,OU=FourServers,DC=FourAnyway,DC=com"
         )
         $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToOrganizationalUnit
         $Output | Should -Be @(
             'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            "OU=FourServers,DC=FourAnyway,DC=com"
         )
     }
     It 'ToDC Conversion' {
@@ -40,12 +44,14 @@
             'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            "CN=Four-PRINT-CLAY-SHIP-0004,CN=Four-PRINT,OU=FourServers,DC=FourAnyway,DC=com"
         )
         $Output = ConvertFrom-DistinguishedName -ToDC -DistinguishedName $DistinguishedName
         $Output | Should -Be @(
             'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=xyz'
+            'DC=FourAnyway,DC=com'
         )
     }
     It 'ToDC Conversion - Pipeline' {
@@ -53,12 +59,14 @@
             'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            "CN=Four-PRINT-CLAY-SHIP-0004,CN=Four-PRINT,OU=FourServers,DC=FourAnyway,DC=com"
         )
         $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToDC
         $Output | Should -Be @(
             'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=xyz'
             'DC=ad,DC=evotec,DC=xyz'
+            'DC=FourAnyway,DC=com'
         )
     }
     It 'ToDomainCN Conversion' {
@@ -66,12 +74,14 @@
             'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            "CN=Four-PRINT-CLAY-SHIP-0004,CN=Four-PRINT,OU=FourServers,DC=FourAnyway,DC=com"
         )
         $Output = ConvertFrom-DistinguishedName -ToDomainCN -DistinguishedName $DistinguishedName
         $Output | Should -Be @(
             'ad.evotec.xyz'
             'ad.evotec.xyz'
             'ad.evotec.xyz'
+            'FourAnyway.com'
         )
     }
     It 'ToDomainCN Conversion - Pipeline' {
@@ -92,6 +102,7 @@
             'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            "CN=Four-PRINT-CLAY-SHIP-0004,CN=Four-PRINT,OU=FourServers,DC=FourAnyway,DC=com"
         )
         $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToMultipleOrganizationalUnit
         $Output | Should -Be @(
@@ -100,6 +111,7 @@
             'OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=FourServers,DC=FourAnyway,DC=com'
         )
     }
     It 'ToMultipleOU Conversion with Parent - Pipeline' {
@@ -107,6 +119,7 @@
             'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            "CN=Four-PRINT-CLAY-SHIP-0004,CN=Four-PRINT,OU=FourServers,DC=FourAnyway,DC=com"
         )
         $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToMultipleOrganizationalUnit -IncludeParent
         $Output | Should -Be @(
@@ -118,6 +131,7 @@
             'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
             'OU=Production,DC=ad,DC=evotec,DC=xyz'
+            "OU=FourServers,DC=FourAnyway,DC=com"
         )
     }
     It 'ToLastName Conversion' {
