@@ -135,9 +135,23 @@
                     $CN
                 }
             } elseif ($ToOrganizationalUnit) {
-                if ($Distinguished -match '^CN=[^,\\]+(?:\\,[^,\\]+)*,(.+)$') {
+                <#
+                .SYNOPSIS
+                Extracts the organizational unit part from a Distinguished Name.
+
+                .DESCRIPTION
+                For objects with OU in the path, finds and returns the first OU and everything after it.
+                For objects with only CN parts, returns everything after the first CN.
+                For objects that are already OUs, returns the original DN.
+                #>
+                if ($Distinguished -match '.*?(OU=.+)$') {
+                    # If the DN contains an OU part, return that part (first OU and everything after)
+                    $matches[1]
+                } elseif ($Distinguished -match '^CN=[^,\\]+(?:\\,[^,\\]+)*,(.+)$') {
+                    # No OU found, but DN starts with CN - return everything after first CN
                     $matches[1]
                 } elseif ($Distinguished -match '^(OU=|CN=)') {
+                    # Return full string if it starts with OU= or if nothing else matched
                     $Distinguished
                 }
             } elseif ($ToMultipleOrganizationalUnit) {
