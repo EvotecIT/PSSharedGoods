@@ -168,4 +168,35 @@
             'SADM Testing 2'
         )
     }
+
+    It 'ToContainer Conversion' {
+        $DistinguishedName = @(
+            'CN=Users,DC=ad,DC=evotec,DC=xyz'
+            'CN=Group Policy Creator Owners,CN=Users,DC=ad,DC=evotec,DC=xyz'
+            'CN=Admin,OU=Servers,DC=ad,DC=evotec,DC=xyz'
+            'OU=Servers,DC=ad,DC=evotec,DC=xyz'
+            'CN=Windows Authorization Access Group,CN=Builtin,DC=ad,DC=evotec,DC=xyz'
+            'CN=e6d5fd00-385d-4e65-b02d-9da3493ed850,CN=Operations,CN=DomainUpdates,CN=System,DC=ad,DC=evotec,DC=xyz'
+            'OU=Domain Controllers,DC=ad,DC=evotec,DC=pl'
+            'OU=Microsoft Exchange Security Groups,DC=ad,DC=evotec,DC=xyz'
+            'CN=Przemyslaw Klys,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'CN=ITR03_AD Admins,OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'CN=SADM Testing 2,OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+        )
+
+        $Output = $DistinguishedName | ConvertFrom-DistinguishedName -ToContainer
+        $Output | Should -Be @(
+            'CN=Users,DC=ad,DC=evotec,DC=xyz',
+            'CN=Users,DC=ad,DC=evotec,DC=xyz',
+            'OU=Servers,DC=ad,DC=evotec,DC=xyz',
+            'OU=Servers,DC=ad,DC=evotec,DC=xyz',
+            'CN=Builtin,DC=ad,DC=evotec,DC=xyz',
+            'CN=Operations,CN=DomainUpdates,CN=System,DC=ad,DC=evotec,DC=xyz',
+            'OU=Domain Controllers,DC=ad,DC=evotec,DC=pl',
+            'OU=Microsoft Exchange Security Groups,DC=ad,DC=evotec,DC=xyz',
+            'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz',
+            'OU=Security,OU=Groups,OU=Production,DC=ad,DC=evotec,DC=xyz'
+            'OU=Special,OU=Accounts,OU=Production,DC=ad,DC=evotec,DC=xyz'
+        )
+    }
 }

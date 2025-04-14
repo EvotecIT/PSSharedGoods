@@ -1,16 +1,19 @@
 ﻿function ConvertFrom-DistinguishedName {
     <#
     .SYNOPSIS
-    Converts a Distinguished Name to CN, OU, Multiple OUs or DC
+    Converts a Distinguished Name to CN, OU, Multiple OUs, DC or Container
 
     .DESCRIPTION
-    Converts a Distinguished Name to CN, OU, Multiple OUs or DC
+    Converts a Distinguished Name to CN, OU, Multiple OUs, DC or Container
 
     .PARAMETER DistinguishedName
     Distinguished Name to convert
 
     .PARAMETER ToOrganizationalUnit
     Converts DistinguishedName to Organizational Unit
+
+    .PARAMETER ToMultipleOrganizationalUnit
+    Converts DistinguishedName to Multiple Organizational Units
 
     .PARAMETER ToDC
     Converts DistinguishedName to DC
@@ -20,6 +23,12 @@
 
     .PARAMETER ToCanonicalName
     Converts DistinguishedName to Canonical Name
+
+    .PARAMETER ToLastName
+    Converts DistinguishedName to the last CN or OU part
+
+    .PARAMETER ToContainer
+    Converts DistinguishedName to its parent container
 
     .PARAMETER ToFQDN
     Converts DistinguishedName to Fully Qualified Domain Name (FQDN)
@@ -70,7 +79,7 @@
     Domain Controllers
     Microsoft Exchange Security Groups
 
-    .EXAMPLEE
+    .EXAMPLE
     ConvertFrom-DistinguishedName -DistinguishedName 'DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
     ConvertFrom-DistinguishedName -DistinguishedName 'OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
     ConvertFrom-DistinguishedName -DistinguishedName 'CN=test,OU=Users,OU=Production,DC=ad,DC=evotec,DC=xyz' -ToCanonicalName
@@ -79,6 +88,18 @@
     ad.evotec.xyz
     ad.evotec.xyz\Production\Users
     ad.evotec.xyz\Production\Users\test
+
+    .EXAMPLE
+    ConvertFrom-DistinguishedName -DistinguishedName 'CN=Users,DC=ad,DC=evotec,DC=xyz' -ToContainer
+    ConvertFrom-DistinguishedName -DistinguishedName 'CN=Group Policy Creator Owners,CN=Users,DC=ad,DC=evotec,DC=xyz' -ToContainer
+    ConvertFrom-DistinguishedName -DistinguishedName 'CN=Admin,OU=Servers,DC=ad,DC=evotec,DC=xyz' -ToContainer
+    ConvertFrom-DistinguishedName -DistinguishedName 'OU=Servers,DC=ad,DC=evotec,DC=xyz' -ToContainer
+
+    Output:
+    CN=Users,DC=ad,DC=evotec,DC=xyz
+    CN=Users,DC=ad,DC=evotec,DC=xyz
+    OU=Servers,DC=ad,DC=evotec,DC=xyz
+    OU=Servers,DC=ad,DC=evotec,DC=xyz
 
     .NOTES
     General notes
@@ -93,6 +114,7 @@
         [Parameter(ParameterSetName = 'ToLastName')]
         [Parameter(ParameterSetName = 'ToCanonicalName')]
         [Parameter(ParameterSetName = 'ToFQDN')]
+        [Parameter(ParameterSetName = 'ToContainer')]
         [alias('Identity', 'DN')][Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)][string[]] $DistinguishedName,
         [Parameter(ParameterSetName = 'ToOrganizationalUnit')][switch] $ToOrganizationalUnit,
         [Parameter(ParameterSetName = 'ToMultipleOrganizationalUnit')][alias('ToMultipleOU')][switch] $ToMultipleOrganizationalUnit,
@@ -101,9 +123,10 @@
         [Parameter(ParameterSetName = 'ToDomainCN')][switch] $ToDomainCN,
         [Parameter(ParameterSetName = 'ToLastName')][switch] $ToLastName,
         [Parameter(ParameterSetName = 'ToCanonicalName')][switch] $ToCanonicalName,
+        [Parameter(ParameterSetName = 'ToContainer')][switch] $ToContainer,
         [Parameter(ParameterSetName = 'ToFQDN')][switch] $ToFQDN
     )
-    Process {
+    process {
         foreach ($Distinguished in $DistinguishedName) {
             if ($ToDomainCN) {
                 $DN = $Distinguished -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
@@ -112,76 +135,36 @@
                     $CN
                 }
             } elseif ($ToOrganizationalUnit) {
-                # $Value = [Regex]::Match($Distinguished, '(?=OU=)(.*\n?)(?<=.)').Value
-                # if ($Value) {
-                #     $Value
-                # }
-
-                # Match everything after first CN= until the end, excluding the first CN if it exists
-                # $Value = $UseMe -replace '^CN=[^,]+,', ''
-                # if ($Value -match '^(CN=.*|OU=.*)') {
-                #     $Value
-                # }
-
                 if ($Distinguished -match '^CN=[^,\\]+(?:\\,[^,\\]+)*,(.+)$') {
-                    # $matches[1] contains everything after first CN= including escaped chars
                     $matches[1]
                 } elseif ($Distinguished -match '^(OU=|CN=)') {
-                    # Return full string if it starts with OU= or doesn't have leading CN=
                     $Distinguished
                 }
             } elseif ($ToMultipleOrganizationalUnit) {
-                # if ($IncludeParent) {
-                #     $Distinguished
-                # }
-                # while ($true) {
-                #     #$dn = $dn -replace '^.+?,(?=CN|OU|DC)'
-                #     $Distinguished = $Distinguished -replace '^.+?,(?=..=)'
-                #     if ($Distinguished -match '^DC=') {
-                #         break
-                #     }
-                #     $Distinguished
-                # }
-
                 $Parts = $Distinguished -split '(?<!\\),'
                 $Results = [System.Collections.ArrayList]::new()
 
-                # Start with full path if IncludeParent is specified
                 if ($IncludeParent) {
                     $null = $Results.Add($Distinguished)
                 }
 
-                # Build paths from right to left, excluding DC parts
                 for ($i = 1; $i -lt $Parts.Count; $i++) {
                     $CurrentPath = $Parts[$i..($Parts.Count - 1)] -join ','
                     if ($CurrentPath -match '^(OU=|CN=)' -and $CurrentPath -notmatch '^DC=') {
                         $null = $Results.Add($CurrentPath)
                     }
                 }
-                # Return results
                 foreach ($R in $Results) {
                     if ($R -match '^(OU=|CN=)') {
                         $R
                     }
                 }
             } elseif ($ToDC) {
-                #return [Regex]::Match($DistinguishedName, '(?=DC=)(.*\n?)(?<=.)').Value
-                # return [Regex]::Match($DistinguishedName, '.*?(DC=.*)').Value
                 $Value = $Distinguished -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
                 if ($Value) {
                     $Value
                 }
-                #return [Regex]::Match($DistinguishedName, 'CN=.*?(DC=.*)').Groups[1].Value
             } elseif ($ToLastName) {
-                # Would be best if it worked, but there is too many edge cases so hand splits seems to be the best solution
-                # Feel free to change it back to regex if you know how ;)
-                <# https://stackoverflow.com/questions/51761894/regex-extract-ou-from-distinguished-name
-                $Regex = "^(?:(?<cn>CN=(?<name>.*?)),)?(?<parent>(?:(?<path>(?:CN|OU).*?),)?(?<domain>(?:DC=.*)+))$"
-                $Found = $Distinguished -match $Regex
-                if ($Found) {
-                    $Matches.name
-                }
-                #>
                 $NewDN = $Distinguished -split ",DC="
                 if ($NewDN[0].Contains(",OU=")) {
                     [Array] $ChangedDN = $NewDN[0] -split ",OU="
@@ -212,28 +195,41 @@
                 } elseif ($Rest) {
                     $Rest.TrimEnd('\') -replace '\\,', ','
                 }
+            } elseif ($ToContainer) {
+                <#
+                .SYNOPSIS
+                Extracts the parent container from a Distinguished Name.
+
+                .DESCRIPTION
+                For objects within containers (like "CN=Object,CN=Container,..."), returns the container part.
+                For objects within OU containers (like "CN=Object,OU=Container,..."), returns the OU container.
+                For container objects directly under the domain (like "CN=Users,DC=..."), returns the full DN.
+                For organizational units (like "OU=Container,DC=..."), returns the OU itself.
+                #>
+                if ($Distinguished -match '^(?:CN|OU)=[^,\\]+(?:\\,[^,\\]+)*,(((?:CN|OU)=[^,\\]+(?:\\,[^,\\]+)*,)+(?:DC=.+))$') {
+                    # This is an object within a container, return the parent container part
+                    $matches[1]
+                } else {
+                    # Either this is already a container directly under domain or another type
+                    # Return the original DN
+                    $Distinguished
+                }
             } elseif ($ToFQDN) {
-                # Convert for example: "CN=adcs,DC=ad,DC=evotec,DC=xyz" to "adcs.ad.evotec.xyz"
-                # This will only work for very specific cases, where CN is the first element in the DN
-                # Split into CN and DC parts
                 if ($Distinguished -match '^CN=(.+?),(?:(?:OU|CN).+,)*((?:DC=.+,?)+)$') {
-                    $cnPart = $matches[1] -replace '\\,', ',' # Unescape commas in CN
+                    $cnPart = $matches[1] -replace '\\,', ','
                     $dcPart = $matches[2] -replace 'DC=', '' -replace ',', '.'
                     "$cnPart.$dcPart"
                 } elseif ($Distinguished -match '^CN=(.+?),((?:DC=.+,?)+)$') {
-                    $cnPart = $matches[1] -replace '\\,', ',' # Unescape commas in CN
+                    $cnPart = $matches[1] -replace '\\,', ','
                     $dcPart = $matches[2] -replace 'DC=', '' -replace ',', '.'
                     "$cnPart.$dcPart"
                 }
             } else {
                 $Regex = '^CN=(?<cn>.+?)(?<!\\),(?<ou>(?:(?:OU|CN).+?(?<!\\),)+(?<dc>DC.+?))$'
-                #$Output = foreach ($_ in $Distinguished) {
                 $Found = $Distinguished -match $Regex
                 if ($Found) {
                     $Matches.cn
                 }
-                #}
-                #$Output.cn
             }
         }
     }
