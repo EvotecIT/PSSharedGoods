@@ -155,24 +155,59 @@
                     $Distinguished
                 }
             } elseif ($ToMultipleOrganizationalUnit) {
+                <#
+                .SYNOPSIS
+                Extracts multiple organizational unit paths from a Distinguished Name.
+
+                .DESCRIPTION
+                Returns an array of organizational unit paths representing each level in the distinguished name.
+                - Without IncludeParent: Skips the parent OU level if the input is already an OU
+                - With IncludeParent: Includes the original DN as the first element
+                Focuses only on OU parts, ignoring CN containers (unless part of the parent DN).
+                #>
+                # Split the DN by unescaped commas
                 $Parts = $Distinguished -split '(?<!\\),'
+
+                # Create results collection
                 $Results = [System.Collections.ArrayList]::new()
 
+                # Add parent if requested
                 if ($IncludeParent) {
                     $null = $Results.Add($Distinguished)
                 }
 
-                for ($i = 1; $i -lt $Parts.Count; $i++) {
-                    $CurrentPath = $Parts[$i..($Parts.Count - 1)] -join ','
-                    if ($CurrentPath -match '^(OU=|CN=)' -and $CurrentPath -notmatch '^DC=') {
-                        $null = $Results.Add($CurrentPath)
+                # Find the first DC part
+                $DCIndex = $Parts.Count - 1
+                for ($i = 0; $i -lt $Parts.Count; $i++) {
+                    if ($Parts[$i] -match '^DC=') {
+                        $DCIndex = $i
+                        break
                     }
                 }
-                foreach ($R in $Results) {
-                    if ($R -match '^(OU=|CN=)') {
-                        $R
+
+                # Determine starting index for processing
+                # If input starts with OU= and -IncludeParent isn't specified, skip the first OU
+                $StartIndex = if ($Parts[0] -match '^OU=' -and -not $IncludeParent) {
+                    1  # Skip first OU part without IncludeParent
+                } else {
+                    if ($Parts[0] -match '^CN=') {
+                        0  # For CN objects, process all parts
+                    } else {
+                        1  # Default starting index
                     }
                 }
+
+                # Extract all OU paths by joining from each OU part to the end
+                # Skip the parts we've determined should be skipped
+                for ($i = $StartIndex; $i -lt $DCIndex; $i++) {
+                    # Only process if this part is an OU
+                    if ($Parts[$i] -match '^OU=') {
+                        $null = $Results.Add(($Parts[$i..$Parts.Count]) -join ',')
+                    }
+                }
+
+                # Return all results that start with OU=
+                $Results | Where-Object { $_ -match '^OU=' }
             } elseif ($ToDC) {
                 $Value = $Distinguished -replace '.*?((DC=[^=]+,)+DC=[^=]+)$', '$1'
                 if ($Value) {
