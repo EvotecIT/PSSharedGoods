@@ -1,4 +1,13 @@
-﻿#### 0.0.306 - 2025.03.20
+﻿#### 0.0.307
+##### What's new
+- Introduced various commented-out examples for using `ConvertFrom-DistinguishedName`.
+- Included examples for converting distinguished names to organizational units and other formats.
+- Enhanced documentation for better understanding of the module's capabilities.
+- Added `ToContainer` switch to `ConvertFrom-DistinguishedName`
+
+**Full Changelog**: https://github.com/EvotecIT/PSSharedGoods/compare/v0.0.306...v0.0.307
+
+#### 0.0.306 - 2025.03.20
 - Improve `ConvertTo-PrettyObject` to handle `deserialized` objects better
 - Improve `ConvertTo-JsonLiteral` to handle `deserialized` objects better
 
