@@ -1,4 +1,8 @@
-﻿#### 0.0.307
+﻿#### 0.0.308 - 2025.06.02
+##### What's new
+- Improve `Convert-FromColor` to support other ways in PSWriteHTML
+
+#### 0.0.307
 ##### What's new
 - Introduced various commented-out examples for using `ConvertFrom-DistinguishedName`.
 - Included examples for converting distinguished names to organizational units and other formats.
