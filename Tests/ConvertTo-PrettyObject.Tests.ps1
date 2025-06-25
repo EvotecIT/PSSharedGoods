@@ -1,4 +1,4 @@
-﻿Enum Fruit{
+﻿enum Fruit{
     Apple = 29
     Pear = 30
     Kiwi = 31
@@ -521,7 +521,7 @@ Describe -Name 'Testing ConvertTo-PrettyObject NewLines' {
     It 'Converts the same way ConvertTo-JSON' {
         $DataTable3 = @(
             [PSCustomObject] @{
-                'Test1'        = 'Test' + [System.Environment]::NewLine + 'test3';
+                'Test1'        = 'Test' + [System.Environment]::NewLine + 'test3'
                 'Test2'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`n test"
                 'Test3'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`r`n test"
                 'Test4'        = 'Test' + [System.Environment]::NewLine + 'test3' + "`r test"
@@ -685,5 +685,248 @@ Describe -Name 'Testing ConvertTo-PrettyObject against int/double' {
         $Output1[0].'Test3' | Should -BeExactly '1.2 1.3 1.4'
         $Output1[0].'Test4' | Should -BeExactly '1 2 3 4 5'
         $Output1[0].'Test5' | Should -BeExactly '1 1.2 1.3 4'
+    }
+}
+
+Describe -Name 'Testing ConvertTo-PrettyObject with comprehensive null and empty input handling' {
+    It 'Handles null input without throwing errors' {
+        {
+            $result = $null | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = $null | ConvertTo-PrettyObject
+        $result | Should -BeNullOrEmpty
+    }
+
+    It 'Handles empty array without throwing errors' {
+        {
+            $result = @() | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = @() | ConvertTo-PrettyObject
+        $result | Should -BeNullOrEmpty
+    }
+
+    It 'Handles array with only null elements without throwing errors' {
+        {
+            $result = @($null, $null, $null) | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = @($null, $null, $null) | ConvertTo-PrettyObject
+        $result | Should -BeNullOrEmpty
+    }
+
+    It 'Handles mixed array with null and valid PSCustomObject correctly' {
+        $testObject = [PSCustomObject]@{
+            Name  = "TestName"
+            Value = 42
+            Date  = Get-Date "2023-01-01"
+        }
+
+        {
+            $result = @($null, $testObject, $null) | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = @($null, $testObject, $null) | ConvertTo-PrettyObject
+        $result | Should -Not -BeNullOrEmpty
+        $result.Count | Should -Be 1
+        $result.Name | Should -Be "TestName"
+        $result.Value | Should -Be 42
+        $result.Date | Should -Be "2023-01-01 00:00:00"
+    }
+
+    It 'Handles empty hashtable without throwing errors' {
+        {
+            $result = @{} | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = @{} | ConvertTo-PrettyObject
+        $result | Should -Not -BeNullOrEmpty
+        $result.PSObject.Properties.Count | Should -Be 0
+    }
+
+    It 'Handles hashtable with null values correctly' {
+        $hashTable = @{
+            Property1 = $null
+            Property2 = "ValidValue"
+            Property3 = $null
+        }
+
+        {
+            $result = $hashTable | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = $hashTable | ConvertTo-PrettyObject
+        $result | Should -Not -BeNullOrEmpty
+        $result.Property1 | Should -Be ""
+        $result.Property2 | Should -Be "ValidValue"
+        $result.Property3 | Should -Be ""
+    }
+
+    It 'Handles PSCustomObject with null properties correctly' {
+        $customObject = [PSCustomObject]@{
+            NullProperty        = $null
+            StringProperty      = "Test"
+            EmptyStringProperty = ""
+            NumberProperty      = 123
+        }
+
+        {
+            $result = $customObject | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = $customObject | ConvertTo-PrettyObject
+        $result | Should -Not -BeNullOrEmpty
+        $result.NullProperty | Should -Be ""
+        $result.StringProperty | Should -Be "Test"
+        $result.EmptyStringProperty | Should -Be ""
+        $result.NumberProperty | Should -Be 123
+    }
+
+    It 'Handles array with mixed null objects and hashtables' {
+        $testData = @(
+            $null,
+            @{ Key1 = "Value1"; Key2 = $null },
+            $null,
+            [PSCustomObject]@{ Prop1 = "Test"; Prop2 = $null },
+            $null
+        )
+
+        {
+            $result = $testData | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = $testData | ConvertTo-PrettyObject
+        $result | Should -Not -BeNullOrEmpty
+        $result.Count | Should -Be 2
+        $result[0].Key1 | Should -Be "Value1"
+        $result[0].Key2 | Should -Be ""
+        $result[1].Prop1 | Should -Be "Test"
+        $result[1].Prop2 | Should -Be ""
+    }
+
+    It 'Handles Force parameter with null first object' {
+        $testData = @(
+            $null,
+            [PSCustomObject]@{ Property1 = "Test1"; Property2 = "Test2" },
+            [PSCustomObject]@{ Property1 = "Test3"; Property3 = "Test4" }
+        )
+
+        {
+            $result = $testData | ConvertTo-PrettyObject -Force
+        } | Should -Not -Throw
+
+        $result = $testData | ConvertTo-PrettyObject -Force
+        $result | Should -Not -BeNullOrEmpty
+        $result.Count | Should -Be 2
+        $result[0].Property1 | Should -Be "Test1"
+        $result[0].Property2 | Should -Be "Test2"
+        $result[1].Property1 | Should -Be "Test3"
+    }
+
+    It 'Handles null parameter directly (not through pipeline)' {
+        {
+            $result = ConvertTo-PrettyObject -Object $null
+        } | Should -Not -Throw
+
+        $result = ConvertTo-PrettyObject -Object $null
+        $result | Should -BeNullOrEmpty
+    }
+
+    It 'Handles mixed array with various null scenarios' {
+        $testData = @(
+            $null,
+            @{},  # Empty hashtable
+            $null,
+            [PSCustomObject]@{},  # Empty PSCustomObject
+            $null,
+            [PSCustomObject]@{ ValidProp = "Test" },
+            $null
+        )
+
+        {
+            $result = $testData | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = $testData | ConvertTo-PrettyObject
+        $result | Should -Not -BeNullOrEmpty
+        $result.Count | Should -Be 3  # Empty hashtable, empty PSCustomObject, and valid PSCustomObject
+
+        # First result should be the empty hashtable (should create object with no properties)
+        $result[0].PSObject.Properties.Count | Should -Be 0
+
+        # Second result should be the empty PSCustomObject (should create object with no properties)
+        $result[1].PSObject.Properties.Count | Should -Be 0
+
+        # Third result should be the valid PSCustomObject
+        $result[2].ValidProp | Should -Be "Test"
+    }
+
+    It 'Handles hashtable with only null and empty values' {
+        $hashTable = @{
+            NullValue   = $null
+            EmptyString = ""
+            EmptyArray  = @()
+            EmptyList   = [System.Collections.Generic.List[string]]::new()
+        }
+
+        {
+            $result = $hashTable | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = $hashTable | ConvertTo-PrettyObject
+        $result | Should -Not -BeNullOrEmpty
+        $result.NullValue | Should -Be ""
+        $result.EmptyString | Should -Be ""
+        $result.EmptyArray | Should -Be ""
+        $result.EmptyList | Should -Be ""
+    }
+
+    It 'Handles PSCustomObject with complex null scenarios' {
+        $customObject = [PSCustomObject]@{
+            NullValue   = $null
+            EmptyArray  = @()
+            NestedNull  = [PSCustomObject]@{ InnerNull = $null }
+            ValidString = "Test"
+        }
+
+        {
+            $result = $customObject | ConvertTo-PrettyObject
+        } | Should -Not -Throw
+
+        $result = $customObject | ConvertTo-PrettyObject
+        $result | Should -Not -BeNullOrEmpty
+        $result.NullValue | Should -Be ""
+        $result.EmptyArray | Should -Be ""
+        $result.NestedNull | Should -Be "@{InnerNull=}"  # Nested objects become string representation
+        $result.ValidString | Should -Be "Test"
+    }
+
+    It 'Handles array with null elements between valid objects using ArrayJoin' {
+        $testData = @(
+            $null,
+            [PSCustomObject]@{
+                Name   = "Test1"
+                Values = @("A", "B", "C")
+            },
+            $null,
+            [PSCustomObject]@{
+                Name   = "Test2"
+                Values = @("D", "E", "F")
+            },
+            $null
+        )
+
+        {
+            $result = $testData | ConvertTo-PrettyObject -ArrayJoin -ArrayJoinString ","
+        } | Should -Not -Throw
+
+        $result = $testData | ConvertTo-PrettyObject -ArrayJoin -ArrayJoinString ","
+        $result | Should -Not -BeNullOrEmpty
+        $result.Count | Should -Be 2
+        $result[0].Name | Should -Be "Test1"
+        $result[0].Values | Should -Be "A,B,C"
+        $result[1].Name | Should -Be "Test2"
+        $result[1].Values | Should -Be "D,E,F"
     }
 }
