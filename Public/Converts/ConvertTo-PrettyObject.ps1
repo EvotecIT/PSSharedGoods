@@ -79,7 +79,10 @@
     #>
     [CmdletBinding()]
     param(
-        [alias('InputObject')][Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0, Mandatory)][Array] $Object,
+        [alias('InputObject')]
+        [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName, Position = 0)]
+        [Array] $Object,
+
         [int] $Depth,
         [switch] $AsArray,
         [string] $DateTimeFormat = "yyyy-MM-dd HH:mm:ss",
@@ -114,22 +117,47 @@
                 -or $_ -is [sbyte] -or $_ -is [uint16] -or $_ -is [uint32] -or $_ -is [uint64] `
                 -or $_ -is [float] -or $_ -is [double] -or $_ -is [decimal]
         }
+        $ProcessedAnyInput = $false
     }
     process {
+        # Handle case where no object is provided or null is provided
+        if (-not $PSBoundParameters.ContainsKey('Object') -or $null -eq $Object -or $Object.Count -eq 0) {
+            return
+        }
+
+        $ProcessedAnyInput = $true
+
         for ($a = 0; $a -lt $Object.Count; $a++) {
+            # Skip null array elements
+            if ($null -eq $Object[$a]) {
+                continue
+            }
+
             $NewObject = [ordered] @{}
             if ($Object[$a] -is [System.Collections.IDictionary]) {
+                # Handle empty dictionaries
+                if ($Object[$a].Keys.Count -eq 0) {
+                    [PSCustomObject] $NewObject
+                    continue
+                }
+
                 # Push to TEXT the same as [PSCustomObject]
                 for ($i = 0; $i -lt ($Object[$a].Keys).Count; $i++) {
                     $Property = ([string[]]$Object[$a].Keys)[$i]
+                    # Skip null or empty property names
+                    if ([string]::IsNullOrEmpty($Property)) {
+                        continue
+                    }
                     $DisplayProperty = $Property.Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $Value = $Object[$a].$Property
                     # the same code for PSCustomObject
                     if ($null -eq $Value) {
                         $NewObject[$DisplayProperty] = ""
                     } elseif ($Value -is [string]) {
-                        foreach ($Key in $AdvancedReplace.Keys) {
-                            $Value = $Value.Replace($Key, $AdvancedReplace[$Key])
+                        if ($AdvancedReplace) {
+                            foreach ($Key in $AdvancedReplace.Keys) {
+                                $Value = $Value.Replace($Key, $AdvancedReplace[$Key])
+                            }
                         }
                         $NewObject[$DisplayProperty] = $Value.Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                     } elseif ($Value -is [DateTime]) {
@@ -177,20 +205,36 @@
                 $Object[$a]
             } else {
                 if ($Force -and -not $PropertyName) {
+                    # Handle case where first object might be null
+                    if ($null -eq $Object[0]) {
+                        continue
+                    }
                     $PropertyName = $Object[0].PSObject.Properties.Name
                 } elseif ($Force -and $PropertyName) {
 
                 } else {
+                    # Handle case where current object has no properties
+                    if ($null -eq $Object[$a].PSObject -or $null -eq $Object[$a].PSObject.Properties) {
+                        continue
+                    }
                     $PropertyName = $Object[$a].PSObject.Properties.Name
                 }
+
+                # Skip if no properties found
+                if ($null -eq $PropertyName -or $PropertyName.Count -eq 0) {
+                    continue
+                }
+
                 foreach ($Property in $PropertyName) {
                     $DisplayProperty = $Property.Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $Value = $Object[$a].$Property
                     if ($null -eq $Value) {
                         $NewObject[$DisplayProperty] = ""
                     } elseif ($Value -is [string]) {
-                        foreach ($Key in $AdvancedReplace.Keys) {
-                            $Value = $Value.Replace($Key, $AdvancedReplace[$Key])
+                        if ($AdvancedReplace) {
+                            foreach ($Key in $AdvancedReplace.Keys) {
+                                $Value = $Value.Replace($Key, $AdvancedReplace[$Key])
+                            }
                         }
                         $NewObject[$DisplayProperty] = $Value.Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                     } elseif ($Value -is [DateTime]) {
@@ -220,7 +264,7 @@
                         if ($NumberAsString) {
                             $NewObject[$DisplayProperty] = ($Value).ToString()
                         } else {
-                            $NewObject[$DisplayProperty] = $Value            
+                            $NewObject[$DisplayProperty] = $Value
                         }
                     } elseif ($Value -is [PSObject]) {
                         # We force it to max depth 0
@@ -232,6 +276,13 @@
                 }
                 [PSCustomObject] $NewObject
             }
+        }
+    }
+    end {
+        # If no input was processed, check if we were called with null directly
+        if (-not $ProcessedAnyInput -and $PSBoundParameters.ContainsKey('Object') -and $null -eq $Object) {
+            # Return nothing for null input
+            return
         }
     }
 }
