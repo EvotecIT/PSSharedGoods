@@ -1,4 +1,8 @@
-﻿#### 0.0.308 - 2025.06.02
+﻿#### 0.0.309 - 2025.06.25
+##### What's new
+- improved `ConvertTo-PrettyObject` to handle nulls
+
+#### 0.0.308 - 2025.06.02
 ##### What's new
 - Improve `Convert-FromColor` to support other ways in PSWriteHTML
 
