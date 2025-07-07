@@ -1,4 +1,11 @@
-﻿#### 0.0.309 - 2025.06.25
+﻿#### 0.0.310 - 2025.07.07
+##### What's new
+- Added `Get-FolderEncoding` to get folder encoding
+- Added `Convert-FolderEncoding` to convert folder encoding
+- Added `Convert-FileEncoding` to convert file encoding
+- Added `Get-FileEncoding` to get file encoding
+
+#### 0.0.309 - 2025.06.25
 ##### What's new
 - improved `ConvertTo-PrettyObject` to handle nulls
 
