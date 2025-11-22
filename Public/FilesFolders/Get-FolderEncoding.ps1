@@ -1,4 +1,4 @@
-function Get-FolderEncoding {
+﻿function Get-FolderEncoding {
     <#
     .SYNOPSIS
     Analyzes file encodings in folders based on file extensions.
@@ -374,42 +374,43 @@ function Get-FolderEncoding {
     # Add a display summary method for better default output
     $result | Add-Member -MemberType ScriptMethod -Name 'DisplaySummary' -Value {
         Write-Host ""
-        Write-Host "📊 Folder Encoding Analysis Summary" -ForegroundColor Green
+        Write-Host "Folder Encoding Analysis Summary" -ForegroundColor Green
         Write-Host "=================================="
-        Write-Host "📁 Directories analyzed: $($this.Summary.ProcessedDirectories)" -ForegroundColor Cyan
-        Write-Host "📄 Total files found: $($this.Summary.TotalFiles)" -ForegroundColor Cyan
-        Write-Host "🔤 Unique encodings: $($this.Summary.UniqueEncodings)" -ForegroundColor Cyan
-        Write-Host "⭐ Most common encoding: $($this.Summary.MostCommonEncoding)" -ForegroundColor Green
-        Write-Host "⚠️  Mixed encodings: $($this.Summary.HasMixedEncodings)" -ForegroundColor $(if ($this.Summary.HasMixedEncodings) { 'Yellow' } else { 'Green' })
+        Write-Host "Directories analyzed : $($this.Summary.ProcessedDirectories)" -ForegroundColor Cyan
+        Write-Host "Total files found    : $($this.Summary.TotalFiles)" -ForegroundColor Cyan
+        Write-Host "Unique encodings     : $($this.Summary.UniqueEncodings)" -ForegroundColor Cyan
+        Write-Host "Most common encoding : $($this.Summary.MostCommonEncoding)" -ForegroundColor Green
+        Write-Host "Mixed encodings      : $($this.Summary.HasMixedEncodings)" -ForegroundColor $(if ($this.Summary.HasMixedEncodings) { 'Yellow' } else { 'Green' })
 
         if ($this.Summary.HasMixedEncodings) {
-            Write-Host "📝 Inconsistent extensions: $($this.Summary.InconsistentExtensions -join ', ')" -ForegroundColor Yellow
+            Write-Host "Inconsistent extensions: $($this.Summary.InconsistentExtensions -join ', ')" -ForegroundColor Yellow
         }
 
         Write-Host ""
-        Write-Host "📈 Encoding Distribution:" -ForegroundColor Blue
+        Write-Host "Encoding Distribution:" -ForegroundColor Blue
         $this.EncodingDistribution.GetEnumerator() | Sort-Object Value -Descending | ForEach-Object {
             $percentage = [math]::Round(($_.Value / $this.Summary.TotalFiles) * 100, 1)
-            Write-Host "  $($_.Key): $($_.Value) files ($percentage%)" -ForegroundColor White
+            $percentText = "{0}%" -f $percentage
+            Write-Host "  $($_.Key): $($_.Value) files ($percentText)" -ForegroundColor White
         }
 
         if ($this.Recommendations -and $this.Recommendations.Count -gt 0) {
             Write-Host ""
-            Write-Host "💡 Recommendations:" -ForegroundColor Magenta
+            Write-Host "Recommendations:" -ForegroundColor Magenta
             foreach ($rec in $this.Recommendations) {
                 Write-Host "  $($rec.Extension) files:" -ForegroundColor White
-                Write-Host "    Target encoding: $($rec.RecommendedEncoding)" -ForegroundColor Green
+                Write-Host "    Target encoding        : $($rec.RecommendedEncoding)" -ForegroundColor Green
                 Write-Host "    Files needing conversion: $($rec.NonCompliantFiles)/$($rec.TotalFiles)" -ForegroundColor Yellow
             }
         }
 
         Write-Host ""
-        Write-Host "⏱️  Analysis duration: $($this.Summary.Duration.TotalSeconds.ToString('F2')) seconds" -ForegroundColor Gray
+        Write-Host "Analysis duration: $($this.Summary.Duration.TotalSeconds.ToString('F2')) seconds" -ForegroundColor Gray
     }
 
     # Add a custom ToString method for better default display
     $result | Add-Member -MemberType ScriptMethod -Name 'ToString' -Value {
-        return "Folder Encoding Analysis: $($this.Summary.TotalFiles) files, $($this.Summary.UniqueEncodings) encodings, Most common: $($this.Summary.MostCommonEncoding)"
+        "Folder Encoding Analysis: $($this.Summary.TotalFiles) files, $($this.Summary.UniqueEncodings) encodings, Most common: $($this.Summary.MostCommonEncoding)"
     } -Force
 
     return $result
