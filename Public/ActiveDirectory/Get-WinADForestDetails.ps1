@@ -48,6 +48,9 @@
     .PARAMETER PreferWritable
     Prefer writable domain controllers over read-only ones when returning Query Servers
 
+    .PARAMETER Credential
+    Alternate credentials to use for all Active Directory queries
+
     .PARAMETER Extended
     Return extended information about domains with NETBIOS names
 
@@ -75,9 +78,15 @@
         [int] $PortsTimeout = 100,
         [int] $PingCount = 1,
         [switch] $PreferWritable,
+        [System.Management.Automation.PSCredential] $Credential,
         [switch] $Extended,
         [System.Collections.IDictionary] $ExtendedForestInformation
     )
+    $credentialSplat = @{}
+    if ($PSBoundParameters.ContainsKey('Credential')) {
+        $credentialSplat['Credential'] = $Credential
+    }
+
     if ($Global:ProgressPreference -ne 'SilentlyContinue') {
         $TemporaryProgress = $Global:ProgressPreference
         $Global:ProgressPreference = 'SilentlyContinue'
@@ -88,9 +97,9 @@
         $Findings = [ordered] @{ }
         try {
             if ($Forest) {
-                $ForestInformation = Get-ADForest -ErrorAction Stop -Identity $Forest
+                $ForestInformation = Get-ADForest -ErrorAction Stop -Identity $Forest @credentialSplat
             } else {
-                $ForestInformation = Get-ADForest -ErrorAction Stop
+                $ForestInformation = Get-ADForest -ErrorAction Stop @credentialSplat
             }
             <#
             $ForestInformation = [ordered] @{
@@ -135,7 +144,7 @@
         # We want to have QueryServers always available for all domains
         [Array] $DomainsActive = foreach ($Domain in $Findings['Forest'].Domains) {
             try {
-                $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop -Writable:$PreferWritable.IsPresent
+                $DC = Get-ADDomainController -DomainName $Domain -Discover -ErrorAction Stop -Writable:$PreferWritable.IsPresent @credentialSplat
 
                 $OrderedDC = [ordered] @{
                     Domain      = $DC.Domain
@@ -173,7 +182,7 @@
 
             [Array] $AllDC = try {
                 try {
-                    $DomainControllers = Get-ADDomainController -Filter $Filter -Server $QueryServer -ErrorAction Stop
+                    $DomainControllers = Get-ADDomainController -Filter $Filter -Server $QueryServer -ErrorAction Stop @credentialSplat
                 } catch {
                     Write-Warning "Get-WinADForestDetails - Error listing DCs for domain $Domain - $($_.Exception.Message)"
                     continue
@@ -203,7 +212,7 @@
                     }
                     # We need to get DSA GUID from NTDSSettingsObjectDN
                     # this is useful for some other operations such as repadmin
-                    $DSAGuid = (Get-ADObject -Identity $S.NTDSSettingsObjectDN -Server $QueryServer).ObjectGUID
+                    $DSAGuid = (Get-ADObject -Identity $S.NTDSSettingsObjectDN -Server $QueryServer @credentialSplat).ObjectGUID
                     $Server = [ordered] @{
                         Domain                 = $Domain
                         HostName               = $S.HostName
@@ -293,7 +302,7 @@
                 try {
                     #$Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0]
 
-                    $Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0] | ForEach-Object {
+                    $Findings['DomainsExtended'][$DomainEx] = Get-ADDomain -Server $Findings['QueryServers'][$DomainEx].HostName[0] @credentialSplat | ForEach-Object {
                         # We need to use ForEach-Object to convert ADPropertyValueCollection to normal strings. Otherwise Copy-Dictionary fails
                         #True     False    ADPropertyValueCollection                System.Collections.CollectionBase
 
