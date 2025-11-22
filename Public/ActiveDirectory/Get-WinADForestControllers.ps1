@@ -21,6 +21,9 @@ function Get-WinADForestControllers {
     Get-WinADDomainControllers -Credential $Credential
     Retrieves information about all domain controllers in the forest using specified credentials.
 
+    .PARAMETER Credential
+    Alternate credentials for forest and domain controller discovery.
+
     .EXAMPLE
     Get-WinADDomainControllers | Format-Table *
     Displays detailed information about all domain controllers in a tabular format.

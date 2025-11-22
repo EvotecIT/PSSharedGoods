@@ -21,6 +21,9 @@
     .PARAMETER AsString
     Return the guid as a string
 
+    .PARAMETER Credential
+    Alternate credentials for RootDSE/DC/schema queries.
+
     .EXAMPLE
     Convert-ADSchemaToGuid -SchemaName 'ms-Exch-MSO-Forward-Sync-Cookie'
 

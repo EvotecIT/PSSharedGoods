@@ -12,11 +12,14 @@
     .PARAMETER Domain
     Domain to query. By default the current domain is used
 
-   .PARAMETER RootDSE
+    .PARAMETER RootDSE
     RootDSE to query. By default RootDSE is queried from the domain
 
     .PARAMETER DisplayName
     Return the schema name by display name. By default it returns as Name
+
+    .PARAMETER Credential
+    Alternate credentials for RootDSE/DC/schema queries.
 
     .EXAMPLE
     $T2 = '570b9266-bbb3-4fad-a712-d2e3fedc34dd'

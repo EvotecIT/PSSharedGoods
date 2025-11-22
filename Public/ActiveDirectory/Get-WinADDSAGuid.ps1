@@ -27,6 +27,9 @@
     .PARAMETER ExtendedForestInformation
     Ability to provide Forest Information from another command to speed up processing
 
+    .PARAMETER Credential
+    Alternate credentials passed through to Get-WinADForestDetails.
+
     .EXAMPLE
     Get-WinADDSAGuid | Format-Table
 

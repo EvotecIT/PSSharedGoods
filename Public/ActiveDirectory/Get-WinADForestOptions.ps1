@@ -7,6 +7,12 @@
         This Cmdlet gets Active Directory Site Options.
         We can fill out the rest of this comment-based help later.
 
+    .PARAMETER Domain
+        Target domain/forest to query. Defaults to current domain.
+
+    .PARAMETER Credential
+        Alternate credentials for RootDSE and site option queries.
+
     .LINK
         https://serverfault.com/questions/543143/detecting-ad-site-options-using-powershell
 
