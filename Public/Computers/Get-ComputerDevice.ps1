@@ -12,6 +12,9 @@
     .PARAMETER Protocol
     Specifies the protocol to use for the query. Valid values are 'Default', 'Dcom', or 'Wsman'. Default is 'Default'.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER All
     Retrieves all properties of the computer devices.
 
@@ -31,6 +34,7 @@
     param(
         [string] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [pscredential] $Credential,
         [switch] $All,
         [switch] $Extended
     )
@@ -102,7 +106,7 @@
         '30' = "This device is using an Interrupt Request (IRQ) resource that another device is using."
         '31' = "This device is not working properly because Windows cannot load the drivers required for this device."
     }
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         $Information
     } else {

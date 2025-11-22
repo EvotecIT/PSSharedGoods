@@ -12,6 +12,9 @@ function Get-ComputerSystem {
     .PARAMETER Protocol
     Specifies the protocol to use for the remote connection. Valid values are 'Default', 'Dcom', or 'Wsman'.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER All
     Indicates whether to retrieve all available properties of the computer system.
 
@@ -27,6 +30,7 @@ function Get-ComputerSystem {
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [pscredential] $Credential,
         [switch] $All
     )
     [string] $Class = 'Win32_ComputerSystem'
@@ -35,7 +39,7 @@ function Get-ComputerSystem {
     } else {
         $Properties = 'PSComputerName', 'Name', 'Manufacturer' , 'Domain', 'Model' , 'Systemtype', 'PrimaryOwnerName', 'PCSystemType', 'PartOfDomain', 'CurrentTimeZone', 'BootupState', 'Roles', 'SystemFamily'
     }
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         $Information
     } else {

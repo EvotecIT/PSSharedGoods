@@ -9,6 +9,9 @@ function Get-ComputerCulture {
     .PARAMETER ComputerName
     Specifies the name of the computer from which to retrieve culture information. Defaults to the local computer.
 
+    .PARAMETER Credential
+    Alternate credentials for remote Invoke-Command.
+
     .EXAMPLE
     Get-ComputerCulture
     Retrieves culture information from the local computer.
@@ -20,7 +23,8 @@ function Get-ComputerCulture {
     #>
     [CmdletBinding()]
     param(
-        [string] $ComputerName = $Env:COMPUTERNAME
+        [string] $ComputerName = $Env:COMPUTERNAME,
+        [pscredential] $Credential
     )
     $ScriptBlock = {
         Get-Culture | Select-Object KeyboardLayoutId, DisplayName, @{Expression = { $_.ThreeLetterWindowsLanguageName }; Label = "Windows Language" }
@@ -28,7 +32,9 @@ function Get-ComputerCulture {
     if ($ComputerName -eq $Env:COMPUTERNAME) {
         $Data8 = Invoke-Command -ScriptBlock $ScriptBlock
     } else {
-        $Data8 = Invoke-Command -ComputerName $ComputerName -ScriptBlock $ScriptBlock
+        $invokeSplat = @{ ComputerName = $ComputerName; ScriptBlock = $ScriptBlock }
+        if ($Credential) { $invokeSplat.Credential = $Credential }
+        $Data8 = Invoke-Command @invokeSplat
     }
     return $Data8
 }

@@ -9,6 +9,9 @@ function Get-ComputerApplication {
     .PARAMETER ComputerName
     Specifies computer on which you want to run the operation.
 
+    .PARAMETER Credential
+    Alternate credentials for remote Invoke-Command when collecting installed apps.
+
     .EXAMPLE
     Get-ComputerApplications -Verbose | Format-Table
 
@@ -21,7 +24,8 @@ function Get-ComputerApplication {
     [alias('Get-ComputerApplications')]
     [CmdletBinding()]
     param(
-        [string[]] $ComputerName = $Env:COMPUTERNAME
+        [string[]] $ComputerName = $Env:COMPUTERNAME,
+        [pscredential] $Credential
     )
     $ScriptBlock = {
         $objapp1 = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*
@@ -48,6 +52,7 @@ function Get-ComputerApplication {
                 ComputerName = $Computer
                 ScriptBlock  = $ScriptBlock
             }
+            if ($Credential) { $Parameters.Credential = $Credential }
         }
         try {
             $Data = Invoke-Command @Parameters

@@ -9,6 +9,9 @@ function Get-ComputerOemInformation {
     .PARAMETER ComputerName
     Specifies the name of the computer from which to retrieve the OEM information. If not specified, the local computer name is used.
 
+    .PARAMETER Credential
+    Alternate credentials for remote Invoke-Command.
+
     .EXAMPLE
     Get-ComputerOemInformation
     Retrieves OEM information from the local computer.
@@ -20,13 +23,16 @@ function Get-ComputerOemInformation {
     #>
     [CmdletBinding()]
     param(
-        [string] $ComputerName = $Env:COMPUTERNAME
+        [string] $ComputerName = $Env:COMPUTERNAME,
+        [pscredential] $Credential
     )
     $ScriptBlock = { Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation | Select-Object Model, Manufacturer, Logo, SupportPhone, SupportURL, SupportHours }
     if ($ComputerName -eq $Env:COMPUTERNAME) {
         $Data = Invoke-Command -ScriptBlock $ScriptBlock
     } else {
-        $Data = Invoke-Command -ComputerName $ComputerName -ScriptBlock $ScriptBlock
+        $invokeSplat = @{ ComputerName = $ComputerName; ScriptBlock = $ScriptBlock }
+        if ($Credential) { $invokeSplat.Credential = $Credential }
+        $Data = Invoke-Command @invokeSplat
     }
     return $Data
 }

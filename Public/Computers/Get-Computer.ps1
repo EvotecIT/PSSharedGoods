@@ -12,6 +12,9 @@
     .PARAMETER Type
     Specifies the types of information to retrieve. Valid values include 'Application', 'BIOS', 'CPU', 'RAM', 'Disk', 'DiskLogical', 'Network', 'NetworkFirewall', 'OperatingSystem', 'Services', 'System', 'Startup', 'Time', and 'WindowsUpdates'. If not specified, retrieves all available types.
 
+    .PARAMETER Credential
+    Alternate credentials passed to all underlying queries.
+
     .PARAMETER AsHashtable
     Indicates whether to return the output as a hashtable.
 
@@ -32,6 +35,7 @@
             'Network', 'NetworkFirewall',
             'OperatingSystem', 'Services', 'System', 'Startup', 'Time', 'WindowsUpdates'
         )][string[]] $Type,
+        [pscredential] $Credential,
         [switch] $AsHashtable
     )
     Begin {
@@ -42,82 +46,82 @@
             $OutputObject = [ordered] @{}
             if ($Type -contains 'Application' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Application for $Computer"
-                $Application = Get-ComputerApplication -ComputerName $Computer
+                $Application = Get-ComputerApplication -ComputerName $Computer -Credential $Credential
                 $OutputObject['Application'] = $Application
             }
             if ($Type -contains 'BIOS' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing BIOS for $Computer"
-                $BIOS = Get-ComputerBios -ComputerName $Computer
+                $BIOS = Get-ComputerBios -ComputerName $Computer -Credential $Credential
                 $OutputObject['BIOS'] = $BIOS
             }
             if ($Type -contains 'CPU' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing CPU for $Computer"
-                $CPU = Get-ComputerCPU -ComputerName $Computer
+                $CPU = Get-ComputerCPU -ComputerName $Computer -Credential $Credential
                 $OutputObject['CPU'] = $CPU
             }
             if ($Type -contains 'RAM' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing RAM for $Computer"
-                $RAM = Get-ComputerRAM -ComputerName $Computer
+                $RAM = Get-ComputerRAM -ComputerName $Computer -Credential $Credential
                 $OutputObject['RAM'] = $RAM
             }
             if ($Type -contains 'Disk' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Disk for $Computer"
-                $Disk = Get-ComputerDisk -ComputerName $Computer
+                $Disk = Get-ComputerDisk -ComputerName $Computer -Credential $Credential
                 $OutputObject['Disk'] = $Disk
             }
             if ($Type -contains 'DiskLogical' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing DiskLogical for $Computer"
-                $DiskLogical = Get-ComputerDiskLogical -ComputerName $Computer
+                $DiskLogical = Get-ComputerDiskLogical -ComputerName $Computer -Credential $Credential
                 $OutputObject['DiskLogical'] = $DiskLogical
             }
             if ($Type -contains 'OperatingSystem' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing OperatingSystem for $Computer"
-                $OperatingSystem = Get-ComputerOperatingSystem -ComputerName $Computer
+                $OperatingSystem = Get-ComputerOperatingSystem -ComputerName $Computer -Credential $Credential
                 $OutputObject['OperatingSystem'] = $OperatingSystem
             }
             if ($Type -contains 'Network' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Network for $Computer"
-                $Network = Get-ComputerNetwork -ComputerName $Computer
+                $Network = Get-ComputerNetwork -ComputerName $Computer -Credential $Credential
                 $OutputObject['Network'] = $Network
             }
             if ($Type -contains 'NetworkFirewall' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing NetworkFirewall for $Computer"
-                $NetworkFirewall = Get-ComputerNetwork -ComputerName $Computer -NetworkFirewallOnly
+                $NetworkFirewall = Get-ComputerNetwork -ComputerName $Computer -Credential $Credential -NetworkFirewallOnly
                 $OutputObject['NetworkFirewall'] = $NetworkFirewall
             }
             if ($Type -contains 'RDP' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing RDP for $Computer"
-                $RDP = Get-ComputerRDP -ComputerName $Computer
+                $RDP = Get-ComputerRDP -ComputerName $Computer -Credential $Credential
                 $OutputObject['RDP'] = $RDP
             }
             if ($Type -contains 'Services' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Services for $Computer"
-                $Services = Get-ComputerService -ComputerName $Computer
+                $Services = Get-ComputerService -ComputerName $Computer -Credential $Credential
                 $OutputObject['Services'] = $Services
             }
             if ($Type -contains 'System' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing System for $Computer"
-                $System = Get-ComputerSystem -ComputerName $Computer
+                $System = Get-ComputerSystem -ComputerName $Computer -Credential $Credential
                 $OutputObject['System'] = $System
             }
             if ($Type -contains 'Startup' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Startup for $Computer"
-                $Startup = Get-ComputerStartup -ComputerName $Computer
+                $Startup = Get-ComputerStartup -ComputerName $Computer -Credential $Credential
                 $OutputObject['Startup'] = $Startup
             }
             if ($Type -contains 'Time' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Time for $Computer"
-                $Time = Get-ComputerTime -TimeTarget $Computer
+                $Time = Get-ComputerTime -TimeTarget $Computer -Credential $Credential
                 $OutputObject['Time'] = $Time
             }
             if ($Type -contains 'Tasks' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing Tasks for $Computer"
-                $Tasks = Get-ComputerTask -ComputerName $Computer
+                $Tasks = Get-ComputerTask -ComputerName $Computer -Credential $Credential
                 $OutputObject['Tasks'] = $Tasks
             }
             if ($Type -contains 'WindowsUpdates' -or $null -eq $Type) {
                 Write-Verbose "Get-Computer - Processing WindowsUpdates for $Computer"
-                $WindowsUpdates = Get-ComputerWindowsUpdates -ComputerName $Computer
+                $WindowsUpdates = Get-ComputerWindowsUpdates -ComputerName $Computer -Credential $Credential
                 $OutputObject['WindowsUpdates'] = $WindowsUpdates
             }
             if ($AsHashtable) {

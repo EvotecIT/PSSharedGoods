@@ -15,6 +15,9 @@
     .PARAMETER NetworkFirewallSummaryOnly
     Indicates whether to retrieve a summary of firewall information for the specified computers.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM/firewall queries on remote hosts.
+
     .EXAMPLE
     Get-ComputerNetworkCard -ComputerName AD1, AD2, AD3
 
@@ -45,11 +48,23 @@
     [CmdletBinding()]
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
+        [pscredential] $Credential,
         [switch] $NetworkFirewallOnly,
         [switch] $NetworkFirewallSummaryOnly,
         [alias('Joiner')][string] $Splitter
     )
     [Array] $CollectionComputers = $ComputerName.Where( { $_ -eq $Env:COMPUTERNAME }, 'Split')
+
+    $remoteSessionTargets = $CollectionComputers[1]
+    $remoteCimSession = $null
+    if ($remoteSessionTargets.Count -gt 0 -and $Credential) {
+        try {
+            $remoteCimSession = New-CimSession -ComputerName $remoteSessionTargets -Credential $Credential -ErrorAction Stop
+            $remoteSessionTargets = $remoteCimSession
+        } catch {
+            Write-Verbose "Get-ComputerNetwork - Failed to create CimSession with supplied credentials. Falling back to default context. $_"
+        }
+    }
 
     $Firewall = @{ }
     $NetworkFirewall = @(
@@ -71,7 +86,7 @@
             foreach ($_ in $CollectionComputers[1]) {
                 $Firewall[$_] = @{ }
             }
-            $Output = Get-NetFirewallProfile -CimSession $CollectionComputers[1]
+            $Output = Get-NetFirewallProfile -CimSession $remoteSessionTargets
             foreach ($_ in $Output) {
                 if ($_.Name -eq 'Domain') {
                     $Firewall[$_.PSComputerName]['DomainAuthenticated'] = $_
@@ -85,6 +100,7 @@
         }
     )
     if ($NetworkFirewallOnly) {
+        if ($remoteCimSession) { $remoteCimSession | Remove-CimSession }
         return $NetworkFirewall
     }
     if ($NetworkFirewallSummaryOnly) {
@@ -119,6 +135,7 @@
         DisabledInterfaceAliases        : {NotConfigured}
 
         #>
+        if ($remoteCimSession) { $remoteCimSession | Remove-CimSession }
         return $Firewall
     }
     $NetworkCards = @(
@@ -131,12 +148,12 @@
             }
         }
         if ($CollectionComputers[1].Count -gt 0) {
-            Get-NetConnectionProfile -CimSession $CollectionComputers[1]
+            Get-NetConnectionProfile -CimSession $remoteSessionTargets
         }
     )
     foreach ($_ in $NetworkCards) {
 
-        $NetworkCardsConfiguration = Get-CimData -ComputerName $ComputerName -Class 'Win32_NetworkAdapterConfiguration'
+        $NetworkCardsConfiguration = Get-CimData -ComputerName $ComputerName -Class 'Win32_NetworkAdapterConfiguration' -Credential $Credential
         $CurrentCard = foreach ($Configuration in $NetworkCardsConfiguration) {
             if ($_.PSComputerName -eq $Configuration.PSComputerName) {
                 if ($Configuration.InterfaceIndex -eq $_.InterfaceIndex) {
@@ -192,6 +209,7 @@
             ComputerName                    = $_.PSComputerName
         }
     }
+    if ($remoteCimSession) { $remoteCimSession | Remove-CimSession }
 }
 
 #Get-ComputerNetwork -ComputerName AD1, AD2 | Format-Table -a *

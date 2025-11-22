@@ -12,6 +12,9 @@ function Get-ComputerOperatingSystem {
     .PARAMETER Protocol
     Specifies the protocol to use for the connection (Default, Dcom, or Wsman). Default is 'Default'.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER All
     Switch parameter to retrieve all available properties of the operating system.
 
@@ -28,6 +31,7 @@ function Get-ComputerOperatingSystem {
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [pscredential] $Credential,
         [switch] $All
     )
     [string] $Class = 'win32_operatingsystem'
@@ -36,7 +40,7 @@ function Get-ComputerOperatingSystem {
     } else {
         [string[]] $Properties = 'Caption', 'Manufacturer', 'InstallDate', 'OSArchitecture', 'Version', 'SerialNumber', 'BootDevice', 'WindowsDirectory', 'CountryCode', 'OSLanguage', 'OSProductSuite', 'PSComputerName', 'LastBootUpTime', 'LocalDateTime'
     }
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         $Information
     } else {

@@ -9,6 +9,9 @@
     .PARAMETER ComputerName
     Specifies the name of the computer to retrieve RDP settings for.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries to the terminal services namespace.
+
     .EXAMPLE
     Get-ComputerRDP -ComputerName "Computer01"
     Retrieves RDP settings for a computer named "Computer01".
@@ -20,7 +23,8 @@
     [alias('Get-RDPSecurity')]
     [cmdletbinding()]
     param(
-        [string[]] $ComputerName
+        [string[]] $ComputerName,
+        [pscredential] $Credential
     )
     <#
     Caption                                :
@@ -46,7 +50,7 @@
     PSComputerName                         : AD2
     #>
     # https://docs.microsoft.com/en-us/windows/win32/termserv/win32-tsgeneralsetting
-    $Output = Get-CimData -class 'Win32_TSGeneralSetting' -NameSpace 'root\cimv2\terminalservices' -ComputerName $ComputerName
+    $Output = Get-CimData -class 'Win32_TSGeneralSetting' -NameSpace 'root\cimv2\terminalservices' -ComputerName $ComputerName -Credential $Credential
     foreach ($_ in $Output) {
 
 

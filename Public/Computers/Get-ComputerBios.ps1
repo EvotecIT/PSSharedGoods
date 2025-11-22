@@ -12,6 +12,9 @@ function Get-ComputerBios {
     .PARAMETER Protocol
     Specifies the protocol to use for communication. Valid values are 'Default', 'Dcom', or 'Wsman'. Default is 'Default'.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER All
     Switch parameter to retrieve all available BIOS properties.
 
@@ -28,6 +31,7 @@ function Get-ComputerBios {
     param(
         [string] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [pscredential] $Credential,
         [switch] $All
     )
     [string] $Class = 'win32_bios'
@@ -37,7 +41,7 @@ function Get-ComputerBios {
         [string[]] $Properties = 'PSComputerName', 'Status', 'Version', 'PrimaryBIOS', 'Manufacturer', 'ReleaseDate', 'SerialNumber', 'SMBIOSBIOSVersion', 'SMBIOSMajorVersion', 'SMBIOSMinorVersion', 'SystemBiosMajorVersion', 'SystemBiosMinorVersion'
 
     }
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         $Information
     } else {

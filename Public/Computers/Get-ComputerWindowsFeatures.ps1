@@ -12,6 +12,9 @@ function Get-ComputerWindowsFeatures {
     .PARAMETER Protocol
     Protocol to use when gathering data. Choices are Default, Dcom, WSMan
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER EnabledOnly
     Returns only data if Windows Feature is enabled
 
@@ -28,6 +31,7 @@ function Get-ComputerWindowsFeatures {
     param(
         [string] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [pscredential] $Credential,
         [switch] $EnabledOnly,
         [switch] $All
     )
@@ -44,7 +48,7 @@ function Get-ComputerWindowsFeatures {
         '3' = 'Absent'
         '4' = 'Unknown'
     }
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         $Information
     } else {

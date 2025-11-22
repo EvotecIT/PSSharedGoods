@@ -15,6 +15,9 @@ function Get-ComputerRoles {
     .PARAMETER EnabledOnly
     Display only enabled/installed features or roles
 
+    .PARAMETER Credential
+    Alternate credentials when querying roles/features remotely.
+
     .EXAMPLE
     Get-ComputerRoles -ComputerName AD1 -EnabledOnly -FeatureType Role | Format-Table
 
@@ -26,7 +29,8 @@ function Get-ComputerRoles {
     param (
         [string[]] $ComputerName = $env:COMPUTERNAME,
         [ValidateSet('Role', 'Role Service', 'Feature')] $FeatureType,
-        [switch] $EnabledOnly
+        [switch] $EnabledOnly,
+        [pscredential] $Credential
     )
     if ($Global:ProgressPreference -ne 'SilentlyContinue') {
         $TemporaryProgress = $Global:ProgressPreference
@@ -34,12 +38,20 @@ function Get-ComputerRoles {
     }
     foreach ($Computer in $ComputerName) {
         try {
-            $Output = Get-WindowsFeature -ComputerName $Computer -ErrorAction Stop
+            if ($Credential) {
+                $invokeSplat = @{ ComputerName = $Computer; Credential = $Credential; ErrorAction = 'Stop' }
+                $Output = Invoke-Command @invokeSplat {
+                    Import-Module ServerManager
+                    Get-WindowsFeature
+                }
+            } else {
+                $Output = Get-WindowsFeature -ComputerName $Computer -ErrorAction Stop
+            }
         }
         #The request could not be processed against a server below Windows Server 2012. Use Invoke-Command and Import-Module
         catch [System.Exception] {
             if ($_.FullyQualifiedErrorId -like 'UnSupportedTargetDevice,*') {
-                $output = Invoke-Command -ComputerName $computer {
+                $output = Invoke-Command -ComputerName $computer -Credential $Credential {
                     Import-Module ServerManager
                     Get-WindowsFeature
                 }

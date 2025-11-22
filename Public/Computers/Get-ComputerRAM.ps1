@@ -12,6 +12,9 @@
     .PARAMETER Protocol
     Specifies the protocol to use for retrieving RAM information. Valid values are 'Default', 'Dcom', and 'Wsman'. Defaults to 'Default'.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER All
     Indicates whether to retrieve all available properties of the RAM. If specified, all properties will be retrieved.
 
@@ -31,6 +34,7 @@
     param(
         [string] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [pscredential] $Credential,
         [switch] $All,
         [switch] $Extended
     )
@@ -173,7 +177,7 @@
         '26' = 'DDR4'
     }
 
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         $Information
     } else {

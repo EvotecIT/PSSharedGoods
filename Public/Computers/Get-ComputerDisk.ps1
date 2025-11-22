@@ -12,6 +12,9 @@ function Get-ComputerDisk {
     .PARAMETER Protocol
     Specifies the protocol to be used for retrieving disk information. Valid values are 'Default', 'Dcom', and 'Wsman'.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER All
     Indicates whether to retrieve all available disk information.
 
@@ -36,6 +39,7 @@ function Get-ComputerDisk {
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [pscredential] $Credential,
         [switch] $All
     )
     [string] $Class = 'win32_diskdrive'
@@ -44,7 +48,7 @@ function Get-ComputerDisk {
     } else {
         [string[]] $Properties = 'Index', 'Model', 'Caption', 'SerialNumber', 'Description', 'MediaType', 'FirmwareRevision', 'Partitions', 'Size', 'PNPDeviceID', 'PSComputerName'
     }
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         $Information
     } else {
