@@ -10,6 +10,9 @@ function Test-ForestConnectivity {
     Test-ForestConnectivity
     Tests the connectivity to the Active Directory forest.
 
+    .PARAMETER Credential
+    Alternate credentials to attempt the forest connectivity test.
+
     #>
     [CmdletBinding()]
     param(
