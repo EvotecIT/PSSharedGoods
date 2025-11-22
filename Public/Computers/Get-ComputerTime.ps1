@@ -53,7 +53,9 @@
         [switch] $ForceCIM
     )
     if (-not $TimeSource) {
-        $TimeSource = (Get-ADDomainController -Discover -Service PrimaryDC -DomainName $Domain).HostName
+        $discoverParams = @{ DomainName = $Domain; Service = 'PrimaryDC'; Discover = $true }
+        if ($Credential) { $discoverParams['Credential'] = $Credential }
+        $TimeSource = (Get-ADDomainController @discoverParams).HostName
     }
 
     if ($ForceCIM) {

@@ -34,20 +34,25 @@
         [string] $Guid,
         [string] $Domain,
         [Microsoft.ActiveDirectory.Management.ADEntity] $RootDSE,
-        [switch] $DisplayName
+        [switch] $DisplayName,
+        [pscredential] $Credential
     )
+    $credentialSplat = @{}
+    if ($PSBoundParameters.ContainsKey('Credential')) {
+        $credentialSplat['Credential'] = $Credential
+    }
     if (-not $Script:ADSchemaMap -or -not $Script:ADSchemaMapDisplayName) {
         if ($RootDSE) {
             $Script:RootDSE = $RootDSE
         } elseif (-not $Script:RootDSE) {
             if ($Domain) {
-                $Script:RootDSE = Get-ADRootDSE -Server $Domain
+                $Script:RootDSE = Get-ADRootDSE -Server $Domain @credentialSplat
             } else {
-                $Script:RootDSE = Get-ADRootDSE
+                $Script:RootDSE = Get-ADRootDSE @credentialSplat
             }
         }
         $DomainCN = ConvertFrom-DistinguishedName -DistinguishedName $Script:RootDSE.defaultNamingContext -ToDomainCN
-        $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop).Hostname[0]
+        $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop @credentialSplat).Hostname[0]
 
         $Script:ADSchemaMap = @{ }
         $Script:ADSchemaMapDisplayName = @{ }
@@ -56,7 +61,7 @@
         Write-Verbose "Convert-ADGuidToSchema - Querying Schema from $QueryServer"
         $Time = [System.Diagnostics.Stopwatch]::StartNew()
         if (-not $Script:StandardRights) {
-            $Script:StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties name, lDAPDisplayName, schemaIDGUID -Server $QueryServer -ErrorAction Stop | Select-Object name, lDAPDisplayName, schemaIDGUID
+            $Script:StandardRights = Get-ADObject -SearchBase $Script:RootDSE.schemaNamingContext -LDAPFilter "(schemaidguid=*)" -Properties name, lDAPDisplayName, schemaIDGUID -Server $QueryServer -ErrorAction Stop @credentialSplat | Select-Object name, lDAPDisplayName, schemaIDGUID
         }
         foreach ($S in $Script:StandardRights) {
             $Script:ADSchemaMap["$(([System.GUID]$S.schemaIDGUID).Guid)"] = $S.name
@@ -69,7 +74,7 @@
         $Time = [System.Diagnostics.Stopwatch]::StartNew()
         #Create a hashtable to store the GUID value of each extended right in the forest
         if (-not $Script:ExtendedRightsGuids) {
-            $Script:ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, lDAPDisplayName, rightsGuid -Server $QueryServer -ErrorAction Stop | Select-Object name, displayName, lDAPDisplayName, rightsGuid
+            $Script:ExtendedRightsGuids = Get-ADObject -SearchBase $Script:RootDSE.ConfigurationNamingContext -LDAPFilter "(&(objectclass=controlAccessRight)(rightsguid=*))" -Properties name, displayName, lDAPDisplayName, rightsGuid -Server $QueryServer -ErrorAction Stop @credentialSplat | Select-Object name, displayName, lDAPDisplayName, rightsGuid
         }
         foreach ($S in $Script:ExtendedRightsGuids) {
             $Script:ADSchemaMap["$(([System.GUID]$S.rightsGUID).Guid)"] = $S.name

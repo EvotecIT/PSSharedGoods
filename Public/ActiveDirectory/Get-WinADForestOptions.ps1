@@ -2,11 +2,10 @@
     <#
     .SYNOPSIS
         This Cmdlet gets Active Directory Site Options.
+
     .DESCRIPTION
         This Cmdlet gets Active Directory Site Options.
         We can fill out the rest of this comment-based help later.
-    .LINK
-        http://myotherpcisacloud.com
 
     .LINK
         https://serverfault.com/questions/543143/detecting-ad-site-options-using-powershell
@@ -16,8 +15,13 @@
     #>
     [CmdletBinding()]
     Param(
-        [string] $Domain = $Env:USERDNSDOMAIN
+        [string] $Domain = $Env:USERDNSDOMAIN,
+        [pscredential] $Credential
     )
+    $credentialSplat = @{}
+    if ($PSBoundParameters.ContainsKey('Credential')) {
+        $credentialSplat['Credential'] = $Credential
+    }
     BEGIN {
         # This enum comes from NtDsAPI.h in the Windows SDK.
         # Also thanks to Jason Scott for pointing it out to me. http://serverfault.com/users/23067/jscott
@@ -40,16 +44,16 @@
 "@
 
         if ($Domain) {
-            $RootDSE = Get-ADRootDSE -Server $Domain
+            $RootDSE = Get-ADRootDSE -Server $Domain @credentialSplat
         } else {
-            $RootDSE = Get-ADRootDSE
+            $RootDSE = Get-ADRootDSE @credentialSplat
         }
         $DomainCN = ConvertFrom-DistinguishedName -DistinguishedName $RootDSE.defaultNamingContext -ToDomainCN
-        $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop).Hostname[0]
+        $QueryServer = (Get-ADDomainController -DomainName $DomainCN -Discover -ErrorAction Stop @credentialSplat).Hostname[0]
 
-        $Sites = Get-ADObject -Filter 'objectClass -eq "site"' -SearchBase ($RootDSE).ConfigurationNamingContext -Server $QueryServer
+        $Sites = Get-ADObject -Filter 'objectClass -eq "site"' -SearchBase ($RootDSE).ConfigurationNamingContext -Server $QueryServer @credentialSplat
         ForEach ($Site In $Sites) {
-            $SiteSettings = Get-ADObject "CN=NTDS Site Settings,$($Site.DistinguishedName)" -Properties Options -Server $QueryServer
+            $SiteSettings = Get-ADObject "CN=NTDS Site Settings,$($Site.DistinguishedName)" -Properties Options -Server $QueryServer @credentialSplat
             If (!$SiteSettings.PSObject.Properties.Match('Options').Count -OR $SiteSettings.Options -EQ 0) {
                 # I went with '(none)' here to give it a more classic repadmin.exe feel.
                 # You could also go with $Null, or omit the property altogether for a more modern, Powershell feel.

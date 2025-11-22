@@ -43,13 +43,12 @@ function Get-WinADForestControllers {
         [switch] $SkipEmpty,
         [pscredential] $Credential
     )
+    $credentialSplat = @{}
+    if ($PSBoundParameters.ContainsKey('Credential')) {
+        $credentialSplat['Credential'] = $Credential
+    }
     try {
-        if($Credential){
-            $Forest = Get-ADForest -Credential $Credential
-        }
-        else{
-            $Forest = Get-ADForest
-        }
+        $Forest = Get-ADForest @credentialSplat
         if (-not $Domain) {
             $Domain = $Forest.Domains
         }
@@ -60,13 +59,8 @@ function Get-WinADForestControllers {
     }
     $Servers = foreach ($D in $Domain) {
         try {
-            $LocalServer = Get-ADDomainController -Discover -DomainName $D -ErrorAction Stop -Writable
-            if($Credential){
-                $DC = Get-ADDomainController -Server $LocalServer.HostName[0] -Credential $Credential -Filter * -ErrorAction Stop
-            }
-            else{
-               $DC = Get-ADDomainController -Server $LocalServer.HostName[0] -Filter * -ErrorAction Stop 
-            }
+            $LocalServer = Get-ADDomainController -Discover -DomainName $D -ErrorAction Stop -Writable @credentialSplat
+            $DC = Get-ADDomainController -Server $LocalServer.HostName[0] -Filter * -ErrorAction Stop @credentialSplat
             foreach ($S in $DC) {
                 $Server = [ordered] @{
                     Domain               = $D

@@ -13,10 +13,14 @@ function Test-ForestConnectivity {
     #>
     [CmdletBinding()]
     param(
-
+        [pscredential] $Credential
     )
+    $credentialSplat = @{}
+    if ($PSBoundParameters.ContainsKey('Credential')) {
+        $credentialSplat['Credential'] = $Credential
+    }
     Try {
-        $null = Get-ADForest
+        $null = Get-ADForest @credentialSplat
         return $true
     } catch {
         #Write-Warning 'No connectivity to forest/domain.'
