@@ -27,6 +27,9 @@
     .PARAMETER ExtendedForestInformation
     Ability to provide Forest Information from another command to speed up processing
 
+    .PARAMETER Credential
+    Alternate credentials passed through to Get-WinADForestDetails.
+
     .EXAMPLE
     Get-WinADDSAGuid | Format-Table
 
@@ -41,9 +44,10 @@
         [alias('Domain', 'Domains')][string[]] $IncludeDomains,
         [alias('DomainControllers', 'ComputerName')][string[]] $IncludeDomainControllers,
         [switch] $SkipRODC,
-        [System.Collections.IDictionary] $ExtendedForestInformation
+        [System.Collections.IDictionary] $ExtendedForestInformation,
+        [pscredential] $Credential
     )
-    $Forest = Get-WinADForestDetails -Forest $Forest -ExtendedForestInformation $ExtendedForestInformation -ExcludeDomains $ExcludeDomains -ExcludeDomainControllers $ExcludeDomainControllers -IncludeDomains $IncludeDomains -IncludeDomainControllers $IncludeDomainControllers -SkipRODC:$SkipRODC
+    $Forest = Get-WinADForestDetails -Forest $Forest -ExtendedForestInformation $ExtendedForestInformation -ExcludeDomains $ExcludeDomains -ExcludeDomainControllers $ExcludeDomainControllers -IncludeDomains $IncludeDomains -IncludeDomainControllers $IncludeDomainControllers -SkipRODC:$SkipRODC -Credential $Credential
     $ListDSA = [ordered]@{}
     foreach ($DC in $Forest.ForestDomainControllers) {
         $ListDSA[$DC.DsaGuid] = [PSCustomObject] @{

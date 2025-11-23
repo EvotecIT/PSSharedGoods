@@ -9,6 +9,9 @@ function Get-ComputerWindowsUpdates {
     .PARAMETER ComputerName
     Specifies the name of the computer(s) to retrieve Windows update information for.
 
+    .PARAMETER Credential
+    Alternate credentials for invoking Get-HotFix on remote hosts.
+
     .EXAMPLE
     Get-ComputerWindowsUpdates -ComputerName "EVOWIN", "AD1"
     Retrieves Windows update information for computers named "EVOWIN" and "AD1".
@@ -18,11 +21,14 @@ function Get-ComputerWindowsUpdates {
     #>
     [CmdletBinding()]
     param(
-        [string[]] $ComputerName = $Env:COMPUTERNAME
+        [string[]] $ComputerName = $Env:COMPUTERNAME,
+        [pscredential] $Credential
     )
     foreach ($Computer in $ComputerName) {
         try {
-            $Data = Get-HotFix -ComputerName $Computer
+            $hotfixParams = @{ ComputerName = $Computer }
+            if ($Credential) { $hotfixParams['Credential'] = $Credential }
+            $Data = Get-HotFix @hotfixParams
             $Output = foreach ($Update in $Data) {
                 [PSCustomObject] @{
                     ComputerName = $Computer

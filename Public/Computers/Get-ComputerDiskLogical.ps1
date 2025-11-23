@@ -12,6 +12,9 @@ function Get-ComputerDiskLogical {
     .PARAMETER Protocol
     Specifies the protocol to use for retrieving disk information. Valid values are 'Default', 'Dcom', and 'Wsman'.
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER RoundingPlace
     Specifies the number of decimal places to round the disk space values to.
 
@@ -42,6 +45,7 @@ function Get-ComputerDiskLogical {
     param(
         [string[]] $ComputerName = $Env:COMPUTERNAME,
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
+        [pscredential] $Credential,
         [string][ValidateSet('GB', 'TB', 'MB')] $Size = 'GB',
         [int] $RoundingPlace = 2,
         [int] $RoundingPlacePercent = 2,
@@ -81,7 +85,7 @@ function Get-ComputerDiskLogical {
 
     $Divider = "1$Size"
 
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         $Information
     } else {

@@ -12,6 +12,9 @@ function Get-PSService {
     .PARAMETER Protocol
     Protocol to use to gather services
 
+    .PARAMETER Credential
+    Alternate credentials for CIM queries. Default is current user.
+
     .PARAMETER Service
     Limit output to just few services
 
@@ -42,7 +45,8 @@ function Get-PSService {
         [ValidateSet('Default', 'Dcom', 'Wsman')][string] $Protocol = 'Default',
         [alias('Services')][string[]] $Service,
         [switch] $All,
-        [switch] $Extended
+        [switch] $Extended,
+        [pscredential] $Credential
     )
     [string] $Class = 'win32_service'
     [string] $Properties = '*'
@@ -86,7 +90,7 @@ function Get-PSService {
             $CachedServices[$S] = $true
         }
     }
-    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Class $Class -Properties $Properties
+    $Information = Get-CimData -ComputerName $ComputerName -Protocol $Protocol -Credential $Credential -Class $Class -Properties $Properties
     if ($All) {
         if ($Service) {
             foreach ($Entry in $Information) {

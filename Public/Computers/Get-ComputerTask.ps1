@@ -9,6 +9,9 @@
     .PARAMETER ComputerName
     Specifies computer on which you want to run the operation.
 
+    .PARAMETER Credential
+    Alternate credentials for creating a CIM session when querying scheduled tasks remotely.
+
     .EXAMPLE
     Get-ComputerTask | Format-Table
 
@@ -18,7 +21,8 @@
     [alias('Get-ComputerTasks')]
     [cmdletbinding()]
     param(
-        [string[]] $ComputerName = $Env:COMPUTERNAME
+        [string[]] $ComputerName = $Env:COMPUTERNAME,
+        [pscredential] $Credential
     )
     foreach ($Computer in $ComputerName) {
         # Querying CIM locally usually doesn't work. This means if you're querying same computer you neeed to skip CimSession/ComputerName if it's local query
@@ -30,10 +34,17 @@
 
         if ($Computer -eq $Env:COMPUTERNAME -or $Computer -eq $LocalComputerDNSName) {
             $TaskParameters = @{}
+            $cimSession = $null
         } else {
-            $TaskParameters = @{
-                CimSession = $Computer
+            $sessionParams = @{ ComputerName = $Computer }
+            if ($Credential) { $sessionParams['Credential'] = $Credential }
+            try {
+                $cimSession = New-CimSession @sessionParams
+            } catch {
+                Write-Warning "Get-ComputerTask - Unable to create CimSession for $Computer. $_"
+                continue
             }
+            $TaskParameters = @{ CimSession = $cimSession }
         }
         # Full code
 
@@ -98,6 +109,7 @@
                 NumberOfMissedRuns                      = $Info.NumberOfMissedRuns
             }
         }
+        if ($cimSession) { $cimSession | Remove-CimSession }
     }
 }
 

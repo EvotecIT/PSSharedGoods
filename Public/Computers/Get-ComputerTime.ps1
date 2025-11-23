@@ -16,7 +16,7 @@
     Specifies computer on which you want to run the CIM operation. You can specify a fully qualified domain name (FQDN), a NetBIOS name, or an IP address. If you do not specify this parameter, the cmdlet performs the operation on the local computer using Component Object Model (COM).
 
     .PARAMETER Credential
-    Specifies a user account that has permission to perform this action. The default is the current user.
+    Alternate credentials for both AD discovery and CIM queries. Default is current user.
 
     .PARAMETER ForceCIM
 
@@ -53,7 +53,9 @@
         [switch] $ForceCIM
     )
     if (-not $TimeSource) {
-        $TimeSource = (Get-ADDomainController -Discover -Service PrimaryDC -DomainName $Domain).HostName
+        $discoverParams = @{ DomainName = $Domain; Service = 'PrimaryDC'; Discover = $true }
+        if ($Credential) { $discoverParams['Credential'] = $Credential }
+        $TimeSource = (Get-ADDomainController @discoverParams).HostName
     }
 
     if ($ForceCIM) {

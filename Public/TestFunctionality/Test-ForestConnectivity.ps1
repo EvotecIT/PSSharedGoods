@@ -10,13 +10,20 @@ function Test-ForestConnectivity {
     Test-ForestConnectivity
     Tests the connectivity to the Active Directory forest.
 
+    .PARAMETER Credential
+    Alternate credentials to attempt the forest connectivity test.
+
     #>
     [CmdletBinding()]
     param(
-
+        [pscredential] $Credential
     )
+    $credentialSplat = @{}
+    if ($PSBoundParameters.ContainsKey('Credential')) {
+        $credentialSplat['Credential'] = $Credential
+    }
     Try {
-        $null = Get-ADForest
+        $null = Get-ADForest @credentialSplat
         return $true
     } catch {
         #Write-Warning 'No connectivity to forest/domain.'
