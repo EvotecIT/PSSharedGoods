@@ -183,13 +183,29 @@
             [Array] $AllDC = try {
                 try {
                     $DomainControllers = Get-ADDomainController -Filter $Filter -Server $QueryServer -ErrorAction Stop @credentialSplat
+                } catch [Microsoft.ActiveDirectory.Management.ADIdentityNotFoundException] {
+                    # Some environments (e.g. with WAN optimizers registered) can break -Filter *; fall back to known replica list
+                    try {
+                        $DomainControllers = (Get-ADDomain -Identity $Domain -Server $QueryServer @credentialSplat).ReplicaDirectoryServers | ForEach-Object {
+                            try {
+                                Get-ADDomainController -Identity $_ -Server $QueryServer -ErrorAction Stop @credentialSplat
+                            } catch {
+                                Write-Warning "Get-WinADForestDetails - Error listing DC $_ for domain $Domain during fallback - $($_.Exception.Message)"
+                                $null
+                            }
+                        }
+                        $DomainControllers = $DomainControllers | Where-Object { $_ }
+                    } catch {
+                        Write-Warning "Get-WinADForestDetails - Error listing DCs for domain $Domain using fallback - $($_.Exception.Message)"
+                        continue
+                    }
                 } catch {
                     Write-Warning "Get-WinADForestDetails - Error listing DCs for domain $Domain - $($_.Exception.Message)"
                     continue
                 }
                 foreach ($S in $DomainControllers) {
                     if ($IncludeDomainControllers.Count -gt 0) {
-                        If (-not $IncludeDomainControllers[0].Contains('.')) {
+                        if (-not $IncludeDomainControllers[0].Contains('.')) {
                             if ($S.Name -notin $IncludeDomainControllers) {
                                 continue
                             }
@@ -200,7 +216,7 @@
                         }
                     }
                     if ($ExcludeDomainControllers.Count -gt 0) {
-                        If (-not $ExcludeDomainControllers[0].Contains('.')) {
+                        if (-not $ExcludeDomainControllers[0].Contains('.')) {
                             if ($S.Name -in $ExcludeDomainControllers) {
                                 continue
                             }
@@ -396,7 +412,7 @@
         [Array] $Findings['ForestDomainControllers'] = foreach ($Domain in $Findings.Domains) {
             [Array] $AllDC = foreach ($S in $Findings.DomainDomainControllers["$Domain"]) {
                 if ($IncludeDomainControllers.Count -gt 0) {
-                    If (-not $IncludeDomainControllers[0].Contains('.')) {
+                    if (-not $IncludeDomainControllers[0].Contains('.')) {
                         if ($S.Name -notin $IncludeDomainControllers) {
                             continue
                         }
@@ -407,7 +423,7 @@
                     }
                 }
                 if ($ExcludeDomainControllers.Count -gt 0) {
-                    If (-not $ExcludeDomainControllers[0].Contains('.')) {
+                    if (-not $ExcludeDomainControllers[0].Contains('.')) {
                         if ($S.Name -in $ExcludeDomainControllers) {
                             continue
                         }
