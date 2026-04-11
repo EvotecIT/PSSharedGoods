@@ -12,10 +12,6 @@ Use PSSharedGoods when you need the common helper layer behind other Evotec modu
 - object flattening and data shaping utilities
 - shared functions used by higher-level reporting modules
 
-## Website content contract
-
-The public examples for this project are curated under Website/content/examples in the source repository. Raw repository examples are not mirrored automatically because older project folders often contain experiments, generated output, or environment-specific scripts.
-
 ## Related project pages
 
 - [Project overview](/projects/pssharedgoods/)
