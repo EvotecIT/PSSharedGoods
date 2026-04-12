@@ -4,7 +4,7 @@ description: "Install PSSharedGoods from the package source used by this project
 layout: docs
 ---
 
-Use this page when you need the shortest setup path before trying the curated examples.
+Install PSSharedGoods before trying the curated helper examples.
 
 ## PowerShell Gallery
 

@@ -4,7 +4,7 @@ description: "Curated examples for PSSharedGoods."
 layout: docs
 ---
 
-These examples are maintained with the PSSharedGoods repository and selected for the website because they show safe, reviewable usage patterns.
+These PSSharedGoods examples focus on helper patterns that often support reporting, inventory, and cross-module automation.
 
 ## Featured examples
 
