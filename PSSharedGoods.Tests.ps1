@@ -43,7 +43,12 @@ foreach ($Module in $PSDInformation.RequiredModules) {
 Write-Color
 
 Import-Module $PSScriptRoot\*.psd1 -Force
-$result = Invoke-Pester -Script $PSScriptRoot\Tests -Verbose -EnableExit
+Import-Module Pester -Force
+$configuration = [PesterConfiguration]::Default
+$configuration.Run.Path = "$PSScriptRoot\Tests"
+$configuration.Run.PassThru = $true
+$configuration.Output.Verbosity = 'Detailed'
+$result = Invoke-Pester -Configuration $configuration
 
 if ($result.FailedCount -gt 0) {
     throw "$($result.FailedCount) tests failed."
