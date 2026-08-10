@@ -628,6 +628,18 @@ Describe -Name 'Testing ConvertTo-JsonLiteral NewLines' {
     }
 }
 
+Describe -Name 'Testing ConvertTo-JsonLiteral ArrayJoin position preservation' {
+    It 'Keeps null elements as empty joined fields' {
+        $Data = [PSCustomObject] @{
+            Values = @(1, $null, 2)
+        }
+
+        $Converted = $Data | ConvertTo-JsonLiteral -Depth 5 -ArrayJoin -ArrayJoinString ',' | ConvertFrom-Json
+
+        $Converted.Values | Should -Be '1,,2'
+    }
+}
+
 
 Describe -Name 'Testing ConvertTo-JsonLiteral Using Force' {
     It 'Forces convesion according to first object in array' {

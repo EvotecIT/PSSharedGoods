@@ -173,13 +173,7 @@
                         $NewObject[$DisplayProperty] = "$Value"
                     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
                         if ($ArrayJoin) {
-                            $Value = @($Value | ForEach-Object {
-                                    if ($_ | IsNumeric) {
-                                        [System.Convert]::ToString($_, [System.Globalization.CultureInfo]::InvariantCulture)
-                                    } else {
-                                        "$_"
-                                    }
-                                }) -join $ArrayJoinString
+                            $Value = ConvertTo-InvariantJoinedString -Value $Value -Separator $ArrayJoinString
                             $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         } else {
@@ -256,13 +250,7 @@
                         $NewObject[$DisplayProperty] = "$Value"
                     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
                         if ($ArrayJoin) {
-                            $Value = @($Value | ForEach-Object {
-                                    if ($_ | IsNumeric) {
-                                        [System.Convert]::ToString($_, [System.Globalization.CultureInfo]::InvariantCulture)
-                                    } else {
-                                        "$_"
-                                    }
-                                }) -join $ArrayJoinString
+                            $Value = ConvertTo-InvariantJoinedString -Value $Value -Separator $ArrayJoinString
                             $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         } else {

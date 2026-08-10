@@ -105,13 +105,7 @@
             }
         } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
             if ($ArrayJoin) {
-                $Value = @($Value | ForEach-Object {
-                        if ($_ | IsNumeric) {
-                            [System.Convert]::ToString($_, [System.Globalization.CultureInfo]::InvariantCulture)
-                        } else {
-                            "$_"
-                        }
-                    }) -join $ArrayJoinString
+                $Value = ConvertTo-InvariantJoinedString -Value $Value -Separator $ArrayJoinString
                 $Value = "$Value".Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                 "`"$Value`""
             } else {

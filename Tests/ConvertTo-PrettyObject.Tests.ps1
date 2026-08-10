@@ -688,6 +688,18 @@ Describe -Name 'Testing ConvertTo-PrettyObject against int/double' {
     }
 }
 
+Describe -Name 'Testing ConvertTo-PrettyObject ArrayJoin position preservation' {
+    It 'Keeps null elements as empty joined fields' {
+        $Data = [PSCustomObject] @{
+            Values = @(1, $null, 2)
+        }
+
+        $Converted = $Data | ConvertTo-PrettyObject -ArrayJoin -ArrayJoinString ','
+
+        $Converted.Values | Should -Be '1,,2'
+    }
+}
+
 Describe -Name 'Testing ConvertTo-PrettyObject with comprehensive null and empty input handling' {
     It 'Handles null input without throwing errors' {
         {
