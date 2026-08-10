@@ -132,12 +132,8 @@ function Format-TransposeTable {
                         $ListHeader.Add($myObject.$Property)
                     }
                 } else {
-                    if ($AllObjects.Count -eq 1) {
-                        $ListHeader.Add("$($Name)")
-                    } else {
-                        for ($i = 0; $i -lt $Object.Count; $i++) {
-                            $ListHeader.Add("$($Name)$i")
-                        }
+                    for ($i = 0; $i -lt $Object.Count; $i++) {
+                        $ListHeader.Add("$($Name)$i")
                     }
                 }
                 $CountOfProperties = $Object[0].PSObject.Properties.Name.Count

@@ -95,7 +95,7 @@
                     $Property = ([string[]]$Value.Keys)[$i]
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
-                    $OutputValue = ConvertTo-StringByType -Value $Value[$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -Force:$Force -ArrayJoinString $ArrayJoinString -ArrayJoin:$ArrayJoin.IsPresent
+                    $OutputValue = ConvertTo-StringByType -Value $Value[$Property] -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -AdvancedReplace $AdvancedReplace -Force:$Force -ArrayJoinString $ArrayJoinString -ArrayJoin:$ArrayJoin.IsPresent
                     $null = $TextBuilder.Append("$OutputValue")
                     if ($i -ne ($Value.Keys).Count - 1) {
                         $null = $TextBuilder.AppendLine(',')
@@ -105,7 +105,7 @@
             }
         } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
             if ($ArrayJoin) {
-                $Value = $Value -join $ArrayJoinString
+                $Value = ConvertTo-InvariantJoinedString -Value $Value -Separator $ArrayJoinString
                 $Value = "$Value".Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                 "`"$Value`""
             } else {
@@ -127,7 +127,7 @@
                         } else {
                             $PropertyName = $V.PSObject.Properties.Name
                         }
-                        $OutputValue = ConvertTo-StringByType -Value $V -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -Force:$Force -PropertyName $PropertyName -ArrayJoinString $ArrayJoinString -ArrayJoin:$ArrayJoin.IsPresent
+                        $OutputValue = ConvertTo-StringByType -Value $V -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -AdvancedReplace $AdvancedReplace -Force:$Force -PropertyName $PropertyName -ArrayJoinString $ArrayJoinString -ArrayJoin:$ArrayJoin.IsPresent
                         $null = $TextBuilder.Append($OutputValue)
                     }
                     $null = $TextBuilder.Append("]")
@@ -136,7 +136,7 @@
         } elseif ($Value -is [System.Enum] -or $Value.PSTypeNames -contains 'Deserialized.System.Enum') {
             "`"$($($Value).ToString())`""
         } elseif (($Value | IsNumeric) -eq $true) {
-            $Value = $($Value).ToString().Replace(',', '.')
+            $Value = [System.Convert]::ToString($Value, [System.Globalization.CultureInfo]::InvariantCulture)
             if ($NumberAsString) {
                 "`"$Value`""
             } else {
@@ -163,7 +163,7 @@
                     }
                     $DisplayProperty = $Property.Replace('\', "\\").Replace('"', '\"').Replace([System.Environment]::NewLine, $NewLineFormatProperty.NewLineCarriage).Replace("`n", $NewLineFormatProperty.NewLine).Replace("`r", $NewLineFormatProperty.Carriage)
                     $null = $TextBuilder.Append("`"$DisplayProperty`":")
-                    $OutputValue = ConvertTo-StringByType -Value $Value.$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -Force:$Force -ArrayJoinString $ArrayJoinString -ArrayJoin:$ArrayJoin.IsPresent
+                    $OutputValue = ConvertTo-StringByType -Value $Value.$Property -DateTimeFormat $DateTimeFormat -NumberAsString:$NumberAsString -BoolAsString:$BoolAsString -Depth $Depth -MaxDepth $MaxDepth -TextBuilder $TextBuilder -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormatProperty -AdvancedReplace $AdvancedReplace -Force:$Force -ArrayJoinString $ArrayJoinString -ArrayJoin:$ArrayJoin.IsPresent
                     $null = $TextBuilder.Append("$OutputValue")
                 }
                 $null = $TextBuilder.Append("}")
