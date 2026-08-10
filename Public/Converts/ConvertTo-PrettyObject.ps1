@@ -89,12 +89,12 @@
         [switch] $NumberAsString,
         [switch] $BoolAsString,
         [System.Collections.IDictionary] $NewLineFormat = @{
-            NewLineCarriage = "`r`n"
+            NewLineCarriage = [System.Environment]::NewLine
             NewLine         = "`n"
             Carriage        = "`r"
         },
         [System.Collections.IDictionary] $NewLineFormatProperty = @{
-            NewLineCarriage = "`r`n"
+            NewLineCarriage = [System.Environment]::NewLine
             NewLine         = "`n"
             Carriage        = "`r"
         },

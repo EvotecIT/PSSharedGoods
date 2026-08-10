@@ -22,9 +22,18 @@ foreach ($Module in $RequiredModules) {
             Install-Module -Name $Module.ModuleName -Force -SkipPublisherCheck
         }
     } else {
-        $Exists = Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue
+        if ($Module -eq 'Pester') {
+            $Exists = Get-Module -ListAvailable -Name Pester -ErrorAction SilentlyContinue |
+                Where-Object Version -ge ([version] '5.0.0')
+        } else {
+            $Exists = Get-Module -ListAvailable -Name $Module -ErrorAction SilentlyContinue
+        }
         if (-not $Exists) {
-            Install-Module -Name $Module -Force -SkipPublisherCheck
+            if ($Module -eq 'Pester') {
+                Install-Module -Name Pester -MinimumVersion 5.0.0 -Force -SkipPublisherCheck
+            } else {
+                Install-Module -Name $Module -Force -SkipPublisherCheck
+            }
         }
     }
 }
@@ -43,13 +52,13 @@ foreach ($Module in $PSDInformation.RequiredModules) {
 Write-Color
 
 Import-Module $PSScriptRoot\*.psd1 -Force
-Import-Module Pester -Force
+Import-Module Pester -MinimumVersion 5.0.0 -Force
 $configuration = [PesterConfiguration]::Default
 $configuration.Run.Path = "$PSScriptRoot\Tests"
 $configuration.Run.PassThru = $true
 $configuration.Output.Verbosity = 'Detailed'
 $result = Invoke-Pester -Configuration $configuration
 
-if ($result.FailedCount -gt 0) {
-    throw "$($result.FailedCount) tests failed."
+if ($result.Result -ne 'Passed' -or $result.FailedCount -gt 0) {
+    throw "Pester run failed with result '$($result.Result)' and $($result.FailedCount) failed tests."
 }
