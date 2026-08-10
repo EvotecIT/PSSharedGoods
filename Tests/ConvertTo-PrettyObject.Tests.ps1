@@ -688,6 +688,18 @@ Describe -Name 'Testing ConvertTo-PrettyObject against int/double' {
     }
 }
 
+Describe -Name 'Testing ConvertTo-PrettyObject ArrayJoin position preservation' {
+    It 'Keeps null elements as empty joined fields' {
+        $Data = [PSCustomObject] @{
+            Values = @(1, $null, 2)
+        }
+
+        $Converted = $Data | ConvertTo-PrettyObject -ArrayJoin -ArrayJoinString ','
+
+        $Converted.Values | Should -Be '1,,2'
+    }
+}
+
 Describe -Name 'Testing ConvertTo-PrettyObject with comprehensive null and empty input handling' {
     It 'Handles null input without throwing errors' {
         {
@@ -729,7 +741,7 @@ Describe -Name 'Testing ConvertTo-PrettyObject with comprehensive null and empty
 
         $result = @($null, $testObject, $null) | ConvertTo-PrettyObject
         $result | Should -Not -BeNullOrEmpty
-        $result.Count | Should -Be 1
+        @($result).Count | Should -Be 1
         $result.Name | Should -Be "TestName"
         $result.Value | Should -Be 42
         $result.Date | Should -Be "2023-01-01 00:00:00"
@@ -740,9 +752,9 @@ Describe -Name 'Testing ConvertTo-PrettyObject with comprehensive null and empty
             $result = @{} | ConvertTo-PrettyObject
         } | Should -Not -Throw
 
-        $result = @{} | ConvertTo-PrettyObject
-        $result | Should -Not -BeNullOrEmpty
-        $result.PSObject.Properties.Count | Should -Be 0
+        $result = ConvertTo-PrettyObject -Object (, @{})
+        $null -eq $result | Should -BeFalse
+        @($result.PSObject.Properties).Count | Should -Be 0
     }
 
     It 'Handles hashtable with null values correctly' {
@@ -848,15 +860,15 @@ Describe -Name 'Testing ConvertTo-PrettyObject with comprehensive null and empty
             $result = $testData | ConvertTo-PrettyObject
         } | Should -Not -Throw
 
-        $result = $testData | ConvertTo-PrettyObject
+        $result = ConvertTo-PrettyObject -Object $testData
         $result | Should -Not -BeNullOrEmpty
         $result.Count | Should -Be 3  # Empty hashtable, empty PSCustomObject, and valid PSCustomObject
 
         # First result should be the empty hashtable (should create object with no properties)
-        $result[0].PSObject.Properties.Count | Should -Be 0
+        @($result[0].PSObject.Properties).Count | Should -Be 0
 
         # Second result should be the empty PSCustomObject (should create object with no properties)
-        $result[1].PSObject.Properties.Count | Should -Be 0
+        @($result[1].PSObject.Properties).Count | Should -Be 0
 
         # Third result should be the valid PSCustomObject
         $result[2].ValidProp | Should -Be "Test"

@@ -599,6 +599,45 @@ Describe -Name 'Testing ConvertTo-JsonLiteral NewLines' {
         $Output1.'Test8"Oopps"' | Should -Be $Output2.'Test8"Oopps"'
         $Output1."Test9'Ooops'" | Should -Be $Output2."Test9'Ooops'"
     }
+
+    It 'Propagates newline maps through nested values and property names' {
+        $NewLineFormat = @{
+            NewLineCarriage = '\n'
+            NewLine         = '\n'
+            Carriage        = '\r'
+        }
+        $NestedProperty = -join ('Nested', [System.Environment]::NewLine, 'Property')
+        $NestedValue = -join ('Nested', [System.Environment]::NewLine, 'Value')
+        $Data = [ordered] @{
+            Outer = [ordered] @{
+                $NestedProperty = $NestedValue
+                Items           = @(
+                    [PSCustomObject] @{
+                        Text = $NestedValue
+                    }
+                )
+            }
+        }
+
+        $Converted = $Data | ConvertTo-JsonLiteral -Depth 5 -NewLineFormat $NewLineFormat -NewLineFormatProperty $NewLineFormat | ConvertFrom-Json
+        $ExpectedProperty = "Nested`nProperty"
+        $ExpectedValue = "Nested`nValue"
+
+        $Converted.Outer.$ExpectedProperty | Should -Be $ExpectedValue
+        $Converted.Outer.Items[0].Text | Should -Be $ExpectedValue
+    }
+}
+
+Describe -Name 'Testing ConvertTo-JsonLiteral ArrayJoin position preservation' {
+    It 'Keeps null elements as empty joined fields' {
+        $Data = [PSCustomObject] @{
+            Values = @(1, $null, 2)
+        }
+
+        $Converted = $Data | ConvertTo-JsonLiteral -Depth 5 -ArrayJoin -ArrayJoinString ',' | ConvertFrom-Json
+
+        $Converted.Values | Should -Be '1,,2'
+    }
 }
 
 
