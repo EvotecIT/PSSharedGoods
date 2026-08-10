@@ -98,28 +98,34 @@ Describe -Name 'Testing ConvertTo-FlatObject' {
     }
     It 'OrderedObject Conversion' {
         $result = Compare-MultipleObjects -Objects $Object1, $Object2 -FlattenObject
-        $result[0].Status | Should -Be $false
-        $result[1].Status | Should -Be $true
-        $result[2].Status | Should -Be $true
-        $result[2]."Source" | Should -Be 30
-        $result[2]."1" | Should -Be 30
-        $result[3].Status | Should -Be $true
-        $result[4].Status | Should -Be $true
-        $result[5].Status | Should -Be $false
-        $result[6].Status | Should -Be $false
-        $result[8].Status | Should -Be $true
-        $result[9].Status | Should -Be $true
-        $result[10].Status | Should -Be $false
-        $result[11].Status | Should -Be $true
-        $result[12].Status | Should -Be $true
-        $result[13].Status | Should -Be $true
-        $result[14].Status | Should -Be $true
-        $result[15].Status | Should -Be $true
-        $result[16].Status | Should -Be $true
-        $result[17].Name | Should -be "ListTest.1.Name"
-        $result[17].Status | Should -Be $true
-        $result[18].Status | Should -Be $true
-        $result[18].Name | Should -be "ListTest.1.Age"
-        $result.count | Should -Be 19
+        $expectedStatus = @{
+            'Properties'           = $false
+            'Name'                 = $true
+            'Age'                  = $true
+            'Test'                 = $true
+            'EmptyArray'           = $true
+            'EmptyArray1'          = $false
+            'Address.List.1.Name'  = $true
+            'Address.List.1.Age'   = $true
+            'Address.List.2.Name'  = $false
+            'Address.List.2.Age'   = $true
+            'Address.List.3.Name'  = $true
+            'Address.List.3.Age'   = $true
+            'Address.List.4.Name'  = $true
+            'Address.List.4.Age'   = $true
+            'Address.Country.Name' = $false
+            'Address.City'         = $true
+            'Address.Street'       = $true
+            'ListTest.1.Name'      = $true
+            'ListTest.1.Age'       = $true
+        }
+        foreach ($entry in $expectedStatus.GetEnumerator()) {
+            $matchingResult = @($result | Where-Object Name -EQ $entry.Key)
+            $matchingResult.Count | Should -Be 1
+            $matchingResult[0].Status | Should -Be $entry.Value
+        }
+        ($result | Where-Object Name -EQ 'Age').Source | Should -Be 30
+        ($result | Where-Object Name -EQ 'Age').'1' | Should -Be 30
+        $result.Count | Should -Be $expectedStatus.Count
     }
 }
