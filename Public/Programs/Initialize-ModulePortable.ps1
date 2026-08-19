@@ -34,27 +34,166 @@
         [switch] $Download,
         [switch] $Import
     )
-    function Get-RequiredModule {
+    function Get-PortableModuleCandidates {
         param(
-            [string] $Path,
-            [string] $Name
+            [string] $RootPath,
+            [object] $Requirement
         )
-        $PrimaryModule = Get-ChildItem -LiteralPath "$Path\$Name" -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
-        if ($PrimaryModule) {
-            $Module = Get-Module -ListAvailable $PrimaryModule.FullName -ErrorAction SilentlyContinue -Verbose:$false
-            if ($Module) {
-                [Array] $RequiredModules = $Module.RequiredModules.Name
-                if ($null -ne $RequiredModules) {
-                    $null
-                }
-                $RequiredModules
-                foreach ($_ in $RequiredModules) {
-                    Get-RequiredModule -Path $Path -Name $_
-                }
+
+        $ModuleName = $Requirement.Name
+        $ModulePath = Join-Path -Path $RootPath -ChildPath $ModuleName
+        $ManifestFiles = Get-ChildItem -LiteralPath $ModulePath -Filter "$ModuleName.psd1" -File -Recurse -ErrorAction SilentlyContinue
+        $Candidates = foreach ($ManifestFile in $ManifestFiles) {
+            try {
+                $Manifest = Import-PowerShellDataFile -LiteralPath $ManifestFile.FullName -ErrorAction Stop
+                $Version = [version] $Manifest.ModuleVersion
+                $Guid = [guid] $Manifest.GUID
+            } catch {
+                Write-Warning "Initialize-ModulePortable - Ignoring invalid module manifest $($ManifestFile.FullName): $($_.Exception.Message)"
+                continue
             }
-        } else {
-            Write-Warning "Initialize-ModulePortable - Modules to load not found in $Path"
+
+            $Candidate = [PSCustomObject] @{
+                Name            = $ModuleName
+                Version         = $Version
+                Guid            = $Guid
+                Path            = $ManifestFile.FullName
+                RequiredModules = @($Manifest.RequiredModules | Where-Object { $null -ne $_ })
+            }
+            if (-not (Test-PortableModuleRequirement -Module $Candidate -Requirement $Requirement)) {
+                continue
+            }
+
+            $Candidate
         }
+
+        $Candidates | Sort-Object -Property Version -Descending
+    }
+
+    function Get-PortableModuleRequirement {
+        param(
+            [object] $RequiredModule
+        )
+
+        if ($RequiredModule -is [string]) {
+            return [PSCustomObject] @{
+                Name            = $RequiredModule
+                MinimumVersion  = $null
+                RequiredVersion = $null
+                MaximumVersion  = $null
+                Guid            = $null
+            }
+        }
+
+        $MinimumVersion = if ($RequiredModule.ModuleVersion) { [version] $RequiredModule.ModuleVersion } else { $null }
+        $RequiredVersion = if ($RequiredModule.RequiredVersion) { [version] $RequiredModule.RequiredVersion } else { $null }
+        $MaximumVersion = if ($RequiredModule.MaximumVersion) { [version] $RequiredModule.MaximumVersion } else { $null }
+        $Guid = if ($RequiredModule.GUID) { [guid] $RequiredModule.GUID } else { $null }
+        [PSCustomObject] @{
+            Name            = $RequiredModule.ModuleName
+            MinimumVersion  = $MinimumVersion
+            RequiredVersion = $RequiredVersion
+            MaximumVersion  = $MaximumVersion
+            Guid            = $Guid
+        }
+    }
+
+    function Test-PortableModuleRequirement {
+        param(
+            [object] $Module,
+            [object] $Requirement
+        )
+
+        if ($Requirement.Guid -and $Module.Guid -ne $Requirement.Guid) { return $false }
+        if ($Requirement.RequiredVersion -and $Module.Version -ne $Requirement.RequiredVersion) { return $false }
+        if ($Requirement.MinimumVersion -and $Module.Version -lt $Requirement.MinimumVersion) { return $false }
+        if ($Requirement.MaximumVersion -and $Module.Version -gt $Requirement.MaximumVersion) { return $false }
+        $true
+    }
+
+    function Resolve-PortableModuleGraph {
+        param(
+            [object[]] $Requirements,
+            [System.Collections.IDictionary] $SelectedModules
+        )
+
+        if ($Requirements.Count -eq 0) {
+            $OrderedManifests = [System.Collections.Generic.List[string]]::new()
+            $Ordered = Add-PortableModuleInDependencyOrder -ModuleName $Name -SelectedModules $SelectedModules -VisitingModules @{} -VisitedModules @{} -OrderedManifests $OrderedManifests
+            if (-not $Ordered) {
+                return $null
+            }
+            return [PSCustomObject] @{
+                Modules          = $SelectedModules
+                OrderedManifests = $OrderedManifests.ToArray()
+            }
+        }
+
+        $Requirement = $Requirements[0]
+        $RemainingRequirements = if ($Requirements.Count -gt 1) { @($Requirements[1..($Requirements.Count - 1)]) } else { @() }
+        if ($SelectedModules.Contains($Requirement.Name)) {
+            if (-not (Test-PortableModuleRequirement -Module $SelectedModules[$Requirement.Name] -Requirement $Requirement)) {
+                return $null
+            }
+            return Resolve-PortableModuleGraph -Requirements $RemainingRequirements -SelectedModules $SelectedModules
+        }
+
+        $Candidates = @(Get-PortableModuleCandidates -RootPath $Path -Requirement $Requirement)
+        foreach ($Candidate in $Candidates) {
+            $BranchModules = $SelectedModules.Clone()
+            $BranchModules[$Requirement.Name] = $Candidate
+            $DependencyRequirements = foreach ($RequiredModule in $Candidate.RequiredModules) {
+                $DependencyRequirement = Get-PortableModuleRequirement -RequiredModule $RequiredModule
+                if (-not $DependencyRequirement.Name) {
+                    continue
+                }
+                $DependencyRequirement
+            }
+            if (@($DependencyRequirements).Count -ne $Candidate.RequiredModules.Count) {
+                continue
+            }
+
+            $BranchResult = Resolve-PortableModuleGraph -Requirements (@($DependencyRequirements) + $RemainingRequirements) -SelectedModules $BranchModules
+            if ($BranchResult) {
+                return $BranchResult
+            }
+        }
+
+        $null
+    }
+
+    function Add-PortableModuleInDependencyOrder {
+        param(
+            [string] $ModuleName,
+            [System.Collections.IDictionary] $SelectedModules,
+            [System.Collections.IDictionary] $VisitingModules,
+            [System.Collections.IDictionary] $VisitedModules,
+            [System.Collections.Generic.List[string]] $OrderedManifests
+        )
+
+        if ($VisitedModules.Contains($ModuleName)) {
+            return $true
+        }
+        if ($VisitingModules.Contains($ModuleName)) {
+            return $false
+        }
+
+        $VisitingModules[$ModuleName] = $true
+        $Module = $SelectedModules[$ModuleName]
+        foreach ($RequiredModule in $Module.RequiredModules) {
+            $Requirement = Get-PortableModuleRequirement -RequiredModule $RequiredModule
+            if (-not $Requirement.Name -or -not $SelectedModules.Contains($Requirement.Name)) {
+                return $false
+            }
+            if (-not (Add-PortableModuleInDependencyOrder -ModuleName $Requirement.Name -SelectedModules $SelectedModules -VisitingModules $VisitingModules -VisitedModules $VisitedModules -OrderedManifests $OrderedManifests)) {
+                return $false
+            }
+        }
+
+        $VisitingModules.Remove($ModuleName)
+        $VisitedModules[$ModuleName] = $true
+        $null = $OrderedManifests.Add($Module.Path)
+        $true
     }
 
     if (-not $Name) {
@@ -66,12 +205,30 @@
         return
     }
 
+    if ([string]::IsNullOrWhiteSpace($Path)) {
+        $Path = $PSScriptRoot
+    }
+    try {
+        $Provider = $null
+        $Drive = $null
+        $Path = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path, [ref] $Provider, [ref] $Drive)
+        if ($Provider.Name -ne 'FileSystem') {
+            Write-Warning "Initialize-ModulePortable - Path must use the FileSystem provider."
+            return
+        }
+        $Path = [System.IO.Path]::GetFullPath($Path)
+    } catch {
+        Write-Warning "Initialize-ModulePortable - Invalid path $Path. $($_.Exception.Message)"
+        return
+    }
+
     if ($Download) {
         try {
-            if (-not $Path -or -not (Test-Path -LiteralPath $Path)) {
+            if (-not (Test-Path -LiteralPath $Path)) {
                 $null = New-Item -ItemType Directory -Path $Path -Force
             }
-            Save-Module -Name $Name -LiteralPath $Path -WarningVariable WarningData -WarningAction SilentlyContinue -ErrorAction Stop
+            $WarningData = $null
+            Save-Module -Name $Name -LiteralPath $Path -Force -WarningVariable WarningData -WarningAction SilentlyContinue -ErrorAction Stop
         } catch {
             $ErrorMessage = $_.Exception.Message
 
@@ -84,40 +241,45 @@
     }
 
     if ($Download -or $Import) {
-        [Array] $Modules = Get-RequiredModule -Path $Path -Name $Name | Where-Object { $null -ne $_ }
-        if ($null -ne $Modules) {
-            [array]::Reverse($Modules)
+        $RootRequirement = [PSCustomObject] @{
+            Name            = $Name
+            MinimumVersion  = $null
+            RequiredVersion = $null
+            MaximumVersion  = $null
+            Guid            = $null
         }
-        $CleanedModules = [System.Collections.Generic.List[string]]::new()
+        $ResolvedGraph = Resolve-PortableModuleGraph -Requirements @($RootRequirement) -SelectedModules @{}
+        if (-not $ResolvedGraph) {
+            Write-Warning "Initialize-ModulePortable - Unable to resolve a compatible dependency graph for module $Name in $Path."
+            return
+        }
 
-        foreach ($_ in $Modules) {
-            if ($CleanedModules -notcontains $_) {
-                $CleanedModules.Add($_)
-            }
-        }
-        $CleanedModules.Add($Name)
-
-        $Items = foreach ($_ in $CleanedModules) {
-            Get-ChildItem -LiteralPath "$Path\$_" -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
-        }
-        [Array] $PSD1Files = $Items.FullName
+        [Array] $PSD1Files = $ResolvedGraph.OrderedManifests
     }
     if ($Download) {
+        $DirectorySeparators = [char[]] @([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+        $PortableRoot = $Path.TrimEnd($DirectorySeparators) + [System.IO.Path]::DirectorySeparatorChar
         $ListFiles = foreach ($PSD1 in $PSD1Files) {
-            $PSD1.Replace("$Path", '$PSScriptRoot')
+            $ManifestPath = [System.IO.Path]::GetFullPath($PSD1)
+            if (-not $ManifestPath.StartsWith($PortableRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+                Write-Warning "Initialize-ModulePortable - Module manifest $ManifestPath is outside portable path $Path."
+                return
+            }
+            $ManifestPath.Substring($PortableRoot.Length).Replace('\', '/')
         }
         # Build File
         $Content = @(
             '$Modules = @('
             foreach ($_ in $ListFiles) {
-                "   `"$_`""
+                $RelativePath = $_.Replace("'", "''")
+                "    Join-Path -Path `$PSScriptRoot -ChildPath '$RelativePath'"
             }
             ')'
             "foreach (`$_ in `$Modules) {"
-            "   Import-Module `$_ -Verbose:`$false -Force"
+            "    Import-Module `$_ -Verbose:`$false -Force"
             "}"
         )
-        $Content | Set-Content -Path $Path\$Name.ps1 -Force
+        $Content | Set-Content -LiteralPath (Join-Path -Path $Path -ChildPath "$Name.ps1") -Force
     }
     if ($Import) {
         $ListFiles = foreach ($PSD1 in $PSD1Files) {
