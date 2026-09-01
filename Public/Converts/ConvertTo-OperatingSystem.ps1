@@ -36,6 +36,9 @@
     if ($OperatingSystem -like 'Windows 10*' -or $OperatingSystem -like 'Windows 11*') {
         $Systems = @{
             # This is how it's written in AD
+            '10.0 (26200)' = 'Windows 11 25H2'
+            '10.0 (26100)' = 'Windows 11 24H2'
+            '10.0 (22631)' = 'Windows 11 23H2'
             '10.0 (22621)' = 'Windows 11 22H2'
             '10.0 (22000)' = 'Windows 11 21H2'
             '10.0 (19045)' = 'Windows 10 22H2'
@@ -55,6 +58,9 @@
             '10.0 (10240)' = "Windows 10 1507"
 
             # This is how WMI/CIM stores it
+            '10.0.26200'   = 'Windows 11 25H2'
+            '10.0.26100'   = 'Windows 11 24H2'
+            '10.0.22631'   = 'Windows 11 23H2'
             '10.0.22621'   = 'Windows 11 22H2'
             '10.0.22000'   = 'Windows 11 21H2'
             '10.0.19045'   = 'Windows 10 22H2'
@@ -74,6 +80,9 @@
             '10.0.10240'   = "Windows 10 1507"
 
             # This is how it's written in registry
+            '26200'        = 'Windows 11 25H2'
+            '26100'        = 'Windows 11 24H2'
+            '22631'        = 'Windows 11 23H2'
             '22621'        = 'Windows 11 22H2'
             '22000'        = 'Windows 11 21H2'
             '19045'        = 'Windows 10 22H2'
@@ -102,6 +111,7 @@
 
         $Systems = @{
             # This is how it's written in AD
+            '10.0 (26100)' = 'Windows Server 2025'
             '10.0 (20348)' = 'Windows Server 2022'
             '10.0 (19042)' = 'Windows Server 2019 20H2'
             '10.0 (19041)' = 'Windows Server 2019 2004'
@@ -115,6 +125,7 @@
             '5.2 (3790)'   = 'Windows Server 2003'
 
             # This is how WMI/CIM stores it
+            '10.0.26100'   = 'Windows Server 2025'
             '10.0.20348'   = 'Windows Server 2022'
             '10.0.19042'   = 'Windows Server 2019 20H2'
             '10.0.19041'   = 'Windows Server 2019 2004'
@@ -128,6 +139,7 @@
             '5.2.3790'     = 'Windows Server 2003' # i think
 
             # This is how it's written in registry
+            '26100'        = 'Windows Server 2025'
             '20348'        = 'Windows Server 2022'
             '19042'        = 'Windows Server 2019 20H2'
             '19041'        = 'Windows Server 2019 2004'
