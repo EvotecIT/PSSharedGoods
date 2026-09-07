@@ -7,7 +7,7 @@ Describe "ConvertFrom-ObjectToString" {
             Nothing  = $null
             List     = @('a', $null, 'c')
             'List 2' = @(1, 2, 3)
-            Hash     = @{ String = "content"; Int = 1 }
+            Hash     = [ordered]@{ String = "content"; Int = 1 }
             Name     = 'John'
             Age      = 30
             Float    = 1.234
@@ -49,7 +49,7 @@ Describe "ConvertFrom-ObjectToString" {
             Nothing  = $null
             List     = @('a', $null, 'c', 1)
             'List 2' = @(1, 2, 3)
-            Hash     = @{ String = "content"; Int = 1 }
+            Hash     = [ordered]@{ String = "content"; Int = 1 }
             Name     = 'John'
             Age      = 30
             Float    = 1.234
@@ -87,7 +87,7 @@ Describe "ConvertFrom-ObjectToString" {
             Nothing  = $null
             List     = @('a', $null, 'c')
             'List 2' = @(1, 2, 3)
-            Hash     = @{ String = "content"; Int = 1 }
+            Hash     = [ordered]@{ String = "content"; Int = 1 }
             Name     = [string[]]::new(4)
             Age      = 30
         }

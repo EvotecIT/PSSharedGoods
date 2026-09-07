@@ -81,12 +81,12 @@
         [switch] $NumberAsString,
         [switch] $BoolAsString,
         [System.Collections.IDictionary] $NewLineFormat = @{
-            NewLineCarriage = '\r\n'
+            NewLineCarriage = if ([System.Environment]::NewLine -eq "`n") { '\n' } else { '\r\n' }
             NewLine         = "\n"
             Carriage        = "\r"
         },
         [System.Collections.IDictionary] $NewLineFormatProperty = @{
-            NewLineCarriage = '\r\n'
+            NewLineCarriage = if ([System.Environment]::NewLine -eq "`n") { '\n' } else { '\r\n' }
             NewLine         = "\n"
             Carriage        = "\r"
         },

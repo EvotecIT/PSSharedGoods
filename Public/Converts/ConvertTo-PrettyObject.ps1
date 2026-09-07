@@ -89,14 +89,14 @@
         [switch] $NumberAsString,
         [switch] $BoolAsString,
         [System.Collections.IDictionary] $NewLineFormat = @{
-            NewLineCarriage = '\r\n'
-            NewLine         = "\n"
-            Carriage        = "\r"
+            NewLineCarriage = [System.Environment]::NewLine
+            NewLine         = "`n"
+            Carriage        = "`r"
         },
         [System.Collections.IDictionary] $NewLineFormatProperty = @{
-            NewLineCarriage = '\r\n'
-            NewLine         = "\n"
-            Carriage        = "\r"
+            NewLineCarriage = [System.Environment]::NewLine
+            NewLine         = "`n"
+            Carriage        = "`r"
         },
         [System.Collections.IDictionary] $AdvancedReplace,
         [string] $ArrayJoinString,
@@ -173,7 +173,7 @@
                         $NewObject[$DisplayProperty] = "$Value"
                     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
                         if ($ArrayJoin) {
-                            $Value = $Value -join $ArrayJoinString
+                            $Value = ConvertTo-InvariantJoinedString -Value $Value -Separator $ArrayJoinString
                             $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         } else {
@@ -184,9 +184,8 @@
                     } elseif ($Value -is [System.Enum]) {
                         $NewObject[$DisplayProperty] = ($Value).ToString()
                     } elseif (($Value | IsNumeric) -eq $true) {
-                        $Value = $($Value).ToString().Replace(',', '.')
                         if ($NumberAsString) {
-                            $NewObject[$DisplayProperty] = "$Value"
+                            $NewObject[$DisplayProperty] = [System.Convert]::ToString($Value, [System.Globalization.CultureInfo]::InvariantCulture)
                         } else {
                             $NewObject[$DisplayProperty] = $Value
                         }
@@ -222,6 +221,7 @@
 
                 # Skip if no properties found
                 if ($null -eq $PropertyName -or $PropertyName.Count -eq 0) {
+                    [PSCustomObject] $NewObject
                     continue
                 }
 
@@ -250,7 +250,7 @@
                         $NewObject[$DisplayProperty] = "$Value"
                     } elseif ($Value -is [System.Collections.IList] -or $Value -is [System.Collections.ReadOnlyCollectionBase]) {
                         if ($ArrayJoin) {
-                            $Value = $Value -join $ArrayJoinString
+                            $Value = ConvertTo-InvariantJoinedString -Value $Value -Separator $ArrayJoinString
                             $Value = "$Value".Replace([System.Environment]::NewLine, $NewLineFormat.NewLineCarriage).Replace("`n", $NewLineFormat.NewLine).Replace("`r", $NewLineFormat.Carriage)
                             $NewObject[$DisplayProperty] = "$Value"
                         } else {
@@ -262,7 +262,7 @@
                         $NewObject[$DisplayProperty] = ($Value).ToString()
                     } elseif (($Value | IsNumeric) -eq $true) {
                         if ($NumberAsString) {
-                            $NewObject[$DisplayProperty] = ($Value).ToString()
+                            $NewObject[$DisplayProperty] = [System.Convert]::ToString($Value, [System.Globalization.CultureInfo]::InvariantCulture)
                         } else {
                             $NewObject[$DisplayProperty] = $Value
                         }

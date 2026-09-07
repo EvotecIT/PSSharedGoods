@@ -34,28 +34,6 @@
         [switch] $Download,
         [switch] $Import
     )
-    function Get-RequiredModule {
-        param(
-            [string] $Path,
-            [string] $Name
-        )
-        $PrimaryModule = Get-ChildItem -LiteralPath "$Path\$Name" -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
-        if ($PrimaryModule) {
-            $Module = Get-Module -ListAvailable $PrimaryModule.FullName -ErrorAction SilentlyContinue -Verbose:$false
-            if ($Module) {
-                [Array] $RequiredModules = $Module.RequiredModules.Name
-                if ($null -ne $RequiredModules) {
-                    $null
-                }
-                $RequiredModules
-                foreach ($_ in $RequiredModules) {
-                    Get-RequiredModule -Path $Path -Name $_
-                }
-            }
-        } else {
-            Write-Warning "Initialize-ModulePortable - Modules to load not found in $Path"
-        }
-    }
 
     if (-not $Name) {
         Write-Warning "Initialize-ModulePortable - Module name not given. Terminating."
@@ -66,12 +44,30 @@
         return
     }
 
+    if ([string]::IsNullOrWhiteSpace($Path)) {
+        $Path = $PSScriptRoot
+    }
+    try {
+        $Provider = $null
+        $Drive = $null
+        $Path = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path, [ref] $Provider, [ref] $Drive)
+        if ($Provider.Name -ne 'FileSystem') {
+            Write-Warning "Initialize-ModulePortable - Path must use the FileSystem provider."
+            return
+        }
+        $Path = [System.IO.Path]::GetFullPath($Path)
+    } catch {
+        Write-Warning "Initialize-ModulePortable - Invalid path $Path. $($_.Exception.Message)"
+        return
+    }
+
     if ($Download) {
         try {
-            if (-not $Path -or -not (Test-Path -LiteralPath $Path)) {
+            if (-not (Test-Path -LiteralPath $Path)) {
                 $null = New-Item -ItemType Directory -Path $Path -Force
             }
-            Save-Module -Name $Name -LiteralPath $Path -WarningVariable WarningData -WarningAction SilentlyContinue -ErrorAction Stop
+            $WarningData = $null
+            Save-Module -Name $Name -LiteralPath $Path -Force -WarningVariable WarningData -WarningAction SilentlyContinue -ErrorAction Stop
         } catch {
             $ErrorMessage = $_.Exception.Message
 
@@ -84,40 +80,45 @@
     }
 
     if ($Download -or $Import) {
-        [Array] $Modules = Get-RequiredModule -Path $Path -Name $Name | Where-Object { $null -ne $_ }
-        if ($null -ne $Modules) {
-            [array]::Reverse($Modules)
+        $RootRequirement = [PSCustomObject] @{
+            Name            = $Name
+            MinimumVersion  = $null
+            RequiredVersion = $null
+            MaximumVersion  = $null
+            Guid            = $null
         }
-        $CleanedModules = [System.Collections.Generic.List[string]]::new()
+        $ResolvedGraph = Resolve-PortableModuleGraph -Requirements @($RootRequirement) -SelectedModules @{} -RootModuleName $Name -RootPath $Path
+        if (-not $ResolvedGraph) {
+            Write-Warning "Initialize-ModulePortable - Unable to resolve a compatible dependency graph for module $Name in $Path."
+            return
+        }
 
-        foreach ($_ in $Modules) {
-            if ($CleanedModules -notcontains $_) {
-                $CleanedModules.Add($_)
-            }
-        }
-        $CleanedModules.Add($Name)
-
-        $Items = foreach ($_ in $CleanedModules) {
-            Get-ChildItem -LiteralPath "$Path\$_" -Filter '*.psd1' -Recurse -ErrorAction SilentlyContinue -Depth 1
-        }
-        [Array] $PSD1Files = $Items.FullName
+        [Array] $PSD1Files = $ResolvedGraph.OrderedManifests
     }
     if ($Download) {
+        $DirectorySeparators = [char[]] @([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+        $PortableRoot = $Path.TrimEnd($DirectorySeparators) + [System.IO.Path]::DirectorySeparatorChar
         $ListFiles = foreach ($PSD1 in $PSD1Files) {
-            $PSD1.Replace("$Path", '$PSScriptRoot')
+            $ManifestPath = [System.IO.Path]::GetFullPath($PSD1)
+            if (-not $ManifestPath.StartsWith($PortableRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+                Write-Warning "Initialize-ModulePortable - Module manifest $ManifestPath is outside portable path $Path."
+                return
+            }
+            $ManifestPath.Substring($PortableRoot.Length).Replace('\', '/')
         }
         # Build File
         $Content = @(
             '$Modules = @('
             foreach ($_ in $ListFiles) {
-                "   `"$_`""
+                $RelativePath = $_.Replace("'", "''")
+                "    Join-Path -Path `$PSScriptRoot -ChildPath '$RelativePath'"
             }
             ')'
             "foreach (`$_ in `$Modules) {"
-            "   Import-Module `$_ -Verbose:`$false -Force"
+            "    Import-Module `$_ -Verbose:`$false -Force"
             "}"
         )
-        $Content | Set-Content -Path $Path\$Name.ps1 -Force
+        $Content | Set-Content -LiteralPath (Join-Path -Path $Path -ChildPath "$Name.ps1") -Force
     }
     if ($Import) {
         $ListFiles = foreach ($PSD1 in $PSD1Files) {

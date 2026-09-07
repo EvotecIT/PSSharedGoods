@@ -49,10 +49,14 @@
     $ForestInformation = Get-WinADForestDetails -Forest $Forest -IncludeDomains $IncludeDomains -ExcludeDomains $ExcludeDomains -ExtendedForestInformation $ExtendedForestInformation
     foreach ($Domain in $ForestInformation.Domains) {
         $ADDictionary[$Domain] = [ordered] @{ }
-        $QueryServer = $ForestInformation['QueryServers'][$Domain]['HostName'][0]
-        $DomainInformation = Get-ADDomain -Server $QueryServer
-
         if ($Type -contains 'DomainAdmins') {
+            $QueryServerInformation = $ForestInformation['QueryServers'][$Domain]
+            if (-not $QueryServerInformation -or -not $QueryServerInformation['HostName']) {
+                continue
+            }
+            $QueryServer = $QueryServerInformation['HostName'][0]
+            $DomainInformation = Get-ADDomain -Server $QueryServer
+
             Get-ADGroup -Filter "SID -eq '$($DomainInformation.DomainSID)-512'" -Server $QueryServer -ErrorAction SilentlyContinue | ForEach-Object {
                 $ADDictionary['ByNetBIOS']["$($DomainInformation.NetBIOSName)\$($_.Name)"] = $_
                 $ADDictionary[$Domain]['DomainAdmins'] = "$($DomainInformation.NetBIOSName)\$($_.Name)"
@@ -62,11 +66,18 @@
     }
     # We need to treat EnterpriseAdmins separatly as it should be always available, not only when requested specific domain
     foreach ($Domain in $ForestInformation.Forest.Domains) {
+        if ($Domain -in $ExcludeDomains) {
+            continue
+        }
         if (-not $ADDictionary[$Domain]) {
             $ADDictionary[$Domain] = [ordered] @{ }
         }
         if ($Type -contains 'EnterpriseAdmins') {
-            $QueryServer = $ForestInformation['QueryServers'][$Domain]['HostName'][0]
+            $QueryServerInformation = $ForestInformation['QueryServers'][$Domain]
+            if (-not $QueryServerInformation -or -not $QueryServerInformation['HostName']) {
+                continue
+            }
+            $QueryServer = $QueryServerInformation['HostName'][0]
             $DomainInformation = Get-ADDomain -Server $QueryServer
 
             Get-ADGroup -Filter "SID -eq '$($DomainInformation.DomainSID)-519'" -Server $QueryServer -ErrorAction SilentlyContinue | ForEach-Object {

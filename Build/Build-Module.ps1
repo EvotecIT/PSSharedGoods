@@ -1,6 +1,17 @@
-Import-Module "PSPublishModule" -Force
+param(
+    [ValidateSet('Manifest', 'Build', 'Publish')]
+    [string] $ConfigurationGateMode = 'Build',
 
-Invoke-ModuleBuild -ModuleName 'PSSharedGoods' {
+    [bool] $SignModule = $true,
+
+    [string] $PowerShellGalleryApiKeyPath = 'C:\Support\Important\PowerShellGalleryAPI.txt',
+
+    [string] $GitHubApiKeyPath = 'C:\Support\Important\GitHubAPI.txt'
+)
+
+Import-Module PSPublishModule -Force -ErrorAction Stop
+
+Build-Module -ModuleName 'PSSharedGoods' {
     # Usual defaults as per standard module
     $Manifest = @{
         # Version number of this module.
@@ -47,7 +58,7 @@ Invoke-ModuleBuild -ModuleName 'PSSharedGoods' {
         'ActiveDirectory'
         'CimCmdlets'
         'DnsClient'
-    ) -IgnoreFunctionName 'Select-Unique', 'Compare-TwoArrays', 'Invoke-DbaQuery', 'Get-RequiredModule', 'IsOfType', 'GetFormattedPair', 'IsNumeric' # those functions are internal within private function
+    ) -IgnoreFunctionName 'Select-Unique', 'Compare-TwoArrays', 'Invoke-DbaQuery', 'IsOfType', 'GetFormattedPair', 'IsNumeric' # those functions are internal within private function
 
     $ConfigurationFormat = [ordered] @{
         RemoveComments                              = $true
@@ -90,27 +101,28 @@ Invoke-ModuleBuild -ModuleName 'PSSharedGoods' {
     # when creating PSD1 %use special style without comments and with only required parameters
     New-ConfigurationFormat -ApplyTo 'DefaultPSD1', 'OnMergePSD1' -PSD1Style 'Minimal'
     # configuration for documentation, at the same time it enables documentation processing
-    New-ConfigurationDocumentation -Enable:$false -StartClean -UpdateWhenNew -PathReadme 'Docs\Readme.md' -Path 'Docs'
+    New-ConfigurationDocumentation -Enable:$false -PathReadme 'Docs\Readme.md' -Path 'Docs'
 
     New-ConfigurationImportModule -ImportSelf
 
     $newConfigurationBuildSplat = @{
         Enable                            = $true
-        SignModule                        = $true
+        SignModule                        = $SignModule
         MergeModuleOnBuild                = $true
         MergeFunctionsFromApprovedModules = $true
-        CertificateThumbprint             = '92e95fb58effa6a4a75e77a33cdd6bfe6dd30f1a'
-        RefreshPSD1Only                   = $true
+        CertificateThumbprint             = '92E95FB58EFFA6A4A75E77A33CDD6BFE6DD30F1A'
     }
 
     New-ConfigurationBuild @newConfigurationBuildSplat
 
     #New-ConfigurationTest -TestsPath "$PSScriptRoot\..\Tests" -Enable
 
-    New-ConfigurationArtefact -Type Unpacked -Enable -Path "$PSScriptRoot\..\Artefacts\Unpacked" -AddRequiredModules
-    New-ConfigurationArtefact -Type Packed -Enable -Path "$PSScriptRoot\..\Artefacts\Packed" -ArtefactName '<ModuleName>.v<ModuleVersion>.zip'
+    New-ConfigurationArtefact -Type Unpacked -Enable -Path 'Artefacts\Unpacked' -AddRequiredModules
+    New-ConfigurationArtefact -Type Packed -Enable -Path 'Artefacts\Packed' -ArtefactName '<ModuleName>.v<ModuleVersion>.zip'
 
     # options for publishing to github/psgallery
-    ##New-ConfigurationPublish -Type PowerShellGallery -FilePath 'C:\Support\Important\PowerShellGalleryAPI.txt' -Enabled:$true
-    ##New-ConfigurationPublish -Type GitHub -FilePath 'C:\Support\Important\GitHubAPI.txt' -UserName 'EvotecIT' -Enabled:$true
+    New-ConfigurationPublish -Type PowerShellGallery -FilePath $PowerShellGalleryApiKeyPath -Enabled:$false
+    New-ConfigurationPublish -Type GitHub -FilePath $GitHubApiKeyPath -UserName 'EvotecIT' -RepositoryName 'PSSharedGoods' -Enabled:$false
+
+    New-ConfigurationGate -Mode $ConfigurationGateMode
 } -ExitCode
