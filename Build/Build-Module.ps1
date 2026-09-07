@@ -99,7 +99,7 @@ Invoke-ModuleBuild -ModuleName 'PSSharedGoods' {
         SignModule                        = $true
         MergeModuleOnBuild                = $true
         MergeFunctionsFromApprovedModules = $true
-        CertificateThumbprint             = '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
+        CertificateThumbprint             = '92e95fb58effa6a4a75e77a33cdd6bfe6dd30f1a'
         RefreshPSD1Only                   = $true
     }
 
@@ -111,6 +111,6 @@ Invoke-ModuleBuild -ModuleName 'PSSharedGoods' {
     New-ConfigurationArtefact -Type Packed -Enable -Path "$PSScriptRoot\..\Artefacts\Packed" -ArtefactName '<ModuleName>.v<ModuleVersion>.zip'
 
     # options for publishing to github/psgallery
-    #New-ConfigurationPublish -Type PowerShellGallery -FilePath 'C:\Support\Important\PowerShellGalleryAPI.txt' -Enabled:$true
-    #New-ConfigurationPublish -Type GitHub -FilePath 'C:\Support\Important\GitHubAPI.txt' -UserName 'EvotecIT' -Enabled:$true
+    ##New-ConfigurationPublish -Type PowerShellGallery -FilePath 'C:\Support\Important\PowerShellGalleryAPI.txt' -Enabled:$true
+    ##New-ConfigurationPublish -Type GitHub -FilePath 'C:\Support\Important\GitHubAPI.txt' -UserName 'EvotecIT' -Enabled:$true
 } -ExitCode
