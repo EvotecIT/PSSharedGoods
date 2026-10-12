@@ -44,15 +44,16 @@
         }
         $TestPath = Test-Path -Path $FullPath
         if ($TestPath) {
-            if (-not $ACLS) {
+            $CurrentACL = $ACLS
+            if (-not $CurrentACL) {
                 try {
-                    $ACLS = (Get-Acl -Path $FullPath -ErrorAction Stop)
+                    $CurrentACL = (Get-Acl -Path $FullPath -ErrorAction Stop)
                 } catch {
                     Write-Warning -Message "Get-FilePermission - Can't access $FullPath. Error $($_.Exception.Message)"
                     continue
                 }
             }
-            $Output = foreach ($ACL in $ACLS.Access) {
+            $Output = foreach ($ACL in $CurrentACL.Access) {
                 if ($Inherited) {
                     if ($ACL.IsInherited -eq $false) {
                         # if it's not inherited and we require inherited lets continue
@@ -93,7 +94,7 @@
                 }
                 if ($IncludeACLObject) {
                     $ReturnObject['ACL'] = $ACL
-                    $ReturnObject['AllACL'] = $ACLS
+                    $ReturnObject['AllACL'] = $CurrentACL
                 }
                 if ($AsHashTable) {
                     $ReturnObject
